@@ -1,0 +1,63 @@
+#############################################
+# Common Settings
+#############################################
+
+#############################################
+# This file is the top-most EditorConfig file
+#############################################
+
+root = true
+
+#############################################
+# All Files
+#############################################
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = crlf
+
+############################################
+# File Extension Settings
+############################################
+
+# Visual Studio Solution Files
+[*.sln]
+indent_style = tab
+
+# Visual Studio XML Project Files
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
+indent_size = 2
+
+# Various XML Configuration Files
+[{*.xml,*.xsd,*.xsl,*.config,*.props,*.targets,*.nuspec,*.resx,*.ruleset,*.vsixmanifest,*.vsct}]
+indent_size = 2
+end_of_line = lf
+
+# Proto Files
+[*.proto]
+end_of_line = lf
+indent_size = 2
+
+# JSON Files
+[*.{json,json5}]
+indent_size = 2
+end_of_line = lf
+
+# YAML Files
+[{*.yaml,*.yml}]
+indent_size = 2
+end_of_line = lf
+
+# Markdown Files
+[{*.markdown,*.md}]
+trim_trailing_whitespace = false
+end_of_line = lf
+
+# Bash Files
+[{*.bash,*.sh}]
+indent_size = 2
+end_of_line = lf
