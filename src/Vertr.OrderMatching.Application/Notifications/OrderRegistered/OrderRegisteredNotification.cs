@@ -8,6 +8,16 @@ namespace Vertr.OrderMatching.Application.Notifications.OrderRegistered
 
         public Guid OrderId { get; }
 
-        public DateTime RegesteredTime { get; }
+        public DateTime RegisteredTime { get; }
+
+        public OrderRegisteredNotification(
+            Guid correlationId,
+            Guid orderId,
+            DateTime registeredTime)
+        {
+            CorrelationId = correlationId;
+            OrderId = orderId;
+            RegisteredTime = registeredTime;
+        }
     }
 }
