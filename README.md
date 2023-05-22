@@ -1,6 +1,10 @@
 # vertr
 Algorithmic Trading Engine
 
+## 22-05-23 
+- Command Processor (Mediatr)
+- Cancel Order Command - (Hashset + Stack)
+
 ## 19-05-23 Order matching engine
 
 - не регистрируем сделки Market - Market (тк нужно брать откуда-то цену)

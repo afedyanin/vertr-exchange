@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\BuyCommand\" />
+    <Folder Include="Commands\CancelOrderCommand\" />
+    <Folder Include="Commands\SellCommand\" />
+    <Folder Include="Notifications\OrderRegisteredNotification\" />
+    <Folder Include="Notifications\OrderFullfilmentNotification\" />
+    <Folder Include="Notifications\TradeNotification\" />
+    <Folder Include="Queries\GetOrderBook\" />
+    <Folder Include="Queries\GetOrders\" />
+    <Folder Include="Queries\GetTrades\" />
+  </ItemGroup>
+
+</Project>
