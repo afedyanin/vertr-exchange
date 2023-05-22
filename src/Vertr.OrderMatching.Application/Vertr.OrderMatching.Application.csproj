@@ -7,15 +7,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\BuyCommand\" />
-    <Folder Include="Commands\CancelOrderCommand\" />
-    <Folder Include="Commands\SellCommand\" />
-    <Folder Include="Notifications\OrderRegisteredNotification\" />
-    <Folder Include="Notifications\OrderFullfilmentNotification\" />
-    <Folder Include="Notifications\TradeNotification\" />
+    <Compile Remove="Commands\BuyCommand\**" />
+    <Compile Remove="Commands\CancelOrderCommand\**" />
+    <Compile Remove="Commands\SellCommand\**" />
+    <Compile Remove="Notifications\OrderFullfilmentNotification\**" />
+    <Compile Remove="Notifications\OrderRegisteredNotification\**" />
+    <Compile Remove="Notifications\TradeNotification\**" />
+    <EmbeddedResource Remove="Commands\BuyCommand\**" />
+    <EmbeddedResource Remove="Commands\CancelOrderCommand\**" />
+    <EmbeddedResource Remove="Commands\SellCommand\**" />
+    <EmbeddedResource Remove="Notifications\OrderFullfilmentNotification\**" />
+    <EmbeddedResource Remove="Notifications\OrderRegisteredNotification\**" />
+    <EmbeddedResource Remove="Notifications\TradeNotification\**" />
+    <None Remove="Commands\BuyCommand\**" />
+    <None Remove="Commands\CancelOrderCommand\**" />
+    <None Remove="Commands\SellCommand\**" />
+    <None Remove="Notifications\OrderFullfilmentNotification\**" />
+    <None Remove="Notifications\OrderRegisteredNotification\**" />
+    <None Remove="Notifications\TradeNotification\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Queries\GetOrderBook\" />
     <Folder Include="Queries\GetOrders\" />
     <Folder Include="Queries\GetTrades\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.0.1" />
   </ItemGroup>
 
 </Project>
