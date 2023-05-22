@@ -1,6 +1,8 @@
+using MediatR;
+
 namespace Vertr.OrderMatching.Application.Notifications.NewTrade
 {
-    public record class NewTradeNotification
+    public record class NewTradeNotification : INotification
     {
         public Guid Id { get; }
 
