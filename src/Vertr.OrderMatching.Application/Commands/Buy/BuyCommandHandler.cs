@@ -1,7 +1,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Vertr.Infrastructure.Common.Contracts;
 using Vertr.OrderMatching.Application.Common;
 using Vertr.OrderMatching.Domain.Contracts;
+using Vertr.OrderMatching.Domain.Entities;
 using Vertr.OrderMatching.Domain.Repositories;
 
 namespace Vertr.OrderMatching.Application.Commands.Buy
@@ -17,7 +19,8 @@ namespace Vertr.OrderMatching.Application.Commands.Buy
             IMediator mediator,
             IOrderRepository repository,
             IOrderFactory orderFactory,
-            ILogger<BuyCommandHandler> logger) : base(mediator, repository)
+            ITopicProvider<Order> topicProvider,
+            ILogger<BuyCommandHandler> logger) : base(mediator, repository, topicProvider)
         {
             _logger = logger;
             _orderFactory = orderFactory;

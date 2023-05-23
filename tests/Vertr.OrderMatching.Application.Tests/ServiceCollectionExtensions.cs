@@ -2,8 +2,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.Infrastructure.Common.Contracts;
 using Vertr.Infrastructure.Common.Implementation;
+using Vertr.Infrastructure.Common.Messaging;
 using Vertr.OrderMatching.Application.Commands.Buy;
 using Vertr.OrderMatching.Domain.Contracts;
+using Vertr.OrderMatching.Domain.Entities;
 using Vertr.OrderMatching.Domain.Factories;
 using Vertr.OrderMatching.Domain.Repositories;
 
@@ -30,6 +32,9 @@ namespace Vertr.OrderMatching.Application.Tests
 
             serviceCollection
                 .AddSingleton<IEntityIdGenerator<Guid>, GuidEntityIdGenerator>();
+
+            serviceCollection
+                .AddSingleton<ITopicProvider<Order>, ChannelBasedTopicProvider<Order>>();
 
             return serviceCollection;
         }
