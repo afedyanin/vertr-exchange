@@ -1,44 +1,56 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Vertr.OrderMatching.Application.Notifications.OrderRegistered;
+using Vertr.OrderMatching.Application.Common;
+using Vertr.OrderMatching.Domain.Contracts;
 
 namespace Vertr.OrderMatching.Application.Commands.Buy
 {
-    public sealed class BuyCommandHandler : IRequestHandler<BuyLimitCommand>, IRequestHandler<BuyMarketCommand>
+    public sealed class BuyCommandHandler :
+        IRequestHandler<BuyLimitCommand, BuySellCommandResult>,
+        IRequestHandler<BuyMarketCommand, BuySellCommandResult>
     {
         private readonly ILogger<BuyCommandHandler> _logger;
         private readonly IMediator _mediator;
+        private readonly IOrderFactory _orderFactory;
 
         public BuyCommandHandler(
             ILogger<BuyCommandHandler> logger,
-            IMediator mediator)
+            IMediator mediator,
+            IOrderFactory orderFactory)
         {
             _logger = logger;
             _mediator = mediator;
+            _orderFactory = orderFactory;
         }
 
-        public async Task Handle(BuyLimitCommand request, CancellationToken cancellationToken)
+        public async Task<BuySellCommandResult> Handle(BuyLimitCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Buy limit command received: {buyLimit}", request);
 
-            var orderRegistered = new OrderRegisteredNotification(
+            var order = _orderFactory.CreateOrder(
                 request.CorrelationId,
-                Guid.NewGuid(),
-                DateTime.UtcNow);
+                request.OwnerId,
+                request.Instrument,
+                request.Qty,
+                decimal.Zero,
+                true);
 
-            await _mediator.Publish(orderRegistered, cancellationToken);
+            return await OrderHelper.HandleNewOrder(_mediator, order, cancellationToken);
         }
 
-        public async Task Handle(BuyMarketCommand request, CancellationToken cancellationToken)
+        public async Task<BuySellCommandResult> Handle(BuyMarketCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Buy market command received: {buyMarket}", request);
 
-            var orderRegistered = new OrderRegisteredNotification(
+            var order = _orderFactory.CreateOrder(
                 request.CorrelationId,
-                Guid.NewGuid(),
-                DateTime.UtcNow);
+                request.OwnerId,
+                request.Instrument,
+                request.Qty,
+                decimal.Zero,
+                true);
 
-            await _mediator.Publish(orderRegistered, cancellationToken);
+            return await OrderHelper.HandleNewOrder(_mediator, order, cancellationToken);
         }
     }
 }

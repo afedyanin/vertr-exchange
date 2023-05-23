@@ -1,4 +1,5 @@
 using Vertr.OrderMatching.Domain.Contracts;
+using Vertr.OrderMatching.Domain.ValueObjects;
 
 namespace Vertr.OrderMatching.Domain.Entities
 {
@@ -6,44 +7,77 @@ namespace Vertr.OrderMatching.Domain.Entities
     {
         public Guid Id { get; }
 
-        public string Instrument { get; } = string.Empty;
+        public Guid CorrelationId { get; }
 
-        public int TraderId { get; }
+        public Guid OwnerId { get; }
+
+        public string Instrument { get; } 
 
         // Market order if Zero
         public decimal Price { get; }
 
         public decimal Qty { get; }
 
-        public decimal RemainingQty { get; private set; }
-
         public bool IsBuy { get; }
 
         public DateTime CreationTime { get; }
 
-        public bool IsExecuted => RemainingQty <= 0;
-
         internal Order(Guid id,
+            Guid correlationId,
+            Guid ownerId,
             string instrument,
-            int traderId,
             decimal price,
             decimal qty,
             bool isBuy,
             DateTime creationTime)
         {
             Id = id;
+            CorrelationId = correlationId;
+            OwnerId = ownerId;
             Instrument = instrument;
-            TraderId = traderId;
             IsBuy = isBuy;
             Price = price;
             Qty = qty;
-            RemainingQty = qty;
             CreationTime = creationTime;
         }
 
-        private bool IsValid()
+        public ValidationResult Validate()
         {
-            return true;
+            var errors = new List<string>();
+
+            if (Id == Guid.Empty)
+            {
+                errors.Add("Invalid OrderId.");
+            }
+
+            if (CorrelationId == Guid.Empty)
+            {
+                errors.Add("Invalid CorrelationId.");
+            }
+
+            if (OwnerId == Guid.Empty)
+            {
+                errors.Add("Invalid OwnerId.");
+            }
+
+            if (string.IsNullOrEmpty(Instrument))
+            {
+                errors.Add("Instrument cannot be empty.");
+            }
+
+            if (Price < decimal.Zero)
+            {
+                errors.Add("Price must be greater than or equal to zero.");
+            }
+
+            if (Qty <= decimal.Zero)
+            {
+                errors.Add("Quantity must be greater than zero.");
+            }
+
+            return errors.Count == 0 ?
+                new ValidationResult(true):
+                new ValidationResult(false, errors.ToArray());
         }
     }
 }

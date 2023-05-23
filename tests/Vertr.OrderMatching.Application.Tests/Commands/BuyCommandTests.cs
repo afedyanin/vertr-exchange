@@ -30,7 +30,8 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
         [Test]
         public async Task CanCreateBuyMarketCommand()
         {
-            var buyMarket = new BuyMarketCommand(Guid.NewGuid(), "SBER", 12);
+            var ownerId = Guid.NewGuid();
+            var buyMarket = new BuyMarketCommand(Guid.NewGuid(), ownerId, "SBER", 12);
             _logger.LogInformation("New buy market command created: {buyMarket}", buyMarket);
 
             await _mediator.Send(buyMarket);
