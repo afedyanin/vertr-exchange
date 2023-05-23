@@ -2,24 +2,24 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderMatching.Application.Common;
 using Vertr.OrderMatching.Domain.Contracts;
+using Vertr.OrderMatching.Domain.Repositories;
 
 namespace Vertr.OrderMatching.Application.Commands.Sell
 {
-    public sealed class SellCommandHandler :
+    public sealed class SellCommandHandler : BuySellCommandHandlerBase,
         IRequestHandler<SellLimitCommand, BuySellCommandResult>,
         IRequestHandler<SellMarketCommand, BuySellCommandResult>
     {
         private readonly ILogger<SellCommandHandler> _logger;
-        private readonly IMediator _mediator;
         private readonly IOrderFactory _orderFactory;
 
         public SellCommandHandler(
             ILogger<SellCommandHandler> logger,
             IMediator mediator,
-            IOrderFactory orderFactory)
+            IOrderFactory orderFactory,
+            IOrderRepository repository) : base(mediator, repository)
         {
             _logger = logger;
-            _mediator = mediator;
             _orderFactory = orderFactory;
         }
 
@@ -35,7 +35,7 @@ namespace Vertr.OrderMatching.Application.Commands.Sell
                 request.Price,
                 false);
 
-            return await OrderHelper.HandleNewOrder(_mediator, order, cancellationToken);
+            return await HandleNewOrder(order, cancellationToken);
         }
 
         public async Task<BuySellCommandResult> Handle(SellMarketCommand request, CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ namespace Vertr.OrderMatching.Application.Commands.Sell
                 decimal.Zero,
                 false);
 
-            return await OrderHelper.HandleNewOrder(_mediator, order, cancellationToken);
+            return await HandleNewOrder(order, cancellationToken);
         }
     }
 }

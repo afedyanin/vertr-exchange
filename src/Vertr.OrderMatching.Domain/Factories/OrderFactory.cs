@@ -31,8 +31,8 @@ namespace Vertr.OrderMatching.Domain.Factories
 
             return new Order(
                 orderId,
-                ownerId,
                 correlationId,
+                ownerId,
                 instrument,
                 qty,
                 price,

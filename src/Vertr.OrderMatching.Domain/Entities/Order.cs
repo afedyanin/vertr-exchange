@@ -26,8 +26,8 @@ namespace Vertr.OrderMatching.Domain.Entities
             Guid correlationId,
             Guid ownerId,
             string instrument,
-            decimal price,
             decimal qty,
+            decimal price,
             bool isBuy,
             DateTime creationTime)
         {
@@ -35,9 +35,9 @@ namespace Vertr.OrderMatching.Domain.Entities
             CorrelationId = correlationId;
             OwnerId = ownerId;
             Instrument = instrument;
-            IsBuy = isBuy;
-            Price = price;
             Qty = qty;
+            Price = price;
+            IsBuy = isBuy;
             CreationTime = creationTime;
         }
 

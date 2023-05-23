@@ -2,24 +2,24 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderMatching.Application.Common;
 using Vertr.OrderMatching.Domain.Contracts;
+using Vertr.OrderMatching.Domain.Repositories;
 
 namespace Vertr.OrderMatching.Application.Commands.Buy
 {
-    public sealed class BuyCommandHandler :
+    public sealed class BuyCommandHandler : BuySellCommandHandlerBase,
         IRequestHandler<BuyLimitCommand, BuySellCommandResult>,
         IRequestHandler<BuyMarketCommand, BuySellCommandResult>
     {
-        private readonly ILogger<BuyCommandHandler> _logger;
-        private readonly IMediator _mediator;
         private readonly IOrderFactory _orderFactory;
+        private readonly ILogger<BuyCommandHandler> _logger;
 
         public BuyCommandHandler(
-            ILogger<BuyCommandHandler> logger,
             IMediator mediator,
-            IOrderFactory orderFactory)
+            IOrderRepository repository,
+            IOrderFactory orderFactory,
+            ILogger<BuyCommandHandler> logger) : base(mediator, repository)
         {
             _logger = logger;
-            _mediator = mediator;
             _orderFactory = orderFactory;
         }
 
@@ -35,7 +35,7 @@ namespace Vertr.OrderMatching.Application.Commands.Buy
                 decimal.Zero,
                 true);
 
-            return await OrderHelper.HandleNewOrder(_mediator, order, cancellationToken);
+            return await HandleNewOrder(order, cancellationToken);
         }
 
         public async Task<BuySellCommandResult> Handle(BuyMarketCommand request, CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ namespace Vertr.OrderMatching.Application.Commands.Buy
                 decimal.Zero,
                 true);
 
-            return await OrderHelper.HandleNewOrder(_mediator, order, cancellationToken);
+            return await HandleNewOrder(order, cancellationToken);
         }
     }
 }

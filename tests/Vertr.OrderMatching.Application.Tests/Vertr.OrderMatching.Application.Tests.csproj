@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Vertr.Infrastructure.Common\Vertr.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\..\src\Vertr.OrderMatching.Application\Vertr.OrderMatching.Application.csproj" />
   </ItemGroup>
 
