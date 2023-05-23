@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Infrastructure.Common\Vertr.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Vertr.OrderMatching.Core\Vertr.OrderMatching.Core.csproj" />
   </ItemGroup>
 
 </Project>
