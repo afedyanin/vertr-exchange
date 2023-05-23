@@ -1,4 +1,4 @@
-namespace Vertr.Common.Contracts
+namespace Vertr.OrderMatching.Domain.Contracts
 {
     public interface IEntity<T> where T : struct
     {

@@ -1,4 +1,4 @@
-namespace Vertr.Common.Contracts
+namespace Vertr.Infrastructure.Common.Contracts
 {
     public interface ITimeService
     {

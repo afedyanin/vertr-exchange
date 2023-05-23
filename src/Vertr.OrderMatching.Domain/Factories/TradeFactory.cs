@@ -1,29 +1,28 @@
-using Vertr.Common.Contracts;
-using Vertr.Ome.Contracts;
-using Vertr.Ome.Entities;
-using Vertr.OrderMatching.Core.Trades;
+using Vertr.Infrastructure.Common.Contracts;
+using Vertr.OrderMatching.Domain.Contracts;
+using Vertr.OrderMatching.Domain.Entities;
 
-namespace Vertr.Ome.Factories
+namespace Vertr.OrderMatching.Domain.Factories
 {
     public sealed class TradeFactory : ITradeFactory
     {
-        private readonly IEntityIdGenerator<long> _entityIdGenerator;
+        private readonly IEntityIdGenerator<Guid> _entityIdGenerator;
 
         private readonly ITimeService _timeService;
 
         public TradeFactory(
-            IEntityIdGenerator<long> entityIdGenerator,
+            IEntityIdGenerator<Guid> entityIdGenerator,
             ITimeService timeService)
         {
             _entityIdGenerator = entityIdGenerator;
             _timeService = timeService;
         }
 
-        public Trade CreateTrade(OrderFullfilment orderFullfilment)
+        public Trade CreateTrade()
         {
             var nextId = _entityIdGenerator.GetNextId();
             var currentTime = _timeService.GetCurrentUtcTime();
-            var trade = new Trade(nextId, orderFullfilment, currentTime);
+            var trade = new Trade(nextId, currentTime);
             return trade;
         }
     }

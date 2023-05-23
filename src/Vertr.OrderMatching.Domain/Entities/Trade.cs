@@ -1,15 +1,12 @@
-using Vertr.Common.Contracts;
-using Vertr.OrderMatching.Core.Trades;
+using Vertr.OrderMatching.Domain.Contracts;
 
-namespace Vertr.Ome.Entities
+namespace Vertr.OrderMatching.Domain.Entities
 {
-    public class Trade : IEntity<long>
+    public class Trade : IEntity<Guid>
     {
         public static Trade Empty => new();
 
-        public long Id { get; }
-
-        public OrderFullfilment Fulfillment { get; }
+        public Guid Id { get; }
 
         public DateTime FulfillmentTime { get; }
 
@@ -20,12 +17,10 @@ namespace Vertr.Ome.Entities
         }
 
         internal Trade(
-            long id,
-            OrderFullfilment fulfillment,
+            Guid id,
             DateTime fulfillmentTime)
         {
             Id = id;
-            Fulfillment = fulfillment;
             FulfillmentTime = fulfillmentTime;
         }
     }

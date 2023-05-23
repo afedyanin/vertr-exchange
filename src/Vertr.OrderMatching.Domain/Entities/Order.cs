@@ -1,11 +1,10 @@
-using Vertr.Common.Contracts;
-using Vertr.OrderMatching.Core.Books;
+using Vertr.OrderMatching.Domain.Contracts;
 
-namespace Vertr.Ome.Entities
+namespace Vertr.OrderMatching.Domain.Entities
 {
-    public class Order : IEntity<long>
+    public class Order : IEntity<Guid>
     {
-        public long Id { get; }
+        public Guid Id { get; }
 
         public string Instrument { get; } = string.Empty;
 
@@ -24,7 +23,7 @@ namespace Vertr.Ome.Entities
 
         public bool IsExecuted => RemainingQty <= 0;
 
-        internal Order(long id,
+        internal Order(Guid id,
             string instrument,
             int traderId,
             decimal price,
@@ -40,11 +39,6 @@ namespace Vertr.Ome.Entities
             Qty = qty;
             RemainingQty = qty;
             CreationTime = creationTime;
-        }
-
-        public OrderBookEntry CreateBookEntry()
-        {
-            return new OrderBookEntry(Id, CreationTime, Price, Qty, IsBuy);
         }
 
         private bool IsValid()
