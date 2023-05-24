@@ -16,22 +16,21 @@ namespace Vertr.OrderMatching.Core.Tests
         {
             var bids = new PriorityQueue<OrderBookEntry, PriceTimePriority>(PriceTimeComparers.BidComparer);
 
-            // use Id as order to dequeue
-            var bid1 = new OrderBookEntry(4L, _after, _less, 0, true);
-            var bid2 = new OrderBookEntry(2L, _after, _more, 0, true);
-            var bid3 = new OrderBookEntry(1L, _before, _more, 0, true);
-            var bid4 = new OrderBookEntry(3L, _before, _less, 0, true);
+            // use Qty as order to dequeue
+            var bid1 = new OrderBookEntry(Guid.NewGuid(), _after, _less, 4, true);
+            var bid2 = new OrderBookEntry(Guid.NewGuid(), _after, _more, 2, true);
+            var bid3 = new OrderBookEntry(Guid.NewGuid(), _before, _more, 1, true);
+            var bid4 = new OrderBookEntry(Guid.NewGuid(), _before, _less, 3, true);
 
             bids.Enqueue(bid1, bid1.GetPriority());
             bids.Enqueue(bid2, bid2.GetPriority());
-            bids.Enqueue(bid3,  bid3.GetPriority());
+            bids.Enqueue(bid3, bid3.GetPriority());
             bids.Enqueue(bid4, bid4.GetPriority());
 
-            var id = 1L;
-
+            var id = 1;
             while (bids.TryDequeue(out var bid, out var _))
             {
-                Assert.That(bid.OrderId, Is.EqualTo(id++));
+                Assert.That(bid.RemainingQty, Is.EqualTo(id++));
             }
         }
         [Test]
@@ -40,22 +39,21 @@ namespace Vertr.OrderMatching.Core.Tests
         {
             var asks = new PriorityQueue<OrderBookEntry, PriceTimePriority>(PriceTimeComparers.AskComparer);
 
-            // use Id as order to dequeue
-            var ask1 = new OrderBookEntry(2L, _after, _less, 0, false);
-            var ask2 = new OrderBookEntry(4L, _after, _more, 0, false);
-            var ask3 = new OrderBookEntry(3L, _before, _more, 0, false);
-            var ask4 = new OrderBookEntry(1L, _before, _less, 0, false);
+            // use Qty as order to dequeue
+            var ask1 = new OrderBookEntry(Guid.NewGuid(), _after, _less, 2, false);
+            var ask2 = new OrderBookEntry(Guid.NewGuid(), _after, _more, 4, false);
+            var ask3 = new OrderBookEntry(Guid.NewGuid(), _before, _more, 3, false);
+            var ask4 = new OrderBookEntry(Guid.NewGuid(), _before, _less, 1, false);
 
             asks.Enqueue(ask1, ask1.GetPriority());
             asks.Enqueue(ask2, ask2.GetPriority());
             asks.Enqueue(ask3, ask3.GetPriority());
             asks.Enqueue(ask4, ask4.GetPriority());
 
-            var id = 1L;
-
+            var id = 1;
             while (asks.TryDequeue(out var ask, out var _))
             {
-                Assert.That(ask.OrderId, Is.EqualTo(id++));
+                Assert.That(ask.RemainingQty, Is.EqualTo(id++));
             }
         }
     }

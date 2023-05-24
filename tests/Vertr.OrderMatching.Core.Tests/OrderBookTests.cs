@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using Vertr.OrderMatching.Core.Books;
 
 namespace Vertr.OrderMatching.Core.Tests
@@ -18,10 +17,10 @@ namespace Vertr.OrderMatching.Core.Tests
             var book = new OrderBook();
 
             // use Id as order to dequeue
-            var bid1 = new OrderBookEntry(4L, _after, _less, 10, true);
-            var bid2 = new OrderBookEntry(2L, _after, _more, 20, true);
-            var bid3 = new OrderBookEntry(1L, _before, _more, 30, true);
-            var bid4 = new OrderBookEntry(3L, _before, _less, 40, true);
+            var bid1 = new OrderBookEntry(Guid.Empty, _after, _less, 4, true);
+            var bid2 = new OrderBookEntry(Guid.Empty, _after, _more, 2, true);
+            var bid3 = new OrderBookEntry(Guid.Empty, _before, _more, 1, true);
+            var bid4 = new OrderBookEntry(Guid.Empty, _before, _less, 3, true);
 
             book.Bids.Place(bid1);
             book.Bids.Place(bid2);
@@ -36,11 +35,12 @@ namespace Vertr.OrderMatching.Core.Tests
         {
             var book = new OrderBook();
 
-            // use Id as order to dequeue
-            var bid1 = new OrderBookEntry(4L, _after, _less, 10, true);
-            var bid2 = new OrderBookEntry(2L, _after, _more, 20, true);
-            var bid3 = new OrderBookEntry(1L, _before, _more, 30, true);
-            var bid4 = new OrderBookEntry(3L, _before, _less, 40, true);
+
+            // use Qty as order to dequeue
+            var bid1 = new OrderBookEntry(Guid.Empty, _after, _less, 4, true);
+            var bid2 = new OrderBookEntry(Guid.Empty, _after, _more, 2, true);
+            var bid3 = new OrderBookEntry(Guid.Empty, _before, _more, 1, true);
+            var bid4 = new OrderBookEntry(Guid.Empty, _before, _less, 3, true);
 
             book.Bids.Place(bid1);
             book.Bids.Place(bid2);
@@ -52,7 +52,7 @@ namespace Vertr.OrderMatching.Core.Tests
             var id = 1L;
             foreach (var item in sn)
             {
-                Assert.That(item.OrderId, Is.EqualTo(id++));
+                Assert.That(item.RemainingQty, Is.EqualTo(id++));
                 Console.WriteLine(item);
             }
 
@@ -65,10 +65,10 @@ namespace Vertr.OrderMatching.Core.Tests
             var book = new OrderBook();
 
             // use Id as order to dequeue
-            var ask1 = new OrderBookEntry(2L, _after, _less, 10, false);
-            var ask2 = new OrderBookEntry(4L, _after, _more, 20, false);
-            var ask3 = new OrderBookEntry(3L, _before, _more, 30, false);
-            var ask4 = new OrderBookEntry(1L, _before, _less, 40, false);
+            var ask1 = new OrderBookEntry(Guid.Empty, _after, _less, 2, false);
+            var ask2 = new OrderBookEntry(Guid.Empty, _after, _more, 4, false);
+            var ask3 = new OrderBookEntry(Guid.Empty, _before, _more, 3, false);
+            var ask4 = new OrderBookEntry(Guid.Empty, _before, _less, 1, false);
 
             book.Asks.Limit.Place(ask1);
             book.Asks.Limit.Place(ask2);
@@ -80,7 +80,7 @@ namespace Vertr.OrderMatching.Core.Tests
             var id = 1L;
             foreach (var item in sn)
             {
-                Assert.That(item.OrderId, Is.EqualTo(id++));
+                Assert.That(item.RemainingQty, Is.EqualTo(id++));
                 Console.WriteLine(item);
             }
 

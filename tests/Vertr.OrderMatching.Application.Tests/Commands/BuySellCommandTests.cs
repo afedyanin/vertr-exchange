@@ -1,13 +1,18 @@
+using Vertr.Infrastructure.Common.Contracts;
 using Vertr.OrderMatching.Application.Commands.BuySell;
+using Vertr.OrderMatching.Domain.Entities;
 
 namespace Vertr.OrderMatching.Application.Tests.Commands
 {
     public class BuySellCommandTests : ServiceProviderTestBase
     {
+        private const string Ticker = "SBER";
+        private ITopic<Order> _sberTopic;
+
         [SetUp]
         public void Setup()
         {
-            _ = OrderTopicProvider.GetOrAdd("SBER");
+            _sberTopic = OrderTopicProvider.GetOrAdd(Ticker);
         }
 
         [Test]
@@ -15,7 +20,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
         {
             var ownerId = Guid.NewGuid();
             var correlationId = Guid.NewGuid();
-            var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 12, decimal.Zero, true);
+            var buyMarket = new BuySellCommand(correlationId, ownerId, Ticker, 12, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
             Assert.Multiple(() =>
             {
@@ -30,14 +35,15 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
         {
             var ownerId = Guid.NewGuid();
             var correlationId = Guid.NewGuid();
-            var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 38, decimal.Zero, true);
+            var buyMarket = new BuySellCommand(correlationId, ownerId, Ticker, 38, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
             var order = OrderRepository.GetById(res.OrderId);
+            var consumedOrder = await _sberTopic.Consume();
 
             Assert.Multiple(() =>
             {
                 Assert.That(order, Is.Not.Null);
-                Assert.That(order!.Ticker, Is.EqualTo("SBER"));
+                Assert.That(order!.Ticker, Is.EqualTo(Ticker));
                 Assert.That(order!.CorrelationId, Is.EqualTo(correlationId));
                 Assert.That(order!.OwnerId, Is.EqualTo(ownerId));
                 Assert.That(order!.Qty, Is.EqualTo(38));
@@ -47,14 +53,12 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
         [Test]
         public async Task CanGetOrderFromTopicConsumer()
         {
-            var topic = OrderTopicProvider.GetOrAdd("SBER");
-
             var ownerId = Guid.NewGuid();
             var correlationId = Guid.NewGuid();
-            var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 38, decimal.Zero, true);
+            var buyMarket = new BuySellCommand(correlationId, ownerId, Ticker, 38, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
 
-            var consumedOrder = await topic.Consume();
+            var consumedOrder = await _sberTopic.Consume();
             // TODO: So we have order from queue. Need to process it^
             // - GetOrderBook
             // - Match
@@ -64,7 +68,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
             Assert.Multiple(() =>
             {
                 Assert.That(consumedOrder, Is.Not.Null);
-                Assert.That(consumedOrder.Ticker, Is.EqualTo("SBER"));
+                Assert.That(consumedOrder.Ticker, Is.EqualTo(Ticker));
                 Assert.That(consumedOrder.CorrelationId, Is.EqualTo(correlationId));
                 Assert.That(consumedOrder.OwnerId, Is.EqualTo(ownerId));
                 Assert.That(consumedOrder.Qty, Is.EqualTo(38));

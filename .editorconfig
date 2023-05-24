@@ -413,7 +413,7 @@ dotnet_naming_symbols.stylecop_private_fields_group.applicable_accessibilities =
 dotnet_naming_symbols.stylecop_private_fields_group.applicable_kinds           = field
 dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.symbols     = stylecop_private_fields_group
 dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.style = camel_case_style
-dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.severity = warning
+dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.severity = suggestion
 
 # Underscore
 # https://stackoverflow.com/questions/45736659/how-do-i-customize-visual-studios-private-field-generation-shortcut-for-constru
@@ -423,7 +423,7 @@ dotnet_naming_rule.private_members_with_underscore.severity = suggestion
 
 dotnet_naming_symbols.private_fields.applicable_kinds           = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
-dotnet_naming_symbols.private_fields.required_modifiers         = readonly
+# dotnet_naming_symbols.private_fields.required_modifiers         = readonly
 
 dotnet_naming_style.prefix_underscore.capitalization = camel_case
 dotnet_naming_style.prefix_underscore.required_prefix = _

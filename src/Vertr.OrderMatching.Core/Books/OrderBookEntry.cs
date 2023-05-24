@@ -2,7 +2,7 @@ namespace Vertr.OrderMatching.Core.Books
 {
     public readonly record struct OrderBookEntry
     {
-        public long OrderId { get; }
+        public Guid OrderId { get; }
 
         public DateTime ArrivalTime { get; }
 
@@ -21,7 +21,7 @@ namespace Vertr.OrderMatching.Core.Books
         public bool IsLimit => !IsMarket;
 
         public OrderBookEntry(
-            long orderId,
+            Guid orderId,
             DateTime arrivalTime,
             decimal price,
             decimal remainingQty,

@@ -1,6 +1,9 @@
 # vertr
 Algorithmic Trading Engine
 
+## 24-05-23
+- Add MarketData - Best Bid-Ask, LastTrade Ptrice/Qty, Time
+
 ## 22-05-23 
 - Command Processor (Mediatr)
 - Cancel Order Command - (Hashset + Stack)

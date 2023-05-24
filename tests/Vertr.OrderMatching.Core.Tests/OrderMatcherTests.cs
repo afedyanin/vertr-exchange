@@ -15,8 +15,8 @@ namespace Vertr.OrderMatching.Core.Tests
         [Test]
         public void CanFillBidAndAskWithTheSameQty()
         {
-            var bid = new OrderBookEntry(10L, _time, 12.0m, 50, true);
-            var ask = new OrderBookEntry(12L, _time, 12.0m, 50, false);
+            var bid = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, 50, true);
+            var ask = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, 50, false);
 
             var trade = OrderMatcher.FillSingle(ref bid, ref ask);
 
@@ -42,8 +42,8 @@ namespace Vertr.OrderMatching.Core.Tests
             decimal askRestQty
             )
         {
-            var bid = new OrderBookEntry(10L, _time, 12.0m, bidQty, true);
-            var ask = new OrderBookEntry(12L, _time, 12.0m, askQty, false);
+            var bid = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, bidQty, true);
+            var ask = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, askQty, false);
 
             var trade = OrderMatcher.FillSingle(ref bid, ref ask);
 
@@ -71,8 +71,8 @@ namespace Vertr.OrderMatching.Core.Tests
             bool canFill
             )
         {
-            var bid = new OrderBookEntry(10L, _time, bidPrice, bidQty, true);
-            var ask = new OrderBookEntry(12L, _time, askPrice, askQty, false);
+            var bid = new OrderBookEntry(Guid.NewGuid(), _time, bidPrice, bidQty, true);
+            var ask = new OrderBookEntry(Guid.NewGuid(), _time, askPrice, askQty, false);
 
             var res = OrderMatcher.CanFill(ref bid, ref ask);
 
@@ -85,17 +85,17 @@ namespace Vertr.OrderMatching.Core.Tests
             var book = new OrderBook();
 
             // use Id as order to dequeue
-            var ask1 = new OrderBookEntry(2L, _after, _less, 10, false);
-            var ask2 = new OrderBookEntry(4L, _after, _more, 20, false);
-            var ask3 = new OrderBookEntry(3L, _before, _more, 30, false);
-            var ask4 = new OrderBookEntry(1L, _before, _less, 40, false);
+            var ask1 = new OrderBookEntry(Guid.NewGuid(), _after, _less, 10, false); // 2
+            var ask2 = new OrderBookEntry(Guid.NewGuid(), _after, _more, 20, false); // 4
+            var ask3 = new OrderBookEntry(Guid.NewGuid(), _before, _more, 30, false); // 3
+            var ask4 = new OrderBookEntry(Guid.NewGuid(), _before, _less, 40, false); // 1
 
             book.Asks.Place(ask1);
             book.Asks.Place(ask2);
             book.Asks.Place(ask3);
             book.Asks.Place(ask4);
 
-            var bid1 = new OrderBookEntry(40L, _after, decimal.Zero, 43, true);
+            var bid1 = new OrderBookEntry(Guid.NewGuid(), _after, decimal.Zero, 43, true);
 
             var trades = OrderMatcher.MatchBid(ref bid1, book);
 
@@ -121,17 +121,17 @@ namespace Vertr.OrderMatching.Core.Tests
             var book = new OrderBook();
 
             // use Id as order to dequeue
-            var ask1 = new OrderBookEntry(2L, _after, _less, 10, false);
-            var ask2 = new OrderBookEntry(4L, _after, _more, 20, false);
-            var ask3 = new OrderBookEntry(3L, _before, _more, 30, false);
-            var ask4 = new OrderBookEntry(1L, _before, _less, 40, false);
+            var ask1 = new OrderBookEntry(Guid.NewGuid(), _after, _less, 10, false); // 2
+            var ask2 = new OrderBookEntry(Guid.NewGuid(), _after, _more, 20, false); // 4
+            var ask3 = new OrderBookEntry(Guid.NewGuid(), _before, _more, 30, false); // 3
+            var ask4 = new OrderBookEntry(Guid.NewGuid(), _before, _less, 40, false); // 1
 
             book.Asks.Place(ask1);
             book.Asks.Place(ask2);
             book.Asks.Place(ask3);
             book.Asks.Place(ask4);
 
-            var bid1 = new OrderBookEntry(40L, _after, _more + 0.1m, 63, true);
+            var bid1 = new OrderBookEntry(Guid.NewGuid(), _after, _more + 0.1m, 63, true);
 
             var trades = OrderMatcher.MatchBid(ref bid1, book);
             Assert.Multiple(() =>
