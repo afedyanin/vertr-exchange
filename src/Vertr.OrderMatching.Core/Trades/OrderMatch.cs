@@ -1,6 +1,6 @@
 namespace Vertr.OrderMatching.Core.Trades
 {
-    public readonly record struct OrderFullfilment
+    public readonly record struct OrderMatch
     {
         public Guid BuyOrderId { get; }
 
@@ -10,7 +10,7 @@ namespace Vertr.OrderMatching.Core.Trades
 
         public decimal FilledQty { get; }
 
-        public OrderFullfilment(
+        public OrderMatch(
             Guid buyOrderId,
             Guid sellOrderId,
             decimal price,

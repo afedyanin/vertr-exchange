@@ -4,13 +4,15 @@ namespace Vertr.OrderMatching.Domain.Entities
 {
     public class Trade : IEntity<Guid>
     {
-        public static Trade Empty => new();
-
         public Guid Id { get; }
 
-        public DateTime FulfillmentTime { get; }
+        public string Ticker { get; } = string.Empty;
 
-        public bool IsEmpty => Id == Empty.Id;
+        public DateTime TradeTime { get; }
+
+        public decimal Price { get; }
+
+        public decimal Qty { get; }
 
         private Trade()
         {
@@ -18,10 +20,16 @@ namespace Vertr.OrderMatching.Domain.Entities
 
         internal Trade(
             Guid id,
-            DateTime fulfillmentTime)
+            string ticker,
+            decimal price,
+            decimal qty,
+            DateTime tradeTime)
         {
             Id = id;
-            FulfillmentTime = fulfillmentTime;
+            Ticker = ticker;
+            Price = price;
+            Qty = qty;
+            TradeTime = tradeTime;
         }
     }
 }

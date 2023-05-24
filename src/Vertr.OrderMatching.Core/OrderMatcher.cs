@@ -9,42 +9,42 @@ namespace Vertr.OrderMatching.Core
 {
     public static class OrderMatcher
     {
-        public static OrderFullfilment[] MatchBid(ref OrderBookEntry bid, OrderBook orderBook)
+        public static OrderMatch[] MatchBid(ref OrderBookEntry bid, OrderBook orderBook)
         {
-            var trades = new List<OrderFullfilment>();
+            var matches = new List<OrderMatch>();
 
-            trades.AddRange(FillOrder(ref bid, orderBook.Asks.Market));
-            trades.AddRange(FillOrder(ref bid, orderBook.Asks.Limit));
+            matches.AddRange(MatchOrder(ref bid, orderBook.Asks.Market));
+            matches.AddRange(MatchOrder(ref bid, orderBook.Asks.Limit));
             orderBook.Bids.Place(bid);
 
-            return trades.ToArray();
+            return matches.ToArray();
         }
 
-        public static OrderFullfilment[] MatchAsk(ref OrderBookEntry ask, OrderBook orderBook)
+        public static OrderMatch[] MatchAsk(ref OrderBookEntry ask, OrderBook orderBook)
         {
-            var trades = new List<OrderFullfilment>();
+            var matches = new List<OrderMatch>();
 
-            trades.AddRange(FillOrder(ref ask, orderBook.Bids.Market));
-            trades.AddRange(FillOrder(ref ask, orderBook.Bids.Limit));
+            matches.AddRange(MatchOrder(ref ask, orderBook.Bids.Market));
+            matches.AddRange(MatchOrder(ref ask, orderBook.Bids.Limit));
             orderBook.Asks.Place(ask);
 
-            return trades.ToArray();
+            return matches.ToArray();
         }
 
-        internal static OrderFullfilment[] FillOrder(ref OrderBookEntry order, OrderBookSide counterSide)
+        internal static OrderMatch[] MatchOrder(ref OrderBookEntry order, OrderBookSide counterSide)
         {
             if (order.IsFilled || counterSide.IsEmpty)
             {
-                return Array.Empty<OrderFullfilment>();
+                return Array.Empty<OrderMatch>();
             }
 
             if (order.IsMarket && counterSide.IsMarketBook)
             {
                 // Cannot fill market to market
-                return Array.Empty<OrderFullfilment>();
+                return Array.Empty<OrderMatch>();
             }
 
-            var trades = new List<OrderFullfilment>();
+            var trades = new List<OrderMatch>();
 
             while (!order.IsFilled)
             {
@@ -59,7 +59,7 @@ namespace Vertr.OrderMatching.Core
                 }
 
                 counterOrder = counterSide.Take();
-                var fullfilment = FillSingle(ref order, ref counterOrder);
+                var fullfilment = MatchSingle(ref order, ref counterOrder);
 
                 trades.Add(fullfilment);
 
@@ -74,7 +74,7 @@ namespace Vertr.OrderMatching.Core
             return trades.ToArray();
         }
 
-        internal static OrderFullfilment FillSingle(ref OrderBookEntry o1, ref OrderBookEntry o2)
+        internal static OrderMatch MatchSingle(ref OrderBookEntry o1, ref OrderBookEntry o2)
         {
             var fillQty = o1.RemainingQty <= o2.RemainingQty ? o1.RemainingQty : o2.RemainingQty;
 
@@ -92,7 +92,7 @@ namespace Vertr.OrderMatching.Core
                 o2.RemainingQty - fillQty,
                 o2.IsBid);
 
-            return CreateOrderFullfilment(ref o1, ref o2, fillQty);
+            return CreateOrderMatch(ref o1, ref o2, fillQty);
         }
 
         internal static bool CanFill(ref OrderBookEntry o1, ref OrderBookEntry o2)
@@ -119,11 +119,11 @@ namespace Vertr.OrderMatching.Core
             return bid.Price >= ask.Price;
         }
 
-        private static OrderFullfilment CreateOrderFullfilment(ref OrderBookEntry o1, ref OrderBookEntry o2, decimal fillQty)
+        private static OrderMatch CreateOrderMatch(ref OrderBookEntry o1, ref OrderBookEntry o2, decimal fillQty)
         {
             (var bid, var ask) = BidAsk(ref o1, ref o2);
 
-            var fulfillment = new OrderFullfilment(
+            var fulfillment = new OrderMatch(
             bid.OrderId,
             ask.OrderId,
             GetTradePrice(bid.Price, ask.Price, PriceMatchingPolicy.Min),

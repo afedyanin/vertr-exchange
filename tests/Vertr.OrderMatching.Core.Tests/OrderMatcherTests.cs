@@ -18,7 +18,7 @@ namespace Vertr.OrderMatching.Core.Tests
             var bid = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, 50, true);
             var ask = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, 50, false);
 
-            var trade = OrderMatcher.FillSingle(ref bid, ref ask);
+            var trade = OrderMatcher.MatchSingle(ref bid, ref ask);
 
             Assert.Multiple(() =>
             {
@@ -45,7 +45,7 @@ namespace Vertr.OrderMatching.Core.Tests
             var bid = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, bidQty, true);
             var ask = new OrderBookEntry(Guid.NewGuid(), _time, 12.0m, askQty, false);
 
-            var trade = OrderMatcher.FillSingle(ref bid, ref ask);
+            var trade = OrderMatcher.MatchSingle(ref bid, ref ask);
 
             Assert.Multiple(() =>
             {

@@ -18,11 +18,14 @@ namespace Vertr.OrderMatching.Domain.Factories
             _timeService = timeService;
         }
 
-        public Trade CreateTrade()
+        public Trade CreateTrade(
+            string ticker,
+            decimal price,
+            decimal qty)
         {
             var nextId = _entityIdGenerator.GetNextId();
             var currentTime = _timeService.GetCurrentUtcTime();
-            var trade = new Trade(nextId, currentTime);
+            var trade = new Trade(nextId, ticker, price, qty, currentTime);
             return trade;
         }
     }

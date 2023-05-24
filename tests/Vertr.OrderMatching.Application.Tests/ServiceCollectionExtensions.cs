@@ -22,7 +22,7 @@ namespace Vertr.OrderMatching.Application.Tests
                 .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BuySellCommand>());
 
             serviceCollection
-                .AddSingleton<IOrderRepository, OrderInMemoryRepository>();
+                .AddSingleton<IOrderRepository, OrderRepository>();
 
             serviceCollection
                 .AddSingleton<IOrderFactory, OrderFactory>();

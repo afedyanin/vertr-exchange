@@ -11,7 +11,7 @@ namespace Vertr.OrderMatching.Domain.Entities
 
         public Guid OwnerId { get; }
 
-        public string Ticker { get; }
+        public string Ticker { get; } = string.Empty;
 
         // Market order if Zero
         public decimal Price { get; }
@@ -21,6 +21,10 @@ namespace Vertr.OrderMatching.Domain.Entities
         public bool IsBuy { get; }
 
         public DateTime CreationTime { get; }
+
+        private Order()
+        {
+        }
 
         internal Order(Guid id,
             Guid correlationId,
