@@ -1,9 +1,8 @@
 using MediatR;
-using Vertr.OrderMatching.Application.Common;
 
-namespace Vertr.OrderMatching.Application.Commands.Sell
+namespace Vertr.OrderMatching.Application.Commands.BuySell
 {
-    public record class SellLimitCommand : IRequest<BuySellCommandResult>
+    public record class BuySellCommand : IRequest<BuySellCommandResult>
     {
         public Guid CorrelationId { get; }
 
@@ -15,18 +14,21 @@ namespace Vertr.OrderMatching.Application.Commands.Sell
 
         public decimal Price { get; }
 
-        public SellLimitCommand(
-            Guid correlationId,
+        public bool IsBuy { get; }
+
+        public BuySellCommand(Guid correlationId,
             Guid ownerId,
             string instrument,
             decimal qty,
-            decimal price)
+            decimal price,
+            bool isBuy)
         {
             CorrelationId = correlationId;
             OwnerId = ownerId;
             Instrument = instrument;
             Qty = qty;
             Price = price;
+            IsBuy = isBuy;  
         }
     }
 }

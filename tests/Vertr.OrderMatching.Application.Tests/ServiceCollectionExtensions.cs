@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Infrastructure.Common.Contracts;
 using Vertr.Infrastructure.Common.Implementation;
 using Vertr.Infrastructure.Common.Messaging;
-using Vertr.OrderMatching.Application.Commands.Buy;
+using Vertr.OrderMatching.Application.Commands.BuySell;
 using Vertr.OrderMatching.Domain.Contracts;
 using Vertr.OrderMatching.Domain.Entities;
 using Vertr.OrderMatching.Domain.Factories;
@@ -19,7 +19,7 @@ namespace Vertr.OrderMatching.Application.Tests
                 .AddLogging(configure => configure.AddConsole());
 
             serviceCollection
-                .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BuyLimitCommand>());
+                .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<BuySellCommand>());
 
             serviceCollection
                 .AddSingleton<IOrderRepository, OrderInMemoryRepository>();

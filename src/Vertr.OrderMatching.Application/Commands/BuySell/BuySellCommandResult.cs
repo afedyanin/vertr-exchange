@@ -1,4 +1,4 @@
-namespace Vertr.OrderMatching.Application.Common
+namespace Vertr.OrderMatching.Application.Commands.BuySell
 {
     public record class BuySellCommandResult
     {

@@ -1,8 +1,8 @@
-using Vertr.OrderMatching.Application.Commands.Buy;
+using Vertr.OrderMatching.Application.Commands.BuySell;
 
 namespace Vertr.OrderMatching.Application.Tests.Commands
 {
-    public class BuyCommandTests : ServiceProviderTestBase
+    public class BuySellCommandTests : ServiceProviderTestBase
     {
         [SetUp]
         public void Setup()
@@ -15,7 +15,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
         {
             var ownerId = Guid.NewGuid();
             var correlationId = Guid.NewGuid();
-            var buyMarket = new BuyMarketCommand(correlationId, ownerId, "SBER", 12);
+            var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 12, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
 
             Assert.That(res, Is.Not.Null);
@@ -28,7 +28,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
         {
             var ownerId = Guid.NewGuid();
             var correlationId = Guid.NewGuid();
-            var buyMarket = new BuyMarketCommand(correlationId, ownerId, "SBER", 38);
+            var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 38, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
             var order = OrderRepository.GetById(res.OrderId);
 
@@ -49,7 +49,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
 
             var ownerId = Guid.NewGuid();
             var correlationId = Guid.NewGuid();
-            var buyMarket = new BuyMarketCommand(correlationId, ownerId, "SBER", 38);
+            var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 38, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
             var consumedOrder = await topic.Consume();
 
