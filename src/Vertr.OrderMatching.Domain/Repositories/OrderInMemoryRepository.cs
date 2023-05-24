@@ -5,7 +5,7 @@ namespace Vertr.OrderMatching.Domain.Repositories
 {
     public class OrderInMemoryRepository : IOrderRepository
     {
-        private readonly ConcurrentDictionary<Guid, Order> _dictionary = new ConcurrentDictionary<Guid, Order>();
+        private readonly ConcurrentDictionary<Guid, Order> _dictionary = new();
 
         public bool Delete(Guid orderId)
         {
@@ -19,8 +19,8 @@ namespace Vertr.OrderMatching.Domain.Repositories
 
         public Order? GetById(Guid orderId)
         {
-            var res = _dictionary.TryGetValue(orderId, out var order);
-            return res ? order : null;
+            var found = _dictionary.TryGetValue(orderId, out var order);
+            return found ? order : null;
         }
 
         public bool Insert(Order order)

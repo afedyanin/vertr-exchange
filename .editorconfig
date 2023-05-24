@@ -25,14 +25,6 @@ csharp_prefer_braces = true:warning
 csharp_style_namespace_declarations = block_scoped:warning
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
-csharp_style_expression_bodied_methods = true:warning
-csharp_style_expression_bodied_constructors = true:warning
-csharp_style_expression_bodied_operators = true:warning
-csharp_style_expression_bodied_properties = true:warning
-csharp_style_expression_bodied_indexers = true:warning
-csharp_style_expression_bodied_accessors = true:warning
-csharp_style_expression_bodied_lambdas = true:warning
-csharp_style_expression_bodied_local_functions = true:warning
 csharp_style_throw_expression = true:warning
 csharp_space_around_binary_operators = before_and_after
 csharp_style_prefer_null_check_over_type_check = true:warning
@@ -195,14 +187,14 @@ csharp_style_var_when_type_is_apparent = true:warning
 csharp_style_var_elsewhere = true:warning
 
 # Expression-bodied members
-csharp_style_expression_bodied_methods = true:warning
-csharp_style_expression_bodied_constructors = true:warning
-csharp_style_expression_bodied_operators = true:warning
-csharp_style_expression_bodied_properties = true:warning
-csharp_style_expression_bodied_indexers = true:warning
-csharp_style_expression_bodied_accessors = true:warning
-csharp_style_expression_bodied_lambdas = true:warning
-csharp_style_expression_bodied_local_functions = true:warning
+csharp_style_expression_bodied_methods = suggestion
+csharp_style_expression_bodied_constructors = suggestion
+csharp_style_expression_bodied_operators = suggestion
+csharp_style_expression_bodied_properties = suggestion
+csharp_style_expression_bodied_indexers = suggestion
+csharp_style_expression_bodied_accessors = suggestion
+csharp_style_expression_bodied_lambdas = suggestion
+csharp_style_expression_bodied_local_functions = suggestion
 
 # Pattern matching preferences
 csharp_style_pattern_matching_over_is_with_cast_check = true:warning

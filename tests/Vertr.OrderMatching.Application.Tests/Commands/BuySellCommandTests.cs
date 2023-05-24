@@ -5,7 +5,10 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
     public class BuySellCommandTests : ServiceProviderTestBase
     {
         [SetUp]
-        public void Setup() => OrderTopicProvider.GetOrAdd("SBER");
+        public void Setup()
+        {
+            _ = OrderTopicProvider.GetOrAdd("SBER");
+        }
 
         [Test]
         public async Task CanCreateBuyMarketCommand()
@@ -34,7 +37,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
             Assert.Multiple(() =>
             {
                 Assert.That(order, Is.Not.Null);
-                Assert.That(order!.Instrument, Is.EqualTo("SBER"));
+                Assert.That(order!.Ticker, Is.EqualTo("SBER"));
                 Assert.That(order!.CorrelationId, Is.EqualTo(correlationId));
                 Assert.That(order!.OwnerId, Is.EqualTo(ownerId));
                 Assert.That(order!.Qty, Is.EqualTo(38));
@@ -61,7 +64,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
             Assert.Multiple(() =>
             {
                 Assert.That(consumedOrder, Is.Not.Null);
-                Assert.That(consumedOrder.Instrument, Is.EqualTo("SBER"));
+                Assert.That(consumedOrder.Ticker, Is.EqualTo("SBER"));
                 Assert.That(consumedOrder.CorrelationId, Is.EqualTo(correlationId));
                 Assert.That(consumedOrder.OwnerId, Is.EqualTo(ownerId));
                 Assert.That(consumedOrder.Qty, Is.EqualTo(38));

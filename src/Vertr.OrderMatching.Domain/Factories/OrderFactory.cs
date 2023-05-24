@@ -21,7 +21,7 @@ namespace Vertr.OrderMatching.Domain.Factories
         public Order CreateOrder(
             Guid correlationId,
             Guid ownerId,
-            string instrument,
+            string ticker,
             decimal qty,
             decimal price,
             bool isBuy)
@@ -33,7 +33,7 @@ namespace Vertr.OrderMatching.Domain.Factories
                 orderId,
                 correlationId,
                 ownerId,
-                instrument,
+                ticker,
                 qty,
                 price,
                 isBuy,

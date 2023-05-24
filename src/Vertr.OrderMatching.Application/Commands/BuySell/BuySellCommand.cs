@@ -8,7 +8,7 @@ namespace Vertr.OrderMatching.Application.Commands.BuySell
 
         public Guid OwnerId { get; }
 
-        public string Instrument { get; }
+        public string Ticker { get; }
 
         public decimal Qty { get; }
 
@@ -18,17 +18,17 @@ namespace Vertr.OrderMatching.Application.Commands.BuySell
 
         public BuySellCommand(Guid correlationId,
             Guid ownerId,
-            string instrument,
+            string ticker,
             decimal qty,
             decimal price,
             bool isBuy)
         {
             CorrelationId = correlationId;
             OwnerId = ownerId;
-            Instrument = instrument;
+            Ticker = ticker;
             Qty = qty;
             Price = price;
-            IsBuy = isBuy;  
+            IsBuy = isBuy;
         }
     }
 }

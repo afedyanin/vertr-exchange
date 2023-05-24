@@ -11,7 +11,7 @@ namespace Vertr.OrderMatching.Domain.Entities
 
         public Guid OwnerId { get; }
 
-        public string Instrument { get; } 
+        public string Ticker { get; }
 
         // Market order if Zero
         public decimal Price { get; }
@@ -25,7 +25,7 @@ namespace Vertr.OrderMatching.Domain.Entities
         internal Order(Guid id,
             Guid correlationId,
             Guid ownerId,
-            string instrument,
+            string ticker,
             decimal qty,
             decimal price,
             bool isBuy,
@@ -34,7 +34,7 @@ namespace Vertr.OrderMatching.Domain.Entities
             Id = id;
             CorrelationId = correlationId;
             OwnerId = ownerId;
-            Instrument = instrument;
+            Ticker = ticker;
             Qty = qty;
             Price = price;
             IsBuy = isBuy;
@@ -60,9 +60,9 @@ namespace Vertr.OrderMatching.Domain.Entities
                 errors.Add("Invalid OwnerId.");
             }
 
-            if (string.IsNullOrEmpty(Instrument))
+            if (string.IsNullOrEmpty(Ticker))
             {
-                errors.Add("Instrument cannot be empty.");
+                errors.Add("Ticker cannot be empty.");
             }
 
             if (Price < decimal.Zero)
@@ -76,7 +76,7 @@ namespace Vertr.OrderMatching.Domain.Entities
             }
 
             return errors.Count == 0 ?
-                new ValidationResult(true):
+                new ValidationResult(true) :
                 new ValidationResult(false, errors.ToArray());
         }
     }

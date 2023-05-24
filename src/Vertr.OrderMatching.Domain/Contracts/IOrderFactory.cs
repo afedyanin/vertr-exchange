@@ -7,7 +7,7 @@ namespace Vertr.OrderMatching.Domain.Contracts
         Order CreateOrder(
             Guid correlationId,
             Guid ownerId,
-            string instrument,
+            string ticker,
             decimal qty,
             decimal price,
             bool isBuy);

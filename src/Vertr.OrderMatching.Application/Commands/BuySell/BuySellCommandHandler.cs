@@ -37,7 +37,7 @@ namespace Vertr.OrderMatching.Application.Commands.BuySell
             var order = _orderFactory.CreateOrder(
                 request.CorrelationId,
                 request.OwnerId,
-                request.Instrument,
+                request.Ticker,
                 request.Qty,
                 decimal.Zero,
                 true);
@@ -49,11 +49,11 @@ namespace Vertr.OrderMatching.Application.Commands.BuySell
                 return new BuySellCommandResult(validated.ValidationErrors);
             }
 
-            var orderTopic = _topicProvider.Get(order.Instrument);
+            var orderTopic = _topicProvider.Get(order.Ticker);
 
             if (orderTopic == null)
             {
-                return new BuySellCommandResult(new string[] { $"Instrument={order.Instrument} is not supported." });
+                return new BuySellCommandResult(new string[] { $"Ticker={order.Ticker} is not supported." });
             }
 
             var saved = _repository.Insert(order);

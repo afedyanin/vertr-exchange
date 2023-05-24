@@ -116,7 +116,7 @@ namespace Vertr.OrderMatching.Core
 
             // Цена покупки выше или равна цене предложения
             (var bid, var ask) = BidAsk(ref o1, ref o2);
-            return bid.Price >= ask.Price; 
+            return bid.Price >= ask.Price;
         }
 
         private static OrderFullfilment CreateOrderFullfilment(ref OrderBookEntry o1, ref OrderBookEntry o2, decimal fillQty)

@@ -4,10 +4,10 @@ namespace Vertr.OrderMatching.Domain.Repositories
 {
     public interface IOrderBookRepository
     {
-        OrderBook? Get(string instrument);
+        OrderBook? GetByTicker(string ticker);
 
-        OrderBook GetOrAdd(string instrument);
+        OrderBook GetOrAdd(string ticker);
 
-        bool Remove(string instrument);
+        bool Remove(string ticker);
     }
 }
