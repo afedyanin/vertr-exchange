@@ -99,8 +99,11 @@ namespace Vertr.OrderMatching.Core.Tests
 
             var trades = OrderMatcher.MatchBid(ref bid1, book);
 
-            Assert.That(trades, Has.Length.EqualTo(2));
-            Assert.That(bid1.IsFilled, Is.EqualTo(true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(trades, Has.Length.EqualTo(2));
+                Assert.That(bid1.IsFilled, Is.EqualTo(true));
+            });
 
             var sn = book.Asks.Limit.GetSnapshot();
 
@@ -131,9 +134,11 @@ namespace Vertr.OrderMatching.Core.Tests
             var bid1 = new OrderBookEntry(40L, _after, _more + 0.1m, 63, true);
 
             var trades = OrderMatcher.MatchBid(ref bid1, book);
-
-            Assert.That(trades, Has.Length.EqualTo(3));
-            Assert.That(bid1.IsFilled, Is.EqualTo(true));
+            Assert.Multiple(() =>
+            {
+                Assert.That(trades, Has.Length.EqualTo(3));
+                Assert.That(bid1.IsFilled, Is.EqualTo(true));
+            });
 
             var sn = book.Asks.Limit.GetSnapshot();
 

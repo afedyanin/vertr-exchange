@@ -5,10 +5,7 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
     public class BuySellCommandTests : ServiceProviderTestBase
     {
         [SetUp]
-        public void Setup()
-        {
-            OrderTopicProvider.GetOrAdd("SBER");
-        }
+        public void Setup() => OrderTopicProvider.GetOrAdd("SBER");
 
         [Test]
         public async Task CanCreateBuyMarketCommand()
@@ -17,10 +14,12 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
             var correlationId = Guid.NewGuid();
             var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 12, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
-
-            Assert.That(res, Is.Not.Null);
-            Assert.That(!res.HasErrors);
-            Assert.That(res.OrderId, Is.Not.EqualTo(Guid.Empty));
+            Assert.Multiple(() =>
+            {
+                Assert.That(res, Is.Not.Null);
+                Assert.That(!res.HasErrors);
+                Assert.That(res.OrderId, Is.Not.EqualTo(Guid.Empty));
+            });
         }
 
         [Test]
@@ -51,7 +50,13 @@ namespace Vertr.OrderMatching.Application.Tests.Commands
             var correlationId = Guid.NewGuid();
             var buyMarket = new BuySellCommand(correlationId, ownerId, "SBER", 38, decimal.Zero, true);
             var res = await Mediator.Send(buyMarket);
+
             var consumedOrder = await topic.Consume();
+            // TODO: So we have order from queue. Need to process it^
+            // - GetOrderBook
+            // - Match
+            // - Create & Send Trades
+            // - Create & Send Fulfillments
 
             Assert.Multiple(() =>
             {

@@ -7,7 +7,6 @@ namespace Vertr.OrderMatching.Domain.Repositories
     {
         private readonly ConcurrentDictionary<Guid, Order> _dictionary = new ConcurrentDictionary<Guid, Order>();
 
-
         public bool Delete(Guid orderId)
         {
             return _dictionary.TryRemove(orderId, out _);
