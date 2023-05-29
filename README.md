@@ -1,6 +1,11 @@
 # vertr
 Algorithmic Trading Engine
 
+## 25-05-23
+- MessageQueue, MessageQueueProvider
+- Notifications(Events) in Domain - IMediator
+- Remaining Qty for Orders?
+
 ## 24-05-23
 - Add MarketData - Best Bid-Ask, LastTrade Ptrice/Qty, Time
 
