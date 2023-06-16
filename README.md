@@ -1,6 +1,10 @@
 # vertr
 Algorithmic Trading Engine
 
+## 16-06-23
+- Неявный пайплайн через ченнел. Неудобно и не видно, что происходит. Нужна более явная логика
+- Сложная схема с книгами - нужно упростить и переделать
+
 ## 25-05-23
 - MessageQueue, MessageQueueProvider
 - Notifications(Events) in Domain - IMediator

@@ -13,24 +13,21 @@
     <Compile Remove="Notifications\OrderFullfilmentNotification\**" />
     <Compile Remove="Notifications\OrderRegisteredNotification\**" />
     <Compile Remove="Notifications\TradeNotification\**" />
+    <Compile Remove="Queries\**" />
     <EmbeddedResource Remove="Commands\BuyCommand\**" />
     <EmbeddedResource Remove="Commands\CancelOrderCommand\**" />
     <EmbeddedResource Remove="Commands\SellCommand\**" />
     <EmbeddedResource Remove="Notifications\OrderFullfilmentNotification\**" />
     <EmbeddedResource Remove="Notifications\OrderRegisteredNotification\**" />
     <EmbeddedResource Remove="Notifications\TradeNotification\**" />
+    <EmbeddedResource Remove="Queries\**" />
     <None Remove="Commands\BuyCommand\**" />
     <None Remove="Commands\CancelOrderCommand\**" />
     <None Remove="Commands\SellCommand\**" />
     <None Remove="Notifications\OrderFullfilmentNotification\**" />
     <None Remove="Notifications\OrderRegisteredNotification\**" />
     <None Remove="Notifications\TradeNotification\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Queries\GetOrderBook\" />
-    <Folder Include="Queries\GetOrders\" />
-    <Folder Include="Queries\GetTrades\" />
+    <None Remove="Queries\**" />
   </ItemGroup>
 
   <ItemGroup>
