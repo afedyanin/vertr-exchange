@@ -115,7 +115,7 @@ indent_style = tab
 
 [*.{cs,csx,cake,vb,vbx}]
 # Default Severity for all .NET Code Style rules below
-dotnet_analyzer_diagnostic.severity = warning
+dotnet_analyzer_diagnostic.severity = none
 
 ##########################################
 # Language Rules
@@ -187,14 +187,14 @@ csharp_style_var_when_type_is_apparent = true:warning
 csharp_style_var_elsewhere = true:warning
 
 # Expression-bodied members
-csharp_style_expression_bodied_methods = suggestion
-csharp_style_expression_bodied_constructors = suggestion
-csharp_style_expression_bodied_operators = suggestion
-csharp_style_expression_bodied_properties = suggestion
-csharp_style_expression_bodied_indexers = suggestion
-csharp_style_expression_bodied_accessors = suggestion
-csharp_style_expression_bodied_lambdas = suggestion
-csharp_style_expression_bodied_local_functions = suggestion
+csharp_style_expression_bodied_methods = none
+csharp_style_expression_bodied_constructors = none
+csharp_style_expression_bodied_operators = none
+csharp_style_expression_bodied_properties = none
+csharp_style_expression_bodied_indexers = none
+csharp_style_expression_bodied_accessors = none
+csharp_style_expression_bodied_lambdas = none
+csharp_style_expression_bodied_local_functions = none
 
 # Pattern matching preferences
 csharp_style_pattern_matching_over_is_with_cast_check = true:warning
@@ -418,7 +418,7 @@ dotnet_naming_rule.stylecop_private_fields_must_be_camel_case_rule.severity = su
 # Underscore
 # https://stackoverflow.com/questions/45736659/how-do-i-customize-visual-studios-private-field-generation-shortcut-for-constru
 dotnet_naming_rule.private_members_with_underscore.symbols  = private_fields
-dotnet_naming_rule.private_members_with_underscore.style    = prefix_underscore
+dotnet_naming_rule.private_members_with_underscore.style = prefix_underscore
 dotnet_naming_rule.private_members_with_underscore.severity = suggestion
 
 dotnet_naming_symbols.private_fields.applicable_kinds           = field

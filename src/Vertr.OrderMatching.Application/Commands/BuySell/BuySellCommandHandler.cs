@@ -32,15 +32,15 @@ namespace Vertr.OrderMatching.Application.Commands.BuySell
 
         public async Task<BuySellCommandResult> Handle(BuySellCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Buy limit command received: {BuyLimit}", request);
+            _logger.LogInformation("Buy/sell command received: {BuyLimit}", request);
 
             var order = _orderFactory.CreateOrder(
                 request.CorrelationId,
                 request.OwnerId,
                 request.Ticker,
                 request.Qty,
-                decimal.Zero,
-                true);
+                request.Price,
+                request.IsBuy);
 
             var validated = order.Validate();
 
