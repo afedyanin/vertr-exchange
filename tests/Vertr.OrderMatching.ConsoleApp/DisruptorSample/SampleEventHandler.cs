@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Disruptor;
 
-namespace Vertr.OrderMatching.ConsoleApp.DisroptorSample;
+namespace Vertr.OrderMatching.ConsoleApp.DisruptorSample;
 
 public class SampleEventHandler : IEventHandler<SampleEvent>
 {

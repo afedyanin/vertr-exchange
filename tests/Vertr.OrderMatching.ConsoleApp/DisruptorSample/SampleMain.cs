@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Disruptor.Dsl;
 
-namespace Vertr.OrderMatching.ConsoleApp.DisroptorSample;
+namespace Vertr.OrderMatching.ConsoleApp.DisruptorSample;
 
 internal class SampleMain
 {
-    public static void Run()
+    public static void Start()
     {
         var disruptor = new Disruptor<SampleEvent>(() => new SampleEvent(), ringBufferSize: 1024);
 
