@@ -9,11 +9,11 @@ using Vertr.ExchCore.Infrastructure.Disruptor.Abstractions;
 
 namespace Vertr.ExchCore.Infrastructure.Disruptor
 {
-    public class OrderCommandPublisher : IOrderCommandPublisher
+    public class DisruptorOrderCommandPublisher : IOrderCommandPublisher
     {
         private readonly IDisruptorService<OrderCommand> _disruptor;
 
-        public OrderCommandPublisher(
+        public DisruptorOrderCommandPublisher(
             IDisruptorService<OrderCommand> disruptor)
         {
             _disruptor = disruptor;
