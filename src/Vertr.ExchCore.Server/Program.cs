@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Server.Api;
+namespace Vertr.ExchCore.Server;
 
 public class Program
 {

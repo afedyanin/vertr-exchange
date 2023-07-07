@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Vertr.Exchange.Server.Api.Client.Requests
+namespace Vertr.ExchCore.Domain.Abstractions
 {
-    public class NewOrderRequest
+    internal interface IEventHandler
     {
-
     }
 }

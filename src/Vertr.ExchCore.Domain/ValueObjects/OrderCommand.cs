@@ -1,6 +1,8 @@
-namespace Vertr.Exchange.Contracts;
+using Vertr.ExchCore.Domain.Enums;
 
-public class OrderCommand
+namespace Vertr.ExchCore.Domain.ValueObjects;
+
+public record class OrderCommand
 {
     public long Uuid { get; set; }
 

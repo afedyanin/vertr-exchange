@@ -1,10 +1,10 @@
-namespace Vertr.Exchange.Server.Api.Controllers;
+namespace Vertr.ExchCore.Server.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
 [ApiController]
-public class OrdersController : ControllerBase
+public class ValuesController : ControllerBase
 {
     // GET: api/<OrdersController>
     [HttpGet]
