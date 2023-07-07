@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Disruptor" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.ExchCore.Domain\Vertr.ExchCore.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
