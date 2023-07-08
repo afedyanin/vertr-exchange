@@ -24,7 +24,7 @@ namespace Vertr.ExchCore.Infrastructure.Disruptor.Extensions
 
             var subscriberGroups = subscribers.GroupBy(s => s.Priority);
 
-            foreach (var subscriberGroup in subscriberGroups)
+            foreach (var subscriberGroup in subscriberGroups.OrderBy(g => g.Key))
             {
                 var currentGroup = subscriberGroup?.ToArray();
 

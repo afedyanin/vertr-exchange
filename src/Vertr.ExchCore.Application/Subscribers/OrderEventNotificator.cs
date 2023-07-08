@@ -18,6 +18,13 @@ internal class OrderEventNotificator : IOrderCommandSubscriber
 
     public void HandleEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        _logger.LogInformation("Processing data from {Priority}-{Handler}", Priority, nameof(OrderEventNotificator));
+        var nextId = 301L;
+
+        _logger.LogInformation("Priority={Priority} OrderId={OrderId} will be set to {NextId}",
+            Priority,
+            data.OrderId,
+            nextId);
+
+        data.OrderId = nextId;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Disruptor;
 using Disruptor.Dsl;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.ValueObjects;
@@ -14,16 +15,22 @@ internal class OrderCommandDisruptorService : IOrderCommandPublisher, IDisposabl
 {
     private readonly Disruptor<OrderCommand> _disruptor;
     private readonly DisruptorOptions _config;
+    private readonly ILogger<OrderCommandDisruptorService> _logger;
 
     public OrderCommandDisruptorService(
         IOptions<DisruptorOptions> config,
-        IEnumerable<IOrderCommandSubscriber> subscribers)
+        IEnumerable<IOrderCommandSubscriber> subscribers,
+        ILogger<OrderCommandDisruptorService> logger)
     {
+        _logger = logger;
         _config = config.Value;
+
         _disruptor = new Disruptor<OrderCommand>(() =>
             new OrderCommand(), ringBufferSize: _config.RingBufferSize);
         _disruptor.AttachEventHandlers(subscribers);
+
         _disruptor.Start();
+        _logger.LogInformation("Disruptor started at {Time}", DateTime.Now);
     }
 
     public void Publish(OrderCommand command)
@@ -33,12 +40,13 @@ internal class OrderCommandDisruptorService : IOrderCommandPublisher, IDisposabl
         var cmd = scope.Event();
 
         // TODO: Fill order command
-        // data.Id = 42;
+        cmd.OrderId = 100L;
         // data.Message = ping;
     }
 
     public void Dispose()
     {
+        _logger.LogInformation("Disruptor shutdown at {Time}", DateTime.Now);
         _disruptor.Shutdown();
     }
 }

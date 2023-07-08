@@ -23,6 +23,13 @@ internal class OrderMatching : IOrderCommandSubscriber
 
     public void HandleEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        _logger.LogInformation("Processing data from {Priority} {Handler}", Priority, nameof(OrderMatching));
+        var nextId = 201L;
+
+        _logger.LogInformation("Priority={Priority} OrderId={OrderId} will be set to {NextId}",
+            Priority,
+            data.OrderId,
+            nextId);
+
+        data.OrderId = nextId;
     }
 }
