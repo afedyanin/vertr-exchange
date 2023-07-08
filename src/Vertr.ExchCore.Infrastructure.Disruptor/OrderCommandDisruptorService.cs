@@ -5,26 +5,24 @@ using Disruptor.Dsl;
 using Microsoft.Extensions.Options;
 using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.ValueObjects;
-using Vertr.ExchCore.Infrastructure.Disruptor.Abstractions;
 using Vertr.ExchCore.Infrastructure.Disruptor.Configuration;
 using Vertr.ExchCore.Infrastructure.Disruptor.Extensions;
-using Vertr.ExchCore.Infrastructure.Disruptor.Helpers;
 
 namespace Vertr.ExchCore.Infrastructure.Disruptor;
 
-internal class OrderCommandDisruptorService : IDisruptorService<OrderCommand>, IDisposable
+internal class OrderCommandDisruptorService : IOrderCommandPublisher, IDisposable
 {
     private readonly Disruptor<OrderCommand> _disruptor;
     private readonly DisruptorConfiguration _config;
 
     public OrderCommandDisruptorService(
         IOptions<DisruptorConfiguration> config,
-        IEnumerable<IOrderCommandEventHandler[]> eventHandlers)
+        IEnumerable<IOrderCommandSubscriber> subscribers)
     {
         _config = config.Value;
         _disruptor = new Disruptor<OrderCommand>(() =>
             new OrderCommand(), ringBufferSize: _config.RingBufferSize);
-        _disruptor.AttachEventHandlers(eventHandlers);
+        _disruptor.AttachEventHandlers(subscribers);
         _disruptor.Start();
     }
 

@@ -6,15 +6,15 @@ namespace Vertr.ExchCore.Infrastructure.Disruptor;
 
 internal class DisruptorOrderCommandEventHanlder : IEventHandler<OrderCommand>
 {
-    private readonly IOrderCommandEventHandler _eventHandler;
+    private readonly IOrderCommandSubscriber _subscriber;
 
     public DisruptorOrderCommandEventHanlder(
-        IOrderCommandEventHandler eventHandler)
+        IOrderCommandSubscriber subscriber)
     {
-        _eventHandler = eventHandler;
+        _subscriber = subscriber;
     }
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        _eventHandler.HandleEvent(data, sequence, endOfBatch);
+        _subscriber.HandleEvent(data, sequence, endOfBatch);
     }
 }

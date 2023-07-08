@@ -7,7 +7,9 @@ using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Domain.Abstractions;
 
-public interface IOrderCommandEventHandler
+public interface IOrderCommandSubscriber
 {
+    int Priority { get; } // Used for grouping subscribers
+
     void HandleEvent(OrderCommand data, long sequence, bool endOfBatch);
 }

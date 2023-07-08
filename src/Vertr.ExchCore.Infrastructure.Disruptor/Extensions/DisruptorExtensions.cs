@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,38 +15,38 @@ namespace Vertr.ExchCore.Infrastructure.Disruptor.Extensions
     {
         public static void AttachEventHandlers(this
             Disruptor<OrderCommand> disruptor,
-            IEnumerable<IOrderCommandEventHandler[]> eventHandlers)
+            IEnumerable<IOrderCommandSubscriber> subscribers)
         {
-            if (eventHandlers == null || !eventHandlers.Any())
-            {
-                return;
-            }
+            Debug.Assert(subscribers != null);
+            Debug.Assert(subscribers.Any());
 
-            EventHandlerGroup<OrderCommand>? group = null;
+            EventHandlerGroup<OrderCommand>? eventHandlerGroup = null;
 
-            foreach (var handlers in eventHandlers)
+            var subscriberGroups = subscribers.GroupBy(s => s.Priority);
+
+            foreach (var subscriberGroup in subscriberGroups)
             {
-                if (handlers == null || !handlers.Any())
+                var currentGroup = subscriberGroup?.ToArray();
+
+                if (currentGroup is null)
                 {
                     continue;
                 }
 
-                var wrappedHandlers = WrapHandlers(handlers);
+                var wrappedHandlers = WrapHandlers(currentGroup);
 
-                if (group is null)
+                if (eventHandlerGroup is null)
                 {
-                    group = disruptor.HandleEventsWith(wrappedHandlers);
+                    eventHandlerGroup = disruptor.HandleEventsWith(wrappedHandlers);
                 }
                 else
                 {
-                    group = group.Then(wrappedHandlers);
+                    eventHandlerGroup = eventHandlerGroup.Then(wrappedHandlers);
                 }
             }
         }
 
-        private static IEventHandler<OrderCommand>[] WrapHandlers(IOrderCommandEventHandler[] handlers)
-        {
-            return handlers.Select(h => new DisruptorOrderCommandEventHanlder(h)).ToArray();
-        }
+        private static IEventHandler<OrderCommand>[] WrapHandlers(IOrderCommandSubscriber[] handlers)
+            => handlers.Select(h => new DisruptorOrderCommandEventHanlder(h)).ToArray();
     }
 }
