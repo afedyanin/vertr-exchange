@@ -11,4 +11,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.ExchCore.Application\Vertr.ExchCore.Application.csproj" />
+    <ProjectReference Include="..\Vertr.ExchCore.Infrastructure.Disruptor\Vertr.ExchCore.Infrastructure.Disruptor.csproj" />
+  </ItemGroup>
+
 </Project>

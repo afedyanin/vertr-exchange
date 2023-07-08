@@ -13,10 +13,10 @@ namespace Vertr.ExchCore.Infrastructure.Disruptor;
 internal class OrderCommandDisruptorService : IOrderCommandPublisher, IDisposable
 {
     private readonly Disruptor<OrderCommand> _disruptor;
-    private readonly DisruptorConfiguration _config;
+    private readonly DisruptorOptions _config;
 
     public OrderCommandDisruptorService(
-        IOptions<DisruptorConfiguration> config,
+        IOptions<DisruptorOptions> config,
         IEnumerable<IOrderCommandSubscriber> subscribers)
     {
         _config = config.Value;
