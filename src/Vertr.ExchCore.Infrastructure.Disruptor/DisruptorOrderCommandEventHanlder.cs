@@ -4,8 +4,7 @@ using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Infrastructure.Disruptor;
 
-internal class DisruptorOrderCommandEventHanlder<T> :
-    IEventHandler<OrderCommand> where T : IOrderCommandEventHandler
+internal class DisruptorOrderCommandEventHanlder : IEventHandler<OrderCommand>
 {
     private readonly IOrderCommandEventHandler _eventHandler;
 

@@ -3,9 +3,11 @@ using System.Net.NetworkInformation;
 using Disruptor;
 using Disruptor.Dsl;
 using Microsoft.Extensions.Options;
+using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.ValueObjects;
 using Vertr.ExchCore.Infrastructure.Disruptor.Abstractions;
 using Vertr.ExchCore.Infrastructure.Disruptor.Configuration;
+using Vertr.ExchCore.Infrastructure.Disruptor.Extensions;
 using Vertr.ExchCore.Infrastructure.Disruptor.Helpers;
 
 namespace Vertr.ExchCore.Infrastructure.Disruptor;
@@ -17,11 +19,12 @@ internal class OrderCommandDisruptorService : IDisruptorService<OrderCommand>, I
 
     public OrderCommandDisruptorService(
         IOptions<DisruptorConfiguration> config,
-        IEnumerable<IEventHandler<OrderCommand>[]> eventHandlers)
+        IEnumerable<IOrderCommandEventHandler[]> eventHandlers)
     {
         _config = config.Value;
-        _disruptor = new Disruptor<OrderCommand>(() => new OrderCommand(), ringBufferSize: _config.RingBufferSize);
-        DisruptorInitializer.AttachEventHandlers(_disruptor, eventHandlers);
+        _disruptor = new Disruptor<OrderCommand>(() =>
+            new OrderCommand(), ringBufferSize: _config.RingBufferSize);
+        _disruptor.AttachEventHandlers(eventHandlers);
         _disruptor.Start();
     }
 
