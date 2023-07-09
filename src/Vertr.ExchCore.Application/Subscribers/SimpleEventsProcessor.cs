@@ -44,6 +44,8 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
 
     private void SendCommandResult(OrderCommand data, long sequence)
     {
+        var commandResult = new OrderCommandResult(data, Domain.Enums.CommandResultCode.ACCEPTED, sequence);
+        _orderCommandResultHandler.HandleCommandResult(commandResult);
     }
 
     private void SendTradeEvents(OrderCommand data)

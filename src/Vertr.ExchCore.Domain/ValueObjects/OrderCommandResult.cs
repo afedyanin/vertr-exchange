@@ -9,10 +9,20 @@ namespace Vertr.ExchCore.Domain.ValueObjects
 {
     public record class OrderCommandResult
     {
-        public OrderCommand? Command { get; set; }
+        public OrderCommand? Command { get; }
 
-        public CommandResultCode ResultCode { get; set; }
+        public CommandResultCode ResultCode { get; }
 
-        public long Sequence { get; set; }
+        public long Sequence { get; }
+
+        public OrderCommandResult(
+            OrderCommand command,
+            CommandResultCode resultCode,
+            long sequence)
+        {
+            Command = command;
+            ResultCode = resultCode;
+            Sequence = sequence;
+        }
     }
 }
