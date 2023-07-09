@@ -2,6 +2,8 @@ using Microsoft.Extensions.Logging;
 using Vertr.ExchCore.Application.Subscribers.Enums;
 using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.Abstractions.EventHandlers;
+using Vertr.ExchCore.Domain.Commands;
+using Vertr.ExchCore.Domain.Enums;
 using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Application.Subscribers;
@@ -44,7 +46,9 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
 
     private void SendCommandResult(OrderCommand data, long sequence)
     {
-        var commandResult = new OrderCommandResult(data, Domain.Enums.CommandResultCode.ACCEPTED, sequence);
+        // TODO Implement this
+        var apiCommand = new ApiCommand();
+        var commandResult = new OrderCommandResult(apiCommand, CommandResultCode.ACCEPTED, sequence);
         _orderCommandResultHandler.HandleCommandResult(commandResult);
     }
 

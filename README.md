@@ -3,8 +3,9 @@ Algorithmic Trading Engine
 
 ## 09-07-23
 - Disruptor Exception Hhandler
-- 
-
+- Async events handler
+- Не возвращать OrderCommand в евентах - нужен другой объект
+- implement API commands
 
 ## 02-07-23
 
