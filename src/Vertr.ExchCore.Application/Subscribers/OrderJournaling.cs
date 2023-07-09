@@ -12,10 +12,10 @@ namespace Vertr.ExchCore.Application.Subscribers;
 
 internal class OrderJournaling : IOrderCommandSubscriber
 {
-    private readonly ILogger<OrderEventNotificator> _logger;
+    private readonly ILogger<SimpleEventsProcessor> _logger;
 
     public OrderJournaling(
-        ILogger<OrderEventNotificator> logger)
+        ILogger<SimpleEventsProcessor> logger)
     {
         _logger = logger;
     }

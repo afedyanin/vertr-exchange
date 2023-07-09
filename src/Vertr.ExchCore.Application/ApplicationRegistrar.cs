@@ -10,7 +10,7 @@ public static class ApplicationRegistrar
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSingleton<IOrderManagementApi, OrderManagementApi>();
-        services.AddSingleton<IOrderCommandSubscriber, OrderEventNotificator>();
+        services.AddSingleton<IOrderCommandSubscriber, SimpleEventsProcessor>();
         services.AddSingleton<IOrderCommandSubscriber, OrderJournaling>();
         services.AddSingleton<IOrderCommandSubscriber, OrderMatching>();
         services.AddSingleton<IOrderCommandSubscriber, OrderReplication>();

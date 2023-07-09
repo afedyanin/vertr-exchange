@@ -1,6 +1,11 @@
 # vertr
 Algorithmic Trading Engine
 
+## 09-07-23
+- Disruptor Exception Hhandler
+- 
+
+
 ## 02-07-23
 
 ### US-1 Basic Disruptor Engine via REST API
