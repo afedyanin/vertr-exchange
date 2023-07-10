@@ -1,6 +1,14 @@
 # vertr
 Algorithmic Trading Engine
 
+## 10-07-23
+- доделать MatcherEvent и обвязку вокруг него
+- доделать TradeEvents и обвязку вокруг них
+- генерировать маркет дату
+- зарефакторить хендлеры дисраптора. Оставить только действительно нужные
+- переключиться на матчинг енжин
+
+
 ## 09-07-23
 - Disruptor Exception Hhandler
 - Async events handler
