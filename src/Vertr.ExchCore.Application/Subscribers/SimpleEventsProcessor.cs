@@ -2,26 +2,26 @@ using Microsoft.Extensions.Logging;
 using Vertr.ExchCore.Application.Subscribers.Enums;
 using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.Abstractions.EventHandlers;
-using Vertr.ExchCore.Domain.Commands;
 using Vertr.ExchCore.Domain.Enums;
+using Vertr.ExchCore.Domain.Events.OrderEvents;
 using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Application.Subscribers;
 
 internal class SimpleEventsProcessor : IOrderCommandSubscriber
 {
-    private readonly IOrderCommandResultHandler _orderCommandResultHandler;
-    private readonly ITradeEventsHandler _tradeEventsHandler;
-    private readonly IMarketDataEventsHandler _marketDataEventsHandler;
+    private readonly IOrderCommandEventHandler _orderCommandEventHandler;
+    private readonly ITradeEventHandler _tradeEventsHandler;
+    private readonly IMarketDataEventHandler _marketDataEventsHandler;
     private readonly ILogger<SimpleEventsProcessor> _logger;
 
     public SimpleEventsProcessor(
-        IOrderCommandResultHandler orderCommandResultHandler,
-        ITradeEventsHandler tradeEventsHandler,
-        IMarketDataEventsHandler marketDataEventsHandler,
+        IOrderCommandEventHandler orderCommandEventHandler,
+        ITradeEventHandler tradeEventsHandler,
+        IMarketDataEventHandler marketDataEventsHandler,
         ILogger<SimpleEventsProcessor> logger)
     {
-        _orderCommandResultHandler = orderCommandResultHandler;
+        _orderCommandEventHandler = orderCommandEventHandler;
         _tradeEventsHandler = tradeEventsHandler;
         _marketDataEventsHandler = marketDataEventsHandler;
         _logger = logger;
@@ -47,9 +47,8 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
     private void SendCommandResult(OrderCommand data, long sequence)
     {
         // TODO Implement this
-        var apiCommand = new ApiCommand();
-        var commandResult = new OrderCommandResult(apiCommand, CommandResultCode.ACCEPTED, sequence);
-        _orderCommandResultHandler.HandleCommandResult(commandResult);
+        var evt = new OrderCommandEvent();
+        _orderCommandEventHandler.Handle(evt);
     }
 
     private void SendTradeEvents(OrderCommand data)
