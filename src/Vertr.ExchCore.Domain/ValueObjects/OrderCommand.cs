@@ -21,4 +21,6 @@ public record class OrderCommand
     public long Price { get; set; }
 
     public long Size { get; set; }
+
+    public MatcherTradeEvent? MatcherEvent { get; set; }
 }
