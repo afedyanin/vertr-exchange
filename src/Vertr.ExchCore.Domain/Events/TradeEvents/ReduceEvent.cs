@@ -1,6 +1,6 @@
 namespace Vertr.ExchCore.Domain.Events.TradeEvents;
 
-public record class ReduceEvent
+public record class ReduceEvent : TradeEventBase
 {
     public int Symbol { get; set; }
 

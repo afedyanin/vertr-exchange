@@ -4,6 +4,7 @@ using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.Abstractions.EventHandlers;
 using Vertr.ExchCore.Domain.Enums;
 using Vertr.ExchCore.Domain.Events.OrderEvents;
+using Vertr.ExchCore.Domain.Events.TradeEvents;
 using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Application.Subscribers;
@@ -53,9 +54,37 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
 
     private void SendTradeEvents(OrderCommand data)
     {
+        var evts = CreateTradeEvents(data);
+        _tradeEventsHandler.Handle(evts);
     }
 
     private void SendMarketData(OrderCommand data)
     {
+    }
+
+    private IEnumerable<TradeEventBase> CreateTradeEvents(OrderCommand data)
+    {
+        var matcherEvt = data.MatcherEvent;
+        var res = new List<TradeEventBase>();
+
+        while(matcherEvt is not null)
+        {
+            var evt = CreateTradeEvent(data, matcherEvt);
+
+            if (evt is not null)
+            {
+                res.Add(evt);
+            }
+
+            matcherEvt = matcherEvt.NextEvent;
+        }
+
+        return res;
+    }
+
+    private TradeEventBase? CreateTradeEvent(OrderCommand data, MatcherTradeEvent mathcerEvt)
+    {
+        // TODO Implement this
+        return new TradeEvent();
     }
 }

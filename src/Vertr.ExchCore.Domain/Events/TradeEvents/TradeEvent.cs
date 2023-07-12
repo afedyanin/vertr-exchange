@@ -3,7 +3,7 @@ using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Domain.Events.TradeEvents;
 
-public record class TradeEvent
+public record class TradeEvent : TradeEventBase
 {
     public int Symbol { get; set; }
 
