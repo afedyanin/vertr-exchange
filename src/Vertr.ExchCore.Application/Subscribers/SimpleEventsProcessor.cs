@@ -1,8 +1,10 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Vertr.ExchCore.Application.Subscribers.Enums;
 using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.Abstractions.EventHandlers;
 using Vertr.ExchCore.Domain.Enums;
+using Vertr.ExchCore.Domain.Events.MarketDataEvents;
 using Vertr.ExchCore.Domain.Events.OrderEvents;
 using Vertr.ExchCore.Domain.Events.TradeEvents;
 using Vertr.ExchCore.Domain.ValueObjects;
@@ -35,6 +37,7 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
 
         try
         {
+            // TODO: Split on separated consumers
             SendCommandResult(data, sequence);
             SendTradeEvents(data);
             SendMarketData(data);
@@ -55,11 +58,44 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
     private void SendTradeEvents(OrderCommand data)
     {
         var evts = CreateTradeEvents(data);
-        _tradeEventsHandler.Handle(evts);
+
+        Debug.Assert(evts is not null);
+
+        if (evts.Any())
+        {
+            _tradeEventsHandler.Handle(evts);
+        }
     }
 
     private void SendMarketData(OrderCommand data)
     {
+        var orderBook = CreateOrderBook(data);
+
+        if (orderBook is not null)
+        {
+            _marketDataEventsHandler.Handle(orderBook);
+        }
+    }
+
+    private OrderBook? CreateOrderBook(OrderCommand data)
+    {
+        var l2MarketData = data.L2MarketData;
+
+        if (l2MarketData is null)
+        {
+            return null;
+        }
+
+        var asks = new List<OrderBookRecord>(l2MarketData.AskSize);
+
+        for (int i = 0; i < l2MarketData.AskSize; i++)
+        {
+            // TODO: Implement this
+            asks.Add(new OrderBookRecord());
+        }
+
+        // TODO: Implement this
+        return new OrderBook();
     }
 
     private IEnumerable<TradeEventBase> CreateTradeEvents(OrderCommand data)

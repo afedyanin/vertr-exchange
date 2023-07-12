@@ -1,6 +1,6 @@
-namespace Vertr.ExchCore.Domain.ValueObjects;
+namespace Vertr.ExchCore.Domain.Events.MarketDataEvents;
 
-public record class OrderBookRecord
+public class OrderBookRecord
 {
     public long Price { get; set; }
 
