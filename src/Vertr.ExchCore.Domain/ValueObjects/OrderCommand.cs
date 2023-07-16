@@ -24,6 +24,8 @@ public record class OrderCommand
 
     public long Size { get; set; }
 
+    public long ReservedBidPrice { get; set; }
+
     public MatcherTradeEvent? MatcherEvent { get; set; }
 
     public L2MarketData? L2MarketData { get; set; }
