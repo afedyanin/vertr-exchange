@@ -4,7 +4,7 @@ namespace Vertr.ExchCore.Domain.ValueObjects;
 
 public record class OrderCommand
 {
-    public long Uuid { get; set; }
+    public long Uid { get; set; }
 
     public long OrderId { get; set; }
 
@@ -15,6 +15,8 @@ public record class OrderCommand
     public OrderType OrderType { get; set; }
 
     public OrderAction OrderAction { get; set; }
+
+    public CommandResultCode ResultCode { get; set; }   
 
     public int Symbol { get; set; }
 

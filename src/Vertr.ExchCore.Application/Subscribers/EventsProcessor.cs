@@ -11,18 +11,18 @@ using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Application.Subscribers;
 
-internal class SimpleEventsProcessor : IOrderCommandSubscriber
+internal class EventsProcessor : IOrderCommandSubscriber
 {
     private readonly IOrderCommandEventHandler _orderCommandEventHandler;
     private readonly ITradeEventHandler _tradeEventsHandler;
     private readonly IMarketDataEventHandler _marketDataEventsHandler;
-    private readonly ILogger<SimpleEventsProcessor> _logger;
+    private readonly ILogger<EventsProcessor> _logger;
 
-    public SimpleEventsProcessor(
+    public EventsProcessor(
         IOrderCommandEventHandler orderCommandEventHandler,
         ITradeEventHandler tradeEventsHandler,
         IMarketDataEventHandler marketDataEventsHandler,
-        ILogger<SimpleEventsProcessor> logger)
+        ILogger<EventsProcessor> logger)
     {
         _orderCommandEventHandler = orderCommandEventHandler;
         _tradeEventsHandler = tradeEventsHandler;
@@ -77,7 +77,7 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
         }
     }
 
-    private OrderBook? CreateOrderBook(OrderCommand data)
+    private MarketDataOrderBook? CreateOrderBook(OrderCommand data)
     {
         var l2MarketData = data.L2MarketData;
 
@@ -86,16 +86,16 @@ internal class SimpleEventsProcessor : IOrderCommandSubscriber
             return null;
         }
 
-        var asks = new List<OrderBookRecord>(l2MarketData.AskSize);
+        var asks = new List<MarketDataOrderBookRecord>(l2MarketData.AskSize);
 
         for (int i = 0; i < l2MarketData.AskSize; i++)
         {
             // TODO: Implement this
-            asks.Add(new OrderBookRecord());
+            asks.Add(new MarketDataOrderBookRecord());
         }
 
         // TODO: Implement this
-        return new OrderBook();
+        return new MarketDataOrderBook();
     }
 
     private IEnumerable<TradeEventBase> CreateTradeEvents(OrderCommand data)

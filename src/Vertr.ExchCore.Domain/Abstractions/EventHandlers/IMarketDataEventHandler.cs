@@ -5,5 +5,5 @@ namespace Vertr.ExchCore.Domain.Abstractions.EventHandlers;
 
 public interface IMarketDataEventHandler
 {
-    void Handle(OrderBook orderBook);
+    void Handle(MarketDataOrderBook orderBook);
 }

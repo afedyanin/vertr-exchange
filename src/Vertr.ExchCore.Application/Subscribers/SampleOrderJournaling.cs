@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Vertr.ExchCore.Application.Subscribers.Enums;
 using Vertr.ExchCore.Domain.Abstractions;
@@ -5,12 +10,12 @@ using Vertr.ExchCore.Domain.ValueObjects;
 
 namespace Vertr.ExchCore.Application.Subscribers;
 
-internal class OrderReplication : IOrderCommandSubscriber
+internal class SampleOrderJournaling : IOrderCommandSubscriber
 {
-    private readonly ILogger<OrderReplication> _logger;
+    private readonly ILogger<EventsProcessor> _logger;
 
-    public OrderReplication(
-        ILogger<OrderReplication> logger)
+    public SampleOrderJournaling(
+        ILogger<EventsProcessor> logger)
     {
         _logger = logger;
     }
@@ -18,7 +23,7 @@ internal class OrderReplication : IOrderCommandSubscriber
 
     public void HandleEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        var nextId = 102L;
+        var nextId = 101L;
 
         _logger.LogInformation("Priority={Priority} OrderId={OrderId} will be set to {NextId}",
             Priority,
@@ -28,4 +33,3 @@ internal class OrderReplication : IOrderCommandSubscriber
         data.OrderId = nextId;
     }
 }
-
