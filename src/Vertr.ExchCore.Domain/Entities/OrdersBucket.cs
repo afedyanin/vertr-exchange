@@ -1,37 +1,92 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Vertr.ExchCore.Domain.Abstractions;
+using Vertr.ExchCore.Domain.Enums;
+using Vertr.ExchCore.Domain.Events.TradeEvents;
+using Vertr.ExchCore.Domain.ValueObjects;
 
-namespace Vertr.ExchCore.Domain.Entities
+namespace Vertr.ExchCore.Domain.Entities;
+
+public class OrdersBucket
 {
-    public class OrdersBucket
+    private readonly IDictionary<long, Order> _entries;
+
+    public long Price { get; set; }
+
+    public long TotalVolume { get; private set; }
+
+    public OrdersBucket(long price)
     {
-        private readonly IDictionary<long, Order> _entries;
+        Price = price;
+        TotalVolume = 0;
+        _entries = new Dictionary<long, Order>();
+    }
 
-        public long Price { get; set; }
+    public void Add(Order order)
+    {
+        _entries.Add(order.OrderId, order);
+        TotalVolume += order.Size - order.Filled;
+    }
 
-        public long TotalVolume { get; set; }
-
-        public OrdersBucket(long price)
+    public Order? Remove(long orderId, long uid)
+    {
+        _entries.TryGetValue(orderId, out Order? order);
+        if (order == null)
         {
-            Price = price;
-            TotalVolume = 0;
-            _entries = new Dictionary<long, Order>();
+            return null;
         }
 
-        public void Add(Order order)
+        TotalVolume -= order.Size - order.Filled;
+        return order;
+    }
+
+    public MatcherResult Match(long volumeToCollect, IOrder activeOrder, OrderBookEventsHelper helper)
+    {
+        long totalMatchingVolume = 0;
+        var ordersToRemove = new List<long>();
+
+        MatcherTradeEvent? eventsHead = null;
+        MatcherTradeEvent? eventsTail = null;
+
+        foreach(var order in _entries.Values)
         {
-            _entries.Add(order.OrderId, order);
-            TotalVolume += order.Size - order.Filled;
+            if (volumeToCollect <= 0)
+            {
+                break;
+            }
+
+            var v = Math.Min(volumeToCollect, order.Size - order.Filled);
+            totalMatchingVolume += v;
+
+            order.Filled += v;
+            volumeToCollect -= v;
+            TotalVolume -= v;
+
+            var fullMatch = order.Size == order.Filled;
+
+            var bidderHoldPrice = order.Action == OrderAction.ASK ? activeOrder.ReserveBidPrice : order.ReserveBidPrice;
+            var tradeEvent = helper.SendTradeEvent(order, fullMatch, volumeToCollect == 0, v, bidderHoldPrice);
+
+            if (eventsTail == null)
+            {
+                eventsHead = tradeEvent;
+            }
+            else
+            {
+                eventsTail.NextEvent = tradeEvent;
+            }
+
+            eventsTail = tradeEvent;
+
+            if (fullMatch)
+            {
+                ordersToRemove.Add(order.OrderId);
+            }
         }
 
-        public Order Remove(long orderId, long uid)
+        foreach(var orderId in ordersToRemove)
         {
-            _entries.TryGetValue(orderId, out Order order);
-            if (order == null )
-
+            _entries.Remove(orderId);
         }
+
+        return new MatcherResult(eventsHead!, eventsTail!, totalMatchingVolume, ordersToRemove);
     }
 }

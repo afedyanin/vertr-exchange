@@ -1,8 +1,9 @@
+using Vertr.ExchCore.Domain.Abstractions;
 using Vertr.ExchCore.Domain.Enums;
 
 namespace Vertr.ExchCore.Domain.ValueObjects;
 
-public record class OrderCommand
+public record class OrderCommand : IOrder
 {
     public long Uid { get; set; }
 
@@ -14,7 +15,7 @@ public record class OrderCommand
 
     public OrderType OrderType { get; set; }
 
-    public OrderAction OrderAction { get; set; }
+    public OrderAction Action { get; set; }
 
     public CommandResultCode ResultCode { get; set; }   
 
@@ -24,9 +25,11 @@ public record class OrderCommand
 
     public long Size { get; set; }
 
-    public long ReservedBidPrice { get; set; }
+    public long ReserveBidPrice { get; set; }
 
     public MatcherTradeEvent? MatcherEvent { get; set; }
 
     public L2MarketData? L2MarketData { get; set; }
+
+    public long Filled => 0;
 }

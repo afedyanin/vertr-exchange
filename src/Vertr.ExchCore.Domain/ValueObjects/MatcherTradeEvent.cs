@@ -10,11 +10,11 @@ public record class MatcherTradeEvent
 
     public bool ActiveOrderCompleted { get; set; }
 
-    public long MatcherOrderId { get; set; }
+    public long MatchedOrderId { get; set; }
 
-    public long MatcherOrderUid { get; set; }
+    public long MatchedOrderUid { get; set; }
 
-    public bool MathcerOrderCompleted { get; set; }
+    public bool MatchedOrderCompleted { get; set; }
 
     public long Price { get; set; }
 

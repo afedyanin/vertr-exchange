@@ -16,6 +16,15 @@ internal class OrderBook : IOrderBook
     private readonly IDictionary<long, OrdersBucket> _askBuckets = new Dictionary<long, OrdersBucket>();
     private readonly IDictionary<long, OrdersBucket> _bidBuckets = new Dictionary<long, OrdersBucket>();
 
+    private readonly OrderBookEventsHelper _eventsHelper;
+
+    public OrderBook(
+        OrderBookEventsHelper eventsHelper)
+    {
+        _eventsHelper = eventsHelper;
+    }
+
+
     public CommandResultCode ProcessCommand(OrderCommand orderCommand)
     {
         OrderCommandType commandType = orderCommand.CommandType;
@@ -94,12 +103,12 @@ internal class OrderBook : IOrderBook
 
     private void NewOrderPlaceGtc(OrderCommand cmd)
     {
-        var action = cmd.OrderAction;
+        var action = cmd.Action;
         var price = cmd.Price;
         var size = cmd.Size;
 
         // check if order is marketable (if there are opposite matching orders)
-        var filledSize = tryMatchInstantly(cmd, GetSubtreeForMatching(action, price), 0, cmd);
+        var filledSize = TryMatchInstantly(cmd, GetSubtreeForMatching(action, price), 0, cmd);
         if (filledSize == size)
         {
             // order was matched completely - nothing to place - can just return
@@ -122,8 +131,8 @@ internal class OrderBook : IOrderBook
             Price = price,
             Size = size,
             Filled = filledSize,
-            ReservedBidPrice = cmd.ReservedBidPrice,
-            OrderAction = action,
+            ReserveBidPrice = cmd.ReserveBidPrice,
+            Action = action,
             Uid = cmd.Uid,
             Timestamp = cmd.Timestamp,
         };
@@ -173,13 +182,11 @@ internal class OrderBook : IOrderBook
     }
 
     private long TryMatchInstantly(
-            Order activeOrder,
+            IOrder activeOrder,
             IDictionary<long, OrdersBucket> matchingBuckets,
             long filled,
             OrderCommand triggerCmd)
     {
-
-        //        log.info("matchInstantly: {} {}", order, matchingBuckets);
 
         if (matchingBuckets.Count() == 0)
         {
@@ -195,27 +202,30 @@ internal class OrderBook : IOrderBook
         {
             var sizeLeft = orderSize - filled;
 
-            var bucketMatchings = bucket.match(sizeLeft, activeOrder, eventsHelper);
+            var bucketMatchings = bucket.Match(sizeLeft, activeOrder, _eventsHelper);
 
-            bucketMatchings.ordersToRemove.forEach(idMap::remove);
+            foreach(var orderId in bucketMatchings.OrdersToRemove)
+            {
+                _idMap.Remove(orderId);
+            }
 
-            filled += bucketMatchings.volume;
+            filled += bucketMatchings.Volume;
 
             // attach chain received from bucket matcher
             if (eventsTail == null)
             {
-                triggerCmd.MatcherEvent = bucketMatchings.eventsChainHead;
+                triggerCmd.MatcherEvent = bucketMatchings.EventsChainHead;
             }
             else
             {
-                eventsTail.NextEvent = bucketMatchings.eventsChainHead;
+                eventsTail.NextEvent = bucketMatchings.EventsChainHead;
             }
-            eventsTail = bucketMatchings.eventsChainTail;
+            eventsTail = bucketMatchings.EventsChainTail;
 
-            long price = bucket.getPrice();
+            long price = bucket.Price;
 
             // remove empty buckets
-            if (bucket.getTotalVolume() == 0)
+            if (bucket.TotalVolume == 0)
             {
                 emptyBuckets.Add(price);
             }
@@ -227,14 +237,11 @@ internal class OrderBook : IOrderBook
             }
         }
 
-        // remove empty buckets (is it necessary?)
-        // TODO can remove through iterator ??
-        emptyBuckets.forEach(matchingBuckets::remove);
-
-        //        log.debug("emptyBuckets: {}", emptyBuckets);
-        //        log.debug("matchingRecords: {}", matchingRecords);
+        foreach(var item in emptyBuckets)
+        {
+            matchingBuckets.Remove(item);
+        }
 
         return filled;
     }
-
 }
