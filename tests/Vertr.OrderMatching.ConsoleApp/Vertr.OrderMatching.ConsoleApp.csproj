@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aeron.Client" Version="1.40.0" />
+    <PackageReference Include="Aeron.Driver" Version="1.40.0" />
+    <PackageReference Include="Disruptor" Version="5.0.0" />
+    <PackageReference Include="HdrHistogram" Version="2.5.0" />
+  </ItemGroup>
+
+</Project>
