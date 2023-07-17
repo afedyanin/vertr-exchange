@@ -1,6 +1,16 @@
 # vertr
 Algorithmic Trading Engine
 
+# 17-07-23T22:58
+- для бакетов использовать [LinkedHashMaap](https://github.com/idlerboris/LinkedHashMap/blob/master/CustomCollections/CustomCollections/LinkedHashMap.cs) 
+- для книжек использовать [TreeMap](https://github.com/Giedrius-Kristinaitis/TreeMap/tree/master/C-Sharp%20TreeMap%20Implementation%20and%20Test) 
+либо [NavigableMap](https://gist.github.com/R2D221/f0363e0ee7123c4d7693)
+- проанализировать построение алгоритмов на этих структурах - КЧД - аналог TreeMap?
+
+ART
+- [adaptive-radix-tree](https://github.com/rafaelkallis/adaptive-radix-tree)
+- [Adaptive Radix Tree](https://github.com/manly/AdaptiveRadixTree)
+
 # 17-07-23
 - схематичное описание архитектуры
 - юзер-стори по функционалу
