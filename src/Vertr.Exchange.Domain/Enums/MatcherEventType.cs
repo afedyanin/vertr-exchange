@@ -1,8 +1,8 @@
 namespace Vertr.Exchange.Domain;
-internal enum MatcherEventType
+public enum MatcherEventType
 {
-    Trade = 0,
-    Reject = 1,
-    Reduce = 2,
-    BinaryEvent = 3
+    TRADE = 0,
+    REJECT = 1,
+    REDUCE = 2,
+    BINARY_EVENT = 3
 }

@@ -1,4 +1,4 @@
-namespace Vertr.ExchCore.Domain.ValueObjects;
+namespace Vertr.Exchange.Domain;
 
 public class L2MarketData
 {

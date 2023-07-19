@@ -1,6 +1,6 @@
 namespace Vertr.Exchange.Domain;
 
-internal class MatcherTradeEvent
+public class MatcherTradeEvent
 {
     public MatcherEventType EventType { get; set; }
 
@@ -15,4 +15,6 @@ internal class MatcherTradeEvent
     public long Price { get; set; }
 
     public long Size { get; set; }
+
+    public MatcherTradeEvent? NextEvent { get; set; }
 }
