@@ -4,9 +4,11 @@ namespace Vertr.ExchCore.Domain.Abstractions;
 
 public interface IOrder
 {
+    long OrderId { get; }
+
     long Price { get; }
 
-    long Size { get; } 
+    long Size { get; }
 
     long Filled { get; }
 
@@ -14,7 +16,6 @@ public interface IOrder
 
     OrderAction Action { get; }
 
-    long OrderId { get; }
 
     long Timestamp { get; }
 
