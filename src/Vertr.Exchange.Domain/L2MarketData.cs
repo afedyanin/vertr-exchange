@@ -21,4 +21,10 @@ public class L2MarketData
     public long Timestamp { get; set; }
 
     public long ReferenceSeq { get; set; }
+
+    public L2MarketData(int askSize, int bidSize)
+    {
+        AskSize = askSize;
+        BidSize = bidSize;
+    }
 }

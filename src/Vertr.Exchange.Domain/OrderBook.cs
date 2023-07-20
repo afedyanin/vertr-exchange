@@ -217,12 +217,145 @@ internal class OrderBook : IOrderBook
 
     private CommandResultCode MoveOrder(OrderCommand cmd)
     {
-        throw new NotImplementedException();
-    }
+        long orderId = cmd.OrderId;
+        long newPrice = cmd.Price;
 
+        if (!_orders.TryGetValue(orderId, out var order))
+        {
+            // already matched, moved or cancelled
+            return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
+        }
+
+        if (order.Uid != cmd.Uid)
+        {
+            return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
+        }
+
+        long price = order.Price;
+
+        var buckets = GetBucketsByAction(order.Action);
+
+        if (!buckets.TryGetValue(order.Price, out var bucket))
+        {
+            throw new InvalidOperationException($"Can not find bucket for OrderId={order.OrderId} Price={order.Price}");
+        }
+
+        // fill action fields (for events handling)
+        cmd.Action = order.Action;
+
+        // reserved price risk check for exchange bids
+        //if (symbolSpec.type == SymbolType.CURRENCY_EXCHANGE_PAIR && order.action == OrderAction.BID && cmd.price > order.reserveBidPrice)
+        //{
+        //    return CommandResultCode.MATCHING_MOVE_FAILED_PRICE_OVER_RISK_LIMIT;
+        //}
+
+        // take order out of the original bucket and clean bucket if its empty
+        bucket.Remove(order);
+
+        var removed = bucket.Remove(order);
+
+        if (!removed)
+        {
+            // TODO: How to handle fail removing
+            throw new InvalidOperationException($"Can not remove OrderId={order.OrderId}");
+        }
+
+        if (bucket.TotalVolume == 0L)
+        {
+            buckets.Remove(order.Price);
+        }
+
+        order.Price = newPrice;
+
+        // try match with new price
+        //SortedMap<Long, OrdersBucketNaive> matchingArea = subtreeForMatching(order.action, newPrice);
+        //long filled = tryMatchInstantly(order, matchingArea, order.filled, cmd);
+        //if (filled == order.size)
+        //{
+        // order was fully matched (100% marketable) - removing from order book
+        //idMap.remove(orderId);
+        //return CommandResultCode.SUCCESS;
+        //}
+        //order.filled = filled;
+
+        // if not filled completely - put it into corresponding bucket
+
+        if (!buckets.ContainsKey(order.Price))
+        {
+            buckets.Add(order.Price, new OrdersBucket(order.Price));
+        }
+
+        var anotherBucket = buckets[order.Price];
+        anotherBucket.Put(order);
+
+        return CommandResultCode.SUCCESS;
+    }
     private L2MarketData GetL2MarketDataSnapshot(int size)
     {
-        throw new NotImplementedException();
+        int asksSize = GetTotalAskBuckets(size);
+        int bidsSize = GetTotalBidBuckets(size);
+        var data = new L2MarketData(asksSize, bidsSize);
+        FillAsks(asksSize, data);
+        FillBids(bidsSize, data);
+        return data;
+    }
+
+    private void FillAsks(int size, L2MarketData data)
+    {
+        if (size == 0)
+        {
+            data.AskSize = 0;
+            return;
+        }
+
+        int i = 0;
+
+        foreach (var bucket in _askBuckets.Values)
+        {
+            data.AskPrices[i] = bucket.Price;
+            data.AskVolumes[i] = bucket.TotalVolume;
+            data.AskOrders[i] = bucket.OrdersCount;
+
+            if (++i == size)
+            {
+                break;
+            }
+        }
+
+        data.AskSize = i;
+    }
+
+    private void FillBids(int size, L2MarketData data)
+    {
+        if (size == 0)
+        {
+            data.BidSize = 0;
+            return;
+        }
+
+        int i = 0;
+
+        foreach (var bucket in _bidBuckets.Values)
+        {
+            data.BidPrices[i] = bucket.Price;
+            data.BidVolumes[i] = bucket.TotalVolume;
+            data.BidOrders[i] = bucket.OrdersCount;
+            if (++i == size)
+            {
+                break;
+            }
+        }
+        data.BidSize = i;
+    }
+
+    private int GetTotalAskBuckets(int limit)
+    {
+        return Math.Min(limit, _askBuckets.Count);
+    }
+
+    private int GetTotalBidBuckets(int limit)
+    {
+        return Math.Min(limit, _bidBuckets.Count);
     }
 
     private SortedDictionary<long, OrdersBucket> GetBucketsByAction(OrderAction action)

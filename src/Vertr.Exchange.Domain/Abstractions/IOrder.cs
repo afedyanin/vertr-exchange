@@ -7,7 +7,7 @@ public interface IOrder
 
     long OrderId { get; }
 
-    long Price { get; }
+    long Price { get; set; }
 
     long Size { get; set; }
 
