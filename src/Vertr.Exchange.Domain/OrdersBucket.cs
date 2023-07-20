@@ -56,6 +56,11 @@ internal class OrdersBucket
         return removed;
     }
 
+    public void ReduceSize(long reduceSize)
+    {
+        TotalVolume -= reduceSize;
+    }
+
     public MatcherResult Match(long volumeToCollect)
     {
         var totalMatchingVolume = 0L;

@@ -9,7 +9,7 @@ public interface IOrder
 
     long Price { get; }
 
-    long Size { get; }
+    long Size { get; set; }
 
     long Filled { get; set; }
 
