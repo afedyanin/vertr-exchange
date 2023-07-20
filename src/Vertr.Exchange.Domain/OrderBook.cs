@@ -101,6 +101,71 @@ internal class OrderBook : IOrderBook
         throw new NotImplementedException();
     }
 
+    private long TryMatchInstantly(
+            IOrder activeOrder,
+            IEnumerable<OrdersBucket> matchingBuckets,
+            long filled,
+            OrderCommand triggerCmd)
+    {
+        if (!matchingBuckets.Any())
+        {
+            return filled;
+        }
+
+        long orderSize = activeOrder.Size;
+        List<long> emptyBuckets = new List<long>();
+        MatcherTradeEvent? eventsTail = null;
+
+        foreach (var bucket in matchingBuckets)
+        {
+            long sizeLeft = orderSize - filled;
+            MatcherResult bucketMatchings = bucket.Match(sizeLeft);
+
+            foreach (var orderId in bucketMatchings.OrdersToRemove)
+            {
+                _orders.Remove(orderId);
+            }
+
+            filled += bucketMatchings.Volume;
+
+            // attach chain received from bucket matcher
+            foreach (var evt in bucketMatchings.TradeEvents)
+            {
+                if (eventsTail == null)
+                {
+                    triggerCmd.MatcherEvent = evt;
+                }
+                else
+                {
+                    eventsTail.NextEvent = evt;
+                }
+
+                eventsTail = evt;
+            }
+
+            long price = bucket.Price;
+
+            // remove empty buckets
+            if (bucket.TotalVolume == 0L)
+            {
+                emptyBuckets.Add(price);
+            }
+
+            if (filled == orderSize)
+            {
+                // enough matched
+                break;
+            }
+        }
+
+        foreach (var key in emptyBuckets)
+        {
+            matchingBuckets.Remove(key);
+        }
+
+        return filled;
+    }
+
     private CommandResultCode CancelOrder(OrderCommand cmd)
     {
         var orderId = cmd.OrderId;
@@ -360,4 +425,12 @@ internal class OrderBook : IOrderBook
 
     private SortedDictionary<long, OrdersBucket> GetBucketsByAction(OrderAction action)
         => action == OrderAction.ASK ? _askBuckets : _bidBuckets;
+
+    internal bool ValidateInternalState()
+    {
+        var asksIsValid = _askBuckets.Values.All(b => b.IsValid());
+        var bidsIsValid = _bidBuckets.Values.All(b => b.IsValid());
+
+        return asksIsValid && bidsIsValid;
+    }
 }
