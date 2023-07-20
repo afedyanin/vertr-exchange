@@ -88,7 +88,50 @@ internal class OrderBook : IOrderBook
 
     private void NewOrderPlaceGtc(OrderCommand cmd)
     {
-        throw new NotImplementedException();
+        OrderAction action = cmd.Action;
+        long price = cmd.Price;
+        long size = cmd.Size;
+
+        // check if order is marketable (if there are opposite matching orders)
+        long filledSize = TryMatchInstantly(cmd, subtreeForMatching(action, price), 0, cmd);
+        if (filledSize == size)
+        {
+            // order was matched completely - nothing to place - can just return
+            return;
+        }
+
+        long newOrderId = cmd.OrderId;
+        if (_orders.ContainsKey(newOrderId))
+        {
+            // duplicate order id - can match, but can not place
+            OrderBookEventsHelper.AttachRejectEvent(cmd, cmd.Size - filledSize);
+            //log.warn("duplicate order id: {}", cmd);
+            return;
+        }
+
+        // normally placing regular GTC limit order
+        var orderRecord = new Order
+        {
+            Action = action,
+            OrderId = newOrderId,
+            Price = price,
+            Size = size,
+            Filled = filledSize,
+            Uid = cmd.Uid,
+            Timestamp = cmd.Timestamp,
+        };
+
+        var buckets = GetBucketsByAction(action);
+
+        if (!buckets.ContainsKey(price))
+        {
+            buckets.Add(price, new OrdersBucket(price));
+        }
+
+        var bucket = buckets[price];
+        bucket.Put(orderRecord);
+
+        _orders.Add(newOrderId, orderRecord);
     }
 
     private void NewOrderMatchIoc(OrderCommand cmd)
@@ -103,7 +146,7 @@ internal class OrderBook : IOrderBook
 
     private long TryMatchInstantly(
             IOrder activeOrder,
-            IEnumerable<OrdersBucket> matchingBuckets,
+            SortedDictionary<long, OrdersBucket> matchingBuckets,
             long filled,
             OrderCommand triggerCmd)
     {
@@ -116,7 +159,8 @@ internal class OrderBook : IOrderBook
         List<long> emptyBuckets = new List<long>();
         MatcherTradeEvent? eventsTail = null;
 
-        foreach (var bucket in matchingBuckets)
+        // TODO Must use subset of full dict here
+        foreach (var bucket in matchingBuckets.Values)
         {
             long sizeLeft = orderSize - filled;
             MatcherResult bucketMatchings = bucket.Match(sizeLeft);
