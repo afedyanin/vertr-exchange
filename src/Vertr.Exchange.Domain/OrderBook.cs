@@ -5,6 +5,15 @@ namespace Vertr.Exchange.Domain;
 
 internal class OrderBook : IOrderBook
 {
+    // https://stackoverflow.com/questions/931891/reverse-sorted-dictionary-in-net
+    private class DescendingComparer : IComparer<long>
+    {
+        public int Compare(long x, long y)
+        {
+            return -x.CompareTo(y);
+        }
+    }
+
     // by Key = OrderId
     private readonly IDictionary<long, IOrder> _orders;
 
@@ -15,11 +24,8 @@ internal class OrderBook : IOrderBook
     public OrderBook()
     {
         _orders = new Dictionary<long, IOrder>();
-
         _askBuckets = new SortedDictionary<long, OrdersBucket>();
-        // TODO: Reverse sort order
-        // https://stackoverflow.com/questions/931891/reverse-sorted-dictionary-in-net
-        _bidBuckets = new SortedDictionary<long, OrdersBucket>();
+        _bidBuckets = new SortedDictionary<long, OrdersBucket>(new DescendingComparer());
     }
 
     public CommandResultCode ProcessCommand(OrderCommand cmd)
@@ -73,8 +79,7 @@ internal class OrderBook : IOrderBook
                 NewOrderMatchIoc(cmd);
                 break;
             case OrderType.FOK_BUDGET:
-                NewOrderMatchFokBudget(cmd);
-                break;
+            // TODO: Implement FOC_BUDGET
             case OrderType.IOC_BUDGET:
             // TODO: Implement IOC_BUDGET
             case OrderType.FOK:
@@ -92,8 +97,7 @@ internal class OrderBook : IOrderBook
         long price = cmd.Price;
         long size = cmd.Size;
 
-        var matchingBuckets = action == OrderAction.ASK ? _bidBuckets : _askBuckets;
-        long filledSize = TryMatchInstantly(cmd, matchingBuckets, 0, cmd);
+        long filledSize = TryMatchInstantly(cmd, 0L, cmd);
 
         if (filledSize == size)
         {
@@ -137,20 +141,24 @@ internal class OrderBook : IOrderBook
 
     private void NewOrderMatchIoc(OrderCommand cmd)
     {
-        throw new NotImplementedException();
-    }
+        long filledSize = TryMatchInstantly(cmd, 0L, cmd);
 
-    private void NewOrderMatchFokBudget(OrderCommand cmd)
-    {
-        throw new NotImplementedException();
+        long rejectedSize = cmd.Size - filledSize;
+
+        if (rejectedSize != 0L)
+        {
+            // was not matched completely - send reject for not-completed IoC order
+            OrderBookEventsHelper.AttachRejectEvent(cmd, rejectedSize);
+        }
     }
 
     private long TryMatchInstantly(
             IOrder activeOrder,
-            SortedDictionary<long, OrdersBucket> matchingBuckets,
             long filled,
             OrderCommand triggerCmd)
     {
+        var matchingBuckets = activeOrder.Action == OrderAction.ASK ? _bidBuckets : _askBuckets;
+
         if (!matchingBuckets.Any())
         {
             return filled;
@@ -379,8 +387,7 @@ internal class OrderBook : IOrderBook
         order.Price = newPrice;
 
         // try match with new price
-        var matchingBuckets = order.Action == OrderAction.ASK ? _bidBuckets : _askBuckets;
-        long filled = TryMatchInstantly(order, matchingBuckets, order.Filled, cmd);
+        long filled = TryMatchInstantly(order, order.Filled, cmd);
 
         if (filled == order.Size)
         {
