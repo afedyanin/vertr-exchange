@@ -92,8 +92,9 @@ internal class OrderBook : IOrderBook
         long price = cmd.Price;
         long size = cmd.Size;
 
-        // check if order is marketable (if there are opposite matching orders)
-        long filledSize = TryMatchInstantly(cmd, subtreeForMatching(action, price), 0, cmd);
+        var matchingBuckets = action == OrderAction.ASK ? _bidBuckets : _askBuckets;
+        long filledSize = TryMatchInstantly(cmd, matchingBuckets, 0, cmd);
+
         if (filledSize == size)
         {
             // order was matched completely - nothing to place - can just return
@@ -159,9 +160,18 @@ internal class OrderBook : IOrderBook
         List<long> emptyBuckets = new List<long>();
         MatcherTradeEvent? eventsTail = null;
 
-        // TODO Must use subset of full dict here
         foreach (var bucket in matchingBuckets.Values)
         {
+            if (activeOrder.Action == OrderAction.BID && bucket.Price > activeOrder.Price)
+            {
+                break;
+            }
+
+            if (activeOrder.Action == OrderAction.ASK && bucket.Price < activeOrder.Price)
+            {
+                break;
+            }
+
             long sizeLeft = orderSize - filled;
             MatcherResult bucketMatchings = bucket.Match(sizeLeft);
 
@@ -340,8 +350,6 @@ internal class OrderBook : IOrderBook
             return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
         }
 
-        long price = order.Price;
-
         var buckets = GetBucketsByAction(order.Action);
 
         if (!buckets.TryGetValue(order.Price, out var bucket))
@@ -351,12 +359,6 @@ internal class OrderBook : IOrderBook
 
         // fill action fields (for events handling)
         cmd.Action = order.Action;
-
-        // reserved price risk check for exchange bids
-        //if (symbolSpec.type == SymbolType.CURRENCY_EXCHANGE_PAIR && order.action == OrderAction.BID && cmd.price > order.reserveBidPrice)
-        //{
-        //    return CommandResultCode.MATCHING_MOVE_FAILED_PRICE_OVER_RISK_LIMIT;
-        //}
 
         // take order out of the original bucket and clean bucket if its empty
         bucket.Remove(order);
@@ -377,15 +379,17 @@ internal class OrderBook : IOrderBook
         order.Price = newPrice;
 
         // try match with new price
-        //SortedMap<Long, OrdersBucketNaive> matchingArea = subtreeForMatching(order.action, newPrice);
-        //long filled = tryMatchInstantly(order, matchingArea, order.filled, cmd);
-        //if (filled == order.size)
-        //{
-        // order was fully matched (100% marketable) - removing from order book
-        //idMap.remove(orderId);
-        //return CommandResultCode.SUCCESS;
-        //}
-        //order.filled = filled;
+        var matchingBuckets = order.Action == OrderAction.ASK ? _bidBuckets : _askBuckets;
+        long filled = TryMatchInstantly(order, matchingBuckets, order.Filled, cmd);
+
+        if (filled == order.Size)
+        {
+            // order was fully matched (100% marketable) - removing from order book
+            _orders.Remove(orderId);
+            return CommandResultCode.SUCCESS;
+        }
+
+        order.Filled = filled;
 
         // if not filled completely - put it into corresponding bucket
 

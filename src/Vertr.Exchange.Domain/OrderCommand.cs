@@ -1,7 +1,8 @@
+using Vertr.Exchange.Domain.Abstractions;
 using Vertr.Exchange.Domain.Enums;
 
 namespace Vertr.Exchange.Domain;
-public class OrderCommand
+public class OrderCommand : IOrder
 {
     public OrderCommandType Command { get; set; }
 
@@ -24,4 +25,6 @@ public class OrderCommand
     public long Price { get; set; }
 
     public long Timestamp { get; set; }
+
+    public long Filled { get; set; }
 }
