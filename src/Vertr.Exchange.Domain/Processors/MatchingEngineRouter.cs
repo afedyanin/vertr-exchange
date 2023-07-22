@@ -1,5 +1,6 @@
 using Vertr.Exchange.Domain.Abstractions;
 using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Domain.MatchingEngine;
 
 namespace Vertr.Exchange.Domain.Processors;
 public class MatchingEngineRouter
@@ -14,6 +15,7 @@ public class MatchingEngineRouter
         _orderBooks = new Dictionary<int, IOrderBook>();
     }
 
+    // TODO: How to call this?
     public void AddSymbol(int symbol)
     {
         if (!_orderBooks.ContainsKey(symbol))
@@ -26,7 +28,7 @@ public class MatchingEngineRouter
         }
     }
 
-    public void ProcessOrderCommand(long seq, OrderCommand cmd)
+    public void ProcessOrderCommand(OrderCommand cmd)
     {
         switch (cmd.Command)
         {

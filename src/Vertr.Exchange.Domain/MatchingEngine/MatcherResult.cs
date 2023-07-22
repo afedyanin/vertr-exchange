@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Domain;
+namespace Vertr.Exchange.Domain.MatchingEngine;
 internal sealed class MatcherResult
 {
     public long Volume { get; }

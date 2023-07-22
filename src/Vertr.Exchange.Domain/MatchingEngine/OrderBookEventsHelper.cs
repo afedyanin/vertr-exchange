@@ -1,6 +1,6 @@
 using Vertr.Exchange.Domain.Abstractions;
 
-namespace Vertr.Exchange.Domain;
+namespace Vertr.Exchange.Domain.MatchingEngine;
 
 internal static class OrderBookEventsHelper
 {

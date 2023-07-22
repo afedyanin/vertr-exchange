@@ -1,7 +1,7 @@
 using Vertr.Exchange.Domain.Abstractions;
 using Vertr.Exchange.Domain.Enums;
 
-namespace Vertr.Exchange.Domain;
+namespace Vertr.Exchange.Domain.MatchingEngine;
 
 internal sealed class OrderBook : IOrderBook
 {
@@ -55,7 +55,7 @@ internal sealed class OrderBook : IOrderBook
         }
         else if (commandType == OrderCommandType.ORDER_BOOK_REQUEST)
         {
-            int size = (int)cmd.Size;
+            var size = (int)cmd.Size;
             cmd.MarketData = GetL2MarketDataSnapshot(size >= 0 ? size : int.MaxValue);
             return CommandResultCode.SUCCESS;
         }
@@ -67,8 +67,8 @@ internal sealed class OrderBook : IOrderBook
 
     public L2MarketData GetL2MarketDataSnapshot(int size)
     {
-        int asksSize = GetTotalAskBuckets(size);
-        int bidsSize = GetTotalBidBuckets(size);
+        var asksSize = GetTotalAskBuckets(size);
+        var bidsSize = GetTotalBidBuckets(size);
         var data = new L2MarketData(asksSize, bidsSize);
         FillAsks(asksSize, data);
         FillBids(bidsSize, data);
@@ -100,11 +100,11 @@ internal sealed class OrderBook : IOrderBook
 
     private void NewOrderPlaceGtc(OrderCommand cmd)
     {
-        OrderAction action = cmd.Action;
-        long price = cmd.Price;
-        long size = cmd.Size;
+        var action = cmd.Action;
+        var price = cmd.Price;
+        var size = cmd.Size;
 
-        long filledSize = TryMatchInstantly(cmd, 0L, cmd);
+        var filledSize = TryMatchInstantly(cmd, 0L, cmd);
 
         if (filledSize == size)
         {
@@ -112,7 +112,7 @@ internal sealed class OrderBook : IOrderBook
             return;
         }
 
-        long newOrderId = cmd.OrderId;
+        var newOrderId = cmd.OrderId;
         if (_orders.ContainsKey(newOrderId))
         {
             // duplicate order id - can match, but can not place
@@ -148,9 +148,9 @@ internal sealed class OrderBook : IOrderBook
 
     private void NewOrderMatchIoc(OrderCommand cmd)
     {
-        long filledSize = TryMatchInstantly(cmd, 0L, cmd);
+        var filledSize = TryMatchInstantly(cmd, 0L, cmd);
 
-        long rejectedSize = cmd.Size - filledSize;
+        var rejectedSize = cmd.Size - filledSize;
 
         if (rejectedSize != 0L)
         {
@@ -171,8 +171,8 @@ internal sealed class OrderBook : IOrderBook
             return filled;
         }
 
-        long orderSize = activeOrder.Size;
-        List<long> emptyBuckets = new List<long>();
+        var orderSize = activeOrder.Size;
+        var emptyBuckets = new List<long>();
         MatcherTradeEvent? eventsTail = null;
 
         foreach (var bucket in matchingBuckets.Values)
@@ -187,8 +187,8 @@ internal sealed class OrderBook : IOrderBook
                 break;
             }
 
-            long sizeLeft = orderSize - filled;
-            MatcherResult bucketMatchings = bucket.Match(sizeLeft);
+            var sizeLeft = orderSize - filled;
+            var bucketMatchings = bucket.Match(sizeLeft);
 
             foreach (var orderId in bucketMatchings.OrdersToRemove)
             {
@@ -212,7 +212,7 @@ internal sealed class OrderBook : IOrderBook
                 eventsTail = evt;
             }
 
-            long price = bucket.Price;
+            var price = bucket.Price;
 
             // remove empty buckets
             if (bucket.TotalVolume == 0L)
@@ -282,8 +282,8 @@ internal sealed class OrderBook : IOrderBook
 
     private CommandResultCode ReduceOrder(OrderCommand cmd)
     {
-        long orderId = cmd.OrderId;
-        long requestedReduceSize = cmd.Size;
+        var orderId = cmd.OrderId;
+        var requestedReduceSize = cmd.Size;
 
         if (requestedReduceSize <= 0)
         {
@@ -301,8 +301,8 @@ internal sealed class OrderBook : IOrderBook
             return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
         }
 
-        long remainingSize = order.Remaining;
-        long reduceBy = Math.Min(remainingSize, requestedReduceSize);
+        var remainingSize = order.Remaining;
+        var reduceBy = Math.Min(remainingSize, requestedReduceSize);
 
         var buckets = GetBucketsByAction(order.Action);
 
@@ -351,8 +351,8 @@ internal sealed class OrderBook : IOrderBook
 
     private CommandResultCode MoveOrder(OrderCommand cmd)
     {
-        long orderId = cmd.OrderId;
-        long newPrice = cmd.Price;
+        var orderId = cmd.OrderId;
+        var newPrice = cmd.Price;
 
         if (!_orders.TryGetValue(orderId, out var order))
         {
@@ -394,7 +394,7 @@ internal sealed class OrderBook : IOrderBook
         order.Price = newPrice;
 
         // try match with new price
-        long filled = TryMatchInstantly(order, order.Filled, cmd);
+        var filled = TryMatchInstantly(order, order.Filled, cmd);
 
         if (filled == order.Size)
         {
@@ -426,7 +426,7 @@ internal sealed class OrderBook : IOrderBook
             return;
         }
 
-        int i = 0;
+        var i = 0;
 
         foreach (var bucket in _askBuckets.Values)
         {
@@ -451,7 +451,7 @@ internal sealed class OrderBook : IOrderBook
             return;
         }
 
-        int i = 0;
+        var i = 0;
 
         foreach (var bucket in _bidBuckets.Values)
         {

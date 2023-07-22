@@ -1,6 +1,11 @@
 # vertr
 Algorithmic Trading Engine
 
+# 22-07-23
+- написать тесты для матчинга
+- зарефакторить код в домене
+- что делать с внешними (не Order) командами?
+
 # 17-07-23T22:58
 - для бакетов использовать [LinkedHashMaap](https://github.com/idlerboris/LinkedHashMap/blob/master/CustomCollections/CustomCollections/LinkedHashMap.cs) 
 - для книжек использовать [TreeMap](https://github.com/Giedrius-Kristinaitis/TreeMap/tree/master/C-Sharp%20TreeMap%20Implementation%20and%20Test) 

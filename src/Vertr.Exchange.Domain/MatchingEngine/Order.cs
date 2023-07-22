@@ -1,9 +1,9 @@
 using Vertr.Exchange.Domain.Abstractions;
 using Vertr.Exchange.Domain.Enums;
 
-namespace Vertr.Exchange.Domain;
+namespace Vertr.Exchange.Domain.MatchingEngine;
 
-public class Order : IOrder
+internal sealed class Order : IOrder
 {
     public OrderAction Action { get; set; }
 
