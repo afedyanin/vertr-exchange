@@ -1,9 +1,9 @@
 namespace Vertr.ExchCore.Domain.ValueObjects;
 
-public  class L2MarketData
+public class L2MarketData
 {
     public int AskSize { get; set; }
-    
+
     public int BidSize { get; set; }
 
     public long[] AskPrices { get; set; } = Array.Empty<long>();
