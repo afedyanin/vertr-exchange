@@ -1,5 +1,5 @@
 namespace Vertr.Exchange.Domain.Binary;
 
-internal class BatchAddAccountsCommand : BinaryCommand
+internal sealed class BatchAddAccountsCommand : BinaryCommand
 {
 }

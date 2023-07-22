@@ -2,7 +2,6 @@ using Vertr.Exchange.Domain.Abstractions;
 using Vertr.Exchange.Domain.Binary;
 using Vertr.Exchange.Domain.Enums;
 using Vertr.Exchange.Domain.MatchingEngine;
-using Vertr.Exchange.Domain.Reports;
 
 namespace Vertr.Exchange.Domain.Processors;
 public class MatchingEngineRouter
@@ -12,15 +11,13 @@ public class MatchingEngineRouter
     // Key = Symbol
     private readonly IDictionary<int, IOrderBook> _orderBooks;
 
-    private readonly BinaryCommandsProcessor _binaryCommandsProcessor;
+    private readonly BinaryCommandProcessor _binaryCommandsProcessor;
 
     public MatchingEngineRouter()
     {
         _orderBooks = new Dictionary<int, IOrderBook>();
 
-        _binaryCommandsProcessor = new BinaryCommandsProcessor(
-            HandleBinaryCommand,
-            HandleReportQuery);
+        _binaryCommandsProcessor = new BinaryCommandProcessor(HandleBinaryCommand);
     }
 
     public void ProcessOrderCommand(OrderCommand cmd)
@@ -41,10 +38,10 @@ public class MatchingEngineRouter
             case OrderCommandType.NOP:
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 break;
-            case OrderCommandType.BINARY_DATA_QUERY:
             case OrderCommandType.BINARY_DATA_COMMAND:
                 cmd.ResultCode = _binaryCommandsProcessor.AcceptBinaryCommand(cmd);
                 break;
+            case OrderCommandType.BINARY_DATA_QUERY:
             case OrderCommandType.ADD_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.SUSPEND_USER:
@@ -86,11 +83,6 @@ public class MatchingEngineRouter
                 AddSymbol(sym);
             }
         }
-    }
-
-    private void HandleReportQuery(OrderCommand cmd, ReportQuery binQuery)
-    {
-
     }
 
     private void AddSymbol(int symbol)
