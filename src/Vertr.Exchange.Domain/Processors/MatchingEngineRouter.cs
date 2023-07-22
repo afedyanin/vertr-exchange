@@ -1,6 +1,8 @@
 using Vertr.Exchange.Domain.Abstractions;
+using Vertr.Exchange.Domain.Binary;
 using Vertr.Exchange.Domain.Enums;
 using Vertr.Exchange.Domain.MatchingEngine;
+using Vertr.Exchange.Domain.Reports;
 
 namespace Vertr.Exchange.Domain.Processors;
 public class MatchingEngineRouter
@@ -10,22 +12,15 @@ public class MatchingEngineRouter
     // Key = Symbol
     private readonly IDictionary<int, IOrderBook> _orderBooks;
 
+    private readonly BinaryCommandsProcessor _binaryCommandsProcessor;
+
     public MatchingEngineRouter()
     {
         _orderBooks = new Dictionary<int, IOrderBook>();
-    }
 
-    // TODO: How to call this?
-    public void AddSymbol(int symbol)
-    {
-        if (!_orderBooks.ContainsKey(symbol))
-        {
-            _orderBooks.Add(symbol, new OrderBook());
-        }
-        else
-        {
-            // Warn: symbol already added.
-        }
+        _binaryCommandsProcessor = new BinaryCommandsProcessor(
+            HandleBinaryCommand,
+            HandleReportQuery);
     }
 
     public void ProcessOrderCommand(OrderCommand cmd)
@@ -46,12 +41,14 @@ public class MatchingEngineRouter
             case OrderCommandType.NOP:
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 break;
+            case OrderCommandType.BINARY_DATA_QUERY:
+            case OrderCommandType.BINARY_DATA_COMMAND:
+                cmd.ResultCode = _binaryCommandsProcessor.AcceptBinaryCommand(cmd);
+                break;
             case OrderCommandType.ADD_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.SUSPEND_USER:
             case OrderCommandType.RESUME_USER:
-            case OrderCommandType.BINARY_DATA_QUERY:
-            case OrderCommandType.BINARY_DATA_COMMAND:
             case OrderCommandType.PERSIST_STATE_MATCHING:
             case OrderCommandType.PERSIST_STATE_RISK:
             case OrderCommandType.GROUPING_CONTROL:
@@ -77,6 +74,34 @@ public class MatchingEngineRouter
             && cmd.ResultCode == CommandResultCode.SUCCESS)
         {
             cmd.MarketData = orderBook.GetL2MarketDataSnapshot(_cfgL2RefreshDepth);
+        }
+    }
+
+    private void HandleBinaryCommand(OrderCommand cmd, BinaryCommand binCmd)
+    {
+        if (binCmd is BatchAddSymbolsCommand symCmd)
+        {
+            foreach (var sym in symCmd.Symbols)
+            {
+                AddSymbol(sym);
+            }
+        }
+    }
+
+    private void HandleReportQuery(OrderCommand cmd, ReportQuery binQuery)
+    {
+
+    }
+
+    private void AddSymbol(int symbol)
+    {
+        if (!_orderBooks.ContainsKey(symbol))
+        {
+            _orderBooks.Add(symbol, new OrderBook());
+        }
+        else
+        {
+            // Warn: symbol already added.
         }
     }
 }

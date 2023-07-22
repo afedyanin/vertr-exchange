@@ -29,4 +29,8 @@ public class OrderCommand : IOrder
     public long Filled { get; set; }
 
     public int Symbol { get; set; }
+
+    public byte[] BinaryData { get; set; } = Array.Empty<byte>();
+
+    public BinaryDataType BinaryCommandType { get; set; }
 }
