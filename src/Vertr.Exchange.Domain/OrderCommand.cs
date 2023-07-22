@@ -27,4 +27,6 @@ public class OrderCommand : IOrder
     public long Timestamp { get; set; }
 
     public long Filled { get; set; }
+
+    public int Symbol { get; set; }
 }

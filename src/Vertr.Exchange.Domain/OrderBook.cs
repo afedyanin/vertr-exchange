@@ -3,21 +3,18 @@ using Vertr.Exchange.Domain.Enums;
 
 namespace Vertr.Exchange.Domain;
 
-internal class OrderBook : IOrderBook
+internal sealed class OrderBook : IOrderBook
 {
-    // https://stackoverflow.com/questions/931891/reverse-sorted-dictionary-in-net
-    private class DescendingComparer : IComparer<long>
+    private sealed class DescendingComparer : IComparer<long>
     {
-        public int Compare(long x, long y)
-        {
-            return -x.CompareTo(y);
-        }
+        // https://stackoverflow.com/questions/931891/reverse-sorted-dictionary-in-net
+        public int Compare(long x, long y) => -x.CompareTo(y);
     }
 
-    // by Key = OrderId
+    // Key = OrderId
     private readonly IDictionary<long, IOrder> _orders;
 
-    // by Key = Price 
+    // Key = Price 
     private readonly SortedDictionary<long, OrdersBucket> _bidBuckets;
     private readonly SortedDictionary<long, OrdersBucket> _askBuckets;
 
@@ -66,6 +63,16 @@ internal class OrderBook : IOrderBook
         {
             return CommandResultCode.MATCHING_UNSUPPORTED_COMMAND;
         }
+    }
+
+    public L2MarketData GetL2MarketDataSnapshot(int size)
+    {
+        int asksSize = GetTotalAskBuckets(size);
+        int bidsSize = GetTotalBidBuckets(size);
+        var data = new L2MarketData(asksSize, bidsSize);
+        FillAsks(asksSize, data);
+        FillBids(bidsSize, data);
+        return data;
     }
 
     private void NewOrder(OrderCommand cmd)
@@ -409,15 +416,6 @@ internal class OrderBook : IOrderBook
         anotherBucket.Put(order);
 
         return CommandResultCode.SUCCESS;
-    }
-    private L2MarketData GetL2MarketDataSnapshot(int size)
-    {
-        int asksSize = GetTotalAskBuckets(size);
-        int bidsSize = GetTotalBidBuckets(size);
-        var data = new L2MarketData(asksSize, bidsSize);
-        FillAsks(asksSize, data);
-        FillBids(bidsSize, data);
-        return data;
     }
 
     private void FillAsks(int size, L2MarketData data)

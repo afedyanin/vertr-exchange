@@ -6,7 +6,7 @@ namespace Vertr.Exchange.Domain;
 /// <summary>
 /// Historical sequence of orders with the same direction and price
 /// </summary>
-internal class OrdersBucket
+internal sealed class OrdersBucket
 {
     private readonly LinkedList<IOrder> _orders;
 

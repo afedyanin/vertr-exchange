@@ -1,5 +1,5 @@
 namespace Vertr.Exchange.Domain;
-internal class MatcherResult
+internal sealed class MatcherResult
 {
     public long Volume { get; }
 
