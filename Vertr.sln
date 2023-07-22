@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{4B1B7D85-9A4D-4ECC-B361-5D7E24429657}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		CHANGELOG.md = CHANGELOG.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
 		LICENSE = LICENSE
@@ -18,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9C59A7AC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain", "src\Vertr.Exchange.Domain\Vertr.Exchange.Domain.csproj", "{CB1F7C05-D58E-40DC-B1A1-BE99B4406A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.Domain.Tests", "tests\Vertr.Exchange.Domain.Tests\Vertr.Exchange.Domain.Tests.csproj", "{6277C703-91BD-460E-97EC-A5B6EE679E5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.Tests", "tests\Vertr.Exchange.Domain.Tests\Vertr.Exchange.Domain.Tests.csproj", "{6277C703-91BD-460E-97EC-A5B6EE679E5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
