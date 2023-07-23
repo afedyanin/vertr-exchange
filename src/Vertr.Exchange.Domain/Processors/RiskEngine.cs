@@ -1,10 +1,18 @@
 using Vertr.Exchange.Domain.Abstractions;
 using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Domain.Users;
 
 namespace Vertr.Exchange.Domain.Processors;
 
 internal class RiskEngine : IRiskEngine
 {
+    private readonly IUserProfileService _userProfileService;
+
+    public RiskEngine()
+    {
+        _userProfileService = new UserProfileService();
+    }
+
     public bool PreProcessCommand(long seq, OrderCommand cmd)
     {
         switch (cmd.Command)
@@ -20,59 +28,44 @@ internal class RiskEngine : IRiskEngine
                 return false;
 
             case OrderCommandType.ADD_USER:
-                    cmd.resultCode = userProfileService.addEmptyUserProfile(cmd.uid)
-                            ? CommandResultCode.SUCCESS
-                            : CommandResultCode.USER_MGMT_USER_ALREADY_EXISTS;
-                }
+                cmd.ResultCode = _userProfileService.AddEmptyUserProfile(cmd.Uid)
+                        ? CommandResultCode.SUCCESS
+                        : CommandResultCode.USER_MGMT_USER_ALREADY_EXISTS;
                 return false;
 
             case OrderCommandType.BALANCE_ADJUSTMENT:
-                if (uidForThisHandler(cmd.uid))
-                {
-                    cmd.resultCode = adjustBalance(
-                            cmd.uid, cmd.symbol, cmd.price, cmd.orderId, BalanceAdjustmentType.of(cmd.orderType.getCode()));
-                }
+                cmd.ResultCode = adjustBalance(
+                            cmd.Uid,
+                            cmd.Symbol,
+                            cmd.Price,
+                            cmd.OrderId,
+                            BalanceAdjustmentType.of(cmd.orderType.getCode()));
                 return false;
 
             case OrderCommandType.SUSPEND_USER:
-                if (uidForThisHandler(cmd.uid))
-                {
-                    cmd.resultCode = userProfileService.suspendUserProfile(cmd.uid);
-                }
+                cmd.ResultCode = _userProfileService.SuspendUserProfile(cmd.Uid);
                 return false;
             case OrderCommandType.RESUME_USER:
-                if (uidForThisHandler(cmd.uid))
-                {
-                    cmd.resultCode = userProfileService.resumeUserProfile(cmd.uid);
-                }
+                cmd.ResultCode = _userProfileService.ResumeUserProfile(cmd.Uid);
                 return false;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
             case OrderCommandType.BINARY_DATA_QUERY:
                 binaryCommandsProcessor.acceptBinaryFrame(cmd); // ignore return result, because it should be set by MatchingEngineRouter
-                if (shardId == 0)
-                {
-                    cmd.resultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-                }
+                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return false;
 
             case OrderCommandType.RESET:
-                reset();
-                if (shardId == 0)
-                {
-                    cmd.resultCode = CommandResultCode.SUCCESS;
-                }
+                Reset();
+                cmd.ResultCode = CommandResultCode.SUCCESS;
                 return false;
 
             case OrderCommandType.PERSIST_STATE_MATCHING:
-                if (shardId == 0)
-                {
-                    cmd.resultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-                }
+                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return true;// true = publish sequence before finishing processing whole batch
 
             case OrderCommandType.PERSIST_STATE_RISK:
-                final boolean isSuccess = serializationProcessor.storeData(
+                var isSuccess = serializationProcessor.storeData(
                         cmd.orderId,
                         seq,
                         cmd.timestamp,
@@ -87,44 +80,37 @@ internal class RiskEngine : IRiskEngine
 
     public bool HandlerRiskRelease(long seq, OrderCommand cmd)
     {
-        final int symbol = cmd.symbol;
-
-        final L2MarketData marketData = cmd.marketData;
-        MatcherTradeEvent mte = cmd.matcherEvent;
+        var symbol = cmd.Symbol;
+        var marketData = cmd.MarketData;
+        var mte = cmd.MatcherEvent;
 
         // skip events processing if no events (or if contains BINARY EVENT)
-        if (marketData == null && (mte == null || mte.eventType == MatcherEventType.BINARY_EVENT))
+        if (marketData == null && (mte == null || mte.EventType == MatcherEventType.BINARY_EVENT))
         {
             return false;
         }
 
-        final CoreSymbolSpecification spec = symbolSpecificationProvider.getSymbolSpecification(symbol);
-        if (spec == null)
-        {
-            throw new IllegalStateException("Symbol not found: " + symbol);
-        }
+        var spec = symbolSpecificationProvider.getSymbolSpecification(symbol) ?? throw new IllegalStateException("Symbol not found: " + symbol);
 
-        final boolean takerSell = cmd.action == OrderAction.ASK;
+        var takerSell = cmd.Action == OrderAction.ASK;
 
-        if (mte != null && mte.eventType != MatcherEventType.BINARY_EVENT)
+        if (mte != null && mte.EventType != MatcherEventType.BINARY_EVENT)
         {
             // at least one event to process, resolving primary/taker user profile
             // TODO processing order is reversed
             if (spec.type == SymbolType.CURRENCY_EXCHANGE_PAIR)
             {
 
-                final UserProfile takerUp = uidForThisHandler(cmd.uid)
-                        ? userProfileService.getUserProfileOrAddSuspended(cmd.uid)
-                        : null;
+                var takerUp = _userProfileService.GetUserProfileOrAddSuspended(cmd.Uid);
 
                 // REJECT always comes first; REDUCE is always single event
-                if (mte.eventType == MatcherEventType.REDUCE || mte.eventType == MatcherEventType.REJECT)
+                if (mte.EventType == MatcherEventType.REDUCE || mte.EventType == MatcherEventType.REJECT)
                 {
                     if (takerUp != null)
                     {
                         handleMatcherRejectReduceEventExchange(cmd, mte, spec, takerSell, takerUp);
                     }
-                    mte = mte.nextEvent;
+                    mte = mte.NextEvent;
                 }
 
                 if (mte != null)
@@ -142,14 +128,14 @@ internal class RiskEngine : IRiskEngine
             else
             {
 
-                final UserProfile takerUp = uidForThisHandler(cmd.uid) ? userProfileService.getUserProfileOrAddSuspended(cmd.uid) : null;
+                var takerUp = _userProfileService.GetUserProfileOrAddSuspended(cmd.Uid);
 
                 // for margin-mode symbols also resolve position record
-                final SymbolPositionRecord takerSpr = (takerUp != null) ? takerUp.getPositionRecordOrThrowEx(symbol) : null;
+                var takerSpr = (takerUp != null) ? takerUp.getPositionRecordOrThrowEx(symbol) : null;
                 do
                 {
-                    handleMatcherEventMargin(mte, spec, cmd.action, takerUp, takerSpr);
-                    mte = mte.nextEvent;
+                    handleMatcherEventMargin(mte, spec, cmd.Action, takerUp, takerSpr);
+                    mte = mte.NextEvent;
                 } while (mte != null);
             }
         }
@@ -157,12 +143,11 @@ internal class RiskEngine : IRiskEngine
         // Process marked data
         if (marketData != null && cfgMarginTradingEnabled)
         {
-            final RiskEngine.LastPriceCacheRecord record = lastPriceCache.getIfAbsentPut(symbol, RiskEngine.LastPriceCacheRecord::new);
-            record.askPrice = (marketData.askSize != 0) ? marketData.askPrices[0] : Long.MAX_VALUE;
-            record.bidPrice = (marketData.bidSize != 0) ? marketData.bidPrices[0] : 0;
+            RiskEngine.LastPriceCacheRecord record = lastPriceCache.getIfAbsentPut(symbol, RiskEngine.LastPriceCacheRecord::new);
+            record.askPrice = (marketData.AskSize != 0) ? marketData.AskPrices[0] : long.MaxValue;
+            record.bidPrice = (marketData.BidSize != 0) ? marketData.BidPrices[0] : 0;
         }
 
         return false;
     }
-
 }
