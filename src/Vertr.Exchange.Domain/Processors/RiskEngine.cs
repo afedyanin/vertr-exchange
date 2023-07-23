@@ -1,5 +1,7 @@
 using Vertr.Exchange.Domain.Abstractions;
+using Vertr.Exchange.Domain.Binary;
 using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Domain.Symbols;
 using Vertr.Exchange.Domain.Users;
 
 namespace Vertr.Exchange.Domain.Processors;
@@ -7,10 +9,11 @@ namespace Vertr.Exchange.Domain.Processors;
 internal class RiskEngine : IRiskEngine
 {
     private readonly IUserProfileService _userProfileService;
-
+    private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
     public RiskEngine()
     {
         _userProfileService = new UserProfileService();
+        _symbolSpecificationProvider = new SymbolSpecificationProvider();
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -34,12 +37,12 @@ internal class RiskEngine : IRiskEngine
                 return false;
 
             case OrderCommandType.BALANCE_ADJUSTMENT:
-                cmd.ResultCode = adjustBalance(
+                cmd.ResultCode = AdjustBalance(
                             cmd.Uid,
                             cmd.Symbol,
                             cmd.Price,
                             cmd.OrderId,
-                            BalanceAdjustmentType.of(cmd.orderType.getCode()));
+                            (BalanceAdjustmentType)cmd.OrderType);
                 return false;
 
             case OrderCommandType.SUSPEND_USER:
@@ -63,17 +66,6 @@ internal class RiskEngine : IRiskEngine
             case OrderCommandType.PERSIST_STATE_MATCHING:
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return true;// true = publish sequence before finishing processing whole batch
-
-            case OrderCommandType.PERSIST_STATE_RISK:
-                var isSuccess = serializationProcessor.storeData(
-                        cmd.orderId,
-                        seq,
-                        cmd.timestamp,
-                        MODULE_RE,
-                        shardId,
-                        this);
-                UnsafeUtils.setResultVolatile(cmd, isSuccess, CommandResultCode.SUCCESS, CommandResultCode.STATE_PERSIST_RISK_ENGINE_FAILED);
-                return false;
         }
         return false;
     }
@@ -90,7 +82,8 @@ internal class RiskEngine : IRiskEngine
             return false;
         }
 
-        var spec = symbolSpecificationProvider.getSymbolSpecification(symbol) ?? throw new IllegalStateException("Symbol not found: " + symbol);
+        var spec = _symbolSpecificationProvider.GetSymbolSpecification(symbol) ??
+            throw new InvalidOperationException("Symbol not found: " + symbol);
 
         var takerSell = cmd.Action == OrderAction.ASK;
 
@@ -98,9 +91,8 @@ internal class RiskEngine : IRiskEngine
         {
             // at least one event to process, resolving primary/taker user profile
             // TODO processing order is reversed
-            if (spec.type == SymbolType.CURRENCY_EXCHANGE_PAIR)
+            if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR)
             {
-
                 var takerUp = _userProfileService.GetUserProfileOrAddSuspended(cmd.Uid);
 
                 // REJECT always comes first; REDUCE is always single event
@@ -149,5 +141,42 @@ internal class RiskEngine : IRiskEngine
         }
 
         return false;
+    }
+
+    private CommandResultCode AdjustBalance(
+        long uid,
+        int symbol,
+        long amountDiff,
+        long fundingTransactionId,
+        BalanceAdjustmentType adjustmentType)
+    {
+        var res = _userProfileService.BalanceAdjustment(uid, symbol, amountDiff, fundingTransactionId);
+        /* How to use it?
+        if (res == CommandResultCode.SUCCESS)
+        {
+            switch (adjustmentType)
+            {
+                case BalanceAdjustmentType.ADJUSTMENT:
+                    adjustments.addToValue(symbol, -amountDiff);
+                    break;
+
+                case BalanceAdjustmentType.SUSPEND:
+                    suspends.addToValue(symbol, -amountDiff);
+                    break;
+            }
+        }
+        */
+        return res;
+    }
+
+    public void Reset()
+    {
+        _userProfileService.Reset();
+        _symbolSpecificationProvider.Reset();
+        // binaryCommandsProcessor.reset();
+        // lastPriceCache.clear();
+        // fees.clear();
+        // adjustments.clear();
+        // suspends.clear();
     }
 }

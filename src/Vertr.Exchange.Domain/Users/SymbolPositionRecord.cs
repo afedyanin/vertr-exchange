@@ -21,4 +21,10 @@ internal class SymbolPositionRecord
     public long PendingSellSize { get; }
 
     public long PendingBuySize { get; }
+
+    public bool IsEmpty()
+        => Direction == PositionDirection.EMPTY
+            && PendingSellSize == 0L
+            && PendingBuySize == 0L;
+
 }
