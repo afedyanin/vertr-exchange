@@ -4,7 +4,7 @@ using Vertr.Exchange.Domain.Enums;
 using Vertr.Exchange.Domain.MatchingEngine;
 
 namespace Vertr.Exchange.Domain.Processors;
-public class MatchingEngineRouter
+public class MatchingEngine : IMatchingEngine
 {
     private static readonly int _cfgL2RefreshDepth = int.MaxValue;
 
@@ -13,14 +13,13 @@ public class MatchingEngineRouter
 
     private readonly BinaryCommandProcessor _binaryCommandsProcessor;
 
-    public MatchingEngineRouter()
+    public MatchingEngine()
     {
         _orderBooks = new Dictionary<int, IOrderBook>();
-
         _binaryCommandsProcessor = new BinaryCommandProcessor(HandleBinaryCommand);
     }
 
-    public void ProcessOrderCommand(OrderCommand cmd)
+    public void ProcessOrder(long seq, OrderCommand cmd)
     {
         switch (cmd.Command)
         {
@@ -57,7 +56,7 @@ public class MatchingEngineRouter
         }
     }
 
-    public void ProcessMatchingCommand(OrderCommand cmd)
+    private void ProcessMatchingCommand(OrderCommand cmd)
     {
         if (!_orderBooks.TryGetValue(cmd.Symbol, out var orderBook))
         {
