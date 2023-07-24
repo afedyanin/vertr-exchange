@@ -38,4 +38,6 @@ internal sealed class BinaryCommandProcessor
             _ => null,// TODO: Handle unknown command type
         };
     }
+
+
 }

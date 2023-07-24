@@ -8,12 +8,18 @@ namespace Vertr.Exchange.Domain.Processors;
 
 internal class RiskEngine : IRiskEngine
 {
+    private const bool _cfgMarginTradingEnabled = true;
+    private const bool _cfgIgnoreRiskProcessing = false;
+
     private readonly IUserProfileService _userProfileService;
     private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
+    private readonly BinaryCommandProcessor _binaryCommandsProcessor;
+
     public RiskEngine()
     {
         _userProfileService = new UserProfileService();
         _symbolSpecificationProvider = new SymbolSpecificationProvider();
+        _binaryCommandsProcessor = new BinaryCommandProcessor(HandleBinaryCommand);
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -27,7 +33,7 @@ internal class RiskEngine : IRiskEngine
                 return false;
 
             case OrderCommandType.PLACE_ORDER:
-                cmd.ResultCode = placeOrderRiskCheck(cmd);
+                cmd.ResultCode = PlaceOrderRiskCheck(cmd);
                 return false;
 
             case OrderCommandType.ADD_USER:
@@ -54,7 +60,8 @@ internal class RiskEngine : IRiskEngine
 
             case OrderCommandType.BINARY_DATA_COMMAND:
             case OrderCommandType.BINARY_DATA_QUERY:
-                binaryCommandsProcessor.acceptBinaryFrame(cmd); // ignore return result, because it should be set by MatchingEngineRouter
+                // ignore return result, because it should be set by MatchingEngineRouter
+                var _ = _binaryCommandsProcessor.AcceptBinaryCommand(cmd);
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return false;
 
@@ -68,6 +75,52 @@ internal class RiskEngine : IRiskEngine
                 return true;// true = publish sequence before finishing processing whole batch
         }
         return false;
+    }
+
+    private CommandResultCode PlaceOrderRiskCheck(OrderCommand cmd)
+    {
+
+        var userProfile = _userProfileService.GetUserProfile(cmd.Uid);
+        if (userProfile == null)
+        {
+            cmd.ResultCode = CommandResultCode.AUTH_INVALID_USER;
+            // log.warn("User profile {} not found", cmd.uid);
+            return CommandResultCode.AUTH_INVALID_USER;
+        }
+
+        var spec = _symbolSpecificationProvider.GetSymbolSpecification(cmd.Symbol);
+
+        if (spec == null)
+        {
+            // log.warn("Symbol {} not found", cmd.symbol);
+            return CommandResultCode.INVALID_SYMBOL;
+        }
+
+        if (_cfgIgnoreRiskProcessing)
+        {
+            // skip processing
+            return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
+        }
+
+        // check if account has enough funds
+        var resultCode = PlaceOrder(cmd, userProfile, spec);
+
+        if (resultCode != CommandResultCode.VALID_FOR_MATCHING_ENGINE)
+        {
+            // log.warn("{} risk result={} uid={}: Can not place {}", cmd.orderId, resultCode, userProfile.uid, cmd);
+            // log.warn("{} accounts:{}", cmd.orderId, userProfile.accounts);
+            return CommandResultCode.RISK_NSF;
+        }
+
+        return resultCode;
+    }
+
+    private CommandResultCode PlaceOrder(
+        OrderCommand cmd,
+        UserProfile userProfile,
+        CoreSymbolSpecification spec)
+    {
+        throw new NotImplementedException();
     }
 
     public bool HandlerRiskRelease(long seq, OrderCommand cmd)
@@ -86,7 +139,7 @@ internal class RiskEngine : IRiskEngine
             throw new InvalidOperationException("Symbol not found: " + symbol);
 
         var takerSell = cmd.Action == OrderAction.ASK;
-
+        /*
         if (mte != null && mte.EventType != MatcherEventType.BINARY_EVENT)
         {
             // at least one event to process, resolving primary/taker user profile
@@ -139,8 +192,47 @@ internal class RiskEngine : IRiskEngine
             record.askPrice = (marketData.AskSize != 0) ? marketData.AskPrices[0] : long.MaxValue;
             record.bidPrice = (marketData.BidSize != 0) ? marketData.BidPrices[0] : 0;
         }
-
+        */
         return false;
+    }
+
+    private void HandleBinaryCommand(OrderCommand cmd, BinaryCommand binCmd)
+    {
+        if (binCmd is BatchAddSymbolsCommand batchAddSymbolsCommand)
+        {
+            var symbols = batchAddSymbolsCommand.Symbols;
+
+            foreach (var spec in symbols)
+            {
+                if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || _cfgMarginTradingEnabled)
+                {
+                    _symbolSpecificationProvider.AddSymbol(spec);
+                }
+                else
+                {
+                    // log.warn("Margin symbols are not allowed: {}", spec);
+                }
+            }
+        }
+        else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
+        {
+            var users = batchAddAccountsCommand.Users;
+
+            foreach (var (uid, acounts) in users)
+            {
+                if (_userProfileService.AddEmptyUserProfile(uid))
+                {
+                    foreach (var (cur, bal) in acounts)
+                    {
+                        AdjustBalance(uid, cur, bal, 1_000_000_000 + cur, BalanceAdjustmentType.ADJUSTMENT);
+                    }
+                }
+                else
+                {
+                    // log.debug("User already exist: {}", uid);
+                }
+            }
+        }
     }
 
     private CommandResultCode AdjustBalance(
@@ -173,7 +265,6 @@ internal class RiskEngine : IRiskEngine
     {
         _userProfileService.Reset();
         _symbolSpecificationProvider.Reset();
-        // binaryCommandsProcessor.reset();
         // lastPriceCache.clear();
         // fees.clear();
         // adjustments.clear();
