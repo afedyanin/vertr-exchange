@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Domain.Enums;
+namespace Vertr.Exchange.Common.Enums;
 public enum CommandResultCode
 {
     NEW = 0,

@@ -1,10 +1,11 @@
-using Vertr.Exchange.Domain.Abstractions;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Abstractions;
 
-namespace Vertr.Exchange.Domain.MatchingEngine;
-
-internal static class OrderBookEventsHelper
+namespace Vertr.Exchange.MatchingEngine.Events;
+internal sealed class MatcherTradeEventFactory : IMatcherTradeEventFactory
 {
-    public static MatcherTradeEvent CreateTradeEvent(
+    public IMatcherTradeEvent CreateTradeEvent(
         IOrder matchingOrder,
         bool makerCompleted,
         bool takerCompleted,
@@ -22,7 +23,7 @@ internal static class OrderBookEventsHelper
         };
     }
 
-    public static MatcherTradeEvent CreateReduceEvent(
+    public IMatcherTradeEvent CreateReduceEvent(
         IOrder order,
         long reduceSize,
         bool completed)
@@ -38,17 +39,19 @@ internal static class OrderBookEventsHelper
         };
     }
 
-    public static void AttachRejectEvent(OrderCommand cmd, long rejectedSize)
+    public IMatcherTradeEvent CreateRejectEvent(
+        long price,
+        long rejectedSize)
     {
-        cmd.MatcherEvent = new MatcherTradeEvent
+        return new MatcherTradeEvent
         {
             EventType = MatcherEventType.REJECT,
             ActiveOrderCompleted = true,
             MatchedOrderId = 0L,
             MatchedOrderCompleted = false,
-            Price = cmd.Price,
+            Price = price,
             Size = rejectedSize,
-            NextEvent = cmd.MatcherEvent
         };
     }
+
 }

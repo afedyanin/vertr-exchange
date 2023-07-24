@@ -1,15 +1,14 @@
-using Vertr.Exchange.Domain.Abstractions;
-using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Abstractions;
+using Vertr.Exchange.MatchingEngine.Helpers;
 
-namespace Vertr.Exchange.Domain.MatchingEngine;
+namespace Vertr.Exchange.MatchingEngine;
 
 internal sealed class OrderBook : IOrderBook
 {
-    private sealed class DescendingComparer : IComparer<long>
-    {
-        // https://stackoverflow.com/questions/931891/reverse-sorted-dictionary-in-net
-        public int Compare(long x, long y) => -x.CompareTo(y);
-    }
+    private readonly IMatcherTradeEventFactory _eventFactory;
 
     // Key = OrderId
     private readonly IDictionary<long, IOrder> _orders;
@@ -18,14 +17,16 @@ internal sealed class OrderBook : IOrderBook
     private readonly SortedDictionary<long, OrdersBucket> _bidBuckets;
     private readonly SortedDictionary<long, OrdersBucket> _askBuckets;
 
-    public OrderBook()
+    public OrderBook(
+        IMatcherTradeEventFactory eventFactory)
     {
+        _eventFactory = eventFactory;
         _orders = new Dictionary<long, IOrder>();
         _askBuckets = new SortedDictionary<long, OrdersBucket>();
-        _bidBuckets = new SortedDictionary<long, OrdersBucket>(new DescendingComparer());
+        _bidBuckets = new SortedDictionary<long, OrdersBucket>(LongDescendingComparer.Instance);
     }
 
-    public CommandResultCode ProcessCommand(OrderCommand cmd)
+    public CommandResultCode ProcessCommand(IOrderCommand cmd)
     {
         var commandType = cmd.Command;
 
@@ -75,7 +76,7 @@ internal sealed class OrderBook : IOrderBook
         return data;
     }
 
-    private void NewOrder(OrderCommand cmd)
+    private void NewOrder(IOrderCommand cmd)
     {
         switch (cmd.OrderType)
         {
@@ -93,12 +94,12 @@ internal sealed class OrderBook : IOrderBook
             // TODO: Implement FOK
             default:
                 //log.warn("Unsupported order type: {}", cmd);
-                OrderBookEventsHelper.AttachRejectEvent(cmd, cmd.Size);
+                _eventFactory.AttachRejectEvent(cmd, cmd.Size);
                 break;
         }
     }
 
-    private void NewOrderPlaceGtc(OrderCommand cmd)
+    private void NewOrderPlaceGtc(IOrderCommand cmd)
     {
         var action = cmd.Action;
         var price = cmd.Price;
@@ -116,7 +117,7 @@ internal sealed class OrderBook : IOrderBook
         if (_orders.ContainsKey(newOrderId))
         {
             // duplicate order id - can match, but can not place
-            OrderBookEventsHelper.AttachRejectEvent(cmd, cmd.Size - filledSize);
+            _eventFactory.AttachRejectEvent(cmd, cmd.Size - filledSize);
             //log.warn("duplicate order id: {}", cmd);
             return;
         }
@@ -137,7 +138,7 @@ internal sealed class OrderBook : IOrderBook
 
         if (!buckets.ContainsKey(price))
         {
-            buckets.Add(price, new OrdersBucket(price));
+            buckets.Add(price, new OrdersBucket(_eventFactory, price));
         }
 
         var bucket = buckets[price];
@@ -146,7 +147,7 @@ internal sealed class OrderBook : IOrderBook
         _orders.Add(newOrderId, orderRecord);
     }
 
-    private void NewOrderMatchIoc(OrderCommand cmd)
+    private void NewOrderMatchIoc(IOrderCommand cmd)
     {
         var filledSize = TryMatchInstantly(cmd, 0L, cmd);
 
@@ -155,14 +156,14 @@ internal sealed class OrderBook : IOrderBook
         if (rejectedSize != 0L)
         {
             // was not matched completely - send reject for not-completed IoC order
-            OrderBookEventsHelper.AttachRejectEvent(cmd, rejectedSize);
+            _eventFactory.AttachRejectEvent(cmd, rejectedSize);
         }
     }
 
     private long TryMatchInstantly(
             IOrder activeOrder,
             long filled,
-            OrderCommand triggerCmd)
+            IOrderCommand triggerCmd)
     {
         var matchingBuckets = activeOrder.Action == OrderAction.ASK ? _bidBuckets : _askBuckets;
 
@@ -235,7 +236,7 @@ internal sealed class OrderBook : IOrderBook
         return filled;
     }
 
-    private CommandResultCode CancelOrder(OrderCommand cmd)
+    private CommandResultCode CancelOrder(IOrderCommand cmd)
     {
         var orderId = cmd.OrderId;
 
@@ -271,7 +272,7 @@ internal sealed class OrderBook : IOrderBook
             buckets.Remove(order.Price);
         }
 
-        cmd.MatcherEvent = OrderBookEventsHelper.CreateReduceEvent(order, order.Remaining, true);
+        cmd.MatcherEvent = _eventFactory.CreateReduceEvent(order, order.Remaining, true);
 
         // fill action fields (for events handling)
         // TODO: How and where is it used?
@@ -280,7 +281,7 @@ internal sealed class OrderBook : IOrderBook
         return CommandResultCode.SUCCESS;
     }
 
-    private CommandResultCode ReduceOrder(OrderCommand cmd)
+    private CommandResultCode ReduceOrder(IOrderCommand cmd)
     {
         var orderId = cmd.OrderId;
         var requestedReduceSize = cmd.Size;
@@ -341,7 +342,7 @@ internal sealed class OrderBook : IOrderBook
         }
 
         // send reduce event
-        cmd.MatcherEvent = OrderBookEventsHelper.CreateReduceEvent(order, reduceBy, canRemove);
+        cmd.MatcherEvent = _eventFactory.CreateReduceEvent(order, reduceBy, canRemove);
 
         // fill action fields (for events handling)
         cmd.Action = order.Action;
@@ -349,7 +350,7 @@ internal sealed class OrderBook : IOrderBook
         return CommandResultCode.SUCCESS;
     }
 
-    private CommandResultCode MoveOrder(OrderCommand cmd)
+    private CommandResultCode MoveOrder(IOrderCommand cmd)
     {
         var orderId = cmd.OrderId;
         var newPrice = cmd.Price;
@@ -409,7 +410,7 @@ internal sealed class OrderBook : IOrderBook
 
         if (!buckets.ContainsKey(order.Price))
         {
-            buckets.Add(order.Price, new OrdersBucket(order.Price));
+            buckets.Add(order.Price, new OrdersBucket(_eventFactory, order.Price));
         }
 
         var anotherBucket = buckets[order.Price];

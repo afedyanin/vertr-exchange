@@ -1,8 +1,9 @@
-using Vertr.Exchange.Domain.Abstractions;
-using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.Domain;
-public class OrderCommand : IOrder
+namespace Vertr.Exchange.Common;
+
+public record class OrderCommand : IOrderCommand
 {
     public OrderCommandType Command { get; set; }
 
@@ -14,7 +15,7 @@ public class OrderCommand : IOrder
 
     public L2MarketData? MarketData { get; set; }
 
-    public MatcherTradeEvent? MatcherEvent { get; set; }
+    public IMatcherTradeEvent? MatcherEvent { get; set; }
 
     public long OrderId { get; set; }
 
@@ -30,7 +31,7 @@ public class OrderCommand : IOrder
 
     public int Symbol { get; set; }
 
-    public byte[] BinaryData { get; set; } = Array.Empty<byte>();
+    // public byte[] BinaryData { get; set; } = Array.Empty<byte>();
 
-    public BinaryDataType BinaryCommandType { get; set; }
+    // public BinaryDataType BinaryCommandType { get; set; }
 }

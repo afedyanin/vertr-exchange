@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Domain.Enums;
+namespace Vertr.Exchange.Common.Enums;
 public enum OrderType
 {
     // Good till Cancel - equivalent to regular limit order

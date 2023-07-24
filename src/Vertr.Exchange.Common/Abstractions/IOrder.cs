@@ -1,17 +1,17 @@
-using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.Domain.Abstractions;
+namespace Vertr.Exchange.Common.Abstractions;
 public interface IOrder
 {
     OrderAction Action { get; }
 
     long OrderId { get; }
 
-    long Price { get; set; }
+    long Price { get; }
 
-    long Size { get; set; }
+    long Size { get; }
 
-    long Filled { get; set; }
+    long Filled { get; }
 
     long Uid { get; }
 

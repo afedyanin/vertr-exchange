@@ -1,13 +1,12 @@
 using System.Diagnostics;
-using Vertr.Exchange.Domain.Abstractions;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.MatchingEngine.Abstractions;
 
-namespace Vertr.Exchange.Domain.MatchingEngine;
+namespace Vertr.Exchange.MatchingEngine;
 
-/// <summary>
-/// Historical sequence of orders with the same direction and price
-/// </summary>
 internal sealed class OrdersBucket
 {
+    private readonly IMatcherTradeEventFactory _eventFactory;
     private readonly LinkedList<IOrder> _orders;
 
     public long Price { get; }
@@ -16,12 +15,15 @@ internal sealed class OrdersBucket
 
     public int OrdersCount => _orders.Count;
 
-    public OrdersBucket(long price)
+    public OrdersBucket(
+        IMatcherTradeEventFactory eventFactory,
+        long price)
     {
         Debug.Assert(price >= 0L);
         Price = price;
         TotalVolume = 0L;
         _orders = new LinkedList<IOrder>();
+        _eventFactory = eventFactory;
     }
 
     public IOrder? FindOrder(long orderId)
@@ -65,7 +67,7 @@ internal sealed class OrdersBucket
     {
         var totalMatchingVolume = 0L;
         var ordersToRemove = new List<long>();
-        var tradeEvents = new LinkedList<MatcherTradeEvent>();
+        var tradeEvents = new LinkedList<IMatcherTradeEvent>();
 
         var node = _orders.First;
 
@@ -76,13 +78,14 @@ internal sealed class OrdersBucket
             var volume = Math.Min(volumeToCollect, order.Remaining);
 
             totalMatchingVolume += volume;
-            order.Filled += volume;
+            // !!! order.Filled += volume;
+
             volumeToCollect -= volume;
             TotalVolume -= volume;
 
             var fullMatch = order.Size == order.Filled;
 
-            var tradeEvent = OrderBookEventsHelper.CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume);
+            var tradeEvent = _eventFactory.CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume);
             tradeEvents.AddLast(tradeEvent!);
 
             if (fullMatch)

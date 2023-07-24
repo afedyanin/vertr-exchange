@@ -1,6 +1,9 @@
-namespace Vertr.Exchange.Domain;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
-public class MatcherTradeEvent
+namespace Vertr.Exchange.MatchingEngine;
+
+internal sealed class MatcherTradeEvent : IMatcherTradeEvent
 {
     public MatcherEventType EventType { get; set; }
 
@@ -16,5 +19,5 @@ public class MatcherTradeEvent
 
     public long Size { get; set; }
 
-    public MatcherTradeEvent? NextEvent { get; set; }
+    public IMatcherTradeEvent? NextEvent { get; set; }
 }

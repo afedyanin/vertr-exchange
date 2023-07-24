@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Domain;
+namespace Vertr.Exchange.Common.Enums;
 public enum MatcherEventType
 {
     TRADE = 0,

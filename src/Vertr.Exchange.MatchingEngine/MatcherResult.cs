@@ -1,16 +1,19 @@
-namespace Vertr.Exchange.Domain.MatchingEngine;
+using Vertr.Exchange.Common.Abstractions;
+
+namespace Vertr.Exchange.MatchingEngine;
+
 internal sealed class MatcherResult
 {
     public long Volume { get; }
 
     public long[] OrdersToRemove { get; }
 
-    public MatcherTradeEvent[] TradeEvents { get; }
+    public IMatcherTradeEvent[] TradeEvents { get; }
 
     public MatcherResult(
         long volume,
         long[] ordersToRemove,
-        MatcherTradeEvent[] tradeEvents)
+        IMatcherTradeEvent[] tradeEvents)
     {
         Volume = volume;
         OrdersToRemove = ordersToRemove;
