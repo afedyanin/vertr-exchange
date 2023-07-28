@@ -3,7 +3,7 @@ using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Common;
 
-public record class OrderCommand : IOrderCommand
+public class OrderCommand : IOrder
 {
     public OrderCommandType Command { get; set; }
 

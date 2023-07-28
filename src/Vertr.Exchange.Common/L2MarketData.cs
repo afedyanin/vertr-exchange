@@ -1,6 +1,6 @@
 namespace Vertr.Exchange.Common;
 
-public record class L2MarketData
+public class L2MarketData
 {
     public int AskSize { get; set; }
 
