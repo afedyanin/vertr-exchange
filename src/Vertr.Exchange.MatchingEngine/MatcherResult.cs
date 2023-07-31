@@ -1,5 +1,3 @@
-using Vertr.Exchange.Common.Abstractions;
-
 namespace Vertr.Exchange.MatchingEngine;
 
 internal sealed class MatcherResult
@@ -8,12 +6,12 @@ internal sealed class MatcherResult
 
     public long[] OrdersToRemove { get; }
 
-    public IMatcherTradeEvent[] TradeEvents { get; }
+    public MatcherTradeEvent[] TradeEvents { get; }
 
     public MatcherResult(
         long volume,
         long[] ordersToRemove,
-        IMatcherTradeEvent[] tradeEvents)
+        MatcherTradeEvent[] tradeEvents)
     {
         Volume = volume;
         OrdersToRemove = ordersToRemove;

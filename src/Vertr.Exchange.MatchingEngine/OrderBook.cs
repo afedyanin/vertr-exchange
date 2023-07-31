@@ -1,7 +1,6 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.MatchingEngine.Commands;
 using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine;
@@ -22,43 +21,209 @@ internal sealed class OrderBook : IOrderBook
         _bidBuckets = new SortedDictionary<long, OrdersBucket>(LongDescendingComparer.Instance);
     }
 
-    public CommandResultCode ProcessCommand(OrderCommand cmd)
-    {
-        var orderBookCommand = OrderBookCommandFactory.CreateOrderBookCommand(this, cmd);
-        return orderBookCommand.Execute();
-    }
-
     public IOrder? GetOrder(long orderId)
     {
         _orders.TryGetValue(orderId, out var order);
         return order;
     }
 
-    public void RemoveOrder(long orderId)
+    public bool AddNewOrder(IOrder order)
     {
-        _orders.Remove(orderId);
+        if (_orders.ContainsKey(order.OrderId))
+        {
+            return false;
+        }
+
+        _orders.Add(order.OrderId, order);
+
+        return UpdateOrder(order);
     }
 
-    public OrdersBucket GetBucket(IOrder order)
+    public bool UpdateOrder(IOrder order)
     {
+        var buckets = GetBucketsByAction(order.Action);
+
+        if (!buckets.ContainsKey(order.Price))
+        {
+            buckets.Add(order.Price, new OrdersBucket(order.Price));
+        }
+
+        var bucket = buckets[order.Price];
+        bucket.Put(order);
+
+        return true;
+    }
+
+    public bool RemoveOrder(IOrder order)
+    {
+        var removedFromOrders = _orders.Remove(order.OrderId);
+
+        if (!removedFromOrders)
+        {
+            return false;
+        }
+
         var buckets = GetBucketsByAction(order.Action);
 
         if (!buckets.TryGetValue(order.Price, out var bucket))
         {
-            throw new InvalidOperationException($"Can not find bucket for OrderId={order.OrderId} Price={order.Price}");
+            return false;
         }
 
-        return bucket;
+        var removedFromBucket = bucket.Remove(order);
+
+        if (!removedFromBucket)
+        {
+            return false;
+        }
+
+        if (bucket.TotalVolume == 0L)
+        {
+            buckets.Remove(order.Price);
+        }
+
+        return true;
     }
 
-    public void RemoveBucket(IOrder order)
+    public L2MarketData GetL2MarketDataSnapshot(int size)
     {
-        var buckets = GetBucketsByAction(order.Action);
-        buckets.Remove(order.Price);
+        var asksSize = GetTotalAskBuckets(size);
+        var bidsSize = GetTotalBidBuckets(size);
+        var data = new L2MarketData(asksSize, bidsSize);
+        FillAsks(asksSize, data);
+        FillBids(bidsSize, data);
+        return data;
+    }
+
+    public long TryMatchInstantly(IOrder activeOrder, long filled, OrderCommand triggerCmd)
+    {
+        var matchingBuckets = activeOrder.Action == OrderAction.ASK ? _bidBuckets : _askBuckets;
+
+        if (!matchingBuckets.Any())
+        {
+            return filled;
+        }
+
+        var orderSize = activeOrder.Size;
+        var emptyBuckets = new List<long>();
+        MatcherTradeEvent? eventsTail = null;
+
+        foreach (var bucket in matchingBuckets.Values)
+        {
+            if (activeOrder.Action == OrderAction.BID && bucket.Price > activeOrder.Price)
+            {
+                break;
+            }
+
+            if (activeOrder.Action == OrderAction.ASK && bucket.Price < activeOrder.Price)
+            {
+                break;
+            }
+
+            var sizeLeft = orderSize - filled;
+            var bucketMatchings = bucket.Match(sizeLeft);
+
+            foreach (var orderId in bucketMatchings.OrdersToRemove)
+            {
+                _orders.Remove(orderId);
+            }
+
+            filled += bucketMatchings.Volume;
+
+            // attach chain received from bucket matcher
+            foreach (var evt in bucketMatchings.TradeEvents)
+            {
+                if (eventsTail == null)
+                {
+                    triggerCmd.MatcherEvent = evt;
+                }
+                else
+                {
+                    eventsTail.NextEvent = evt;
+                }
+
+                eventsTail = evt;
+            }
+
+            var price = bucket.Price;
+
+            // remove empty buckets
+            if (bucket.TotalVolume == 0L)
+            {
+                emptyBuckets.Add(price);
+            }
+
+            if (filled == orderSize)
+            {
+                // enough matched
+                break;
+            }
+        }
+
+        foreach (var key in emptyBuckets)
+        {
+            matchingBuckets.Remove(key);
+        }
+
+        return filled;
     }
 
     private SortedDictionary<long, OrdersBucket> GetBucketsByAction(OrderAction action)
         => action == OrderAction.ASK ? _askBuckets : _bidBuckets;
+
+    private int GetTotalAskBuckets(int limit)
+        => Math.Min(limit, _askBuckets.Count);
+
+    private int GetTotalBidBuckets(int limit)
+        => Math.Min(limit, _bidBuckets.Count);
+
+    private void FillAsks(int size, L2MarketData data)
+    {
+        if (size == 0)
+        {
+            data.AskSize = 0;
+            return;
+        }
+
+        var i = 0;
+
+        foreach (var bucket in _askBuckets.Values)
+        {
+            data.AskPrices[i] = bucket.Price;
+            data.AskVolumes[i] = bucket.TotalVolume;
+            data.AskOrders[i] = bucket.OrdersCount;
+
+            if (++i == size)
+            {
+                break;
+            }
+        }
+
+        data.AskSize = i;
+    }
+
+    private void FillBids(int size, L2MarketData data)
+    {
+        if (size == 0)
+        {
+            data.BidSize = 0;
+            return;
+        }
+
+        var i = 0;
+
+        foreach (var bucket in _bidBuckets.Values)
+        {
+            data.BidPrices[i] = bucket.Price;
+            data.BidVolumes[i] = bucket.TotalVolume;
+            data.BidOrders[i] = bucket.OrdersCount;
+            if (++i == size)
+            {
+                break;
+            }
+        }
+        data.BidSize = i;
+    }
 
     internal bool ValidateInternalState()
     {

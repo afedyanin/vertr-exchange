@@ -1,10 +1,11 @@
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal class MatchingUnsupportedCommand : OrderBookCommand
 {
-    public MatchingUnsupportedCommand(OrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
+    public MatchingUnsupportedCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {
     }
 

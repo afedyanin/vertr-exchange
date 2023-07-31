@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.MatchingEngine.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.MatchingEngine;
 
 internal sealed class OrdersBucket
 {
-    private readonly IMatcherTradeEventFactory _eventFactory;
     private readonly LinkedList<IOrder> _orders;
 
     public long Price { get; }
@@ -15,15 +14,12 @@ internal sealed class OrdersBucket
 
     public int OrdersCount => _orders.Count;
 
-    public OrdersBucket(
-        IMatcherTradeEventFactory eventFactory,
-        long price)
+    public OrdersBucket(long price)
     {
         Debug.Assert(price >= 0L);
         Price = price;
         TotalVolume = 0L;
         _orders = new LinkedList<IOrder>();
-        _eventFactory = eventFactory;
     }
 
     public IOrder? FindOrder(long orderId)
@@ -67,7 +63,7 @@ internal sealed class OrdersBucket
     {
         var totalMatchingVolume = 0L;
         var ordersToRemove = new List<long>();
-        var tradeEvents = new LinkedList<IMatcherTradeEvent>();
+        var tradeEvents = new LinkedList<MatcherTradeEvent>();
 
         var node = _orders.First;
 
@@ -85,7 +81,7 @@ internal sealed class OrdersBucket
 
             var fullMatch = order.Size == order.Filled;
 
-            var tradeEvent = _eventFactory.CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume);
+            var tradeEvent = CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume);
             tradeEvents.AddLast(tradeEvent!);
 
             if (fullMatch)
@@ -97,5 +93,23 @@ internal sealed class OrdersBucket
         }
 
         return new MatcherResult(totalMatchingVolume, ordersToRemove.ToArray(), tradeEvents.ToArray());
+    }
+
+    private MatcherTradeEvent CreateTradeEvent(
+        IOrder matchingOrder,
+        bool makerCompleted,
+        bool takerCompleted,
+        long size)
+    {
+        return new MatcherTradeEvent
+        {
+            EventType = MatcherEventType.TRADE,
+            ActiveOrderCompleted = takerCompleted,
+            MatchedOrderId = matchingOrder.OrderId,
+            MatchedOrderUid = matchingOrder.Uid,
+            MatchedOrderCompleted = makerCompleted,
+            Price = matchingOrder.Price,
+            Size = size,
+        };
     }
 }

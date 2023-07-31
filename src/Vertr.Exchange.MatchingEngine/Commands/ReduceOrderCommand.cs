@@ -1,10 +1,11 @@
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal class ReduceOrderCommand : OrderBookCommand
 {
-    public ReduceOrderCommand(OrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
+    public ReduceOrderCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {
     }
 
@@ -33,30 +34,11 @@ internal class ReduceOrderCommand : OrderBookCommand
 
         var remainingSize = order.Remaining;
         var reduceBy = Math.Min(remainingSize, requestedReduceSize);
-        var bucket = OrderBook.GetBucket(order);
-
         var canRemove = reduceBy == remainingSize;
 
         if (canRemove)
         {
-            // now can remove order
-            OrderBook.RemoveOrder(orderId);
-
-            // canRemove order and whole bucket if it is empty
-            bucket.Remove(order);
-
-            var removed = bucket.Remove(order);
-
-            if (!removed)
-            {
-                // TODO: How to handle fail removing
-                throw new InvalidOperationException($"Can not remove OrderId={order.OrderId}");
-            }
-
-            if (bucket.TotalVolume == 0L)
-            {
-                OrderBook.RemoveBucket(order);
-            }
+            OrderBook.RemoveOrder(order);
         }
         else
         {
@@ -65,7 +47,7 @@ internal class ReduceOrderCommand : OrderBookCommand
         }
 
         // send reduce event
-        OrderCommand.MatcherEvent = _eventFactory.CreateReduceEvent(order, reduceBy, canRemove);
+        OrderCommand.MatcherEvent = CreateReduceEvent(order, reduceBy, canRemove);
 
         // fill action fields (for events handling)
         OrderCommand.Action = order.Action;

@@ -1,10 +1,11 @@
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal class MoveOrderCommand : OrderBookCommand
 {
-    public MoveOrderCommand(OrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
+    public MoveOrderCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {
     }
 
@@ -12,7 +13,6 @@ internal class MoveOrderCommand : OrderBookCommand
     {
         var orderId = OrderCommand.OrderId;
         var newPrice = OrderCommand.Price;
-
 
         var order = OrderBook.GetOrder(orderId);
 
@@ -27,51 +27,26 @@ internal class MoveOrderCommand : OrderBookCommand
             return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
         }
 
-        var bucket = OrderBook.GetBucket(order);
+        OrderBook.RemoveOrder(order);
 
         // fill action fields (for events handling)
         OrderCommand.Action = order.Action;
 
-        // take order out of the original bucket and clean bucket if its empty
-        bucket.Remove(order);
-
-        var removed = bucket.Remove(order);
-
-        if (!removed)
-        {
-            // TODO: How to handle fail removing
-            throw new InvalidOperationException($"Can not remove OrderId={order.OrderId}");
-        }
-
-        if (bucket.TotalVolume == 0L)
-        {
-            OrderBook.RemoveBucket(order);
-        }
-
         order.Price = newPrice;
 
         // try match with new price
-        var filled = TryMatchInstantly(order, order.Filled, cmd);
+        var filled = OrderBook.TryMatchInstantly(order, order.Filled, OrderCommand);
 
         if (filled == order.Size)
         {
-            // order was fully matched (100% marketable) - removing from order book
-            OrderBook.RemoveOrder(orderId);
+            OrderBook.RemoveOrder(order);
             return CommandResultCode.SUCCESS;
         }
 
         order.Filled = filled;
 
         // if not filled completely - put it into corresponding bucket
-
-        if (!buckets.ContainsKey(order.Price))
-        {
-            buckets.Add(order.Price, new OrdersBucket(_eventFactory, order.Price));
-        }
-
-        var anotherBucket = buckets[order.Price];
-        anotherBucket.Put(order);
-
+        OrderBook.UpdateOrder(order);
         return CommandResultCode.SUCCESS;
 
     }

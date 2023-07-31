@@ -1,11 +1,12 @@
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Commands.NewOrder;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal static class OrderBookCommandFactory
 {
-    public static OrderBookCommand CreateOrderBookCommand(OrderBook orderBook, OrderCommand cmd)
+    public static OrderBookCommand CreateOrderBookCommand(IOrderBook orderBook, OrderCommand cmd)
     {
         var commandType = cmd.Command;
 
@@ -40,7 +41,7 @@ internal static class OrderBookCommandFactory
         return new NoChangeOrderCommand(orderBook, cmd);
     }
 
-    private static OrderBookCommand CreateNewOrderBookCommand(OrderBook orderBook, OrderCommand cmd)
+    private static OrderBookCommand CreateNewOrderBookCommand(IOrderBook orderBook, OrderCommand cmd)
     {
         return cmd.OrderType switch
         {
