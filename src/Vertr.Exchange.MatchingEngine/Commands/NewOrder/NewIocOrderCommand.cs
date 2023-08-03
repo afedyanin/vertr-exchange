@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands.NewOrder;
-internal class NewIocOrderCommand : NewOrderCommand
+internal class NewIocOrderCommand : OrderBookCommand
 {
     public NewIocOrderCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {

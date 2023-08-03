@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands.NewOrder;
-internal class NewGtcOrderCommand : NewOrderCommand
+internal class NewGtcOrderCommand : OrderBookCommand
 {
     public NewGtcOrderCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {

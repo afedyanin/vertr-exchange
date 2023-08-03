@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
@@ -12,24 +13,18 @@ internal class CancelOrderCommand : OrderBookCommand
 
     public override CommandResultCode Execute()
     {
-        var order = OrderBook.GetOrder(OrderCommand.OrderId);
-
-        if (order is null)
+        if (!HasValidOrder)
         {
             return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
         }
 
-        if (order.Uid != OrderCommand.Uid)
-        {
-            return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
-        }
+        Debug.Assert(Order is not null);
 
-        OrderBook.RemoveOrder(order);
-        OrderCommand.AttachReduceEvent(order, order.Remaining, true);
+        UpdateCommandAction();
 
-        // fill action fields (for events handling)
-        // TODO: How and where is it used?
-        OrderCommand.Action = order.Action;
+        OrderBook.RemoveOrder(Order);
+
+        OrderCommand.AttachReduceEvent(Order, Order.Remaining, true);
 
         return CommandResultCode.SUCCESS;
     }

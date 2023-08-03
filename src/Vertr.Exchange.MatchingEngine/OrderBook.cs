@@ -106,8 +106,8 @@ internal sealed class OrderBook : IOrderBook
             return filled;
         }
 
-        var orderSize = orderCommand.Size;
         var emptyBuckets = new List<long>();
+        var filledOrders = new List<long>();
 
         foreach (var bucket in matchingBuckets.Values)
         {
@@ -116,38 +116,27 @@ internal sealed class OrderBook : IOrderBook
                 break;
             }
 
-            var sizeLeft = orderSize - filled;
-            var bucketMatchings = bucket.Match(sizeLeft);
-
-            foreach (var orderId in bucketMatchings.OrdersToRemove)
+            if (filled == orderCommand.Size)
             {
-                _orders.Remove(orderId);
-            }
-
-            filled += bucketMatchings.Volume;
-
-            // attach chain received from bucket matcher
-            orderCommand.AttachMatcherEvents(bucketMatchings);
-
-            var price = bucket.Price;
-
-            // remove empty buckets
-            if (bucket.TotalVolume == 0L)
-            {
-                emptyBuckets.Add(price);
-            }
-
-            if (filled == orderSize)
-            {
-                // enough matched
                 break;
             }
+
+            var sizeLeft = orderCommand.Size - filled;
+            var bucketMatchings = bucket.Match(sizeLeft);
+
+            filledOrders.AddRange(bucketMatchings.OrdersToRemove);
+
+            if (bucket.TotalVolume == 0L)
+            {
+                emptyBuckets.Add(bucket.Price);
+            }
+
+            orderCommand.AttachMatcherEvents(bucketMatchings);
+            filled += bucketMatchings.Volume;
         }
 
-        foreach (var key in emptyBuckets)
-        {
-            matchingBuckets.Remove(key);
-        }
+        RemoveFilledOrders(filledOrders);
+        RemoveEmptyBuckets(matchingBuckets, emptyBuckets);
 
         return filled;
     }
@@ -170,6 +159,21 @@ internal sealed class OrderBook : IOrderBook
         return reduceBy;
     }
 
+    private void RemoveFilledOrders(IEnumerable<long> orderIds)
+    {
+        foreach (var orderId in orderIds)
+        {
+            _orders.Remove(orderId);
+        }
+    }
+
+    private void RemoveEmptyBuckets(SortedDictionary<long, OrdersBucket> backets, IEnumerable<long> ids)
+    {
+        foreach (var id in ids)
+        {
+            backets.Remove(id);
+        }
+    }
 
     private SortedDictionary<long, OrdersBucket> GetBucketsByAction(OrderAction action)
         => action == OrderAction.ASK ? _askBuckets : _bidBuckets;
@@ -177,17 +181,17 @@ internal sealed class OrderBook : IOrderBook
     private SortedDictionary<long, OrdersBucket> GetBucketsForMatching(OrderAction action)
         => action == OrderAction.ASK ? _bidBuckets : _askBuckets;
 
-    private bool CanMatch(OrderAction action, long orderPrice, long bucketPrice)
+    private static bool CanMatch(OrderAction action, long orderPrice, long bucketPrice)
     {
         if (action == OrderAction.BID && bucketPrice > orderPrice)
         {
-            // цена оффера в бакете выше, чем цена покупки
+            // продажная цена выше, чем запрашиваемая цена покупки
             return false;
         }
 
         if (action == OrderAction.ASK && bucketPrice < orderPrice)
         {
-            // цена покупки в бакете меньше, цем цена предложения
+            // покупная цена меньше, чем запрашиваемая цена продажи
             return false;
         }
 

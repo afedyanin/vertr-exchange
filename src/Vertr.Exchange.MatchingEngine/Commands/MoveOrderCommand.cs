@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
@@ -11,42 +12,30 @@ internal class MoveOrderCommand : OrderBookCommand
 
     public override CommandResultCode Execute()
     {
-        var orderId = OrderCommand.OrderId;
-        var newPrice = OrderCommand.Price;
-
-        var order = OrderBook.GetOrder(orderId);
-
-        if (order is null)
-        {
-            // already matched, moved or cancelled
-            return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
-        }
-
-        if (order.Uid != OrderCommand.Uid)
+        if (!HasValidOrder)
         {
             return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
         }
 
-        OrderBook.RemoveOrder(order);
+        Debug.Assert(Order is not null);
 
-        // fill action fields (for events handling)
-        OrderCommand.Action = order.Action;
+        UpdateCommandAction();
 
-        order.Move(newPrice);
+        OrderBook.RemoveOrder(Order);
 
         // try match with new price
-        var filled = OrderBook.TryMatchInstantly(order, OrderCommand, order.Filled);
+        var filled = OrderBook.TryMatchInstantly(OrderCommand, Order.Filled);
 
-        if (filled == order.Size)
+        if (filled == Order.Size)
         {
-            OrderBook.RemoveOrder(order);
             return CommandResultCode.SUCCESS;
         }
 
-        order.Filled = filled;
-
         // if not filled completely - put it into corresponding bucket
-        OrderBook.UpdateOrder(order);
+        Order.Move(OrderCommand.Price);
+        Order.Fill(filled - Order.Filled);
+        OrderBook.UpdateOrder(Order);
+
         return CommandResultCode.SUCCESS;
 
     }

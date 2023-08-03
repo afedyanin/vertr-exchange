@@ -10,12 +10,29 @@ internal abstract class OrderBookCommand
 
     protected IOrderBook OrderBook { get; }
 
+    public IOrder? Order { get; }
+
+    public bool HasValidOrder
+        => Order is not null &&
+           Order.Uid == OrderCommand.Uid;
+
     protected OrderBookCommand(
         IOrderBook orderBook,
         OrderCommand cmd)
     {
         OrderBook = orderBook;
         OrderCommand = cmd;
+        Order = OrderBook.GetOrder(OrderCommand.OrderId);
     }
     public abstract CommandResultCode Execute();
+
+    protected void UpdateCommandAction()
+    {
+        if (Order is null)
+        {
+            return;
+        }
+
+        OrderCommand.Action = Order.Action;
+    }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
@@ -12,33 +13,24 @@ internal class ReduceOrderCommand : OrderBookCommand
 
     public override CommandResultCode Execute()
     {
-        var orderId = OrderCommand.OrderId;
         var requestedReduceSize = OrderCommand.Size;
 
-        if (requestedReduceSize <= 0)
+        if (requestedReduceSize <= 0L)
         {
             return CommandResultCode.MATCHING_REDUCE_FAILED_WRONG_SIZE;
         }
 
-        var order = OrderBook.GetOrder(orderId);
-
-        if (order is null)
-        {
-            // already matched, moved or cancelled
-            return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
-        }
-
-        if (order.Uid != OrderCommand.Uid)
+        if (!HasValidOrder)
         {
             return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
         }
 
-        var reduced = OrderBook.Reduce(order, requestedReduceSize);
+        Debug.Assert(Order is not null);
 
-        OrderCommand.AttachReduceEvent(order, reduced, order.Completed);
+        UpdateCommandAction();
 
-        // ??? fill action fields (for events handling)
-        OrderCommand.Action = order.Action;
+        var reduced = OrderBook.Reduce(Order, requestedReduceSize);
+        OrderCommand.AttachReduceEvent(Order, reduced, Order.Completed);
 
         return CommandResultCode.SUCCESS;
     }
