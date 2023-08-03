@@ -1,6 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal class CancelOrderCommand : OrderBookCommand
@@ -24,7 +25,7 @@ internal class CancelOrderCommand : OrderBookCommand
         }
 
         OrderBook.RemoveOrder(order);
-        OrderCommand.MatcherEvent = CreateReduceEvent(order, order.Remaining, true);
+        OrderCommand.AttachReduceEvent(order, order.Remaining, true);
 
         // fill action fields (for events handling)
         // TODO: How and where is it used?

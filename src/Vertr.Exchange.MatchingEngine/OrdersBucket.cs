@@ -56,6 +56,8 @@ internal sealed class OrdersBucket
 
     public void ReduceSize(long reduceSize)
     {
+        Debug.Assert(TotalVolume > reduceSize);
+
         TotalVolume -= reduceSize;
     }
 
@@ -74,7 +76,7 @@ internal sealed class OrdersBucket
             var volume = Math.Min(volumeToCollect, order.Remaining);
 
             totalMatchingVolume += volume;
-            // !!! order.Filled += volume;
+            order.Fill(volume);
 
             volumeToCollect -= volume;
             TotalVolume -= volume;

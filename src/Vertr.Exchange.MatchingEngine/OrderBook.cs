@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
@@ -95,27 +96,22 @@ internal sealed class OrderBook : IOrderBook
         return data;
     }
 
-    public long TryMatchInstantly(IOrder activeOrder, long filled, OrderCommand triggerCmd)
+    public long TryMatchInstantly(OrderCommand orderCommand, long filled = 0L)
     {
-        var matchingBuckets = activeOrder.Action == OrderAction.ASK ? _bidBuckets : _askBuckets;
+        var matchingBuckets = GetBucketsForMatching(orderCommand.Action);
 
         if (!matchingBuckets.Any())
         {
+            // no orders to match
             return filled;
         }
 
-        var orderSize = activeOrder.Size;
+        var orderSize = orderCommand.Size;
         var emptyBuckets = new List<long>();
-        MatcherTradeEvent? eventsTail = null;
 
         foreach (var bucket in matchingBuckets.Values)
         {
-            if (activeOrder.Action == OrderAction.BID && bucket.Price > activeOrder.Price)
-            {
-                break;
-            }
-
-            if (activeOrder.Action == OrderAction.ASK && bucket.Price < activeOrder.Price)
+            if (!CanMatch(orderCommand.Action, orderCommand.Price, bucket.Price))
             {
                 break;
             }
@@ -131,19 +127,7 @@ internal sealed class OrderBook : IOrderBook
             filled += bucketMatchings.Volume;
 
             // attach chain received from bucket matcher
-            foreach (var evt in bucketMatchings.TradeEvents)
-            {
-                if (eventsTail == null)
-                {
-                    triggerCmd.MatcherEvent = evt;
-                }
-                else
-                {
-                    eventsTail.NextEvent = evt;
-                }
-
-                eventsTail = evt;
-            }
+            orderCommand.AttachMatcherEvents(bucketMatchings);
 
             var price = bucket.Price;
 
@@ -168,8 +152,47 @@ internal sealed class OrderBook : IOrderBook
         return filled;
     }
 
+    public long Reduce(IOrder order, long requestedReduceSize)
+    {
+        var reduceBy = Math.Min(order.Remaining, requestedReduceSize);
+
+        order.ReduceSize(reduceBy);
+
+        if (order.Completed)
+        {
+            RemoveOrder(order);
+        }
+        else
+        {
+            ReduceBucketSize(order, reduceBy);
+        }
+
+        return reduceBy;
+    }
+
+
     private SortedDictionary<long, OrdersBucket> GetBucketsByAction(OrderAction action)
         => action == OrderAction.ASK ? _askBuckets : _bidBuckets;
+
+    private SortedDictionary<long, OrdersBucket> GetBucketsForMatching(OrderAction action)
+        => action == OrderAction.ASK ? _bidBuckets : _askBuckets;
+
+    private bool CanMatch(OrderAction action, long orderPrice, long bucketPrice)
+    {
+        if (action == OrderAction.BID && bucketPrice > orderPrice)
+        {
+            // цена оффера в бакете выше, чем цена покупки
+            return false;
+        }
+
+        if (action == OrderAction.ASK && bucketPrice < orderPrice)
+        {
+            // цена покупки в бакете меньше, цем цена предложения
+            return false;
+        }
+
+        return true;
+    }
 
     private int GetTotalAskBuckets(int limit)
         => Math.Min(limit, _askBuckets.Count);
@@ -231,5 +254,12 @@ internal sealed class OrderBook : IOrderBook
         var bidsIsValid = _bidBuckets.Values.All(b => b.IsValid());
 
         return asksIsValid && bidsIsValid;
+    }
+
+    private void ReduceBucketSize(IOrder order, long reduceBy)
+    {
+        var bucket = GetBucketsByAction(order.Action)[order.Price];
+        Debug.Assert(bucket != null);
+        bucket.ReduceSize(reduceBy);
     }
 }

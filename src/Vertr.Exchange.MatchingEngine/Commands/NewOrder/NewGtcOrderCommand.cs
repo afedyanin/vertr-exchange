@@ -1,6 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands.NewOrder;
 internal class NewGtcOrderCommand : NewOrderCommand
@@ -11,35 +12,28 @@ internal class NewGtcOrderCommand : NewOrderCommand
 
     public override CommandResultCode Execute()
     {
-        var action = OrderCommand.Action;
-        var price = OrderCommand.Price;
-        var size = OrderCommand.Size;
+        var filledSize = OrderBook.TryMatchInstantly(OrderCommand);
 
-        var filledSize = OrderBook.TryMatchInstantly(OrderCommand, 0L, OrderCommand);
-
-        if (filledSize == size)
+        if (filledSize == OrderCommand.Size)
         {
             // order was matched completely - nothing to place - can just return
-            return OrderCommand.ResultCode; // ???
+            return CommandResultCode.SUCCESS;
         }
 
         // normally placing regular GTC limit order
-        var orderRecord = new Order
-        {
-            Action = action,
-            OrderId = newOrderId,
-            Price = price,
-            Size = size,
-            Filled = filledSize,
-            Uid = cmd.Uid,
-            Timestamp = cmd.Timestamp,
-        };
+        var order = new Order(
+            OrderCommand.Action,
+            OrderCommand.OrderId,
+            OrderCommand.Price,
+            OrderCommand.Size,
+            filledSize,
+            OrderCommand.Uid,
+            OrderCommand.Timestamp);
 
-        if (!OrderBook.AddNewOrder(orderRecord))
+        if (!OrderBook.AddNewOrder(order))
         {
             // duplicate order id - can match, but can not place
-            OrderCommand.MatcherEvent = CreateRejectEvent(OrderCommand.Price, OrderCommand.Size - filledSize);
-            return CommandResultCode.SUCCESS; // ???
+            OrderCommand.AttachRejectEvent(order.Price, order.Remaining);
         }
 
         return CommandResultCode.SUCCESS;

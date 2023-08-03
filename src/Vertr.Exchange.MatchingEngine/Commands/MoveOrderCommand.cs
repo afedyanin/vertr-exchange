@@ -32,10 +32,10 @@ internal class MoveOrderCommand : OrderBookCommand
         // fill action fields (for events handling)
         OrderCommand.Action = order.Action;
 
-        order.Price = newPrice;
+        order.Move(newPrice);
 
         // try match with new price
-        var filled = OrderBook.TryMatchInstantly(order, order.Filled, OrderCommand);
+        var filled = OrderBook.TryMatchInstantly(order, OrderCommand, order.Filled);
 
         if (filled == order.Size)
         {

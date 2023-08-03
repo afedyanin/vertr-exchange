@@ -1,6 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal class RejectOrderCommand : OrderBookCommand
@@ -12,7 +13,7 @@ internal class RejectOrderCommand : OrderBookCommand
     public override CommandResultCode Execute()
     {
         //log.warn("Unsupported order type: {}", cmd);
-        OrderCommand.MatcherEvent = CreateRejectEvent(OrderCommand.Price, OrderCommand.Size);
+        OrderCommand.AttachRejectEvent(OrderCommand.Price, OrderCommand.Size);
         return CommandResultCode.MATCHING_UNSUPPORTED_COMMAND; // ??
     }
 }

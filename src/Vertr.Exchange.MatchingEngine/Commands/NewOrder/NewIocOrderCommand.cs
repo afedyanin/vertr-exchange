@@ -1,6 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands.NewOrder;
 internal class NewIocOrderCommand : NewOrderCommand
@@ -11,14 +12,13 @@ internal class NewIocOrderCommand : NewOrderCommand
 
     public override CommandResultCode Execute()
     {
-        var filledSize = OrderBook.TryMatchInstantly(OrderCommand, 0L, OrderCommand);
-
+        var filledSize = OrderBook.TryMatchInstantly(OrderCommand);
         var rejectedSize = OrderCommand.Size - filledSize;
 
         if (rejectedSize != 0L)
         {
             // was not matched completely - send reject for not-completed IoC order
-            OrderCommand.MatcherEvent = CreateRejectEvent(OrderCommand.Price, rejectedSize);
+            OrderCommand.AttachRejectEvent(OrderCommand.Price, rejectedSize);
         }
 
         return CommandResultCode.SUCCESS;

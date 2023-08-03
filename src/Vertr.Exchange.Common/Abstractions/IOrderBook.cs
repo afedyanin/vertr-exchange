@@ -10,7 +10,9 @@ public interface IOrderBook
 
     bool UpdateOrder(IOrder order);
 
+    long Reduce(IOrder order, long requestedReduceSize);
+
     L2MarketData GetL2MarketDataSnapshot(int size);
 
-    long TryMatchInstantly(IOrder activeOrder, long filled, OrderCommand triggerCmd);
+    long TryMatchInstantly(OrderCommand orderCommand, long filled = 0L);
 }

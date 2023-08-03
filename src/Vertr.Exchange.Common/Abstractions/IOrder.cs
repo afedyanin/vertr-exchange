@@ -17,5 +17,13 @@ public interface IOrder
 
     long Timestamp { get; }
 
-    long Remaining => Size - Filled;
+    long Remaining { get; }
+
+    bool Completed { get; }
+
+    void ReduceSize(long reduceBy);
+
+    void Fill(long increment);
+
+    void Move(long price);
 }

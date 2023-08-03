@@ -18,35 +18,4 @@ internal abstract class OrderBookCommand
         OrderCommand = cmd;
     }
     public abstract CommandResultCode Execute();
-
-    protected IMatcherTradeEvent CreateReduceEvent(
-        IOrder order,
-        long reduceSize,
-        bool completed)
-    {
-        return new MatcherTradeEvent
-        {
-            EventType = MatcherEventType.REDUCE,
-            ActiveOrderCompleted = completed,
-            MatchedOrderId = 0L,
-            MatchedOrderCompleted = false,
-            Price = order.Price,
-            Size = reduceSize,
-        };
-    }
-
-    protected IMatcherTradeEvent CreateRejectEvent(
-        long price,
-        long rejectedSize)
-    {
-        return new MatcherTradeEvent
-        {
-            EventType = MatcherEventType.REJECT,
-            ActiveOrderCompleted = true,
-            MatchedOrderId = 0L,
-            MatchedOrderCompleted = false,
-            Price = price,
-            Size = rejectedSize,
-        };
-    }
 }
