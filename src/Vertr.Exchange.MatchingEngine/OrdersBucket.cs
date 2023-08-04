@@ -33,8 +33,12 @@ internal sealed class OrdersBucket
 
     public void Put(IOrder order)
     {
-        Debug.Assert(order != null);
-        Debug.Assert(order.Price == Price);
+        ArgumentNullException.ThrowIfNull(nameof(order));
+
+        if (!order.Price.Equals(Price))
+        {
+            throw new InvalidOperationException($"Cannot put Order with Price={order.Price} into Bucket with Price={Price}.");
+        }
 
         // remove if exists
         Remove(order);
@@ -45,7 +49,7 @@ internal sealed class OrdersBucket
 
     public bool Remove(IOrder order)
     {
-        Debug.Assert(order != null);
+        ArgumentNullException.ThrowIfNull(nameof(order));
 
         var removed = _orders.Remove(order);
 
@@ -59,7 +63,10 @@ internal sealed class OrdersBucket
 
     public void ReduceSize(long reduceSize)
     {
-        Debug.Assert(TotalVolume > reduceSize);
+        if (TotalVolume < reduceSize)
+        {
+            throw new InvalidOperationException($"ReduceSize={reduceSize} cannot exceed TotalVolume={TotalVolume}.");
+        }
 
         TotalVolume -= reduceSize;
     }

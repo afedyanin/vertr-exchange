@@ -9,6 +9,7 @@ public class OrdersBucketTests
     public void CanCreateBucket()
     {
         var price = 78.2364654655M;
+
         var ob = new OrdersBucket(price);
 
         Assert.That(ob, Is.Not.Null);
@@ -16,17 +17,20 @@ public class OrdersBucketTests
         {
             Assert.That(ob.Price, Is.EqualTo(price));
             Assert.That(ob.IsValid(), Is.EqualTo(true));
-            Assert.That(ob.OrdersCount, Is.EqualTo(0));
+            Assert.That(ob.OrdersCount, Is.EqualTo(0L));
+            Assert.That(ob.TotalVolume, Is.EqualTo(0L));
         });
     }
 
-    [Test]
-    public void CanPutOrder()
+    [TestCase(100, 0)]
+    [TestCase(100, 56)]
+    [TestCase(100, 100)]
+    public void CanPutOrder(long size, long filled)
     {
         var price = 78.23M;
         var ob = new OrdersBucket(price);
+        var order = OrderStub.CreateBidOrder(price, size, filled);
 
-        var order = OrderStub.CreateBidOrder(price, 100);
         ob.Put(order);
 
         Assert.That(ob, Is.Not.Null);
@@ -36,6 +40,62 @@ public class OrdersBucketTests
             Assert.That(ob.Price, Is.EqualTo(price));
             Assert.That(ob.IsValid(), Is.EqualTo(true));
             Assert.That(ob.OrdersCount, Is.EqualTo(1));
+            Assert.That(ob.TotalVolume, Is.EqualTo(order.Remaining));
         });
+    }
+
+    [Test]
+    public void CannotPutOrderWithDifPrice()
+    {
+        var price = 78.23M;
+        var ob = new OrdersBucket(price);
+        var order = OrderStub.CreateBidOrder(price + 0.000001M, 100);
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            ob.Put(order);
+        });
+    }
+
+    [Test]
+    public void CanFindOrder()
+    {
+        var price = 78213.234567M;
+        var ob = new OrdersBucket(price);
+        var order = OrderStub.CreateBidOrder(price, 100);
+        ob.Put(order);
+
+        var found = ob.FindOrder(order.OrderId);
+
+        Assert.That(found, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(found.Price, Is.EqualTo(price));
+            Assert.That(found.Size, Is.EqualTo(order.Size));
+            Assert.That(found.Timestamp, Is.EqualTo(order.Timestamp));
+        });
+    }
+
+    [Test]
+    public void CanRemoveOrder()
+    {
+        var price = 0.000007M;
+        var ob = new OrdersBucket(price);
+        var order = OrderStub.CreateBidOrder(price, 46554);
+        ob.Put(order);
+
+        var removed = ob.Remove(order);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(removed, Is.True);
+            Assert.That(ob.TotalVolume, Is.EqualTo(0L));
+        });
+    }
+
+    [Test]
+    public void CanReduceSize()
+    {
+
     }
 }
