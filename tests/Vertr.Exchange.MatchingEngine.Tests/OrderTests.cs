@@ -10,39 +10,27 @@ public class OrderTests
     [TestCase(-243.99)]
     public void CannotCreateOrderWithInvalidPrice(decimal price)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            var ord = OrderStub.CreateAskOrder(price, 0L);
-        });
+        Assert.Throws<ArgumentOutOfRangeException>(() => OrderStub.CreateAskOrder(price, 0L));
     }
 
     [TestCase(-12)]
     [TestCase(0L)]
     public void CannotCreateOrderWithInvalidPrice(long size)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            var ord = OrderStub.CreateAskOrder(45.98m, size);
-        });
+        Assert.Throws<ArgumentOutOfRangeException>(() => OrderStub.CreateAskOrder(45.98m, size));
     }
 
     [TestCase(-456)]
     public void CannotCreateOrderWithInvalidFilled(long filled)
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            var ord = OrderStub.CreateAskOrder(45.98m, 8, filled);
-        });
+        Assert.Throws<ArgumentOutOfRangeException>(() => OrderStub.CreateAskOrder(45.98m, 8, filled));
     }
 
     [TestCase(12, 20)]
     [TestCase(13, 14)]
     public void CannotCreateOrderWithInvalidSizeFilledCombination(long size, long filled)
     {
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            var ord = OrderStub.CreateAskOrder(45.98m, size, filled);
-        });
+        Assert.Throws<InvalidOperationException>(() => OrderStub.CreateAskOrder(45.98m, size, filled));
     }
 
     [TestCase(12, 8)]
@@ -59,11 +47,7 @@ public class OrderTests
     public void ReduceNegativeThrows()
     {
         var ord = OrderStub.CreateBidOrder(78.99m, 17);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            ord.ReduceSize(-9);
-        });
+        Assert.Throws<ArgumentOutOfRangeException>(() => ord.ReduceSize(-9));
     }
 
     [TestCase(15, 0, 17)]
@@ -71,11 +55,7 @@ public class OrderTests
     public void CannotReduceMoreThanSize(long size, long filled, long reduce)
     {
         var ord = OrderStub.CreateBidOrder(78.99m, size, filled);
-
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            ord.ReduceSize(reduce);
-        });
+        Assert.Throws<InvalidOperationException>(() => ord.ReduceSize(reduce));
     }
 
     [Test]
@@ -95,10 +75,7 @@ public class OrderTests
         var ord = OrderStub.CreateBidOrder(0.99999m, 179);
         var newPrice = -664.190M;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            ord.SetPrice(newPrice);
-        });
+        Assert.Throws<ArgumentOutOfRangeException>(() => ord.SetPrice(newPrice));
     }
 
     [TestCase(178, 0, 78)]
@@ -117,11 +94,7 @@ public class OrderTests
     public void CannotFillNegativeValue()
     {
         var ord = OrderStub.CreateBidOrder(78.99m, 789);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            ord.Fill(-88);
-        });
+        Assert.Throws<ArgumentOutOfRangeException>(() => ord.Fill(-88));
     }
 
     [TestCase(178, 0, 678)]
@@ -130,10 +103,6 @@ public class OrderTests
     public void InvalidFillValueThrows(long size, long initialFill, long fill)
     {
         var ord = OrderStub.CreateBidOrder(78.99m, size, initialFill);
-
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            ord.Fill(fill);
-        });
+        Assert.Throws<InvalidOperationException>(() => ord.Fill(fill));
     }
 }

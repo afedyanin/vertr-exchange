@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
@@ -19,7 +18,11 @@ internal sealed class OrdersBucket
 
     public OrdersBucket(decimal price)
     {
-        Debug.Assert(price >= decimal.Zero);
+        if (price < decimal.Zero)
+        {
+            throw new ArgumentOutOfRangeException(nameof(price), "Price value cannot be < 0.");
+        }
+
         Price = price;
         TotalVolume = 0L;
         _orders = new LinkedList<IOrder>();
@@ -63,6 +66,11 @@ internal sealed class OrdersBucket
 
     public void ReduceSize(long reduceSize)
     {
+        if (reduceSize < decimal.Zero)
+        {
+            throw new ArgumentOutOfRangeException(nameof(reduceSize), "ReduceSize cannot be < 0.");
+        }
+
         if (TotalVolume < reduceSize)
         {
             throw new InvalidOperationException($"ReduceSize={reduceSize} cannot exceed TotalVolume={TotalVolume}.");

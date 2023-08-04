@@ -22,6 +22,13 @@ public class OrdersBucketTests
         });
     }
 
+    [Test]
+    public void CannotCreateBucketWithNegativePrice()
+    {
+        var price = -893.21001M;
+        Assert.Throws<ArgumentOutOfRangeException>(() => new OrdersBucket(price));
+    }
+
     [TestCase(100, 0)]
     [TestCase(100, 56)]
     [TestCase(100, 100)]
@@ -51,10 +58,7 @@ public class OrdersBucketTests
         var ob = new OrdersBucket(price);
         var order = OrderStub.CreateBidOrder(price + 0.000001M, 100);
 
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            ob.Put(order);
-        });
+        Assert.Throws<InvalidOperationException>(() => ob.Put(order));
     }
 
     [Test]
@@ -93,9 +97,46 @@ public class OrdersBucketTests
         });
     }
 
-    [Test]
-    public void CanReduceSize()
+    [TestCase(356, 150, 100)]
+    [TestCase(17, 0, 10)]
+    [TestCase(97, 0, 0)]
+    [TestCase(37, 17, 2)]
+    [TestCase(37, 18, 0)]
+    public void CanReduceSize(long size, long filled, long toReduce)
     {
+        var price = 0.000007M;
+        var ob = new OrdersBucket(price);
+        var order = OrderStub.CreateBidOrder(price, size, filled);
+        ob.Put(order);
 
+        ob.ReduceSize(toReduce);
+
+        Assert.That(ob.TotalVolume, Is.EqualTo(size - (filled + toReduce)));
+    }
+
+    [Test]
+    public void ReduceNegativeThrows()
+    {
+        var price = 79887.0099M;
+        var ob = new OrdersBucket(price);
+        var order = OrderStub.CreateBidOrder(price, 12);
+        ob.Put(order);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => ob.ReduceSize(-99));
+    }
+
+    [TestCase(356, 150, 1000)]
+    [TestCase(17, 0, 18)]
+    [TestCase(97, 0, 108)]
+    [TestCase(37, 17, 21)]
+    [TestCase(37, 8, 30)]
+    public void CannotReduceInvalidValues(long size, long filled, long toReduce)
+    {
+        var price = 0.000007M;
+        var ob = new OrdersBucket(price);
+        var order = OrderStub.CreateBidOrder(price, size, filled);
+        ob.Put(order);
+
+        Assert.Throws<InvalidOperationException>(() => ob.ReduceSize(toReduce));
     }
 }
