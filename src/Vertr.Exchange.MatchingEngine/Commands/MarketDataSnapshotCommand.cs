@@ -3,7 +3,7 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
-internal class MarketDataSnapshotCommand : OrderBookCommand
+internal sealed class MarketDataSnapshotCommand : OrderBookCommand
 {
     public MarketDataSnapshotCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {

@@ -106,12 +106,12 @@ internal sealed class OrderBook : IOrderBook
             return filled;
         }
 
-        var emptyBuckets = new List<long>();
-        var filledOrders = new List<long>();
+        var emptyBucketIds = new List<long>();
+        var filledOrderIds = new List<long>();
 
         foreach (var bucket in matchingBuckets.Values)
         {
-            if (!CanMatch(orderCommand.Action, orderCommand.Price, bucket.Price))
+            if (!CanMatch(orderCommand, bucket.Price))
             {
                 break;
             }
@@ -124,19 +124,19 @@ internal sealed class OrderBook : IOrderBook
             var sizeLeft = orderCommand.Size - filled;
             var bucketMatchings = bucket.Match(sizeLeft);
 
-            filledOrders.AddRange(bucketMatchings.OrdersToRemove);
+            filledOrderIds.AddRange(bucketMatchings.OrdersToRemove);
 
             if (bucket.TotalVolume == 0L)
             {
-                emptyBuckets.Add(bucket.Price);
+                emptyBucketIds.Add(bucket.Price);
             }
 
             orderCommand.AttachMatcherEvents(bucketMatchings);
             filled += bucketMatchings.Volume;
         }
 
-        RemoveFilledOrders(filledOrders);
-        RemoveEmptyBuckets(matchingBuckets, emptyBuckets);
+        RemoveFilledOrders(filledOrderIds);
+        RemoveEmptyBuckets(matchingBuckets, emptyBucketIds);
 
         return filled;
     }
@@ -181,15 +181,15 @@ internal sealed class OrderBook : IOrderBook
     private SortedDictionary<long, OrdersBucket> GetBucketsForMatching(OrderAction action)
         => action == OrderAction.ASK ? _bidBuckets : _askBuckets;
 
-    private static bool CanMatch(OrderAction action, long orderPrice, long bucketPrice)
+    private static bool CanMatch(OrderCommand command, long bucketPrice)
     {
-        if (action == OrderAction.BID && bucketPrice > orderPrice)
+        if (command.Action == OrderAction.BID && bucketPrice > command.Price)
         {
             // продажная цена выше, чем запрашиваемая цена покупки
             return false;
         }
 
-        if (action == OrderAction.ASK && bucketPrice < orderPrice)
+        if (command.Action == OrderAction.ASK && bucketPrice < command.Price)
         {
             // покупная цена меньше, чем запрашиваемая цена продажи
             return false;

@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
-internal class RejectOrderCommand : OrderBookCommand
+internal sealed class RejectOrderCommand : OrderBookCommand
 {
     public RejectOrderCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {

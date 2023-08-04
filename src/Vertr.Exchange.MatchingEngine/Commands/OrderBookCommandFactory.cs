@@ -47,6 +47,9 @@ internal static class OrderBookCommandFactory
         {
             OrderType.GTC => new NewGtcOrderCommand(orderBook, cmd),
             OrderType.IOC => new NewIocOrderCommand(orderBook, cmd),
+            OrderType.IOC_BUDGET => throw new NotImplementedException(),
+            OrderType.FOK => throw new NotImplementedException(),
+            OrderType.FOK_BUDGET => throw new NotImplementedException(),
             _ => new RejectOrderCommand(orderBook, cmd),
         };
     }

@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Commands;
 
 namespace Vertr.Exchange.MatchingEngine;
-internal class OrderBookCommandProcessor : IOrderBookCommandProcesor
+internal sealed class OrderBookCommandProcessor : IOrderBookCommandProcesor
 {
     private readonly IOrderBook _orderBook;
 

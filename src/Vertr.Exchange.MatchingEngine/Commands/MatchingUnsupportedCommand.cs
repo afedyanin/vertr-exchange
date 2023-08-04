@@ -3,7 +3,7 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
-internal class MatchingUnsupportedCommand : OrderBookCommand
+internal sealed class MatchingUnsupportedCommand : OrderBookCommand
 {
     public MatchingUnsupportedCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {

@@ -25,5 +25,5 @@ public interface IOrder
 
     void Fill(long increment);
 
-    void Move(long price);
+    void SetPrice(long price);
 }

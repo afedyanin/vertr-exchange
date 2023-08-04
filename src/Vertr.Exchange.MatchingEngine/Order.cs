@@ -10,7 +10,7 @@ internal sealed class Order : IOrder
 
     public long OrderId { get; }
 
-    public long Price { get; set; }
+    public long Price { get; private set; }
 
     public long Size { get; private set; }
 
@@ -57,7 +57,7 @@ internal sealed class Order : IOrder
         Filled += increment;
     }
 
-    public void Move(long price)
+    public void SetPrice(long price)
     {
         Price = price;
     }

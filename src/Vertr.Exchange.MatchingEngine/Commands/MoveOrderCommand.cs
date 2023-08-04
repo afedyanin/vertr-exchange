@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
-internal class MoveOrderCommand : OrderBookCommand
+internal sealed class MoveOrderCommand : OrderBookCommand
 {
     public MoveOrderCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
     {
@@ -32,7 +32,7 @@ internal class MoveOrderCommand : OrderBookCommand
         }
 
         // if not filled completely - put it into corresponding bucket
-        Order.Move(OrderCommand.Price);
+        Order.SetPrice(OrderCommand.Price);
         Order.Fill(filled - Order.Filled);
         OrderBook.UpdateOrder(Order);
 
