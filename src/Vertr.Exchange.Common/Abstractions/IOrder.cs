@@ -7,7 +7,7 @@ public interface IOrder
 
     long OrderId { get; }
 
-    long Price { get; }
+    decimal Price { get; }
 
     long Size { get; }
 
@@ -15,7 +15,7 @@ public interface IOrder
 
     long Uid { get; }
 
-    long Timestamp { get; }
+    DateTime Timestamp { get; }
 
     long Remaining { get; }
 
@@ -25,5 +25,5 @@ public interface IOrder
 
     void Fill(long increment);
 
-    void SetPrice(long price);
+    void SetPrice(decimal price);
 }

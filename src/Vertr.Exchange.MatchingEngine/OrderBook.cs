@@ -12,14 +12,14 @@ internal sealed class OrderBook : IOrderBook
     private readonly IDictionary<long, IOrder> _orders;
 
     // Key = Price 
-    private readonly SortedDictionary<long, OrdersBucket> _bidBuckets;
-    private readonly SortedDictionary<long, OrdersBucket> _askBuckets;
+    private readonly SortedDictionary<decimal, OrdersBucket> _bidBuckets;
+    private readonly SortedDictionary<decimal, OrdersBucket> _askBuckets;
 
     public OrderBook()
     {
         _orders = new Dictionary<long, IOrder>();
-        _askBuckets = new SortedDictionary<long, OrdersBucket>();
-        _bidBuckets = new SortedDictionary<long, OrdersBucket>(LongDescendingComparer.Instance);
+        _askBuckets = new SortedDictionary<decimal, OrdersBucket>();
+        _bidBuckets = new SortedDictionary<decimal, OrdersBucket>(DecimalDescendingComparer.Instance);
     }
 
     public IOrder? GetOrder(long orderId)
@@ -106,7 +106,7 @@ internal sealed class OrderBook : IOrderBook
             return filled;
         }
 
-        var emptyBucketIds = new List<long>();
+        var emptyBucketIds = new List<decimal>();
         var filledOrderIds = new List<long>();
 
         foreach (var bucket in matchingBuckets.Values)
@@ -167,7 +167,7 @@ internal sealed class OrderBook : IOrderBook
         }
     }
 
-    private void RemoveEmptyBuckets(SortedDictionary<long, OrdersBucket> backets, IEnumerable<long> ids)
+    private void RemoveEmptyBuckets(SortedDictionary<decimal, OrdersBucket> backets, IEnumerable<decimal> ids)
     {
         foreach (var id in ids)
         {
@@ -175,13 +175,13 @@ internal sealed class OrderBook : IOrderBook
         }
     }
 
-    private SortedDictionary<long, OrdersBucket> GetBucketsByAction(OrderAction action)
+    private SortedDictionary<decimal, OrdersBucket> GetBucketsByAction(OrderAction action)
         => action == OrderAction.ASK ? _askBuckets : _bidBuckets;
 
-    private SortedDictionary<long, OrdersBucket> GetBucketsForMatching(OrderAction action)
+    private SortedDictionary<decimal, OrdersBucket> GetBucketsForMatching(OrderAction action)
         => action == OrderAction.ASK ? _bidBuckets : _askBuckets;
 
-    private static bool CanMatch(OrderCommand command, long bucketPrice)
+    private static bool CanMatch(OrderCommand command, decimal bucketPrice)
     {
         if (command.Action == OrderAction.BID && bucketPrice > command.Price)
         {

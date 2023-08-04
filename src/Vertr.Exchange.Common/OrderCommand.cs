@@ -23,9 +23,9 @@ public class OrderCommand
 
     public long Size { get; set; }
 
-    public long Price { get; set; }
+    public decimal Price { get; set; }
 
-    public long Timestamp { get; set; }
+    public DateTime Timestamp { get; set; }
 
     public long Filled { get; set; }
 

@@ -46,7 +46,7 @@ internal static class OrderCommandEventsHelper
 
     public static void AttachRejectEvent(
         this OrderCommand command,
-        long price,
+        decimal price,
         long rejectedSize)
     {
         var evt = new MatcherTradeEvent

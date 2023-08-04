@@ -10,7 +10,7 @@ internal sealed class Order : IOrder
 
     public long OrderId { get; }
 
-    public long Price { get; private set; }
+    public decimal Price { get; private set; }
 
     public long Size { get; private set; }
 
@@ -18,7 +18,7 @@ internal sealed class Order : IOrder
 
     public long Uid { get; }
 
-    public long Timestamp { get; }
+    public DateTime Timestamp { get; }
 
     public long Remaining => Size - Filled;
 
@@ -27,11 +27,11 @@ internal sealed class Order : IOrder
     public Order(
         OrderAction action,
         long orderId,
-        long price,
+        decimal price,
         long size,
         long filled,
         long uid,
-        long timestamp
+        DateTime timestamp
         )
     {
         Action = action;
@@ -57,7 +57,7 @@ internal sealed class Order : IOrder
         Filled += increment;
     }
 
-    public void SetPrice(long price)
+    public void SetPrice(decimal price)
     {
         Price = price;
     }

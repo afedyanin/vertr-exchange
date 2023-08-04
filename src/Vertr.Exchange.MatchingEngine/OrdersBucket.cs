@@ -1,6 +1,9 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
+
+[assembly: InternalsVisibleTo("Vertr.Exchange.MatchingEngine.Tests")]
 
 namespace Vertr.Exchange.MatchingEngine;
 
@@ -8,15 +11,15 @@ internal sealed class OrdersBucket
 {
     private readonly LinkedList<IOrder> _orders;
 
-    public long Price { get; }
+    public decimal Price { get; }
 
     public long TotalVolume { get; private set; }
 
     public int OrdersCount => _orders.Count;
 
-    public OrdersBucket(long price)
+    public OrdersBucket(decimal price)
     {
-        Debug.Assert(price >= 0L);
+        Debug.Assert(price >= decimal.Zero);
         Price = price;
         TotalVolume = 0L;
         _orders = new LinkedList<IOrder>();

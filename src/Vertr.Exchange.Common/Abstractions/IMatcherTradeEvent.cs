@@ -13,7 +13,7 @@ public interface IMatcherTradeEvent
 
     long MatchedOrderUid { get; }
 
-    long Price { get; }
+    decimal Price { get; }
 
     long Size { get; }
 
