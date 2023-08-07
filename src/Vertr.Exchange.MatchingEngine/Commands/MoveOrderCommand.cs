@@ -34,9 +34,8 @@ internal sealed class MoveOrderCommand : OrderBookCommand
         // if not filled completely - put it into corresponding bucket
         Order.SetPrice(OrderCommand.Price);
         Order.Fill(filled - Order.Filled);
-        OrderBook.UpdateOrder(Order);
+        var added = OrderBook.AddOrder(Order);
 
-        return CommandResultCode.SUCCESS;
-
+        return added ? CommandResultCode.SUCCESS : CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID; // TODO: Return ErrorResultCode
     }
 }

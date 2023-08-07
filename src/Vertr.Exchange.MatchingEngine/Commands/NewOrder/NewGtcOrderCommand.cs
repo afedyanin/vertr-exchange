@@ -30,7 +30,7 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
             OrderCommand.Uid,
             OrderCommand.Timestamp);
 
-        if (!OrderBook.AddNewOrder(order))
+        if (!OrderBook.AddOrder(order))
         {
             // duplicate order id - can match, but can not place
             OrderCommand.AttachRejectEvent(order.Price, order.Remaining);

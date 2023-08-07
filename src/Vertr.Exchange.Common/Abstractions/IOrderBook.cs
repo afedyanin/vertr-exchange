@@ -6,9 +6,7 @@ public interface IOrderBook
 
     bool RemoveOrder(IOrder order);
 
-    bool AddNewOrder(IOrder order);
-
-    bool UpdateOrder(IOrder order);
+    bool AddOrder(IOrder order);
 
     long Reduce(IOrder order, long requestedReduceSize);
 

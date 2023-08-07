@@ -28,7 +28,7 @@ internal sealed class OrderBook : IOrderBook
         return order;
     }
 
-    public bool AddNewOrder(IOrder order)
+    public bool AddOrder(IOrder order)
     {
         if (_orders.ContainsKey(order.OrderId))
         {
@@ -37,11 +37,6 @@ internal sealed class OrderBook : IOrderBook
 
         _orders.Add(order.OrderId, order);
 
-        return UpdateOrder(order);
-    }
-
-    public bool UpdateOrder(IOrder order)
-    {
         var buckets = GetBucketsByAction(order.Action);
 
         if (!buckets.ContainsKey(order.Price))
@@ -143,6 +138,11 @@ internal sealed class OrderBook : IOrderBook
 
     public long Reduce(IOrder order, long requestedReduceSize)
     {
+        if (requestedReduceSize < 0L)
+        {
+            throw new ArgumentOutOfRangeException(nameof(requestedReduceSize), "Requested reduce size cannot be < 0.");
+        }
+
         var reduceBy = Math.Min(order.Remaining, requestedReduceSize);
 
         order.ReduceSize(reduceBy);
