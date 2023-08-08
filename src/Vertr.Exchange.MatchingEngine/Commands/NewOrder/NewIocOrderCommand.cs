@@ -12,8 +12,14 @@ internal sealed class NewIocOrderCommand : OrderBookCommand
 
     public override CommandResultCode Execute()
     {
-        var filledSize = OrderBook.TryMatchInstantly(OrderCommand);
-        var rejectedSize = OrderCommand.Size - filledSize;
+        var result = OrderBook.TryMatchInstantly(
+            OrderCommand.Action,
+            OrderCommand.Price,
+            OrderCommand.Size);
+
+        AttachTradeEvents(result.TradeEvents);
+
+        var rejectedSize = OrderCommand.Size - result.Filled;
 
         if (rejectedSize != 0L)
         {

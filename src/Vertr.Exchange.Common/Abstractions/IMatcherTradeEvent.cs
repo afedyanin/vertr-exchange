@@ -17,5 +17,5 @@ public interface IMatcherTradeEvent
 
     long Size { get; }
 
-    IMatcherTradeEvent? NextEvent { get; }
+    IMatcherTradeEvent? NextEvent { get; set; }
 }

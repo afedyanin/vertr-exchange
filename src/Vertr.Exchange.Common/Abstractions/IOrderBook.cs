@@ -1,3 +1,5 @@
+using Vertr.Exchange.Common.Enums;
+
 namespace Vertr.Exchange.Common.Abstractions;
 
 public interface IOrderBook
@@ -12,5 +14,5 @@ public interface IOrderBook
 
     L2MarketData GetL2MarketDataSnapshot(int size);
 
-    long TryMatchInstantly(OrderCommand orderCommand, long filled = 0L);
+    MatcherResult TryMatchInstantly(OrderAction action, decimal price, long size, long filled = 0L);
 }

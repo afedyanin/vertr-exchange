@@ -19,21 +19,26 @@ internal sealed class MoveOrderCommand : OrderBookCommand
 
         Debug.Assert(Order is not null);
 
-        UpdateCommandAction();
-
         OrderBook.RemoveOrder(Order);
 
         // try match with new price
-        var filled = OrderBook.TryMatchInstantly(OrderCommand, Order.Filled);
+        var result = OrderBook.TryMatchInstantly(
+            OrderCommand.Action,
+            OrderCommand.Price,
+            OrderCommand.Size,
+            Order.Filled);
 
-        if (filled == Order.Size)
+        UpdateCommandAction();
+        AttachTradeEvents(result.TradeEvents);
+
+        if (result.Filled == Order.Size)
         {
             return CommandResultCode.SUCCESS;
         }
 
         // if not filled completely - put it into corresponding bucket
         Order.SetPrice(OrderCommand.Price);
-        Order.Fill(filled - Order.Filled);
+        Order.Fill(result.Filled - Order.Filled);
         var added = OrderBook.AddOrder(Order);
 
         return added ? CommandResultCode.SUCCESS : CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID; // TODO: Return ErrorResultCode

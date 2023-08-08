@@ -1,6 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Helpers;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 
@@ -34,5 +35,10 @@ internal abstract class OrderBookCommand
         }
 
         OrderCommand.Action = Order.Action;
+    }
+
+    protected void AttachTradeEvents(IEnumerable<IMatcherTradeEvent> tradeEvents)
+    {
+        OrderCommand.AttachMatcherEvents(tradeEvents);
     }
 }

@@ -79,7 +79,7 @@ internal sealed class OrdersBucket
         TotalVolume -= reduceSize;
     }
 
-    public MatcherResult Match(long volumeToCollect)
+    public BucketMatcherResult Match(long volumeToCollect)
     {
         var totalMatchingVolume = 0L;
         var ordersToRemove = new List<long>();
@@ -112,7 +112,7 @@ internal sealed class OrdersBucket
             node = node.Next;
         }
 
-        return new MatcherResult(totalMatchingVolume, ordersToRemove.ToArray(), tradeEvents.ToArray());
+        return new BucketMatcherResult(totalMatchingVolume, ordersToRemove.ToArray(), tradeEvents.ToArray());
     }
 
     private MatcherTradeEvent CreateTradeEvent(

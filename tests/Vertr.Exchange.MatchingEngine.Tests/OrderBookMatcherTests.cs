@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests;
@@ -14,12 +14,8 @@ public class OrderBookMatcherTests
         var bid = OrderStub.CreateBidOrder(45M, 2);
         orderBook.AddOrder(bid);
 
-        var orderCommand = new OrderCommand
-        {
-        };
+        var res = orderBook.TryMatchInstantly(OrderAction.ASK, 44M, 5, 1);
 
-        var res = orderBook.TryMatchInstantly(orderCommand);
-
-        Assert.That(res, Is.EqualTo(2));
+        Assert.That(res.Filled, Is.EqualTo(2));
     }
 }

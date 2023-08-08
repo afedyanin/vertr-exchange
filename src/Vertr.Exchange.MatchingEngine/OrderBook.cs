@@ -91,32 +91,33 @@ internal sealed class OrderBook : IOrderBook
         return data;
     }
 
-    public long TryMatchInstantly(OrderCommand orderCommand, long filled = 0L)
+    public MatcherResult TryMatchInstantly(OrderAction action, decimal price, long size, long filled = 0L)
     {
-        var matchingBuckets = GetBucketsForMatching(orderCommand.Action);
+        var matchingBuckets = GetBucketsForMatching(action);
 
         if (!matchingBuckets.Any())
         {
             // no orders to match
-            return filled;
+            return new MatcherResult(filled);
         }
 
         var emptyBucketIds = new List<decimal>();
         var filledOrderIds = new List<long>();
+        var matcherEvents = new List<IMatcherTradeEvent>();
 
         foreach (var bucket in matchingBuckets.Values)
         {
-            if (!CanMatch(orderCommand, bucket.Price))
+            if (!CanMatch(action, price, bucket.Price))
             {
                 break;
             }
 
-            if (filled == orderCommand.Size)
+            if (filled == size)
             {
                 break;
             }
 
-            var sizeLeft = orderCommand.Size - filled;
+            var sizeLeft = size - filled;
             var bucketMatchings = bucket.Match(sizeLeft);
 
             filledOrderIds.AddRange(bucketMatchings.OrdersToRemove);
@@ -126,14 +127,16 @@ internal sealed class OrderBook : IOrderBook
                 emptyBucketIds.Add(bucket.Price);
             }
 
-            orderCommand.AttachMatcherEvents(bucketMatchings);
+            // orderCommand.AttachMatcherEvents(bucketMatchings);
+
+            matcherEvents.AddRange(bucketMatchings.TradeEvents);
             filled += bucketMatchings.Volume;
         }
 
         RemoveFilledOrders(filledOrderIds);
         RemoveEmptyBuckets(matchingBuckets, emptyBucketIds);
 
-        return filled;
+        return new MatcherResult(filled, matcherEvents);
     }
 
     public long Reduce(IOrder order, long requestedReduceSize)
@@ -181,15 +184,15 @@ internal sealed class OrderBook : IOrderBook
     private SortedDictionary<decimal, OrdersBucket> GetBucketsForMatching(OrderAction action)
         => action == OrderAction.ASK ? _bidBuckets : _askBuckets;
 
-    private static bool CanMatch(OrderCommand command, decimal bucketPrice)
+    private static bool CanMatch(OrderAction action, decimal price, decimal bucketPrice)
     {
-        if (command.Action == OrderAction.BID && bucketPrice > command.Price)
+        if (action == OrderAction.BID && bucketPrice > price)
         {
             // продажная цена выше, чем запрашиваемая цена покупки
             return false;
         }
 
-        if (command.Action == OrderAction.ASK && bucketPrice < command.Price)
+        if (action == OrderAction.ASK && bucketPrice < price)
         {
             // покупная цена меньше, чем запрашиваемая цена продажи
             return false;

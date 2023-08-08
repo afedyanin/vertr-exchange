@@ -6,11 +6,11 @@ namespace Vertr.Exchange.MatchingEngine.Helpers;
 
 internal static class OrderCommandEventsHelper
 {
-    public static void AttachMatcherEvents(this OrderCommand command, MatcherResult matcherResult)
+    public static void AttachMatcherEvents(this OrderCommand command, IEnumerable<IMatcherTradeEvent> tradeEvents)
     {
-        MatcherTradeEvent? eventsTail = null;
+        IMatcherTradeEvent? eventsTail = null;
 
-        foreach (var evt in matcherResult.TradeEvents)
+        foreach (var evt in tradeEvents)
         {
             if (eventsTail == null)
             {

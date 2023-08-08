@@ -12,9 +12,14 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
 
     public override CommandResultCode Execute()
     {
-        var filledSize = OrderBook.TryMatchInstantly(OrderCommand);
+        var result = OrderBook.TryMatchInstantly(
+            OrderCommand.Action,
+            OrderCommand.Price,
+            OrderCommand.Size);
 
-        if (filledSize == OrderCommand.Size)
+        AttachTradeEvents(result.TradeEvents);
+
+        if (result.Filled == OrderCommand.Size)
         {
             // order was matched completely - nothing to place - can just return
             return CommandResultCode.SUCCESS;
@@ -26,7 +31,7 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
             OrderCommand.OrderId,
             OrderCommand.Price,
             OrderCommand.Size,
-            filledSize,
+            result.Filled,
             OrderCommand.Uid,
             OrderCommand.Timestamp);
 
