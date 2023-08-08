@@ -212,8 +212,11 @@ internal sealed class OrderBook : IOrderBook
             return;
         }
 
-        var i = 0;
+        data.AskPrices = new decimal[size];
+        data.AskVolumes = new long[size];
+        data.AskOrders = new long[size];
 
+        var i = 0;
         foreach (var bucket in _askBuckets.Values)
         {
             data.AskPrices[i] = bucket.Price;
@@ -237,8 +240,11 @@ internal sealed class OrderBook : IOrderBook
             return;
         }
 
-        var i = 0;
+        data.BidPrices = new decimal[size];
+        data.BidVolumes = new long[size];
+        data.BidOrders = new long[size];
 
+        var i = 0;
         foreach (var bucket in _bidBuckets.Values)
         {
             data.BidPrices[i] = bucket.Price;
