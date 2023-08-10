@@ -23,7 +23,7 @@ internal sealed class OrderBookCommandProcessor : IOrderBookCommandProcesor
         catch
         {
             // TODO: Handle and log exception
-            return CommandResultCode.BINARY_COMMAND_FAILED; // TODO: return COmmandResultCode ?? 
+            return CommandResultCode.DROP; // TODO: return CommandResultCode ?? 
         }
     }
 }
