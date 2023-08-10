@@ -12,8 +12,13 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
 
     public override CommandResultCode Execute()
     {
+        if (!OrderCommand.Action.HasValue)
+        {
+            return CommandResultCode.DROP; // Invalid OrderAction
+        }
+
         var result = OrderBook.TryMatchInstantly(
-            OrderCommand.Action,
+            OrderCommand.Action.Value,
             OrderCommand.Price,
             OrderCommand.Size);
 
@@ -27,7 +32,7 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
 
         // normally placing regular GTC limit order
         var order = new Order(
-            OrderCommand.Action,
+            OrderCommand.Action.Value,
             OrderCommand.OrderId,
             OrderCommand.Price,
             OrderCommand.Size,

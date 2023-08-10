@@ -20,8 +20,6 @@ internal sealed class CancelOrderCommand : OrderBookCommand
 
         Debug.Assert(Order is not null);
 
-        UpdateCommandAction();
-
         OrderBook.RemoveOrder(Order);
 
         OrderCommand.AttachReduceEvent(Order, Order.Remaining, true);

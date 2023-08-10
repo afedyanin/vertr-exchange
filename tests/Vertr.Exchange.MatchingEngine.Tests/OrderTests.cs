@@ -59,23 +59,51 @@ public class OrderTests
     }
 
     [Test]
-    public void CanSetPrice()
+    public void CanUpdate()
     {
         var ord = OrderStub.CreateBidOrder(78.99m, 17);
         var newPrice = 7996.21M;
+        var newSize = 12;
+        var newFill = 3;
 
-        ord.SetPrice(newPrice);
+        ord.Update(newPrice, newSize, newFill);
 
-        Assert.That(ord.Price, Is.EqualTo(newPrice));
+        Assert.Multiple(() =>
+        {
+            Assert.That(ord.Price, Is.EqualTo(newPrice));
+            Assert.That(ord.Size, Is.EqualTo(newSize));
+            Assert.That(ord.Filled, Is.EqualTo(newFill));
+        });
     }
 
     [Test]
-    public void CannotSetNegativePrice()
+    public void CannotUpdateNegativePrice()
     {
         var ord = OrderStub.CreateBidOrder(0.99999m, 179);
         var newPrice = -664.190M;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => ord.SetPrice(newPrice));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ord.Update(newPrice, 1));
+    }
+
+    [Test]
+    public void CannotUpdateNegativeSize()
+    {
+        var ord = OrderStub.CreateBidOrder(0.99999m, 179);
+        Assert.Throws<ArgumentOutOfRangeException>(() => ord.Update(123.5M, -901));
+    }
+
+    [Test]
+    public void CannotUpdateNegativeFill()
+    {
+        var ord = OrderStub.CreateBidOrder(0.99999m, 179);
+        Assert.Throws<ArgumentOutOfRangeException>(() => ord.Update(123.5M, 901, -23));
+    }
+
+    [Test]
+    public void CannotUpdateInvalidFill()
+    {
+        var ord = OrderStub.CreateBidOrder(0.99999m, 179);
+        Assert.Throws<InvalidOperationException>(() => ord.Update(123.5M, 91, 235));
     }
 
     [TestCase(178, 0, 78)]

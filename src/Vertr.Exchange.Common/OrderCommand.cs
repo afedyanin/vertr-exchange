@@ -11,7 +11,7 @@ public class OrderCommand
 
     public OrderType OrderType { get; set; }
 
-    public OrderAction Action { get; set; }
+    public OrderAction? Action { get; set; }
 
     public L2MarketData? MarketData { get; set; }
 

@@ -24,10 +24,15 @@ internal abstract class OrderBookCommand
         OrderBook = orderBook;
         OrderCommand = cmd;
         Order = OrderBook.GetOrder(OrderCommand.OrderId);
+        UpdateCommandAction();
     }
     public abstract CommandResultCode Execute();
 
-    protected void UpdateCommandAction()
+    protected void AttachTradeEvents(IEnumerable<IMatcherTradeEvent> tradeEvents)
+    {
+        OrderCommand.AttachMatcherEvents(tradeEvents);
+    }
+    private void UpdateCommandAction()
     {
         if (Order is null)
         {
@@ -35,10 +40,5 @@ internal abstract class OrderBookCommand
         }
 
         OrderCommand.Action = Order.Action;
-    }
-
-    protected void AttachTradeEvents(IEnumerable<IMatcherTradeEvent> tradeEvents)
-    {
-        OrderCommand.AttachMatcherEvents(tradeEvents);
     }
 }

@@ -12,8 +12,13 @@ internal sealed class NewIocOrderCommand : OrderBookCommand
 
     public override CommandResultCode Execute()
     {
+        if (!OrderCommand.Action.HasValue)
+        {
+            return CommandResultCode.DROP; // Invalid OrderAction
+        }
+
         var result = OrderBook.TryMatchInstantly(
-            OrderCommand.Action,
+            OrderCommand.Action.Value,
             OrderCommand.Price,
             OrderCommand.Size);
 

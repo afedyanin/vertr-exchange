@@ -33,25 +33,7 @@ internal sealed class Order : IOrder
         DateTime timestamp
         )
     {
-        if (price < decimal.Zero)
-        {
-            throw new ArgumentOutOfRangeException(nameof(price), "Price value cannot be < 0.");
-        }
-
-        if (size <= 0L)
-        {
-            throw new ArgumentOutOfRangeException(nameof(size), "Size value cannot be < 0.");
-        }
-
-        if (filled < 0L)
-        {
-            throw new ArgumentOutOfRangeException(nameof(filled), "Filled value cannot be < 0.");
-        }
-
-        if (size < filled)
-        {
-            throw new InvalidOperationException($"Filled={filled} cannot exceed order Size={size}.");
-        }
+        Validate(price, size, filled);
 
         Action = action;
         OrderId = orderId;
@@ -100,5 +82,37 @@ internal sealed class Order : IOrder
         }
 
         Price = price;
+    }
+
+    public void Update(decimal price, long size, long filled = 0L)
+    {
+        Validate(price, size, filled);
+
+        Price = price;
+        Size = size;
+        Filled = filled;
+    }
+
+    private void Validate(decimal price, long size, long filled = 0L)
+    {
+        if (price < decimal.Zero)
+        {
+            throw new ArgumentOutOfRangeException(nameof(price), "Price value cannot be < 0.");
+        }
+
+        if (size <= 0L)
+        {
+            throw new ArgumentOutOfRangeException(nameof(size), "Size value cannot be < 0.");
+        }
+
+        if (filled < 0L)
+        {
+            throw new ArgumentOutOfRangeException(nameof(filled), "Filled value cannot be < 0.");
+        }
+
+        if (size < filled)
+        {
+            throw new InvalidOperationException($"Filled={filled} cannot exceed order Size={size}.");
+        }
     }
 }

@@ -27,8 +27,6 @@ internal sealed class ReduceOrderCommand : OrderBookCommand
 
         Debug.Assert(Order is not null);
 
-        UpdateCommandAction();
-
         var reduced = OrderBook.Reduce(Order, requestedReduceSize);
         OrderCommand.AttachReduceEvent(Order, reduced, Order.Completed);
 

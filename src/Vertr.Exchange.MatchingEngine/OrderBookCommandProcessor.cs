@@ -15,7 +15,15 @@ internal sealed class OrderBookCommandProcessor : IOrderBookCommandProcesor
 
     public CommandResultCode ProcessCommand(OrderCommand cmd)
     {
-        var orderBookCommand = OrderBookCommandFactory.CreateOrderBookCommand(_orderBook, cmd);
-        return orderBookCommand.Execute();
+        try
+        {
+            var orderBookCommand = OrderBookCommandFactory.CreateOrderBookCommand(_orderBook, cmd);
+            return orderBookCommand.Execute();
+        }
+        catch
+        {
+            // TODO: Handle and log exception
+            return CommandResultCode.BINARY_COMMAND_FAILED; // TODO: return COmmandResultCode ?? 
+        }
     }
 }

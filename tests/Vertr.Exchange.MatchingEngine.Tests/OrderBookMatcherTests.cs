@@ -39,6 +39,23 @@ public class OrderBookMatcherTests
     }
 
     [Test]
+    public void CanMatchFullFilledOrder()
+    {
+        var orderBook = new OrderBook();
+        var bid = OrderStub.CreateBidOrder(45M, 43);
+        orderBook.AddOrder(bid);
+
+        var res = orderBook.TryMatchInstantly(OrderAction.ASK, 44M, 11, 27);
+        Assert.Multiple(() =>
+        {
+            Assert.That(res.Filled, Is.EqualTo(27));
+            Assert.That(res.TradeEvents.Count, Is.EqualTo(0));
+            Assert.That(bid.Completed, Is.False);
+        });
+    }
+
+
+    [Test]
     public void CanMatchSeveralOrders()
     {
         var orderBook = new OrderBook();
