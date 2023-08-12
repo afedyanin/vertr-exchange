@@ -1,10 +1,10 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
-namespace Vertr.Exchange.MatchingEngine.Tests;
+namespace Vertr.Exchange.MatchingEngine.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
-public class OrderBookCommandProcessorSingleCommandTests
+public class MoveOrderCommandTests
 {
     [Test]
     public void ProcessMoveWithoutMatching()
@@ -60,7 +60,7 @@ public class OrderBookCommandProcessorSingleCommandTests
     public void ProcessMoveWithMatchingSuccess()
     {
         var orderBook = new OrderBook();
-        var ask = OrderStub.CreateBidOrder(18.56M, 7);
+        var ask = OrderStub.CreateAskOrder(18.56M, 7);
         var bid = OrderStub.CreateBidOrder(18.23M, 14, 10);
 
         orderBook.AddOrder(bid);
@@ -80,7 +80,16 @@ public class OrderBookCommandProcessorSingleCommandTests
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
             Assert.That(bid.Size, Is.EqualTo(23));
             Assert.That(bid.Price, Is.EqualTo(18.60M));
+            Assert.That(ask.Completed, Is.True);
+            Assert.That(bid.Completed, Is.False);
+            Assert.That(bid.Size, Is.EqualTo(23));
             Assert.That(bid.Filled, Is.EqualTo(17));
+            Assert.That(cmd.MatcherEvent, Is.Not.Null);
+            Assert.That(cmd.MatcherEvent!.EventType, Is.EqualTo(MatcherEventType.TRADE));
+            Assert.That(cmd.MatcherEvent!.Size, Is.EqualTo(7));
+            Assert.That(cmd.MatcherEvent!.Price, Is.EqualTo(18.56M));
+            Assert.That(cmd.MatcherEvent!.MatchedOrderId, Is.EqualTo(ask.OrderId));
+            Assert.That(cmd.MatcherEvent!.MatchedOrderUid, Is.EqualTo(ask.Uid));
         });
     }
 }
