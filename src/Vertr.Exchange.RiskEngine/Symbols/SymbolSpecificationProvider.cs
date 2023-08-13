@@ -1,6 +1,7 @@
-using Vertr.Exchange.Domain.Abstractions;
+using Vertr.Exchange.Common.Symbols;
+using Vertr.Exchange.RiskEngine.Abstractions;
 
-namespace Vertr.Exchange.Domain.Symbols;
+namespace Vertr.Exchange.RiskEngine.Symbols;
 internal class SymbolSpecificationProvider : ISymbolSpecificationProvider
 {
     private readonly IDictionary<int, CoreSymbolSpecification> _symbolSpecs;

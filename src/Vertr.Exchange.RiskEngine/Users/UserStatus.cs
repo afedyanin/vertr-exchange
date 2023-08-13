@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Domain.Enums;
+namespace Vertr.Exchange.RiskEngine.Users;
 
 public enum UserStatus
 {

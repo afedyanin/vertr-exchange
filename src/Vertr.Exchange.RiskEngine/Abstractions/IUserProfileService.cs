@@ -1,15 +1,15 @@
-using Vertr.Exchange.Domain.Enums;
-using Vertr.Exchange.Domain.Users;
+using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.RiskEngine.Users;
 
-namespace Vertr.Exchange.Domain.Abstractions;
+namespace Vertr.Exchange.RiskEngine.Abstractions;
 
-internal interface IUserProfileService
+public interface IUserProfileService
 {
     UserProfile? GetUserProfile(long uid);
 
     UserProfile GetUserProfileOrAddSuspended(long uid);
 
-    CommandResultCode BalanceAdjustment(long uid, int symbol, long amount, long fundingTransactionId);
+    CommandResultCode BalanceAdjustment(long uid, int symbol, decimal amount, long fundingTransactionId);
 
     bool AddEmptyUserProfile(long uid);
 

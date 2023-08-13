@@ -1,28 +1,28 @@
-using Vertr.Exchange.Domain.Abstractions;
-using Vertr.Exchange.Domain.Binary;
-using Vertr.Exchange.Domain.Enums;
-using Vertr.Exchange.Domain.MatchingEngine;
+using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Binary;
+using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Commands;
 
-namespace Vertr.Exchange.Domain.Processors;
-public class MatchingEngine : IMatchingEngine
+namespace Vertr.Exchange.MatchingEngine;
+
+public class OrderMatchingEngine
 {
     private static readonly int _cfgL2RefreshDepth = int.MaxValue;
 
     // Key = Symbol
     private readonly IDictionary<int, IOrderBook> _orderBooks;
 
-    private readonly BinaryCommandProcessor _binaryCommandsProcessor;
-
-    public MatchingEngine()
+    public OrderMatchingEngine()
     {
         _orderBooks = new Dictionary<int, IOrderBook>();
-        _binaryCommandsProcessor = new BinaryCommandProcessor(HandleBinaryCommand);
     }
 
     public void ProcessOrder(long seq, OrderCommand cmd)
     {
         switch (cmd.Command)
         {
+            // TODO: Compare with OrderBookCommandFactory
             case OrderCommandType.PLACE_ORDER:
             case OrderCommandType.REDUCE_ORDER:
             case OrderCommandType.CANCEL_ORDER:
@@ -38,7 +38,7 @@ public class MatchingEngine : IMatchingEngine
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 break;
             case OrderCommandType.BINARY_DATA_COMMAND:
-                cmd.ResultCode = _binaryCommandsProcessor.AcceptBinaryCommand(cmd);
+                cmd.ResultCode = AcceptBinaryCommand(cmd);
                 break;
             case OrderCommandType.BINARY_DATA_QUERY:
             case OrderCommandType.ADD_USER:
@@ -64,7 +64,10 @@ public class MatchingEngine : IMatchingEngine
             return;
         }
 
-        cmd.ResultCode = orderBook.ProcessCommand(cmd);
+        var orderBookCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+
+        // TODO: Catch and handle exceptions
+        cmd.ResultCode = orderBookCommand.Execute();
 
         if (cmd.Command != OrderCommandType.ORDER_BOOK_REQUEST
             && cmd.ResultCode == CommandResultCode.SUCCESS)
@@ -73,13 +76,28 @@ public class MatchingEngine : IMatchingEngine
         }
     }
 
-    private void HandleBinaryCommand(OrderCommand cmd, BinaryCommand binCmd)
+    public CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
+    {
+        if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
+        {
+            var command = BinaryCommandFactory.CreateCommand(cmd.BinaryCommandType, cmd.BinaryData);
+
+            if (command != null)
+            {
+                HandleBinaryCommand(command);
+            }
+        }
+
+        return CommandResultCode.SUCCESS;
+    }
+
+    private void HandleBinaryCommand(IBinaryCommand binCmd)
     {
         if (binCmd is BatchAddSymbolsCommand symCmd)
         {
             foreach (var sym in symCmd.Symbols)
             {
-                AddSymbol(sym);
+                AddSymbol(sym.SymbolId);
             }
         }
     }

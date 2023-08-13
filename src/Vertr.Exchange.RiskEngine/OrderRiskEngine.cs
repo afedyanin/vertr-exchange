@@ -1,25 +1,25 @@
-using Vertr.Exchange.Domain.Abstractions;
-using Vertr.Exchange.Domain.Binary;
-using Vertr.Exchange.Domain.Enums;
-using Vertr.Exchange.Domain.Symbols;
-using Vertr.Exchange.Domain.Users;
+using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Common;
+using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.RiskEngine.Users;
+using Vertr.Exchange.Common.Symbols;
+using Vertr.Exchange.Common.Binary;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.RiskEngine.Symbols;
 
-namespace Vertr.Exchange.Domain.Processors;
-
-internal class RiskEngine : IRiskEngine
+namespace Vertr.Exchange.RiskEngine;
+public class OrderRiskEngine
 {
     private const bool _cfgMarginTradingEnabled = true;
-    private const bool _cfgIgnoreRiskProcessing = false;
+    private const bool _cfgIgnoreRiskProcessing = true;
 
     private readonly IUserProfileService _userProfileService;
     private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
-    private readonly BinaryCommandProcessor _binaryCommandsProcessor;
 
-    public RiskEngine()
+    public OrderRiskEngine()
     {
         _userProfileService = new UserProfileService();
         _symbolSpecificationProvider = new SymbolSpecificationProvider();
-        _binaryCommandsProcessor = new BinaryCommandProcessor(HandleBinaryCommand);
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -61,7 +61,7 @@ internal class RiskEngine : IRiskEngine
             case OrderCommandType.BINARY_DATA_COMMAND:
             case OrderCommandType.BINARY_DATA_QUERY:
                 // ignore return result, because it should be set by MatchingEngineRouter
-                var _ = _binaryCommandsProcessor.AcceptBinaryCommand(cmd);
+                var _ = AcceptBinaryCommand(cmd);
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return false;
 
@@ -77,53 +77,7 @@ internal class RiskEngine : IRiskEngine
         return false;
     }
 
-    private CommandResultCode PlaceOrderRiskCheck(OrderCommand cmd)
-    {
-
-        var userProfile = _userProfileService.GetUserProfile(cmd.Uid);
-        if (userProfile == null)
-        {
-            cmd.ResultCode = CommandResultCode.AUTH_INVALID_USER;
-            // log.warn("User profile {} not found", cmd.uid);
-            return CommandResultCode.AUTH_INVALID_USER;
-        }
-
-        var spec = _symbolSpecificationProvider.GetSymbolSpecification(cmd.Symbol);
-
-        if (spec == null)
-        {
-            // log.warn("Symbol {} not found", cmd.symbol);
-            return CommandResultCode.INVALID_SYMBOL;
-        }
-
-        if (_cfgIgnoreRiskProcessing)
-        {
-            // skip processing
-            return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-        }
-
-        // check if account has enough funds
-        var resultCode = PlaceOrder(cmd, userProfile, spec);
-
-        if (resultCode != CommandResultCode.VALID_FOR_MATCHING_ENGINE)
-        {
-            // log.warn("{} risk result={} uid={}: Can not place {}", cmd.orderId, resultCode, userProfile.uid, cmd);
-            // log.warn("{} accounts:{}", cmd.orderId, userProfile.accounts);
-            return CommandResultCode.RISK_NSF;
-        }
-
-        return resultCode;
-    }
-
-    private CommandResultCode PlaceOrder(
-        OrderCommand cmd,
-        UserProfile userProfile,
-        CoreSymbolSpecification spec)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool HandlerRiskRelease(long seq, OrderCommand cmd)
+    public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
         var symbol = cmd.Symbol;
         var marketData = cmd.MarketData;
@@ -196,7 +150,33 @@ internal class RiskEngine : IRiskEngine
         return false;
     }
 
-    private void HandleBinaryCommand(OrderCommand cmd, BinaryCommand binCmd)
+
+    public void Reset()
+    {
+        _userProfileService.Reset();
+        // _symbolSpecificationProvider.Reset();
+        // lastPriceCache.clear();
+        // fees.clear();
+        // adjustments.clear();
+        // suspends.clear();
+    }
+
+    private CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
+    {
+        if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
+        {
+            var command = BinaryCommandFactory.CreateCommand(cmd.BinaryCommandType, cmd.BinaryData);
+
+            if (command != null)
+            {
+                HandleBinaryCommand(command);
+            }
+        }
+
+        return CommandResultCode.SUCCESS;
+    }
+
+    private void HandleBinaryCommand(IBinaryCommand binCmd)
     {
         if (binCmd is BatchAddSymbolsCommand batchAddSymbolsCommand)
         {
@@ -238,7 +218,7 @@ internal class RiskEngine : IRiskEngine
     private CommandResultCode AdjustBalance(
         long uid,
         int symbol,
-        long amountDiff,
+        decimal amountDiff,
         long fundingTransactionId,
         BalanceAdjustmentType adjustmentType)
     {
@@ -261,13 +241,49 @@ internal class RiskEngine : IRiskEngine
         return res;
     }
 
-    public void Reset()
+    private CommandResultCode PlaceOrderRiskCheck(OrderCommand cmd)
     {
-        _userProfileService.Reset();
-        _symbolSpecificationProvider.Reset();
-        // lastPriceCache.clear();
-        // fees.clear();
-        // adjustments.clear();
-        // suspends.clear();
+
+        var userProfile = _userProfileService.GetUserProfile(cmd.Uid);
+        if (userProfile == null)
+        {
+            cmd.ResultCode = CommandResultCode.AUTH_INVALID_USER;
+            // log.warn("User profile {} not found", cmd.uid);
+            return CommandResultCode.AUTH_INVALID_USER;
+        }
+
+        var spec = _symbolSpecificationProvider.GetSymbolSpecification(cmd.Symbol);
+
+        if (spec == null)
+        {
+            // log.warn("Symbol {} not found", cmd.symbol);
+            return CommandResultCode.INVALID_SYMBOL;
+        }
+
+        if (_cfgIgnoreRiskProcessing)
+        {
+            // skip processing
+            return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
+        }
+
+        // check if account has enough funds
+        var resultCode = PlaceOrder(cmd, userProfile, spec);
+
+        if (resultCode != CommandResultCode.VALID_FOR_MATCHING_ENGINE)
+        {
+            // log.warn("{} risk result={} uid={}: Can not place {}", cmd.orderId, resultCode, userProfile.uid, cmd);
+            // log.warn("{} accounts:{}", cmd.orderId, userProfile.accounts);
+            return CommandResultCode.RISK_NSF;
+        }
+
+        return resultCode;
+    }
+
+    private CommandResultCode PlaceOrder(
+        OrderCommand cmd,
+        UserProfile userProfile,
+        CoreSymbolSpecification spec)
+    {
+        throw new NotImplementedException();
     }
 }

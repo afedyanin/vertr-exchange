@@ -31,7 +31,7 @@ public class OrderCommand
 
     public int Symbol { get; set; }
 
-    // public byte[] BinaryData { get; set; } = Array.Empty<byte>();
+    public byte[] BinaryData { get; set; } = Array.Empty<byte>();
 
-    // public BinaryDataType BinaryCommandType { get; set; }
+    public BinaryDataType BinaryCommandType { get; set; }
 }

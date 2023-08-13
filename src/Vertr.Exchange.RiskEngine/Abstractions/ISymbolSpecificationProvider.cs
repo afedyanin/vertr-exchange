@@ -1,6 +1,6 @@
-using Vertr.Exchange.Domain.Symbols;
+using Vertr.Exchange.Common.Symbols;
 
-namespace Vertr.Exchange.Domain.Abstractions;
+namespace Vertr.Exchange.RiskEngine.Abstractions;
 
 public interface ISymbolSpecificationProvider
 {

@@ -1,6 +1,6 @@
-using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.Domain.Symbols;
+namespace Vertr.Exchange.Common.Symbols;
 
 public class CoreSymbolSpecification
 {

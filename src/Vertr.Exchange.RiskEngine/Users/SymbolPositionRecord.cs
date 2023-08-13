@@ -1,8 +1,8 @@
-using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.Domain.Users;
+namespace Vertr.Exchange.RiskEngine.Users;
 
-internal class SymbolPositionRecord
+public class SymbolPositionRecord
 {
     public long Uid { get; }
 

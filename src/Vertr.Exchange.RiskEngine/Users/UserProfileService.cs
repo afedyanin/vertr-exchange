@@ -1,7 +1,7 @@
-using Vertr.Exchange.Domain.Abstractions;
-using Vertr.Exchange.Domain.Enums;
+using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.RiskEngine.Abstractions;
 
-namespace Vertr.Exchange.Domain.Users;
+namespace Vertr.Exchange.RiskEngine.Users;
 
 internal class UserProfileService : IUserProfileService
 {
@@ -106,7 +106,11 @@ internal class UserProfileService : IUserProfileService
         _userProfiles.Clear();
     }
 
-    public CommandResultCode BalanceAdjustment(long uid, int symbol, long amount, long fundingTransactionId)
+    public CommandResultCode BalanceAdjustment(
+        long uid,
+        int symbol,
+        decimal amount,
+        long fundingTransactionId)
     {
         _userProfiles.TryGetValue(uid, out var profile);
 

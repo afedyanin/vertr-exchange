@@ -21,7 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Common", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.MatchingEngine", "src\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj", "{A8AB2EF0-5F15-412B-84C0-494B6505B817}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.MatchingEngine.Tests", "tests\Vertr.Exchange.MatchingEngine.Tests\Vertr.Exchange.MatchingEngine.Tests.csproj", "{25138090-ED8C-47EC-A879-5394878A79C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.MatchingEngine.Tests", "tests\Vertr.Exchange.MatchingEngine.Tests\Vertr.Exchange.MatchingEngine.Tests.csproj", "{25138090-ED8C-47EC-A879-5394878A79C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain", "src\Vertr.Exchange.Domain\Vertr.Exchange.Domain.csproj", "{B67362ED-3493-421B-9152-42C306E10649}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.RiskEngine", "src\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj", "{B3C8793D-E038-4E92-B5EA-897CE5BFB597}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{25138090-ED8C-47EC-A879-5394878A79C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25138090-ED8C-47EC-A879-5394878A79C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25138090-ED8C-47EC-A879-5394878A79C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B67362ED-3493-421B-9152-42C306E10649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B67362ED-3493-421B-9152-42C306E10649}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B67362ED-3493-421B-9152-42C306E10649}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B67362ED-3493-421B-9152-42C306E10649}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3C8793D-E038-4E92-B5EA-897CE5BFB597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3C8793D-E038-4E92-B5EA-897CE5BFB597}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3C8793D-E038-4E92-B5EA-897CE5BFB597}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3C8793D-E038-4E92-B5EA-897CE5BFB597}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +61,8 @@ Global
 		{B6622C2A-0BDA-4C7D-AB5B-04E0D968D005} = {4B42857C-FD8E-4EB6-B9D6-200FD3E19168}
 		{A8AB2EF0-5F15-412B-84C0-494B6505B817} = {4B42857C-FD8E-4EB6-B9D6-200FD3E19168}
 		{25138090-ED8C-47EC-A879-5394878A79C3} = {9C59A7AC-5C91-4BC5-97B7-72B20D752B2C}
+		{B67362ED-3493-421B-9152-42C306E10649} = {4B42857C-FD8E-4EB6-B9D6-200FD3E19168}
+		{B3C8793D-E038-4E92-B5EA-897CE5BFB597} = {4B42857C-FD8E-4EB6-B9D6-200FD3E19168}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AED32BEA-7168-480C-BA57-E1182383356F}
