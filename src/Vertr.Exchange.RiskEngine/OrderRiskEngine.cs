@@ -8,10 +8,10 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.RiskEngine.Symbols;
 
 namespace Vertr.Exchange.RiskEngine;
-public class OrderRiskEngine
+public class OrderRiskEngine : IOrderRiskEngine
 {
     private const bool _cfgMarginTradingEnabled = true;
-    private const bool _cfgIgnoreRiskProcessing = true;
+    private const bool _cfgIgnoreRiskProcessing = false;
 
     private readonly IUserProfileService _userProfileService;
     private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
@@ -73,6 +73,18 @@ public class OrderRiskEngine
             case OrderCommandType.PERSIST_STATE_MATCHING:
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return true;// true = publish sequence before finishing processing whole batch
+            case OrderCommandType.PERSIST_STATE_RISK:
+                break;
+            case OrderCommandType.GROUPING_CONTROL:
+                break;
+            case OrderCommandType.NOP:
+                break;
+            case OrderCommandType.SHUTDOWN_SIGNAL:
+                break;
+            case OrderCommandType.RESERVED_COMPRESSED:
+                break;
+            default:
+                break;
         }
         return false;
     }
@@ -223,21 +235,23 @@ public class OrderRiskEngine
         BalanceAdjustmentType adjustmentType)
     {
         var res = _userProfileService.BalanceAdjustment(uid, symbol, amountDiff, fundingTransactionId);
-        /* How to use it?
+
         if (res == CommandResultCode.SUCCESS)
         {
             switch (adjustmentType)
             {
                 case BalanceAdjustmentType.ADJUSTMENT:
-                    adjustments.addToValue(symbol, -amountDiff);
+                    //adjustments.addToValue(symbol, -amountDiff);
                     break;
 
                 case BalanceAdjustmentType.SUSPEND:
-                    suspends.addToValue(symbol, -amountDiff);
+                    //suspends.addToValue(symbol, -amountDiff);
+                    break;
+                default:
                     break;
             }
         }
-        */
+
         return res;
     }
 
@@ -263,7 +277,7 @@ public class OrderRiskEngine
         if (_cfgIgnoreRiskProcessing)
         {
             // skip processing
-            return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
+            //return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
         }
 
         // check if account has enough funds

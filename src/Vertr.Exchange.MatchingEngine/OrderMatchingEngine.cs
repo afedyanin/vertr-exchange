@@ -6,7 +6,7 @@ using Vertr.Exchange.MatchingEngine.Commands;
 
 namespace Vertr.Exchange.MatchingEngine;
 
-public class OrderMatchingEngine
+public class OrderMatchingEngine : IOrderMatchingEngine
 {
     private static readonly int _cfgL2RefreshDepth = int.MaxValue;
 
