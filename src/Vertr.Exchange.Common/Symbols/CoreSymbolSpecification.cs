@@ -4,8 +4,8 @@ namespace Vertr.Exchange.Common.Symbols;
 
 public class CoreSymbolSpecification
 {
-    public int SymbolId { get; }
-    public SymbolType Type { get; }
+    public int SymbolId { get; set; }
+    public SymbolType Type { get; set; }
 
     // currency pair specification
     public int BaseCurrency { get; }  // base currency

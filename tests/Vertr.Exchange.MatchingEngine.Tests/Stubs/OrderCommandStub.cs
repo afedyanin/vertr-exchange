@@ -5,12 +5,15 @@ namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 internal static class OrderCommandStub
 {
+    private const int defaultSymbol = 1;
+
     public static OrderCommand GtcOrder(
         OrderAction action,
         long orderId,
         long uid,
         decimal price,
-        long size)
+        long size,
+        int symbol = defaultSymbol)
     {
         return new OrderCommand
         {
@@ -21,7 +24,8 @@ internal static class OrderCommandStub
             OrderId = orderId,
             Uid = uid,
             Price = price,
-            Size = size
+            Size = size,
+            Symbol = symbol,
         };
     }
 
@@ -30,7 +34,8 @@ internal static class OrderCommandStub
         long orderId,
         long uid,
         decimal price,
-        long size)
+        long size,
+        int symbol = defaultSymbol)
     {
         return new OrderCommand
         {
@@ -41,7 +46,8 @@ internal static class OrderCommandStub
             OrderId = orderId,
             Uid = uid,
             Price = price,
-            Size = size
+            Size = size,
+            Symbol = symbol,
         };
     }
 
@@ -49,7 +55,8 @@ internal static class OrderCommandStub
         long orderId,
         long uid,
         decimal price,
-        long size)
+        long size,
+        int symbol = defaultSymbol)
     {
         return new OrderCommand
         {
@@ -57,21 +64,24 @@ internal static class OrderCommandStub
             OrderId = orderId,
             Uid = uid,
             Price = price,
-            Size = size
+            Size = size,
+            Symbol = symbol,
         };
     }
 
     public static OrderCommand Reduce(
         long orderId,
         long uid,
-        long size)
+        long size,
+        int symbol = defaultSymbol)
     {
         return new OrderCommand
         {
             Command = OrderCommandType.REDUCE_ORDER,
             OrderId = orderId,
             Uid = uid,
-            Size = size
+            Size = size,
+            Symbol = symbol,
         };
     }
 
@@ -79,7 +89,8 @@ internal static class OrderCommandStub
         long orderId,
         long uid,
         decimal price,
-        long size)
+        long size,
+        int symbol = defaultSymbol)
     {
         return new OrderCommand
         {
@@ -89,28 +100,32 @@ internal static class OrderCommandStub
             OrderId = orderId,
             Uid = uid,
             Price = price,
-            Size = size
+            Size = size,
+            Symbol = symbol,
         };
     }
 
     public static OrderCommand Cancel(
         long orderId,
-        long uid)
+        long uid,
+        int symbol = defaultSymbol)
     {
         return new OrderCommand
         {
             Command = OrderCommandType.CANCEL_ORDER,
             OrderId = orderId,
             Uid = uid,
+            Symbol = symbol,
         };
     }
 
-    public static OrderCommand OrderBookRequest(int size)
+    public static OrderCommand OrderBookRequest(int size, int symbol = defaultSymbol)
     {
         return new OrderCommand
         {
             Command = OrderCommandType.ORDER_BOOK_REQUEST,
             Size = size,
+            Symbol = symbol,
         };
     }
 }

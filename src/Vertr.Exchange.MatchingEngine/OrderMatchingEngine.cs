@@ -80,7 +80,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
     {
         if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
         {
-            var command = BinaryCommandFactory.CreateCommand(cmd.BinaryCommandType, cmd.BinaryData);
+            var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
 
             if (command != null)
             {
