@@ -1,8 +1,5 @@
-using System.Runtime.CompilerServices;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-
-[assembly: InternalsVisibleTo("Vertr.Exchange.MatchingEngine.Tests")]
 
 namespace Vertr.Exchange.MatchingEngine;
 

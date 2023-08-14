@@ -1,20 +1,27 @@
+using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Commands;
 
+[assembly: InternalsVisibleTo("Vertr.Exchange.MatchingEngine.Tests")]
+
 namespace Vertr.Exchange.MatchingEngine;
 
 public class OrderMatchingEngine : IOrderMatchingEngine
 {
-    private static readonly int _cfgL2RefreshDepth = int.MaxValue;
+    private readonly MatchingEngineConfiguration _config;
 
     // Key = Symbol
     private readonly IDictionary<int, IOrderBook> _orderBooks;
 
-    public OrderMatchingEngine()
+    public OrderMatchingEngine(
+        IOptions<MatchingEngineConfiguration> options,
+        )
     {
+        _config = options.Value;
         _orderBooks = new Dictionary<int, IOrderBook>();
     }
 
@@ -72,7 +79,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
         if (cmd.Command != OrderCommandType.ORDER_BOOK_REQUEST
             && cmd.ResultCode == CommandResultCode.SUCCESS)
         {
-            cmd.MarketData = orderBook.GetL2MarketDataSnapshot(_cfgL2RefreshDepth);
+            cmd.MarketData = orderBook.GetL2MarketDataSnapshot(_config.L2RefreshDepth);
         }
     }
 

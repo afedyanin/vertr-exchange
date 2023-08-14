@@ -5,33 +5,32 @@ using Vertr.Exchange.RiskEngine.Users;
 using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.RiskEngine.Symbols;
+using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Options;
+
+[assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
 namespace Vertr.Exchange.RiskEngine;
 public class OrderRiskEngine : IOrderRiskEngine
 {
-    private const bool _cfgMarginTradingEnabled = true;
-    private const bool _cfgIgnoreRiskProcessing = false;
-
+    private readonly RiskEngineConfiguration _config;
     private readonly IUserProfileService _userProfileService;
     private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
 
-    public OrderRiskEngine()
+    public OrderRiskEngine(
+        IOptions<RiskEngineConfiguration> configuration,
+        IUserProfileService userProfileService,
+        ISymbolSpecificationProvider symbolSpecificationProvider)
     {
-        _userProfileService = new UserProfileService();
-        _symbolSpecificationProvider = new SymbolSpecificationProvider();
+        _config = configuration.Value;
+        _userProfileService = userProfileService;
+        _symbolSpecificationProvider = symbolSpecificationProvider;
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
     {
         switch (cmd.Command)
         {
-            case OrderCommandType.MOVE_ORDER:
-            case OrderCommandType.CANCEL_ORDER:
-            case OrderCommandType.REDUCE_ORDER:
-            case OrderCommandType.ORDER_BOOK_REQUEST:
-                return false;
-
             case OrderCommandType.PLACE_ORDER:
                 cmd.ResultCode = PlaceOrderRiskCheck(cmd);
                 return false;
@@ -70,9 +69,16 @@ public class OrderRiskEngine : IOrderRiskEngine
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 return false;
 
+            case OrderCommandType.MOVE_ORDER:
+                break;
+            case OrderCommandType.CANCEL_ORDER:
+                break;
+            case OrderCommandType.REDUCE_ORDER:
+                break;
+            case OrderCommandType.ORDER_BOOK_REQUEST:
+                break;
             case OrderCommandType.PERSIST_STATE_MATCHING:
-                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-                return true;// true = publish sequence before finishing processing whole batch
+                break;
             case OrderCommandType.PERSIST_STATE_RISK:
                 break;
             case OrderCommandType.GROUPING_CONTROL:
@@ -163,10 +169,11 @@ public class OrderRiskEngine : IOrderRiskEngine
     }
 
 
-    public void Reset()
+    private void Reset()
     {
         _userProfileService.Reset();
-        // _symbolSpecificationProvider.Reset();
+        _symbolSpecificationProvider.Reset();
+
         // lastPriceCache.clear();
         // fees.clear();
         // adjustments.clear();
@@ -257,7 +264,6 @@ public class OrderRiskEngine : IOrderRiskEngine
 
     private CommandResultCode PlaceOrderRiskCheck(OrderCommand cmd)
     {
-
         var userProfile = _userProfileService.GetUserProfile(cmd.Uid);
         if (userProfile == null)
         {
