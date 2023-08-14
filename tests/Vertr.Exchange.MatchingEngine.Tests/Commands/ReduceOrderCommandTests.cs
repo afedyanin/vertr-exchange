@@ -1,4 +1,5 @@
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Commands;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Commands;
@@ -13,18 +14,18 @@ public class ReduceOrderCommandTests
         var bid = OrderStub.CreateBidOrder(45.23M, 27, 14); // remaining = 27-14 = 13
         orderBook.AddOrder(bid);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.Reduce(
             bid.OrderId,
             bid.Uid,
             7);
 
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
+
         // Size = 27-7 = 20
         // Filled = 14
         // Remaining = 6
 
-        var res = proc.ProcessCommand(cmd);
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
@@ -47,18 +48,18 @@ public class ReduceOrderCommandTests
         var bid = OrderStub.CreateBidOrder(45.23M, 27, 17); // remaining = 27-17 = 10
         orderBook.AddOrder(bid);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.Reduce(
             bid.OrderId,
             bid.Uid,
             19);
 
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
+
         // Size = 27 - 10 = 17
         // Filled = 17
         // Remaining = 0
 
-        var res = proc.ProcessCommand(cmd);
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));

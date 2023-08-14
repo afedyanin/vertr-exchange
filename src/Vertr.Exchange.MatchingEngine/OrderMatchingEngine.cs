@@ -22,7 +22,6 @@ public class OrderMatchingEngine : IOrderMatchingEngine
     {
         switch (cmd.Command)
         {
-            // TODO: Compare with OrderBookCommandFactory
             case OrderCommandType.PLACE_ORDER:
             case OrderCommandType.REDUCE_ORDER:
             case OrderCommandType.CANCEL_ORDER:
@@ -52,11 +51,12 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             case OrderCommandType.RESERVED_COMPRESSED:
                 break;
             default:
+                // TODO: How to handle exception here
                 throw new NotSupportedException(cmd.Command.ToString());
         }
     }
 
-    private void ProcessMatchingCommand(OrderCommand cmd)
+    internal void ProcessMatchingCommand(OrderCommand cmd)
     {
         if (!_orderBooks.TryGetValue(cmd.Symbol, out var orderBook))
         {
@@ -76,7 +76,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
         }
     }
 
-    public CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
+    internal CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
     {
         if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
         {
@@ -84,14 +84,14 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
             if (command != null)
             {
-                HandleBinaryCommand(command);
+                return HandleBinaryCommand(command);
             }
         }
 
-        return CommandResultCode.SUCCESS;
+        return CommandResultCode.BINARY_COMMAND_FAILED;
     }
 
-    private void HandleBinaryCommand(IBinaryCommand binCmd)
+    private CommandResultCode HandleBinaryCommand(IBinaryCommand binCmd)
     {
         if (binCmd is BatchAddSymbolsCommand symCmd)
         {
@@ -100,6 +100,8 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 AddSymbol(sym.SymbolId);
             }
         }
+
+        return CommandResultCode.SUCCESS;
     }
 
     private void AddSymbol(int symbol)

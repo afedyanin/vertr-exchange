@@ -2,7 +2,7 @@ using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.RiskEngine.Abstractions;
 
 namespace Vertr.Exchange.RiskEngine.Symbols;
-internal class SymbolSpecificationProvider : ISymbolSpecificationProvider
+internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
 {
     private readonly IDictionary<int, CoreSymbolSpecification> _symbolSpecs;
 

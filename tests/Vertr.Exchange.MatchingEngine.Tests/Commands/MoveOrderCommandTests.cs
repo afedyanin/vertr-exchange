@@ -1,4 +1,5 @@
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Commands;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Commands;
@@ -13,15 +14,15 @@ public class MoveOrderCommandTests
         var bid = OrderStub.CreateBidOrder(45.23M, 27);
         orderBook.AddOrder(bid);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.MoveOrder(
             bid.OrderId,
             bid.Uid,
             47.97M,
             23);
 
-        var res = proc.ProcessCommand(cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
+
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
@@ -38,21 +39,16 @@ public class MoveOrderCommandTests
         var bid = OrderStub.CreateBidOrder(45.23M, 27, 13);
         orderBook.AddOrder(bid);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.MoveOrder(
             bid.OrderId,
             bid.Uid,
             47.97M,
             3);
 
-        var res = proc.ProcessCommand(cmd);
-        Assert.Multiple(() =>
+        Assert.Throws<InvalidOperationException>(() =>
         {
-            Assert.That(res, Is.EqualTo(CommandResultCode.DROP));
-            Assert.That(bid.Size, Is.EqualTo(27));
-            Assert.That(bid.Price, Is.EqualTo(45.23M));
-            Assert.That(bid.Filled, Is.EqualTo(13));
+            var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+            var res = orderCommand.Execute();
         });
     }
 
@@ -66,15 +62,15 @@ public class MoveOrderCommandTests
         orderBook.AddOrder(bid);
         orderBook.AddOrder(ask);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.MoveOrder(
             bid.OrderId,
             bid.Uid,
             18.60M,
             23);
 
-        var res = proc.ProcessCommand(cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
+
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));

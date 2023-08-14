@@ -3,7 +3,7 @@ using Vertr.Exchange.RiskEngine.Abstractions;
 
 namespace Vertr.Exchange.RiskEngine.Users;
 
-internal class UserProfileService : IUserProfileService
+internal sealed class UserProfileService : IUserProfileService
 {
     private readonly IDictionary<long, UserProfile> _userProfiles;
 
