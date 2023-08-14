@@ -203,7 +203,7 @@ public class OrderRiskEngine : IOrderRiskEngine
 
             foreach (var spec in symbols)
             {
-                if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || _cfgMarginTradingEnabled)
+                if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || _config.MarginTradingEnabled)
                 {
                     _symbolSpecificationProvider.AddSymbol(spec);
                 }
@@ -280,10 +280,10 @@ public class OrderRiskEngine : IOrderRiskEngine
             return CommandResultCode.INVALID_SYMBOL;
         }
 
-        if (_cfgIgnoreRiskProcessing)
+        if (_config.IgnoreRiskProcessing)
         {
             // skip processing
-            //return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
+            return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
         }
 
         // check if account has enough funds

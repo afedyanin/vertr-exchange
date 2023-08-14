@@ -13,16 +13,18 @@ namespace Vertr.Exchange.MatchingEngine;
 public class OrderMatchingEngine : IOrderMatchingEngine
 {
     private readonly MatchingEngineConfiguration _config;
+    private readonly Func<IOrderBook> _orderBookFactory;
 
     // Key = Symbol
     private readonly IDictionary<int, IOrderBook> _orderBooks;
 
     public OrderMatchingEngine(
         IOptions<MatchingEngineConfiguration> options,
-        )
+        Func<IOrderBook> orderBookFactory)
     {
         _config = options.Value;
         _orderBooks = new Dictionary<int, IOrderBook>();
+        _orderBookFactory = orderBookFactory;
     }
 
     public void ProcessOrder(long seq, OrderCommand cmd)
@@ -63,6 +65,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
         }
     }
 
+    // TODO: Unit Tests
     internal void ProcessMatchingCommand(OrderCommand cmd)
     {
         if (!_orderBooks.TryGetValue(cmd.Symbol, out var orderBook))
@@ -115,7 +118,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
     {
         if (!_orderBooks.ContainsKey(symbol))
         {
-            _orderBooks.Add(symbol, new OrderBook());
+            _orderBooks.Add(symbol, _orderBookFactory());
         }
         else
         {
