@@ -3,7 +3,7 @@ using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.RiskEngine.Abstractions;
 
 namespace Vertr.Exchange.RiskEngine.Commands.Users;
-internal class SuspendUserCommand : UserCommand
+internal class SuspendUserCommand : RiskEngineCommand
 {
     public SuspendUserCommand(IUserProfileService userProfileService, OrderCommand command)
         : base(userProfileService, command)

@@ -1,16 +1,16 @@
-using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Common;
 using Vertr.Exchange.RiskEngine.Abstractions;
 
-namespace Vertr.Exchange.RiskEngine.Commands.Users;
+namespace Vertr.Exchange.RiskEngine.Commands;
 
-internal abstract class UserCommand
+internal abstract class RiskEngineCommand
 {
     protected OrderCommand OrderCommand { get; }
 
     protected IUserProfileService UserProfileService { get; }
 
-    public UserCommand(
+    public RiskEngineCommand(
         IUserProfileService userProfileService,
         OrderCommand command)
     {
@@ -20,3 +20,4 @@ internal abstract class UserCommand
 
     public abstract CommandResultCode Execute();
 }
+

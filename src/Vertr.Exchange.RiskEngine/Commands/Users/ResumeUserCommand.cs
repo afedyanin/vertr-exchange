@@ -4,7 +4,7 @@ using Vertr.Exchange.RiskEngine.Abstractions;
 
 namespace Vertr.Exchange.RiskEngine.Commands.Users;
 
-internal class ResumeUserCommand : UserCommand
+internal class ResumeUserCommand : RiskEngineCommand
 {
     public ResumeUserCommand(IUserProfileService userProfileService, OrderCommand command)
         : base(userProfileService, command)

@@ -1,13 +1,12 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.RiskEngine.Abstractions;
-using Vertr.Exchange.RiskEngine.Users;
-using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.RiskEngine.Commands.Users;
+using Vertr.Exchange.RiskEngine.Commands.Orders;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
@@ -33,24 +32,21 @@ public class OrderRiskEngine : IOrderRiskEngine
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
-                cmd.ResultCode = PlaceOrderRiskCheck(cmd);
+                var command = new PreProcessOrderCommand(
+                    _userProfileService,
+                    _symbolSpecificationProvider,
+                    cmd,
+                    _config.IgnoreRiskProcessing);
+
+                cmd.ResultCode = command.Execute();
                 return false;
 
             case OrderCommandType.ADD_USER:
             case OrderCommandType.SUSPEND_USER:
             case OrderCommandType.RESUME_USER:
+            case OrderCommandType.BALANCE_ADJUSTMENT:
                 var userCommand = UserCommandFactory.CreateUserCommand(_userProfileService, cmd);
                 cmd.ResultCode = userCommand.Execute();
-                return false;
-
-
-            case OrderCommandType.BALANCE_ADJUSTMENT:
-                cmd.ResultCode = AdjustBalance(
-                            cmd.Uid,
-                            cmd.Symbol,
-                            cmd.Price,
-                            cmd.OrderId,
-                            (BalanceAdjustmentType)cmd.OrderType);
                 return false;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
@@ -83,77 +79,9 @@ public class OrderRiskEngine : IOrderRiskEngine
 
     public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
-        var symbol = cmd.Symbol;
-        var marketData = cmd.MarketData;
-        var mte = cmd.MatcherEvent;
-
-        // skip events processing if no events (or if contains BINARY EVENT)
-        if (marketData == null && (mte == null || mte.EventType == MatcherEventType.BINARY_EVENT))
-        {
-            return false;
-        }
-
-        var spec = _symbolSpecificationProvider.GetSymbolSpecification(symbol) ??
-            throw new InvalidOperationException("Symbol not found: " + symbol);
-
-        var takerSell = cmd.Action == OrderAction.ASK;
-        /*
-        if (mte != null && mte.EventType != MatcherEventType.BINARY_EVENT)
-        {
-            // at least one event to process, resolving primary/taker user profile
-            // TODO processing order is reversed
-            if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR)
-            {
-                var takerUp = _userProfileService.GetUserProfileOrAddSuspended(cmd.Uid);
-
-                // REJECT always comes first; REDUCE is always single event
-                if (mte.EventType == MatcherEventType.REDUCE || mte.EventType == MatcherEventType.REJECT)
-                {
-                    if (takerUp != null)
-                    {
-                        handleMatcherRejectReduceEventExchange(cmd, mte, spec, takerSell, takerUp);
-                    }
-                    mte = mte.NextEvent;
-                }
-
-                if (mte != null)
-                {
-                    if (takerSell)
-                    {
-                        handleMatcherEventsExchangeSell(mte, spec, takerUp);
-                    }
-                    else
-                    {
-                        handleMatcherEventsExchangeBuy(mte, spec, takerUp, cmd);
-                    }
-                }
-            }
-            else
-            {
-
-                var takerUp = _userProfileService.GetUserProfileOrAddSuspended(cmd.Uid);
-
-                // for margin-mode symbols also resolve position record
-                var takerSpr = (takerUp != null) ? takerUp.getPositionRecordOrThrowEx(symbol) : null;
-                do
-                {
-                    handleMatcherEventMargin(mte, spec, cmd.Action, takerUp, takerSpr);
-                    mte = mte.NextEvent;
-                } while (mte != null);
-            }
-        }
-
-        // Process marked data
-        if (marketData != null && cfgMarginTradingEnabled)
-        {
-            RiskEngine.LastPriceCacheRecord record = lastPriceCache.getIfAbsentPut(symbol, RiskEngine.LastPriceCacheRecord::new);
-            record.askPrice = (marketData.AskSize != 0) ? marketData.AskPrices[0] : long.MaxValue;
-            record.bidPrice = (marketData.BidSize != 0) ? marketData.BidPrices[0] : 0;
-        }
-        */
-        return false;
+        var command = new PostProcessOrderCommand(_userProfileService, _symbolSpecificationProvider, cmd);
+        return command.Execute();
     }
-
 
     private void Reset()
     {
@@ -185,111 +113,51 @@ public class OrderRiskEngine : IOrderRiskEngine
     {
         if (binCmd is BatchAddSymbolsCommand batchAddSymbolsCommand)
         {
-            var symbols = batchAddSymbolsCommand.Symbols;
-
-            foreach (var spec in symbols)
-            {
-                if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || _config.MarginTradingEnabled)
-                {
-                    _symbolSpecificationProvider.AddSymbol(spec);
-                }
-                else
-                {
-                    // log.warn("Margin symbols are not allowed: {}", spec);
-                }
-            }
+            AddSymbols(batchAddSymbolsCommand);
         }
         else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
         {
-            var users = batchAddAccountsCommand.Users;
+            AddAccounts(batchAddAccountsCommand);
+        }
+    }
 
-            foreach (var (uid, acounts) in users)
+    private void AddSymbols(BatchAddSymbolsCommand batchAddSymbolsCommand)
+    {
+        var symbols = batchAddSymbolsCommand.Symbols;
+
+        foreach (var spec in symbols)
+        {
+            if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || _config.MarginTradingEnabled)
             {
-                if (_userProfileService.AddEmptyUserProfile(uid))
-                {
-                    foreach (var (cur, bal) in acounts)
-                    {
-                        AdjustBalance(uid, cur, bal, 1_000_000_000 + cur, BalanceAdjustmentType.ADJUSTMENT);
-                    }
-                }
-                else
-                {
-                    // log.debug("User already exist: {}", uid);
-                }
+                _symbolSpecificationProvider.AddSymbol(spec);
+            }
+            else
+            {
+                // log.warn("Margin symbols are not allowed: {}", spec);
             }
         }
     }
 
-    private CommandResultCode AdjustBalance(
-        long uid,
-        int symbol,
-        decimal amountDiff,
-        long fundingTransactionId,
-        BalanceAdjustmentType adjustmentType)
+    private void AddAccounts(BatchAddAccountsCommand batchAddAccountsCommand)
     {
-        var res = _userProfileService.BalanceAdjustment(uid, symbol, amountDiff, fundingTransactionId);
+        var users = batchAddAccountsCommand.Users;
 
-        if (res == CommandResultCode.SUCCESS)
+        foreach (var (uid, acounts) in users)
         {
-            switch (adjustmentType)
+            if (!_userProfileService.AddEmptyUserProfile(uid))
             {
-                case BalanceAdjustmentType.ADJUSTMENT:
-                    //adjustments.addToValue(symbol, -amountDiff);
-                    break;
-
-                case BalanceAdjustmentType.SUSPEND:
-                    //suspends.addToValue(symbol, -amountDiff);
-                    break;
-                default:
-                    break;
+                // log.debug("User already exist: {}", uid);
+                continue;
+            }
+            foreach (var (cur, bal) in acounts)
+            {
+                // BalanceAdjustmentType.ADJUSTMENT
+                _userProfileService.BalanceAdjustment(
+                    uid,
+                    cur,
+                    bal,
+                    1_000_000_000 + cur);
             }
         }
-
-        return res;
-    }
-
-    private CommandResultCode PlaceOrderRiskCheck(OrderCommand cmd)
-    {
-        var userProfile = _userProfileService.GetUserProfile(cmd.Uid);
-        if (userProfile == null)
-        {
-            cmd.ResultCode = CommandResultCode.AUTH_INVALID_USER;
-            // log.warn("User profile {} not found", cmd.uid);
-            return CommandResultCode.AUTH_INVALID_USER;
-        }
-
-        var spec = _symbolSpecificationProvider.GetSymbolSpecification(cmd.Symbol);
-
-        if (spec == null)
-        {
-            // log.warn("Symbol {} not found", cmd.symbol);
-            return CommandResultCode.INVALID_SYMBOL;
-        }
-
-        if (_config.IgnoreRiskProcessing)
-        {
-            // skip processing
-            return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-        }
-
-        // check if account has enough funds
-        var resultCode = PlaceOrder(cmd, userProfile, spec);
-
-        if (resultCode != CommandResultCode.VALID_FOR_MATCHING_ENGINE)
-        {
-            // log.warn("{} risk result={} uid={}: Can not place {}", cmd.orderId, resultCode, userProfile.uid, cmd);
-            // log.warn("{} accounts:{}", cmd.orderId, userProfile.accounts);
-            return CommandResultCode.RISK_NSF;
-        }
-
-        return resultCode;
-    }
-
-    private CommandResultCode PlaceOrder(
-        OrderCommand cmd,
-        UserProfile userProfile,
-        CoreSymbolSpecification spec)
-    {
-        throw new NotImplementedException();
     }
 }

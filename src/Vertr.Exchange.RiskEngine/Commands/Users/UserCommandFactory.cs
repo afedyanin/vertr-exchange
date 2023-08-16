@@ -6,7 +6,7 @@ namespace Vertr.Exchange.RiskEngine.Commands.Users;
 
 internal static class UserCommandFactory
 {
-    public static UserCommand CreateUserCommand(IUserProfileService userProfileService, OrderCommand orderCommand)
+    public static RiskEngineCommand CreateUserCommand(IUserProfileService userProfileService, OrderCommand orderCommand)
     {
 #pragma warning disable IDE0072 // Add missing cases
         return orderCommand.Command switch
