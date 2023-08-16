@@ -65,7 +65,6 @@ public class OrderMatchingEngine : IOrderMatchingEngine
         }
     }
 
-    // TODO: Unit Tests
     internal void ProcessMatchingCommand(OrderCommand cmd)
     {
         if (!_orderBooks.TryGetValue(cmd.Symbol, out var orderBook))

@@ -9,7 +9,7 @@ public class OrderMatchingEngineTests
     [Test]
     public void CanAddSymbols()
     {
-        var ome = new OrderMatchingEngine();
+        var ome = MatchingEngineStub.Instance;
         var symbolIds = new[] { 1, 2, 3, 4 };
         var cmd = BinaryCommandStub.CreateAddSymbolsCommand(symbolIds);
 
@@ -21,7 +21,7 @@ public class OrderMatchingEngineTests
     [Test]
     public void CanProcessBidOrder()
     {
-        var ome = new OrderMatchingEngine();
+        var ome = MatchingEngineStub.Instance;
         var symbolIds = new[] { 1, 2, 3, 4 };
         var cmd = BinaryCommandStub.CreateAddSymbolsCommand(symbolIds);
         ome.AcceptBinaryCommand(cmd);
@@ -48,7 +48,7 @@ public class OrderMatchingEngineTests
     [Test]
     public void CanProcessBidOrderWithInvalidSymbol()
     {
-        var ome = new OrderMatchingEngine();
+        var ome = MatchingEngineStub.Instance;
         var symbolIds = new[] { 1, 2, 3, 4 };
         var cmd = BinaryCommandStub.CreateAddSymbolsCommand(symbolIds);
         ome.AcceptBinaryCommand(cmd);
@@ -66,5 +66,50 @@ public class OrderMatchingEngineTests
         ome.ProcessOrder(0L, cmd);
 
         Assert.That(cmd.ResultCode, Is.EqualTo(CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID));
+    }
+
+    [Test]
+    public void ProcessMatchingWithInvalidSymbol()
+    {
+        var ome = MatchingEngineStub.Instance;
+        var symbolIds = new[] { 1, 2, 3, 4 };
+        var cmd = BinaryCommandStub.CreateAddSymbolsCommand(symbolIds);
+        ome.AcceptBinaryCommand(cmd);
+
+        var bid = OrderStub.CreateBidOrder(19.23M, 40);
+
+        cmd = OrderCommandStub.GtcOrder(
+            bid.Action,
+            bid.OrderId,
+            bid.Uid,
+            bid.Price,
+            bid.Size,
+            13);
+
+        ome.ProcessMatchingCommand(cmd);
+
+        Assert.That(cmd.ResultCode, Is.EqualTo(CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID));
+    }
+
+    [Test]
+    public void ProcessMatchingSuccess()
+    {
+        var ome = MatchingEngineStub.Instance;
+        var symbolIds = new[] { 1, 2, 3, 4 };
+        var cmd = BinaryCommandStub.CreateAddSymbolsCommand(symbolIds);
+        ome.AcceptBinaryCommand(cmd);
+
+        var bid = OrderStub.CreateBidOrder(19.23M, 40);
+
+        cmd = OrderCommandStub.GtcOrder(
+            bid.Action,
+            bid.OrderId,
+            bid.Uid,
+            bid.Price,
+            bid.Size);
+
+        ome.ProcessMatchingCommand(cmd);
+
+        Assert.That(cmd.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
     }
 }

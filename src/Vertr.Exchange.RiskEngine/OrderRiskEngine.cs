@@ -7,6 +7,7 @@ using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
+using Vertr.Exchange.RiskEngine.Commands.Users;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
@@ -36,10 +37,12 @@ public class OrderRiskEngine : IOrderRiskEngine
                 return false;
 
             case OrderCommandType.ADD_USER:
-                cmd.ResultCode = _userProfileService.AddEmptyUserProfile(cmd.Uid)
-                        ? CommandResultCode.SUCCESS
-                        : CommandResultCode.USER_MGMT_USER_ALREADY_EXISTS;
+            case OrderCommandType.SUSPEND_USER:
+            case OrderCommandType.RESUME_USER:
+                var userCommand = UserCommandFactory.CreateUserCommand(_userProfileService, cmd);
+                cmd.ResultCode = userCommand.Execute();
                 return false;
+
 
             case OrderCommandType.BALANCE_ADJUSTMENT:
                 cmd.ResultCode = AdjustBalance(
@@ -48,13 +51,6 @@ public class OrderRiskEngine : IOrderRiskEngine
                             cmd.Price,
                             cmd.OrderId,
                             (BalanceAdjustmentType)cmd.OrderType);
-                return false;
-
-            case OrderCommandType.SUSPEND_USER:
-                cmd.ResultCode = _userProfileService.SuspendUserProfile(cmd.Uid);
-                return false;
-            case OrderCommandType.RESUME_USER:
-                cmd.ResultCode = _userProfileService.ResumeUserProfile(cmd.Uid);
                 return false;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
@@ -70,25 +66,15 @@ public class OrderRiskEngine : IOrderRiskEngine
                 return false;
 
             case OrderCommandType.MOVE_ORDER:
-                break;
             case OrderCommandType.CANCEL_ORDER:
-                break;
             case OrderCommandType.REDUCE_ORDER:
-                break;
             case OrderCommandType.ORDER_BOOK_REQUEST:
-                break;
             case OrderCommandType.PERSIST_STATE_MATCHING:
-                break;
             case OrderCommandType.PERSIST_STATE_RISK:
-                break;
             case OrderCommandType.GROUPING_CONTROL:
-                break;
             case OrderCommandType.NOP:
-                break;
             case OrderCommandType.SHUTDOWN_SIGNAL:
-                break;
             case OrderCommandType.RESERVED_COMPRESSED:
-                break;
             default:
                 break;
         }
