@@ -17,6 +17,9 @@ public class OrderRiskEngine : IOrderRiskEngine
     private readonly IUserProfileService _userProfileService;
     private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
 
+    // symbol
+    private readonly IDictionary<int, LastPriceCacheRecord> _lastPriceCache;
+
     public OrderRiskEngine(
         IOptions<RiskEngineConfiguration> configuration,
         IUserProfileService userProfileService,
@@ -25,6 +28,7 @@ public class OrderRiskEngine : IOrderRiskEngine
         _config = configuration.Value;
         _userProfileService = userProfileService;
         _symbolSpecificationProvider = symbolSpecificationProvider;
+        _lastPriceCache = new Dictionary<int, LastPriceCacheRecord>();
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -35,8 +39,10 @@ public class OrderRiskEngine : IOrderRiskEngine
                 var command = new PreProcessOrderCommand(
                     _userProfileService,
                     _symbolSpecificationProvider,
+                    _lastPriceCache,
                     cmd,
-                    _config.IgnoreRiskProcessing);
+                    _config.IgnoreRiskProcessing,
+                    _config.MarginTradingEnabled);
 
                 cmd.ResultCode = command.Execute();
                 return false;
@@ -79,7 +85,13 @@ public class OrderRiskEngine : IOrderRiskEngine
 
     public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
-        var command = new PostProcessOrderCommand(_userProfileService, _symbolSpecificationProvider, cmd);
+        var command = new PostProcessOrderCommand(
+            _userProfileService,
+            _symbolSpecificationProvider,
+            _lastPriceCache,
+            cmd,
+            _config.MarginTradingEnabled);
+
         return command.Execute();
     }
 
@@ -87,8 +99,8 @@ public class OrderRiskEngine : IOrderRiskEngine
     {
         _userProfileService.Reset();
         _symbolSpecificationProvider.Reset();
+        _lastPriceCache.Clear();
 
-        // lastPriceCache.clear();
         // fees.clear();
         // adjustments.clear();
         // suspends.clear();
@@ -149,14 +161,14 @@ public class OrderRiskEngine : IOrderRiskEngine
                 // log.debug("User already exist: {}", uid);
                 continue;
             }
-            foreach (var (cur, bal) in acounts)
+            foreach (var (currency, balance) in acounts)
             {
                 // BalanceAdjustmentType.ADJUSTMENT
                 _userProfileService.BalanceAdjustment(
                     uid,
-                    cur,
-                    bal,
-                    1_000_000_000 + cur);
+                    currency,
+                    balance,
+                    1_000_000_000 + currency);
             }
         }
     }

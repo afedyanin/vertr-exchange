@@ -25,6 +25,8 @@ public class OrderCommand
 
     public decimal Price { get; set; }
 
+    public decimal ReserveBidPrice { get; set; }
+
     public DateTime Timestamp { get; set; }
 
     public long Filled { get; set; }

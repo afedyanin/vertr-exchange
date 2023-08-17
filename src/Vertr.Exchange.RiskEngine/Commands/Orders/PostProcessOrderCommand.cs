@@ -9,15 +9,21 @@ internal class PostProcessOrderCommand
     private readonly OrderCommand _orderCommand;
     private readonly IUserProfileService _userProfileService;
     private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
+    private readonly IDictionary<int, LastPriceCacheRecord> _lastPriceCache;
+    private readonly bool _marginTradingEnabled;
 
     public PostProcessOrderCommand(
         IUserProfileService userProfileService,
         ISymbolSpecificationProvider symbolSpecificationProvider,
-        OrderCommand command)
+        IDictionary<int, LastPriceCacheRecord> lastPriceCache,
+        OrderCommand command,
+        bool marginTradingEnabled)
     {
         _orderCommand = command;
         _userProfileService = userProfileService;
         _symbolSpecificationProvider = symbolSpecificationProvider;
+        _lastPriceCache = lastPriceCache;
+        _marginTradingEnabled = marginTradingEnabled;
     }
 
     public bool Execute()
@@ -83,14 +89,22 @@ internal class PostProcessOrderCommand
         }
 
         // Process marked data
-        /*
-        if (marketData != null && cfgMarginTradingEnabled)
+        if (marketData is not null && _marginTradingEnabled)
         {
-            RiskEngine.LastPriceCacheRecord record = lastPriceCache.getIfAbsentPut(symbol, RiskEngine.LastPriceCacheRecord::new);
-            record.askPrice = (marketData.AskSize != 0) ? marketData.AskPrices[0] : long.MaxValue;
-            record.bidPrice = (marketData.BidSize != 0) ? marketData.BidPrices[0] : 0;
+            // TODO: Check sorting
+            var askPrice = (marketData.AskSize != 0) ? marketData.AskPrices[0] : long.MaxValue;
+            var bidPrice = (marketData.BidSize != 0) ? marketData.BidPrices[0] : 0;
+
+            if (_lastPriceCache.ContainsKey(symbol))
+            {
+                _lastPriceCache[symbol] = new LastPriceCacheRecord(askPrice, bidPrice);
+            }
+            else
+            {
+                _lastPriceCache.Add(symbol, new LastPriceCacheRecord(askPrice, bidPrice));
+            }
         }
-        */
+
         return false;
     }
 }

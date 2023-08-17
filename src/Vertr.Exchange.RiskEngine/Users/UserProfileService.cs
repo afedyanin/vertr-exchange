@@ -60,12 +60,12 @@ internal sealed class UserProfileService : IUserProfileService
             return CommandResultCode.USER_MGMT_USER_ALREADY_SUSPENDED;
 
         }
-        else if (profile.Positions.Values.Any(pos => !pos.IsEmpty()))
+        else if (profile.HasPositions)
         {
             return CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_HAS_POSITIONS;
 
         }
-        else if (profile.Accounts.Values.Any(acc => acc != 0L))
+        else if (profile.HasAccounts)
         {
             return CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_NON_EMPTY_ACCOUNTS;
         }
@@ -108,7 +108,7 @@ internal sealed class UserProfileService : IUserProfileService
 
     public CommandResultCode BalanceAdjustment(
         long uid,
-        int symbol,
+        int currency,
         decimal amount,
         long fundingTransactionId)
     {
@@ -131,7 +131,7 @@ internal sealed class UserProfileService : IUserProfileService
         }
 
         // validate balance for withdrawals
-        profile.Accounts.TryGetValue(symbol, out var currentAmount);
+        var currentAmount = profile.GetCurrentAmount(currency);
 
         if (amount < 0 && (currentAmount + amount) < 0)
         {
@@ -139,15 +139,7 @@ internal sealed class UserProfileService : IUserProfileService
         }
 
         profile.AdjustmentsCounter = fundingTransactionId;
-
-        if (!profile.Accounts.ContainsKey(symbol))
-        {
-            profile.Accounts.Add(symbol, amount);
-        }
-        else
-        {
-            profile.Accounts[symbol] += amount;
-        }
+        profile.UpdateAccount(currency, amount);
 
         //log.debug("FUND: {}", userProfile);
         return CommandResultCode.SUCCESS;

@@ -1,3 +1,19 @@
+## 17-08-23
+
+### RiskEngine Parts
+
+- ReserveBidPrice
+- fees.clear();
+- adjustments.clear();
+- suspends.clear();
+
+- логирование
+- рефакторинг
+- юнит-тесты
+- репортинг
+
+
+
 ## 16-08-23
 
 ### Risk Engine - посмотреть в Java коде
