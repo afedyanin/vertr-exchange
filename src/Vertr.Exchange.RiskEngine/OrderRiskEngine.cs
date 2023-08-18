@@ -11,7 +11,7 @@ using Vertr.Exchange.RiskEngine.Commands.Orders;
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
 namespace Vertr.Exchange.RiskEngine;
-public class OrderRiskEngine : IOrderRiskEngine
+internal sealed class OrderRiskEngine : IOrderRiskEngine
 {
     private readonly RiskEngineConfiguration _config;
     private readonly IUserProfileService _userProfileService;
@@ -19,6 +19,19 @@ public class OrderRiskEngine : IOrderRiskEngine
 
     // symbol
     private readonly IDictionary<int, LastPriceCacheRecord> _lastPriceCache;
+
+    // currency
+    private readonly IDictionary<int, decimal> _fees;
+
+    // currency
+    private readonly IDictionary<int, decimal> _adjustments;
+
+    // currency
+    private readonly IDictionary<int, decimal> _suspends;
+
+    public bool IsMarginTradingEnabled => _config.MarginTradingEnabled;
+
+    public bool IgnoreRiskProcessing => _config.IgnoreRiskProcessing;
 
     public OrderRiskEngine(
         IOptions<RiskEngineConfiguration> configuration,
@@ -29,6 +42,9 @@ public class OrderRiskEngine : IOrderRiskEngine
         _userProfileService = userProfileService;
         _symbolSpecificationProvider = symbolSpecificationProvider;
         _lastPriceCache = new Dictionary<int, LastPriceCacheRecord>();
+        _adjustments = new Dictionary<int, decimal>();
+        _fees = new Dictionary<int, decimal>();
+        _suspends = new Dictionary<int, decimal>();
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -39,10 +55,8 @@ public class OrderRiskEngine : IOrderRiskEngine
                 var command = new PreProcessOrderCommand(
                     _userProfileService,
                     _symbolSpecificationProvider,
-                    _lastPriceCache,
-                    cmd,
-                    _config.IgnoreRiskProcessing,
-                    _config.MarginTradingEnabled);
+                    this,
+                    cmd);
 
                 cmd.ResultCode = command.Execute();
                 return false;
@@ -51,7 +65,7 @@ public class OrderRiskEngine : IOrderRiskEngine
             case OrderCommandType.SUSPEND_USER:
             case OrderCommandType.RESUME_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
-                var userCommand = UserCommandFactory.CreateUserCommand(_userProfileService, cmd);
+                var userCommand = UserCommandFactory.CreateUserCommand(_userProfileService, this, cmd);
                 cmd.ResultCode = userCommand.Execute();
                 return false;
 
@@ -88,9 +102,8 @@ public class OrderRiskEngine : IOrderRiskEngine
         var command = new PostProcessOrderCommand(
             _userProfileService,
             _symbolSpecificationProvider,
-            _lastPriceCache,
-            cmd,
-            _config.MarginTradingEnabled);
+            this,
+            cmd);
 
         return command.Execute();
     }
@@ -100,10 +113,9 @@ public class OrderRiskEngine : IOrderRiskEngine
         _userProfileService.Reset();
         _symbolSpecificationProvider.Reset();
         _lastPriceCache.Clear();
-
-        // fees.clear();
-        // adjustments.clear();
-        // suspends.clear();
+        _fees.Clear();
+        _adjustments.Clear();
+        _suspends.Clear();
     }
 
     private CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
@@ -163,13 +175,65 @@ public class OrderRiskEngine : IOrderRiskEngine
             }
             foreach (var (currency, balance) in acounts)
             {
-                // BalanceAdjustmentType.ADJUSTMENT
                 _userProfileService.BalanceAdjustment(
                     uid,
                     currency,
                     balance,
                     1_000_000_000 + currency);
+
+                AdjustBalance(currency, balance, BalanceAdjustmentType.ADJUSTMENT);
             }
+        }
+    }
+
+    public void AdjustBalance(int currency, decimal amount, BalanceAdjustmentType adjustmentType)
+    {
+        switch (adjustmentType)
+        {
+            case BalanceAdjustmentType.ADJUSTMENT:
+                AddToValue(_adjustments, currency, -amount);
+                break;
+
+            case BalanceAdjustmentType.SUSPEND:
+                AddToValue(_suspends, currency, -amount);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public decimal AddFeeValue(int currency, decimal toBeAdded)
+        => AddToValue(_fees, currency, toBeAdded);
+
+    public void AddLastPriceCache(int symbol, decimal askPrice, decimal bidPrice)
+    {
+        if (_lastPriceCache.ContainsKey(symbol))
+        {
+            _lastPriceCache[symbol] = new LastPriceCacheRecord(askPrice, bidPrice);
+        }
+        else
+        {
+            _lastPriceCache.Add(symbol, new LastPriceCacheRecord(askPrice, bidPrice));
+        }
+    }
+
+    public LastPriceCacheRecord? GetLastPriceCache(int symbol)
+    {
+        _lastPriceCache.TryGetValue(symbol, out var priceCache);
+        return priceCache;
+    }
+
+    private static decimal AddToValue(IDictionary<int, decimal> dict, int key, decimal toBeAdded)
+    {
+        if (!dict.ContainsKey(key))
+        {
+            dict.Add(key, toBeAdded);
+            return toBeAdded;
+        }
+        else
+        {
+            dict[key] += toBeAdded;
+            return dict[key];
         }
     }
 }

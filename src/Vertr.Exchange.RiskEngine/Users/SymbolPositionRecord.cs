@@ -13,15 +13,15 @@ internal class SymbolPositionRecord
 
     public PositionDirection Direction { get; private set; }
 
-    public long OpenVolume { get; private set; }
+    public decimal OpenVolume { get; private set; }
 
-    public long OpenPriceSum { get; private set; }
+    public decimal OpenPriceSum { get; private set; }
 
-    public long Profit { get; private set; }
+    public decimal Profit { get; private set; }
 
-    public long PendingSellSize { get; private set; }
+    public decimal PendingSellSize { get; private set; }
 
-    public long PendingBuySize { get; private set; }
+    public decimal PendingBuySize { get; private set; }
 
     public bool IsEmpty()
         => Direction == PositionDirection.EMPTY
@@ -79,7 +79,7 @@ internal class SymbolPositionRecord
         };
     }
 
-    public long CalculateRequiredMarginForFutures(CoreSymbolSpecification spec)
+    public decimal CalculateRequiredMarginForFutures(CoreSymbolSpecification spec)
     {
         var specMarginBuy = spec.MarginBuy;
         var specMarginSell = spec.MarginSell;
@@ -95,7 +95,7 @@ internal class SymbolPositionRecord
         return Math.Max(marginBuy, marginSell);
     }
 
-    public long CalculateRequiredMarginForOrder(CoreSymbolSpecification spec, OrderAction action, long size)
+    public decimal CalculateRequiredMarginForOrder(CoreSymbolSpecification spec, OrderAction action, long size)
     {
         var specMarginBuy = spec.MarginBuy;
         var specMarginSell = spec.MarginSell;
@@ -104,8 +104,8 @@ internal class SymbolPositionRecord
         var currentRiskBuySize = PendingBuySize + signedPosition;
         var currentRiskSellSize = PendingSellSize - signedPosition;
 
-        long marginBuy = specMarginBuy * currentRiskBuySize;
-        long marginSell = specMarginSell * currentRiskSellSize;
+        var marginBuy = specMarginBuy * currentRiskBuySize;
+        var marginSell = specMarginSell * currentRiskSellSize;
 
         // either marginBuy or marginSell can be negative (because of signedPosition), but not both of them
         var currentMargin = Math.Max(marginBuy, marginSell);
@@ -125,7 +125,7 @@ internal class SymbolPositionRecord
         return (newMargin <= currentMargin) ? -1 : newMargin;
     }
 
-    public long UpdatePositionForMarginTrade(OrderAction action, long size, long price)
+    public decimal UpdatePositionForMarginTrade(OrderAction action, long size, decimal price)
     {
 
         // 1. Un-hold pending size
@@ -139,6 +139,7 @@ internal class SymbolPositionRecord
         {
             OpenPositionMargin(action, sizeToOpen, price);
         }
+
         return sizeToOpen;
     }
 
@@ -158,7 +159,7 @@ internal class SymbolPositionRecord
         Direction = PositionDirection.EMPTY;
     }
 
-    private long CloseCurrentPositionFutures(OrderAction action, long tradeSize, long tradePrice)
+    private decimal CloseCurrentPositionFutures(OrderAction action, long tradeSize, decimal tradePrice)
     {
 
         // log.debug("{} {} {} {} cur:{}-{} profit={}", uid, action, tradeSize, tradePrice, position, totalSize, profit);
@@ -189,7 +190,7 @@ internal class SymbolPositionRecord
         return sizeToOpen;
     }
 
-    private void OpenPositionMargin(OrderAction action, long sizeToOpen, long tradePrice)
+    private void OpenPositionMargin(OrderAction action, decimal sizeToOpen, decimal tradePrice)
     {
         OpenVolume += sizeToOpen;
         OpenPriceSum += tradePrice * sizeToOpen;

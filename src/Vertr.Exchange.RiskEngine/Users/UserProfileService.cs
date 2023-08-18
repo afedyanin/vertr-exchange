@@ -139,7 +139,7 @@ internal sealed class UserProfileService : IUserProfileService
         }
 
         profile.AdjustmentsCounter = fundingTransactionId;
-        profile.UpdateAccount(currency, amount);
+        profile.AddToValue(currency, amount);
 
         //log.debug("FUND: {}", userProfile);
         return CommandResultCode.SUCCESS;

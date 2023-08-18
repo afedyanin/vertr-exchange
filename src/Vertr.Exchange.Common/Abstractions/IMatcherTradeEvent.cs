@@ -17,5 +17,7 @@ public interface IMatcherTradeEvent
 
     long Size { get; }
 
+    decimal BidderHoldPrice { get; }
+
     IMatcherTradeEvent? NextEvent { get; set; }
 }

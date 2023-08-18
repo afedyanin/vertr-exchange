@@ -3,13 +3,13 @@ using Vertr.Exchange.RiskEngine.Users;
 
 namespace Vertr.Exchange.RiskEngine.Abstractions;
 
-public interface IUserProfileService
+internal interface IUserProfileService
 {
     UserProfile? GetUserProfile(long uid);
 
     UserProfile GetUserProfileOrAddSuspended(long uid);
 
-    CommandResultCode BalanceAdjustment(long uid, int symbol, decimal amount, long fundingTransactionId);
+    CommandResultCode BalanceAdjustment(long uid, int currency, decimal amount, long fundingTransactionId);
 
     bool AddEmptyUserProfile(long uid);
 
