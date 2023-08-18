@@ -35,6 +35,7 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
             OrderCommand.Action.Value,
             OrderCommand.OrderId,
             OrderCommand.Price,
+            OrderCommand.ReserveBidPrice,
             OrderCommand.Size,
             result.Filled,
             OrderCommand.Uid,

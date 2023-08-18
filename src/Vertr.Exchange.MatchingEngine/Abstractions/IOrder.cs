@@ -9,6 +9,8 @@ public interface IOrder
 
     decimal Price { get; }
 
+    decimal ReserveBidPrice { get; }
+
     long Size { get; }
 
     long Filled { get; }
