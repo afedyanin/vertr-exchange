@@ -8,6 +8,8 @@ public interface ISymbolSpecificationProvider
 
     CoreSymbolSpecification? GetSymbolSpecification(int symbol);
 
+    void AddSymbols(CoreSymbolSpecification[] symbols, bool marginTradingEnabled);
+
     void RegisterSymbol(int symbol, CoreSymbolSpecification spec);
 
     public void Reset();

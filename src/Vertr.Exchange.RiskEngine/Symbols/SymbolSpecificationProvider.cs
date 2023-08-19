@@ -1,3 +1,4 @@
+using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.RiskEngine.Abstractions;
 
@@ -21,6 +22,21 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
         {
             RegisterSymbol(symbolSpecification.SymbolId, symbolSpecification);
             return true;
+        }
+    }
+
+    public void AddSymbols(CoreSymbolSpecification[] symbols, bool marginTradingEnabled)
+    {
+        foreach (var spec in symbols)
+        {
+            if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || marginTradingEnabled)
+            {
+                AddSymbol(spec);
+            }
+            else
+            {
+                // log.warn("Margin symbols are not allowed: {}", spec);
+            }
         }
     }
 

@@ -125,28 +125,11 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
     {
         if (binCmd is BatchAddSymbolsCommand batchAddSymbolsCommand)
         {
-            AddSymbols(batchAddSymbolsCommand);
+            SymbolSpecificationProvider.AddSymbols(batchAddSymbolsCommand.Symbols, IsMarginTradingEnabled);
         }
         else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
         {
             AddAccounts(batchAddAccountsCommand);
-        }
-    }
-
-    private void AddSymbols(BatchAddSymbolsCommand batchAddSymbolsCommand)
-    {
-        var symbols = batchAddSymbolsCommand.Symbols;
-
-        foreach (var spec in symbols)
-        {
-            if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || _config.MarginTradingEnabled)
-            {
-                SymbolSpecificationProvider.AddSymbol(spec);
-            }
-            else
-            {
-                // log.warn("Margin symbols are not allowed: {}", spec);
-            }
         }
     }
 
