@@ -4,6 +4,7 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.RiskEngine.Extensions;
 using Vertr.Exchange.RiskEngine.Users;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
@@ -166,17 +167,17 @@ internal class PostProcessOrderCommand
         // for cancel/rejection only one party is involved
         if (takerSell)
         {
-            taker.AddToValue(spec.BaseCurrency, CoreArithmeticUtils.CalculateAmountAsk(ev.Size, spec));
+            taker.AddToValue(spec.BaseCurrency, spec.CalculateAmountAsk(ev.Size));
         }
         else
         {
             if (cmd.Command == OrderCommandType.PLACE_ORDER && cmd.OrderType == OrderType.FOK_BUDGET)
             {
-                taker.AddToValue(spec.QuoteCurrency, CoreArithmeticUtils.CalculateAmountBidTakerFeeForBudget(ev.Size, ev.Price, spec));
+                taker.AddToValue(spec.QuoteCurrency, spec.CalculateAmountBidTakerFeeForBudget(ev.Size, ev.Price));
             }
             else
             {
-                taker.AddToValue(spec.QuoteCurrency, CoreArithmeticUtils.CalculateAmountBidTakerFee(ev.Size, ev.BidderHoldPrice, spec));
+                taker.AddToValue(spec.QuoteCurrency, spec.CalculateAmountBidTakerFee(ev.Size, ev.BidderHoldPrice));
             }
             // TODO for OrderType.IOC_BUDGET - for REJECT should release leftover deposit after all trades calculated
         }
@@ -210,10 +211,10 @@ internal class PostProcessOrderCommand
 
             // buying, use bidderHoldPrice to calculate released amount based on price difference
             var priceDiff = ev.BidderHoldPrice - ev.Price;
-            var amountDiffToReleaseInQuoteCurrency = CoreArithmeticUtils.CalculateAmountBidReleaseCorrMaker(size, priceDiff, spec);
+            var amountDiffToReleaseInQuoteCurrency = spec.CalculateAmountBidReleaseCorrMaker(size, priceDiff);
             maker.AddToValue(quoteCurrency, amountDiffToReleaseInQuoteCurrency);
 
-            var gainedAmountInBaseCurrency = CoreArithmeticUtils.CalculateAmountAsk(size, spec);
+            var gainedAmountInBaseCurrency = spec.CalculateAmountAsk(size);
             maker.AddToValue(spec.BaseCurrency, gainedAmountInBaseCurrency);
             makerSizeForThisHandler += size;
 
@@ -258,7 +259,7 @@ internal class PostProcessOrderCommand
 
             var size = ev.Size;
             var maker = _userProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
-            var gainedAmountInQuoteCurrency = CoreArithmeticUtils.CalculateAmountBid(size, ev.Price, spec);
+            var gainedAmountInQuoteCurrency = spec.CalculateAmountBid(size, ev.Price);
             maker.AddToValue(quoteCurrency, gainedAmountInQuoteCurrency - (spec.MakerFee * size));
             makerSizeForThisHandler += size;
 

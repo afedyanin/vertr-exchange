@@ -2,6 +2,7 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.RiskEngine.Extensions;
 using Vertr.Exchange.RiskEngine.Users;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
@@ -123,7 +124,7 @@ internal class PreProcessOrderCommand : RiskEngineCommand
                     return CommandResultCode.RISK_INVALID_RESERVE_BID_PRICE;
                 }
 
-                orderHoldAmount = CoreArithmeticUtils.CalculateAmountBidTakerFeeForBudget(size, cmd.Price, spec);
+                orderHoldAmount = spec.CalculateAmountBidTakerFeeForBudget(size, cmd.Price);
                 // if (logDebug) log.debug("hold amount budget buy {} = {} * {} + {} * {}", cmd.price, size, spec.quoteScaleK, size, spec.takerFee);
             }
             else
@@ -134,7 +135,7 @@ internal class PreProcessOrderCommand : RiskEngineCommand
                     //log.warn("reserveBidPrice={} less than price={}", cmd.reserveBidPrice, cmd.price);
                     return CommandResultCode.RISK_INVALID_RESERVE_BID_PRICE;
                 }
-                orderHoldAmount = CoreArithmeticUtils.CalculateAmountBidTakerFee(size, cmd.ReserveBidPrice, spec);
+                orderHoldAmount = spec.CalculateAmountBidTakerFee(size, cmd.ReserveBidPrice);
                 // if (logDebug) log.debug("hold amount buy {} = {} * ( {} * {} + {} )", orderHoldAmount, size, cmd.reserveBidPrice, spec.quoteScaleK, spec.takerFee);
             }
         }
@@ -147,7 +148,7 @@ internal class PreProcessOrderCommand : RiskEngineCommand
                 return CommandResultCode.RISK_ASK_PRICE_LOWER_THAN_FEE;
             }
 
-            orderHoldAmount = CoreArithmeticUtils.CalculateAmountAsk(size, spec);
+            orderHoldAmount = spec.CalculateAmountAsk(size);
             // if (logDebug) log.debug("hold sell {} = {} * {} ", orderHoldAmount, size, spec.baseScaleK);
         }
 
