@@ -2,12 +2,14 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.RiskEngine.Abstractions;
 
-namespace Vertr.Exchange.RiskEngine.Commands.Users;
+namespace Vertr.Exchange.RiskEngine.Users.UserCommands;
 
 internal class ResumeUserCommand : RiskEngineCommand
 {
-    public ResumeUserCommand(IUserProfileService userProfileService, OrderCommand command)
-        : base(userProfileService, command)
+    public ResumeUserCommand(
+        IOrderRiskEngineInternal orderRiskEngine,
+        OrderCommand command)
+        : base(orderRiskEngine, command)
     {
     }
 

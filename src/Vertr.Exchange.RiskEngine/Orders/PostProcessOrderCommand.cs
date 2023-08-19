@@ -6,25 +6,30 @@ using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.RiskEngine.Abstractions;
 using Vertr.Exchange.RiskEngine.Users;
 
-namespace Vertr.Exchange.RiskEngine.Commands.Orders;
+namespace Vertr.Exchange.RiskEngine.Orders;
 
 internal class PostProcessOrderCommand
 {
     private readonly OrderCommand _orderCommand;
-    private readonly OrderRiskEngine _orderRiskEngine;
+    private readonly IOrderRiskEngineInternal _orderRiskEngine;
 
-    private readonly IUserProfileService _userProfileService;
-    private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
+    private IUserProfileService _userProfileService
+        => _orderRiskEngine.UserProfileService;
+
+    private ISymbolSpecificationProvider _symbolSpecificationProvider
+        => _orderRiskEngine.SymbolSpecificationProvider;
+
+    private IFeeCalculationService _feeCalculationService
+        => _orderRiskEngine.FeeCalculationService;
+
+    private ILastPriceCacheProvider _lastPriceCacheProvider
+        => _orderRiskEngine.LastPriceCacheProvider;
 
     public PostProcessOrderCommand(
-        IUserProfileService userProfileService,
-        ISymbolSpecificationProvider symbolSpecificationProvider,
-        OrderRiskEngine orderRiskEngine,
+        IOrderRiskEngineInternal orderRiskEngine,
         OrderCommand command)
     {
         _orderCommand = command;
-        _userProfileService = userProfileService;
-        _symbolSpecificationProvider = symbolSpecificationProvider;
         _orderRiskEngine = orderRiskEngine;
     }
     public bool Execute()
@@ -93,9 +98,9 @@ internal class PostProcessOrderCommand
         if (marketData is not null && _orderRiskEngine.IsMarginTradingEnabled)
         {
             // TODO: Check sorting
-            var askPrice = (marketData.AskSize != 0) ? marketData.AskPrices[0] : long.MaxValue;
-            var bidPrice = (marketData.BidSize != 0) ? marketData.BidPrices[0] : 0;
-            _orderRiskEngine.AddLastPriceCache(symbol, askPrice, bidPrice);
+            var askPrice = marketData.AskSize != 0 ? marketData.AskPrices[0] : long.MaxValue;
+            var bidPrice = marketData.BidSize != 0 ? marketData.BidPrices[0] : 0;
+            _lastPriceCacheProvider.AddLastPrice(symbol, askPrice, bidPrice);
         }
 
         return false;
@@ -117,7 +122,7 @@ internal class PostProcessOrderCommand
                 var fee = spec.TakerFee * sizeOpen;
                 takerUp.AddToValue(spec.QuoteCurrency, -fee);
 
-                _orderRiskEngine.AddFeeValue(spec.QuoteCurrency, fee);
+                _feeCalculationService.AddFeeValue(spec.QuoteCurrency, fee);
             }
             else if (ev.EventType is MatcherEventType.REJECT or MatcherEventType.REDUCE)
             {
@@ -140,7 +145,7 @@ internal class PostProcessOrderCommand
             var fee = spec.MakerFee * sizeOpen;
             maker.AddToValue(spec.QuoteCurrency, -fee);
 
-            _orderRiskEngine.AddFeeValue(spec.QuoteCurrency, fee);
+            _feeCalculationService.AddFeeValue(spec.QuoteCurrency, fee);
 
             if (makerSpr.IsEmpty())
             {
@@ -219,7 +224,7 @@ internal class PostProcessOrderCommand
 
         if (takerSizeForThisHandler != 0 || makerSizeForThisHandler != 0)
         {
-            _orderRiskEngine.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
+            _feeCalculationService.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
         }
     }
 
@@ -252,7 +257,7 @@ internal class PostProcessOrderCommand
             }
 
             var size = ev.Size;
-            UserProfile maker = _userProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
+            var maker = _userProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
             var gainedAmountInQuoteCurrency = CoreArithmeticUtils.CalculateAmountBid(size, ev.Price, spec);
             maker.AddToValue(quoteCurrency, gainedAmountInQuoteCurrency - (spec.MakerFee * size));
             makerSizeForThisHandler += size;
@@ -276,7 +281,7 @@ internal class PostProcessOrderCommand
 
         if (takerSizeForThisHandler != 0 || makerSizeForThisHandler != 0)
         {
-            _orderRiskEngine.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
+            _feeCalculationService.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
         }
     }
 

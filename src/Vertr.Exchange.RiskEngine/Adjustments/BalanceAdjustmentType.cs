@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.RiskEngine.Users;
+namespace Vertr.Exchange.RiskEngine.Adjustments;
 
 public enum BalanceAdjustmentType
 {

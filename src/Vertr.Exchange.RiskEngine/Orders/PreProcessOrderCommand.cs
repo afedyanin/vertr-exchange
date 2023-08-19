@@ -4,22 +4,15 @@ using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.RiskEngine.Abstractions;
 using Vertr.Exchange.RiskEngine.Users;
 
-namespace Vertr.Exchange.RiskEngine.Commands.Orders;
+namespace Vertr.Exchange.RiskEngine.Orders;
 
 internal class PreProcessOrderCommand : RiskEngineCommand
 {
-    private readonly ISymbolSpecificationProvider _symbolSpecificationProvider;
-    private readonly OrderRiskEngine _orderRiskEngine;
-
     public PreProcessOrderCommand(
-        IUserProfileService userProfileService,
-        ISymbolSpecificationProvider symbolSpecificationProvider,
-        OrderRiskEngine orderRiskEngine,
+        IOrderRiskEngineInternal orderRiskEngine,
         OrderCommand command)
-        : base(userProfileService, command)
+        : base(orderRiskEngine, command)
     {
-        _symbolSpecificationProvider = symbolSpecificationProvider;
-        _orderRiskEngine = orderRiskEngine;
     }
 
     public override CommandResultCode Execute()
@@ -37,7 +30,7 @@ internal class PreProcessOrderCommand : RiskEngineCommand
             return CommandResultCode.AUTH_INVALID_USER;
         }
 
-        var spec = _symbolSpecificationProvider.GetSymbolSpecification(cmd.Symbol);
+        var spec = SymbolSpecificationProvider.GetSymbolSpecification(cmd.Symbol);
 
         if (spec == null)
         {
@@ -45,7 +38,7 @@ internal class PreProcessOrderCommand : RiskEngineCommand
             return CommandResultCode.INVALID_SYMBOL;
         }
 
-        if (_orderRiskEngine.IgnoreRiskProcessing)
+        if (OrderRiskEngine.IgnoreRiskProcessing)
         {
             // skip processing
             return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
@@ -75,7 +68,7 @@ internal class PreProcessOrderCommand : RiskEngineCommand
         }
         else if (spec.Type == SymbolType.FUTURES_CONTRACT)
         {
-            if (!_orderRiskEngine.IsMarginTradingEnabled)
+            if (!OrderRiskEngine.IsMarginTradingEnabled)
             {
                 return CommandResultCode.RISK_MARGIN_TRADING_DISABLED;
             }
@@ -96,19 +89,19 @@ internal class PreProcessOrderCommand : RiskEngineCommand
         var currency = cmd.Action == OrderAction.BID ? spec.QuoteCurrency : spec.BaseCurrency;
 
         // futures positions check for this currency
-        decimal freeFuturesMargin = decimal.Zero;
+        var freeFuturesMargin = decimal.Zero;
 
-        if (_orderRiskEngine.IsMarginTradingEnabled)
+        if (OrderRiskEngine.IsMarginTradingEnabled)
         {
             var position = userProfile.GetPositionByCurrency(currency);
 
             if (position != null)
             {
-                int recSymbol = position.Symbol;
-                var spec2 = _symbolSpecificationProvider.GetSymbolSpecification(recSymbol);
+                var recSymbol = position.Symbol;
+                var spec2 = SymbolSpecificationProvider.GetSymbolSpecification(recSymbol);
 
                 // add P&L subtract margin
-                var priceCache = _orderRiskEngine.GetLastPriceCache(recSymbol);
+                var priceCache = LastPriceCacheProvider.GetLastPrice(recSymbol);
                 var e1 = position.EstimateProfit(spec2!, priceCache);
                 var e2 = position.CalculateRequiredMarginForFutures(spec2!);
                 freeFuturesMargin += e1 - e2;
@@ -228,30 +221,30 @@ internal class PreProcessOrderCommand : RiskEngineCommand
 
         // extra margin is required
 
-        int symbol = cmd.Symbol;
+        var symbol = cmd.Symbol;
         // calculate free margin for all positions same currency
 
-        decimal freeMargin = decimal.Zero;
+        var freeMargin = decimal.Zero;
 
         foreach (var positionRecord in userProfile.Positions)
         {
-            int recSymbol = positionRecord.Symbol;
+            var recSymbol = positionRecord.Symbol;
 
             if (recSymbol != symbol)
             {
                 if (positionRecord.Currency == spec.QuoteCurrency)
                 {
-                    var spec2 = _symbolSpecificationProvider.GetSymbolSpecification(recSymbol);
+                    var spec2 = SymbolSpecificationProvider.GetSymbolSpecification(recSymbol);
 
                     // add P&L subtract margin
-                    var cachedPrice = _orderRiskEngine.GetLastPriceCache(recSymbol);
+                    var cachedPrice = LastPriceCacheProvider.GetLastPrice(recSymbol);
                     freeMargin += positionRecord.EstimateProfit(spec2!, cachedPrice);
                     freeMargin -= positionRecord.CalculateRequiredMarginForFutures(spec2!);
                 }
             }
             else
             {
-                var cachedPrice = _orderRiskEngine.GetLastPriceCache(spec.SymbolId);
+                var cachedPrice = LastPriceCacheProvider.GetLastPrice(spec.SymbolId);
                 freeMargin = position.EstimateProfit(spec, cachedPrice);
             }
         }

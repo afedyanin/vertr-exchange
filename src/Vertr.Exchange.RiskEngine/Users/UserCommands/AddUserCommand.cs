@@ -2,11 +2,11 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.RiskEngine.Abstractions;
 
-namespace Vertr.Exchange.RiskEngine.Commands.Users;
+namespace Vertr.Exchange.RiskEngine.Users.UserCommands;
 internal class AddUserCommand : RiskEngineCommand
 {
-    public AddUserCommand(IUserProfileService userProfileService, OrderCommand command)
-        : base(userProfileService, command)
+    public AddUserCommand(IOrderRiskEngineInternal orderRiskEngine, OrderCommand command)
+        : base(orderRiskEngine, command)
     {
     }
 

@@ -1,18 +1,16 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.RiskEngine.Adjustments;
 
-namespace Vertr.Exchange.RiskEngine.Commands.Users;
+namespace Vertr.Exchange.RiskEngine.Users.UserCommands;
 internal class AdjustBalanceCommand : RiskEngineCommand
 {
-    private readonly OrderRiskEngine _orderRiskEngine;
     public AdjustBalanceCommand(
-        IUserProfileService userProfileService,
-        OrderRiskEngine orderRiskEngine,
+        IOrderRiskEngineInternal orderRiskEngine,
         OrderCommand command)
-        : base(userProfileService, command)
+        : base(orderRiskEngine, command)
     {
-        _orderRiskEngine = orderRiskEngine;
     }
 
     public override CommandResultCode Execute()
@@ -25,7 +23,7 @@ internal class AdjustBalanceCommand : RiskEngineCommand
 
         if (res == CommandResultCode.SUCCESS)
         {
-            _orderRiskEngine.AdjustBalance(OrderCommand.Symbol, OrderCommand.Price, (BalanceAdjustmentType)OrderCommand.OrderType);
+            AdjustmentsService.AddAdjustment(OrderCommand.Symbol, OrderCommand.Price, (BalanceAdjustmentType)OrderCommand.OrderType);
         }
 
         return res;

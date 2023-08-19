@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.RiskEngine;
+namespace Vertr.Exchange.RiskEngine.LastPriceCache;
 
 internal readonly record struct LastPriceCacheRecord
 {

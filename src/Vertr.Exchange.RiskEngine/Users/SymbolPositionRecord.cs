@@ -1,5 +1,6 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common.Symbols;
+using Vertr.Exchange.RiskEngine.LastPriceCache;
 
 namespace Vertr.Exchange.RiskEngine.Users;
 
