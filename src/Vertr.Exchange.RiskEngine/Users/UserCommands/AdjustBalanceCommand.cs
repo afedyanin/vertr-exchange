@@ -19,12 +19,8 @@ internal class AdjustBalanceCommand : RiskEngineCommand
             OrderCommand.Uid,
             OrderCommand.Symbol,
             OrderCommand.Price,
-            OrderCommand.OrderId);
-
-        if (res == CommandResultCode.SUCCESS)
-        {
-            AdjustmentsService.AddAdjustment(OrderCommand.Symbol, OrderCommand.Price, (BalanceAdjustmentType)OrderCommand.OrderType);
-        }
+            OrderCommand.OrderId,
+            (BalanceAdjustmentType)OrderCommand.OrderType);
 
         return res;
     }

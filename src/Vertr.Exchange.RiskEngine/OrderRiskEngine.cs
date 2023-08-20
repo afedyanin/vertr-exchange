@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.RiskEngine.Users.UserCommands;
 using Vertr.Exchange.RiskEngine.Orders;
-using Vertr.Exchange.RiskEngine.Adjustments;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
@@ -28,22 +27,18 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
 
     public ILastPriceCacheProvider LastPriceCacheProvider { get; }
 
-    public IAdjustmentsService AdjustmentsService { get; }
-
     public OrderRiskEngine(
         IOptions<RiskEngineConfiguration> configuration,
         IUserProfileService userProfileService,
         ISymbolSpecificationProvider symbolSpecificationProvider,
         IFeeCalculationService feeCalculationService,
-        ILastPriceCacheProvider lastPriceCacheProvider,
-        IAdjustmentsService adjustmentsService)
+        ILastPriceCacheProvider lastPriceCacheProvider)
     {
         _config = configuration.Value;
         UserProfileService = userProfileService;
         SymbolSpecificationProvider = symbolSpecificationProvider;
         FeeCalculationService = feeCalculationService;
         LastPriceCacheProvider = lastPriceCacheProvider;
-        AdjustmentsService = adjustmentsService;
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -103,7 +98,6 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
         SymbolSpecificationProvider.Reset();
         FeeCalculationService.Reset();
         LastPriceCacheProvider.Reset();
-        AdjustmentsService.Reset();
     }
 
     private CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
@@ -129,31 +123,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
         }
         else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
         {
-            AddAccounts(batchAddAccountsCommand);
-        }
-    }
-
-    private void AddAccounts(BatchAddAccountsCommand batchAddAccountsCommand)
-    {
-        var users = batchAddAccountsCommand.Users;
-
-        foreach (var (uid, acounts) in users)
-        {
-            if (!UserProfileService.AddEmptyUserProfile(uid))
-            {
-                // log.debug("User already exist: {}", uid);
-                continue;
-            }
-            foreach (var (currency, balance) in acounts)
-            {
-                UserProfileService.BalanceAdjustment(
-                    uid,
-                    currency,
-                    balance,
-                    1_000_000_000 + currency);
-
-                AdjustmentsService.AddAdjustment(currency, balance, BalanceAdjustmentType.ADJUSTMENT);
-            }
+            UserProfileService.BatchAddAccounts(batchAddAccountsCommand.Users);
         }
     }
 }

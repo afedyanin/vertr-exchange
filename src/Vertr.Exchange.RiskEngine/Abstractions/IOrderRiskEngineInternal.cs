@@ -14,6 +14,4 @@ internal interface IOrderRiskEngineInternal
     IFeeCalculationService FeeCalculationService { get; }
 
     ILastPriceCacheProvider LastPriceCacheProvider { get; }
-
-    IAdjustmentsService AdjustmentsService { get; }
 }

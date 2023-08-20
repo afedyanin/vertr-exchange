@@ -1,16 +1,20 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.RiskEngine.Adjustments;
 
 namespace Vertr.Exchange.RiskEngine.Users;
 
 internal sealed class UserProfileService : IUserProfileService
 {
     private readonly IDictionary<long, UserProfile> _userProfiles;
+    private readonly IAdjustmentsService _adjustmentsService;
 
-    public UserProfileService()
+    public UserProfileService(IAdjustmentsService adjustmentsService)
     {
         _userProfiles = new Dictionary<long, UserProfile>();
+        _adjustmentsService = adjustmentsService;
     }
+
     public UserProfile? GetUserProfile(long uid)
     {
         return _userProfiles.TryGetValue(uid, out var userProfile) ? userProfile : null;
@@ -104,13 +108,15 @@ internal sealed class UserProfileService : IUserProfileService
     public void Reset()
     {
         _userProfiles.Clear();
+        _adjustmentsService.Reset();
     }
 
     public CommandResultCode BalanceAdjustment(
         long uid,
         int currency,
         decimal amount,
-        long fundingTransactionId)
+        long fundingTransactionId,
+        BalanceAdjustmentType balanceAdjustmentType)
     {
         _userProfiles.TryGetValue(uid, out var profile);
 
@@ -141,7 +147,33 @@ internal sealed class UserProfileService : IUserProfileService
         profile.AdjustmentsCounter = fundingTransactionId;
         profile.AddToValue(currency, amount);
 
+        _adjustmentsService.AddAdjustment(
+            currency,
+            amount,
+            balanceAdjustmentType);
+
         //log.debug("FUND: {}", userProfile);
         return CommandResultCode.SUCCESS;
+    }
+
+    public void BatchAddAccounts(IDictionary<int, IDictionary<int, long>> users)
+    {
+        foreach (var (uid, acounts) in users)
+        {
+            if (!AddEmptyUserProfile(uid))
+            {
+                // log.debug("User already exist: {}", uid);
+                continue;
+            }
+            foreach (var (currency, balance) in acounts)
+            {
+                BalanceAdjustment(
+                    uid,
+                    currency,
+                    balance,
+                    1_000_000_000 + currency,
+                    BalanceAdjustmentType.ADJUSTMENT);
+            }
+        }
     }
 }
