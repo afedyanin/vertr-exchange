@@ -19,6 +19,9 @@ internal abstract class RiskEngineCommand
     protected ILastPriceCacheProvider LastPriceCacheProvider
         => OrderRiskEngine.LastPriceCacheProvider;
 
+    protected IFeeCalculationService FeeCalculationService
+        => OrderRiskEngine.FeeCalculationService;
+
     protected RiskEngineCommand(
         IOrderRiskEngineInternal orderRiskEngine,
         OrderCommand command)

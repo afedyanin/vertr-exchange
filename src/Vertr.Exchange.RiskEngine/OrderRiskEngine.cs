@@ -89,7 +89,9 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
     public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
         var command = new PostProcessOrderCommand(this, cmd);
-        return command.Execute();
+
+        // TODO: refactor this
+        return command.Execute() != CommandResultCode.SUCCESS;
     }
 
     private void Reset()

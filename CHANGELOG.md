@@ -1,3 +1,11 @@
+## 20-08-23
+
+### Рефакторинг
+- accounts & users & positions
+- order processing in risk engine
+ 
+
+
 ## 18-08-23
 
 - логирование

@@ -9,46 +9,30 @@ using Vertr.Exchange.RiskEngine.Users;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
 
-internal class PostProcessOrderCommand
+internal class PostProcessOrderCommand : RiskEngineCommand
 {
-    private readonly OrderCommand _orderCommand;
-    private readonly IOrderRiskEngineInternal _orderRiskEngine;
-
-    private IUserProfileService _userProfileService
-        => _orderRiskEngine.UserProfileService;
-
-    private ISymbolSpecificationProvider _symbolSpecificationProvider
-        => _orderRiskEngine.SymbolSpecificationProvider;
-
-    private IFeeCalculationService _feeCalculationService
-        => _orderRiskEngine.FeeCalculationService;
-
-    private ILastPriceCacheProvider _lastPriceCacheProvider
-        => _orderRiskEngine.LastPriceCacheProvider;
-
     public PostProcessOrderCommand(
         IOrderRiskEngineInternal orderRiskEngine,
-        OrderCommand command)
+        OrderCommand command) : base(orderRiskEngine, command)
     {
-        _orderCommand = command;
-        _orderRiskEngine = orderRiskEngine;
     }
-    public bool Execute()
+
+    public override CommandResultCode Execute()
     {
-        var symbol = _orderCommand.Symbol;
-        var marketData = _orderCommand.MarketData;
-        var mte = _orderCommand.MatcherEvent;
+        var symbol = OrderCommand.Symbol;
+        var marketData = OrderCommand.MarketData;
+        var mte = OrderCommand.MatcherEvent;
 
         // skip events processing if no events (or if contains BINARY EVENT)
         if (marketData == null && (mte == null || mte.EventType == MatcherEventType.BINARY_EVENT))
         {
-            return false;
+            return CommandResultCode.SUCCESS;
         }
 
-        var spec = _symbolSpecificationProvider.GetSymbolSpecification(symbol) ??
+        var spec = SymbolSpecificationProvider.GetSymbolSpecification(symbol) ??
             throw new InvalidOperationException("Symbol not found: " + symbol);
 
-        var takerSell = _orderCommand.Action == OrderAction.ASK;
+        var takerSell = OrderCommand.Action == OrderAction.ASK;
 
         if (mte != null && mte.EventType != MatcherEventType.BINARY_EVENT)
         {
@@ -56,14 +40,14 @@ internal class PostProcessOrderCommand
             // TODO processing order is reversed
             if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR)
             {
-                var takerUp = _userProfileService.GetUserProfileOrAddSuspended(_orderCommand.Uid);
+                var takerUp = UserProfileService.GetUserProfileOrAddSuspended(OrderCommand.Uid);
 
                 // REJECT always comes first; REDUCE is always single event
                 if (mte.EventType is MatcherEventType.REDUCE or MatcherEventType.REJECT)
                 {
                     if (takerUp != null)
                     {
-                        HandleMatcherRejectReduceEventExchange(_orderCommand, mte, spec, takerSell, takerUp);
+                        HandleMatcherRejectReduceEventExchange(OrderCommand, mte, spec, takerSell, takerUp);
                     }
                     mte = mte.NextEvent;
                 }
@@ -76,38 +60,38 @@ internal class PostProcessOrderCommand
                     }
                     else
                     {
-                        HandleMatcherEventsExchangeBuy(mte, spec, takerUp!, _orderCommand);
+                        HandleMatcherEventsExchangeBuy(mte, spec, takerUp!, OrderCommand);
                     }
                 }
             }
             else
             {
 
-                var takerUp = _userProfileService.GetUserProfileOrAddSuspended(_orderCommand.Uid);
+                var takerUp = UserProfileService.GetUserProfileOrAddSuspended(OrderCommand.Uid);
 
                 // for margin-mode symbols also resolve position record
                 var takerSpr = takerUp?.GetCurrentPosition(symbol);
                 do
                 {
-                    handleMatcherEventMargin(mte, spec, _orderCommand.Action!.Value, takerUp!, takerSpr!);
+                    HandleMatcherEventMargin(mte, spec, OrderCommand.Action!.Value, takerUp!, takerSpr!);
                     mte = mte.NextEvent;
                 } while (mte != null);
             }
         }
 
         // Process marked data
-        if (marketData is not null && _orderRiskEngine.IsMarginTradingEnabled)
+        if (marketData is not null && OrderRiskEngine.IsMarginTradingEnabled)
         {
             // TODO: Check sorting
             var askPrice = marketData.AskSize != 0 ? marketData.AskPrices[0] : long.MaxValue;
             var bidPrice = marketData.BidSize != 0 ? marketData.BidPrices[0] : 0;
-            _lastPriceCacheProvider.AddLastPrice(symbol, askPrice, bidPrice);
+            LastPriceCacheProvider.AddLastPrice(symbol, askPrice, bidPrice);
         }
 
-        return false;
+        return CommandResultCode.SUCCESS;
     }
 
-    private void handleMatcherEventMargin(
+    private void HandleMatcherEventMargin(
         IMatcherTradeEvent ev,
         CoreSymbolSpecification spec,
         OrderAction takerAction,
@@ -123,7 +107,7 @@ internal class PostProcessOrderCommand
                 var fee = spec.TakerFee * sizeOpen;
                 takerUp.AddToValue(spec.QuoteCurrency, -fee);
 
-                _feeCalculationService.AddFeeValue(spec.QuoteCurrency, fee);
+                FeeCalculationService.AddFeeValue(spec.QuoteCurrency, fee);
             }
             else if (ev.EventType is MatcherEventType.REJECT or MatcherEventType.REDUCE)
             {
@@ -140,13 +124,13 @@ internal class PostProcessOrderCommand
         if (ev.EventType == MatcherEventType.TRADE)
         {
             // update maker's position
-            var maker = _userProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
+            var maker = UserProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
             var makerSpr = maker.GetCurrentPosition(spec.SymbolId);
             var sizeOpen = makerSpr!.UpdatePositionForMarginTrade(GetOppositeAction(takerAction), ev.Size, ev.Price);
             var fee = spec.MakerFee * sizeOpen;
             maker.AddToValue(spec.QuoteCurrency, -fee);
 
-            _feeCalculationService.AddFeeValue(spec.QuoteCurrency, fee);
+            FeeCalculationService.AddFeeValue(spec.QuoteCurrency, fee);
 
             if (makerSpr.IsEmpty())
             {
@@ -207,7 +191,7 @@ internal class PostProcessOrderCommand
             }
 
             var size = ev.Size;
-            var maker = _userProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
+            var maker = UserProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
 
             // buying, use bidderHoldPrice to calculate released amount based on price difference
             var priceDiff = ev.BidderHoldPrice - ev.Price;
@@ -225,7 +209,7 @@ internal class PostProcessOrderCommand
 
         if (takerSizeForThisHandler != 0 || makerSizeForThisHandler != 0)
         {
-            _feeCalculationService.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
+            FeeCalculationService.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
         }
     }
 
@@ -258,7 +242,7 @@ internal class PostProcessOrderCommand
             }
 
             var size = ev.Size;
-            var maker = _userProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
+            var maker = UserProfileService.GetUserProfileOrAddSuspended(ev.MatchedOrderUid);
             var gainedAmountInQuoteCurrency = spec.CalculateAmountBid(size, ev.Price);
             maker.AddToValue(quoteCurrency, gainedAmountInQuoteCurrency - (spec.MakerFee * size));
             makerSizeForThisHandler += size;
@@ -282,7 +266,7 @@ internal class PostProcessOrderCommand
 
         if (takerSizeForThisHandler != 0 || makerSizeForThisHandler != 0)
         {
-            _feeCalculationService.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
+            FeeCalculationService.AddFeeValue(quoteCurrency, (spec.TakerFee * takerSizeForThisHandler) + (spec.MakerFee * makerSizeForThisHandler));
         }
     }
 
