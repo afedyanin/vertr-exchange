@@ -1,4 +1,5 @@
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Commands;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Commands;
@@ -14,13 +15,13 @@ public class CancelOrderCommandTests
 
         orderBook.AddOrder(bid);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.Cancel(
             bid.OrderId,
             bid.Uid);
 
-        var res = proc.ProcessCommand(cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
+
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));

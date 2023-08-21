@@ -1,4 +1,5 @@
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Commands;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Commands.NewOrder;
@@ -12,8 +13,6 @@ public class NewIocOrderCommandTests
         var orderBook = new OrderBook();
         var bid = OrderStub.CreateBidOrder(45.23M, 27);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.IocOrder(
             bid.Action,
             bid.OrderId,
@@ -21,7 +20,9 @@ public class NewIocOrderCommandTests
             bid.Price,
             bid.Size);
 
-        var res = proc.ProcessCommand(cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
+
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
@@ -43,8 +44,6 @@ public class NewIocOrderCommandTests
         orderBook.AddOrder(ask1);
         orderBook.AddOrder(ask2);
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.GtcOrder(
             bid.Action,
             bid.OrderId,
@@ -52,7 +51,8 @@ public class NewIocOrderCommandTests
             bid.Price,
             bid.Size);
 
-        var res = proc.ProcessCommand(cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
 
         Assert.Multiple(() =>
         {

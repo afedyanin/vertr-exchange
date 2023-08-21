@@ -91,7 +91,12 @@ internal sealed class OrderBook : IOrderBook
         return data;
     }
 
-    public MatcherResult TryMatchInstantly(OrderAction action, decimal price, long size, long filled = 0L)
+    public MatcherResult TryMatchInstantly(
+        OrderAction action,
+        decimal price,
+        long size,
+        decimal reservedBidPrice,
+        long filled = 0L)
     {
         var matchingBuckets = GetBucketsForMatching(action);
 
@@ -118,7 +123,7 @@ internal sealed class OrderBook : IOrderBook
             }
 
             var sizeLeft = size - filled;
-            var bucketMatchings = bucket.Match(sizeLeft);
+            var bucketMatchings = bucket.Match(sizeLeft, reservedBidPrice);
 
             filledOrderIds.AddRange(bucketMatchings.OrdersToRemove);
 

@@ -1,4 +1,5 @@
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Commands;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Commands;
@@ -12,15 +13,15 @@ public class RejectOrderCommandTests
         var orderBook = new OrderBook();
         var bid = OrderStub.CreateBidOrder(45.23M, 27, 14); // remaining = 27-14 = 13
 
-        var proc = new OrderBookCommandProcessor(orderBook);
-
         var cmd = OrderCommandStub.Reject(
             bid.OrderId,
             bid.Uid,
             bid.Price,
             bid.Size);
 
-        var res = proc.ProcessCommand(cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var res = orderCommand.Execute();
+
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.MATCHING_UNSUPPORTED_COMMAND));

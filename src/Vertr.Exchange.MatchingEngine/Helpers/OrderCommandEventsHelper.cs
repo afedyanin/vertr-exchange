@@ -39,6 +39,7 @@ internal static class OrderCommandEventsHelper
             MatchedOrderCompleted = false,
             Price = order.Price,
             Size = reduceSize,
+            BidderHoldPrice = order.ReserveBidPrice,
         };
 
         command.MatcherEvent = evt;
@@ -57,6 +58,7 @@ internal static class OrderCommandEventsHelper
             MatchedOrderCompleted = false,
             Price = price,
             Size = rejectedSize,
+            BidderHoldPrice = command.ReserveBidPrice,
         };
 
         command.MatcherEvent = evt;

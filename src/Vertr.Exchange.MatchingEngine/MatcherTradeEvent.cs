@@ -17,6 +17,8 @@ internal sealed class MatcherTradeEvent : IMatcherTradeEvent
 
     public decimal Price { get; set; }
 
+    public decimal BidderHoldPrice { get; set; }
+
     public long Size { get; set; }
 
     public IMatcherTradeEvent? NextEvent { get; set; }

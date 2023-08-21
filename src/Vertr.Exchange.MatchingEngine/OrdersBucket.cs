@@ -1,8 +1,5 @@
-using System.Runtime.CompilerServices;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-
-[assembly: InternalsVisibleTo("Vertr.Exchange.MatchingEngine.Tests")]
 
 namespace Vertr.Exchange.MatchingEngine;
 
@@ -79,7 +76,7 @@ internal sealed class OrdersBucket
         TotalVolume -= reduceSize;
     }
 
-    public BucketMatcherResult Match(long volumeToCollect)
+    public BucketMatcherResult Match(long volumeToCollect, decimal reservedBidPrice = decimal.Zero)
     {
         var totalMatchingVolume = 0L;
         var ordersToRemove = new List<long>();
@@ -101,7 +98,13 @@ internal sealed class OrdersBucket
 
             var fullMatch = order.Size == order.Filled;
 
-            var tradeEvent = CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume);
+            var bidderHoldPrice =
+                order.Action == OrderAction.ASK ?
+                reservedBidPrice :
+                order.ReserveBidPrice;
+
+            var tradeEvent = CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume, bidderHoldPrice);
+
             tradeEvents.AddLast(tradeEvent!);
 
             if (fullMatch)
@@ -119,7 +122,8 @@ internal sealed class OrdersBucket
         IOrder matchingOrder,
         bool makerCompleted,
         bool takerCompleted,
-        long size)
+        long size,
+        decimal bidderHoldPrice)
     {
         return new MatcherTradeEvent
         {
@@ -130,6 +134,7 @@ internal sealed class OrdersBucket
             MatchedOrderCompleted = makerCompleted,
             Price = matchingOrder.Price,
             Size = size,
+            BidderHoldPrice = bidderHoldPrice,
         };
     }
 }

@@ -25,13 +25,15 @@ public class OrderCommand
 
     public decimal Price { get; set; }
 
+    public decimal ReserveBidPrice { get; set; }
+
     public DateTime Timestamp { get; set; }
 
     public long Filled { get; set; }
 
     public int Symbol { get; set; }
 
-    // public byte[] BinaryData { get; set; } = Array.Empty<byte>();
+    public byte[] BinaryData { get; set; } = Array.Empty<byte>();
 
-    // public BinaryDataType BinaryCommandType { get; set; }
+    public BinaryDataType BinaryCommandType { get; set; }
 }
