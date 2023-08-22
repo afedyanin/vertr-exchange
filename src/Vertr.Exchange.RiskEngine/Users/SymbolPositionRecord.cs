@@ -21,9 +21,9 @@ internal class SymbolPositionRecord
 
     public decimal Profit { get; private set; }
 
-    public decimal PendingSellSize { get; private set; }
+    private decimal PendingSellSize { get; set; }
 
-    public decimal PendingBuySize { get; private set; }
+    private decimal PendingBuySize { get; set; }
 
     public bool IsEmpty()
         => Direction == PositionDirection.EMPTY
