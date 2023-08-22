@@ -39,23 +39,27 @@ internal class PreProcessOrderCommand : RiskEngineCommand
             return CommandResultCode.INVALID_SYMBOL;
         }
 
-        if (OrderRiskEngine.IgnoreRiskProcessing)
-        {
-            // skip processing
-            return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-        }
+        return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
 
-        // check if account has enough funds
-        var resultCode = PlaceOrder(cmd, userProfile, spec);
+        /*
+                if (OrderRiskEngine.IgnoreRiskProcessing)
+                {
+                    // skip processing
+                    return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
+                }
 
-        if (resultCode != CommandResultCode.VALID_FOR_MATCHING_ENGINE)
-        {
-            // log.warn("{} risk result={} uid={}: Can not place {}", cmd.orderId, resultCode, userProfile.uid, cmd);
-            // log.warn("{} accounts:{}", cmd.orderId, userProfile.accounts);
-            return CommandResultCode.RISK_NSF;
-        }
+                // check if account has enough funds
+                var resultCode = PlaceOrder(cmd, userProfile, spec);
 
-        return resultCode;
+                if (resultCode != CommandResultCode.VALID_FOR_MATCHING_ENGINE)
+                {
+                    // log.warn("{} risk result={} uid={}: Can not place {}", cmd.orderId, resultCode, userProfile.uid, cmd);
+                    // log.warn("{} accounts:{}", cmd.orderId, userProfile.accounts);
+                    return CommandResultCode.RISK_NSF;
+                }
+
+                return resultCode;
+        */
     }
 
     private CommandResultCode PlaceOrder(
@@ -191,7 +195,7 @@ internal class PreProcessOrderCommand : RiskEngineCommand
 
         if (canPlaceOrder)
         {
-            // position.pendingHold(cmd.action, cmd.size);
+            position.PendingHold(cmd.Action!.Value, cmd.Size);
             return CommandResultCode.VALID_FOR_MATCHING_ENGINE;
         }
         else

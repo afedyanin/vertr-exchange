@@ -4,6 +4,7 @@ using Vertr.Exchange.RiskEngine.LastPriceCache;
 
 namespace Vertr.Exchange.RiskEngine.Users;
 
+// For margin orders only??
 internal class SymbolPositionRecord
 {
     public long Uid { get; }
@@ -67,14 +68,20 @@ internal class SymbolPositionRecord
 
     public decimal EstimateProfit(CoreSymbolSpecification spec, LastPriceCacheRecord? lastPriceCacheRecord)
     {
+        var lastKnownBidPrice = lastPriceCacheRecord.HasValue ?
+            lastPriceCacheRecord.Value.BidPrice : decimal.Zero;
+
+        var lastKnownAskPrice = lastPriceCacheRecord.HasValue ?
+            lastPriceCacheRecord.Value.AskPrice : decimal.MaxValue;
+
         return Direction switch
         {
             PositionDirection.EMPTY => Profit,
-            PositionDirection.DIR_LONG => Profit + ((lastPriceCacheRecord.HasValue && lastPriceCacheRecord.Value.BidPrice != 0)
-                                    ? ((OpenVolume * lastPriceCacheRecord.Value.BidPrice) - OpenPriceSum)
+            PositionDirection.DIR_LONG => Profit + (lastKnownBidPrice != decimal.Zero
+                                    ? (OpenVolume * lastKnownBidPrice) - OpenPriceSum
                                     : spec.MarginBuy * OpenVolume),// unknown price - no liquidity - require extra margin
-            PositionDirection.DIR_SHORT => Profit + ((lastPriceCacheRecord.HasValue && lastPriceCacheRecord.Value.AskPrice != long.MaxValue)
-                                    ? (OpenPriceSum - (OpenVolume * lastPriceCacheRecord.Value.AskPrice))
+            PositionDirection.DIR_SHORT => Profit + (lastKnownAskPrice != long.MaxValue
+                                    ? OpenPriceSum - (OpenVolume * lastKnownAskPrice)
                                     : spec.MarginSell * OpenVolume),// unknown price - no liquidity - require extra margin
             _ => throw new InvalidOperationException("Unknown direction."),
         };
