@@ -1,4 +1,7 @@
+using System.Runtime.CompilerServices;
 using Vertr.Exchange.Common.Enums;
+
+[assembly: InternalsVisibleTo("Vertr.Exchange.Accounts.Tests")]
 
 namespace Vertr.Exchange.Accounts;
 
@@ -35,7 +38,6 @@ internal class Position
 
     public decimal Update(OrderAction action, long size, decimal price)
     {
-
         // 1. Reduce opposite position accordingly (if exists)
         var sizeToOpen = TryToCloseCurrentPosition(action, size, price);
 
@@ -60,8 +62,6 @@ internal class Position
         // current position is bigger than trade size - just reduce position accordingly, don't fix profit
         if (OpenVolume > tradeSize)
         {
-            // TODO: Check this!!!
-            // why don't fix profit ???
             OpenVolume -= tradeSize;
             OpenPriceSum -= tradeSize * tradePrice;
             // Все кол-во закрыли текущей позицией
