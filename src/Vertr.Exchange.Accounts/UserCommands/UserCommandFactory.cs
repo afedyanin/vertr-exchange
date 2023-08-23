@@ -4,9 +4,9 @@ using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts.UserCommands;
 
-internal static class UserCommandFactory
+public static class UserCommandFactory
 {
-    public static UserCommandBase CreateUserCommand(
+    public static IUserCommand CreateUserCommand(
         OrderCommand orderCommand,
         IUserProfilesRepository userProfileRepository)
     {

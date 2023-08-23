@@ -1,4 +1,6 @@
 
+using Vertr.Exchange.Accounts.Abstractions;
+
 namespace Vertr.Exchange.RiskEngine.Abstractions;
 
 internal interface IOrderRiskEngineInternal
@@ -7,7 +9,7 @@ internal interface IOrderRiskEngineInternal
 
     bool IgnoreRiskProcessing { get; }
 
-    IUserProfileService UserProfileService { get; }
+    IUserProfilesRepository UserProfiles { get; }
 
     ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
 

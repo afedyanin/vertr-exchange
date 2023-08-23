@@ -5,8 +5,9 @@ using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
-using Vertr.Exchange.RiskEngine.Users.UserCommands;
 using Vertr.Exchange.RiskEngine.Orders;
+using Vertr.Exchange.Accounts.Abstractions;
+using Vertr.Exchange.Accounts.UserCommands;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
@@ -19,7 +20,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
 
     public bool IgnoreRiskProcessing => _config.IgnoreRiskProcessing;
 
-    public IUserProfileService UserProfileService { get; }
+    public IUserProfilesRepository UserProfiles { get; }
 
     public ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
 
@@ -29,13 +30,13 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
 
     public OrderRiskEngine(
         IOptions<RiskEngineConfiguration> configuration,
-        IUserProfileService userProfileService,
+        IUserProfilesRepository userProfiles,
         ISymbolSpecificationProvider symbolSpecificationProvider,
         IFeeCalculationService feeCalculationService,
         ILastPriceCacheProvider lastPriceCacheProvider)
     {
         _config = configuration.Value;
-        UserProfileService = userProfileService;
+        UserProfiles = userProfiles;
         SymbolSpecificationProvider = symbolSpecificationProvider;
         FeeCalculationService = feeCalculationService;
         LastPriceCacheProvider = lastPriceCacheProvider;
@@ -54,7 +55,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
             case OrderCommandType.SUSPEND_USER:
             case OrderCommandType.RESUME_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
-                var userCommand = UserCommandFactory.CreateUserCommand(this, cmd);
+                var userCommand = UserCommandFactory.CreateUserCommand(cmd, UserProfiles);
                 cmd.ResultCode = userCommand.Execute();
                 return false;
 
@@ -96,7 +97,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
 
     private void Reset()
     {
-        UserProfileService.Reset();
+        UserProfiles.Reset();
         SymbolSpecificationProvider.Reset();
         FeeCalculationService.Reset();
         LastPriceCacheProvider.Reset();
@@ -125,7 +126,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
         }
         else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
         {
-            UserProfileService.BatchAddAccounts(batchAddAccountsCommand.Users);
+            UserProfiles.BatchAdd(batchAddAccountsCommand.Users);
         }
     }
 }

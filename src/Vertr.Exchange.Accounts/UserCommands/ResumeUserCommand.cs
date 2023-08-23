@@ -20,8 +20,6 @@ internal class ResumeUserCommand : UserCommandBase
             return CommandResultCode.USER_MGMT_USER_NOT_FOUND;
         }
 
-        var resumed = UserProfile.Resume();
-
-        return resumed ? CommandResultCode.SUCCESS : CommandResultCode.USER_MGMT_USER_NOT_SUSPENDED; // TODO: Fix it
+        return UserProfile.Resume();
     }
 }

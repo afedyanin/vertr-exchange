@@ -11,6 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Stubs\**" />
+    <EmbeddedResource Remove="Stubs\**" />
+    <None Remove="Stubs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
@@ -23,10 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vertr.Exchange.Accounts\Vertr.Exchange.Accounts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Stubs\" />
   </ItemGroup>
 
 </Project>

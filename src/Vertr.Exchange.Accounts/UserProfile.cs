@@ -69,26 +69,31 @@ internal class UserProfile : IUserProfile
         }
     }
 
-    public bool Suspend()
+    public CommandResultCode Suspend()
     {
-        if (HasPositions || HasAccounts)
+        if (HasPositions)
         {
-            return false;
+            return CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_HAS_POSITIONS;
+        }
+
+        if (HasAccounts)
+        {
+            return CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_NON_EMPTY_ACCOUNTS;
 
         }
 
         Status = UserStatus.SUSPENDED;
-        return true;
+        return CommandResultCode.SUCCESS;
     }
 
-    public bool Resume()
+    public CommandResultCode Resume()
     {
         if (Status != UserStatus.SUSPENDED)
         {
-            return false;
+            return CommandResultCode.USER_MGMT_USER_NOT_SUSPENDED;
         }
 
         Status = UserStatus.ACTIVE;
-        return true;
+        return CommandResultCode.SUCCESS;
     }
 }

@@ -1,4 +1,5 @@
 using Vertr.Exchange.Accounts.Enums;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts.Abstractions;
 
@@ -10,7 +11,7 @@ public interface IUserProfile
 
     decimal AddToValue(int currency, decimal toBeAdded);
 
-    bool Suspend();
+    CommandResultCode Suspend();
 
-    bool Resume();
+    CommandResultCode Resume();
 }

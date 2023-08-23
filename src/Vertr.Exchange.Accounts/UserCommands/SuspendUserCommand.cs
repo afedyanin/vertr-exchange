@@ -19,8 +19,6 @@ internal class SuspendUserCommand : UserCommandBase
             return CommandResultCode.USER_MGMT_USER_NOT_FOUND;
         }
 
-        var suspended = UserProfile.Suspend();
-
-        return suspended ? CommandResultCode.SUCCESS : CommandResultCode.USER_MGMT_USER_NOT_SUSPENDED; // TODO: Fix it
+        return UserProfile.Suspend();
     }
 }

@@ -3,7 +3,7 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts.UserCommands;
-internal abstract class UserCommandBase
+internal abstract class UserCommandBase : IUserCommand
 {
     protected OrderCommand OrderCommand { get; }
 

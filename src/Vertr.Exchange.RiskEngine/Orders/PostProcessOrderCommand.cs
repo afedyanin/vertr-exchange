@@ -1,11 +1,11 @@
 using System.Diagnostics;
+using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common.Symbols;
 using Vertr.Exchange.RiskEngine.Abstractions;
 using Vertr.Exchange.RiskEngine.Extensions;
-using Vertr.Exchange.RiskEngine.Users;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
 
@@ -21,10 +21,10 @@ internal class PostProcessOrderCommand : RiskEngineCommand
     {
         var symbol = OrderCommand.Symbol;
         var marketData = OrderCommand.MarketData;
-        var mte = OrderCommand.MatcherEvent;
+        var matcherEvent = OrderCommand.MatcherEvent;
 
         // skip events processing if no events (or if contains BINARY EVENT)
-        if (marketData == null && (mte == null || mte.EventType == MatcherEventType.BINARY_EVENT))
+        if (marketData == null && (matcherEvent == null || matcherEvent.EventType == MatcherEventType.BINARY_EVENT))
         {
             return CommandResultCode.SUCCESS;
         }
@@ -33,49 +33,44 @@ internal class PostProcessOrderCommand : RiskEngineCommand
             throw new InvalidOperationException("Symbol not found: " + symbol);
 
         var takerSell = OrderCommand.Action == OrderAction.ASK;
+        var takerProfile = UserProfiles.GetOrAdd(OrderCommand.Uid, Accounts.Enums.UserStatus.SUSPENDED);
 
-        if (mte != null && mte.EventType != MatcherEventType.BINARY_EVENT)
+        if (matcherEvent != null && matcherEvent.EventType != MatcherEventType.BINARY_EVENT)
         {
             // at least one event to process, resolving primary/taker user profile
             // TODO processing order is reversed
             if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR)
             {
-                var takerUp = UserProfileService.GetUserProfileOrAddSuspended(OrderCommand.Uid);
 
                 // REJECT always comes first; REDUCE is always single event
-                if (mte.EventType is MatcherEventType.REDUCE or MatcherEventType.REJECT)
+                if (matcherEvent.EventType is MatcherEventType.REDUCE or MatcherEventType.REJECT)
                 {
-                    if (takerUp != null)
-                    {
-                        HandleMatcherRejectReduceEventExchange(OrderCommand, mte, spec, takerSell, takerUp);
-                    }
-                    mte = mte.NextEvent;
+                    HandleMatcherRejectReduceEventExchange(OrderCommand, matcherEvent, spec, takerSell, takerProfile);
+                    matcherEvent = matcherEvent.NextEvent;
                 }
 
-                if (mte != null)
+                if (matcherEvent != null)
                 {
                     if (takerSell)
                     {
-                        HandleMatcherEventsExchangeSell(mte, spec, takerUp!);
+                        HandleMatcherEventsExchangeSell(matcherEvent, spec, takerProfile);
                     }
                     else
                     {
-                        HandleMatcherEventsExchangeBuy(mte, spec, takerUp!, OrderCommand);
+                        HandleMatcherEventsExchangeBuy(matcherEvent, spec, takerProfile, OrderCommand);
                     }
                 }
             }
             else
             {
 
-                var takerUp = UserProfileService.GetUserProfileOrAddSuspended(OrderCommand.Uid);
-
                 // for margin-mode symbols also resolve position record
-                var takerSpr = takerUp?.GetCurrentPosition(symbol);
+                var takerPosition = takerProfile.GetPosition(symbol);
                 do
                 {
-                    HandleMatcherEventMargin(mte, spec, OrderCommand.Action!.Value, takerUp!, takerSpr!);
-                    mte = mte.NextEvent;
-                } while (mte != null);
+                    HandleMatcherEventMargin(matcherEvent, spec, OrderCommand.Action!.Value, takerProfile, takerSpr!);
+                    matcherEvent = matcherEvent.NextEvent;
+                } while (matcherEvent != null);
             }
         }
 
@@ -95,8 +90,8 @@ internal class PostProcessOrderCommand : RiskEngineCommand
         IMatcherTradeEvent ev,
         CoreSymbolSpecification spec,
         OrderAction takerAction,
-        UserProfile takerUp,
-        SymbolPositionRecord takerSpr)
+        IUserProfile takerUp,
+        Position takerSpr)
     {
         if (takerUp != null)
         {

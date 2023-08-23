@@ -1,8 +1,9 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.Accounts.Abstractions;
 
-namespace Vertr.Exchange.RiskEngine;
+namespace Vertr.Exchange.RiskEngine.Orders;
 
 internal abstract class RiskEngineCommand
 {
@@ -10,8 +11,8 @@ internal abstract class RiskEngineCommand
 
     protected OrderCommand OrderCommand { get; }
 
-    protected IUserProfileService UserProfileService
-        => OrderRiskEngine.UserProfileService;
+    protected IUserProfilesRepository UserProfiles
+        => OrderRiskEngine.UserProfiles;
 
     protected ISymbolSpecificationProvider SymbolSpecificationProvider
         => OrderRiskEngine.SymbolSpecificationProvider;
