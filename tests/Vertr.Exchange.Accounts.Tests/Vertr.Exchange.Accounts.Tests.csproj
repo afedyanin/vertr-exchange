@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\src\Vertr.Exchange.Accounts\Vertr.Exchange.Accounts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Stubs\" />
+  </ItemGroup>
+
 </Project>

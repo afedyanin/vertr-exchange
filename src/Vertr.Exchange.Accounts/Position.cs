@@ -7,36 +7,39 @@ namespace Vertr.Exchange.Accounts;
 
 internal class Position
 {
+    // Buy/Sell Amount
+    private decimal _openPriceSum;
+
     public long Uid { get; }
 
     public int Symbol { get; }
 
+    public int Currency { get; }
+
     public PositionDirection Direction { get; private set; }
 
-    // Current Size
+    // Size
     public decimal OpenVolume { get; private set; }
-
-    // Buy/Sell Amount
-    public decimal OpenPriceSum { get; private set; }
 
     // Realized PnL
     public decimal RealizedPnL { get; private set; }
 
-    public bool IsEmpty()
+    public bool IsEmpty
         => Direction == PositionDirection.EMPTY;
 
-    // Конструктор работает по спеке к символу
-    public Position(long uid, int symbol)
+    public Position(long uid, int symbol, int currency)
     {
         Uid = uid;
         Symbol = symbol;
         Direction = PositionDirection.EMPTY;
+        Currency = currency;
     }
 
     public decimal GetUnrealizedPnL(decimal price)
-        => ((OpenVolume * price) - OpenPriceSum) * GetMultiplier(Direction);
+        => ((OpenVolume * price) - _openPriceSum) * GetMultiplier(Direction);
 
-    public decimal Update(OrderAction action, long size, decimal price)
+
+    public void Update(OrderAction action, long size, decimal price)
     {
         // 1. Reduce opposite position accordingly (if exists)
         var sizeToOpen = TryToCloseCurrentPosition(action, size, price);
@@ -46,16 +49,22 @@ internal class Position
         {
             OpenPosition(action, sizeToOpen, price);
         }
+    }
 
-        // new OpenVolume
-        return sizeToOpen;
+    public override string ToString()
+    {
+#if DEBUG
+        return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} OpenPriceSum={_openPriceSum} PnL={RealizedPnL}";
+#else
+        return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} PnL={RealizedPnL}";
+#endif
     }
 
     private decimal TryToCloseCurrentPosition(OrderAction action, long tradeSize, decimal tradePrice)
     {
         if (Direction == PositionDirection.EMPTY || Direction == GetByAction(action))
         {
-            // The same direction - return full size
+            // the same direction - return full size
             return tradeSize;
         }
 
@@ -63,32 +72,31 @@ internal class Position
         if (OpenVolume > tradeSize)
         {
             OpenVolume -= tradeSize;
-            OpenPriceSum -= tradeSize * tradePrice;
-            // Все кол-во закрыли текущей позицией
+            _openPriceSum -= tradeSize * tradePrice;
             return decimal.Zero;
         }
 
-        // Разворот. Закрываем полностью текущую позицию.
         // current position smaller than trade size, can close completely and calculate profit
         var sizeToOpen = tradeSize - OpenVolume;
-        RealizedPnL += ((OpenVolume * tradePrice) - OpenPriceSum) * GetMultiplier(Direction);
+        RealizedPnL += ((OpenVolume * tradePrice) - _openPriceSum) * GetMultiplier(Direction);
+
         Direction = PositionDirection.EMPTY;
-        OpenPriceSum = decimal.Zero;
         OpenVolume = decimal.Zero;
+        _openPriceSum = decimal.Zero;
 
-        // validateInternalState();
-
-        // Незакрытый остаток для разворота
         return sizeToOpen;
     }
 
     private void OpenPosition(OrderAction action, decimal sizeToOpen, decimal tradePrice)
     {
-        OpenVolume += sizeToOpen;
-        OpenPriceSum += tradePrice * sizeToOpen;
-        Direction = GetByAction(action);
+        if (sizeToOpen == decimal.Zero || tradePrice == decimal.Zero)
+        {
+            return;
+        }
 
-        // validateInternalState();
+        Direction = GetByAction(action);
+        OpenVolume += sizeToOpen;
+        _openPriceSum += tradePrice * sizeToOpen;
     }
 
     private static PositionDirection GetByAction(OrderAction action)
