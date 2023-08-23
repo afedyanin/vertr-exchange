@@ -14,4 +14,8 @@ public interface IUserProfile
     CommandResultCode Suspend();
 
     CommandResultCode Resume();
+
+    IPosition? GetPosition(int symbol);
+
+    void UpdatePosition(int symbol, OrderAction action, long tradeSize, decimal tradePrice, int currency);
 }

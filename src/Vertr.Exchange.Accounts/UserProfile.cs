@@ -41,7 +41,7 @@ internal class UserProfile : IUserProfile
         return _accounts[currency];
     }
 
-    public Position? GetPosition(int symbol)
+    public IPosition? GetPosition(int symbol)
     {
         _positions.TryGetValue(symbol, out var currentPosition);
         return currentPosition;

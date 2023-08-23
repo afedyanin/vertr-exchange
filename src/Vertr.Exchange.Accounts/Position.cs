@@ -1,11 +1,12 @@
 using System.Runtime.CompilerServices;
+using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Accounts.Tests")]
 
 namespace Vertr.Exchange.Accounts;
 
-internal class Position
+internal class Position : IPosition
 {
     // Buy/Sell Amount
     private decimal _openPriceSum;

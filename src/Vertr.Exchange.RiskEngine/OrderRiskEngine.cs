@@ -4,7 +4,6 @@ using Vertr.Exchange.RiskEngine.Abstractions;
 using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Options;
 using Vertr.Exchange.RiskEngine.Orders;
 using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Accounts.UserCommands;
@@ -12,34 +11,18 @@ using Vertr.Exchange.Accounts.UserCommands;
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
 namespace Vertr.Exchange.RiskEngine;
-internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineInternal
+internal sealed class OrderRiskEngine : IOrderRiskEngine
 {
-    private readonly RiskEngineConfiguration _config;
-
-    public bool IsMarginTradingEnabled => _config.MarginTradingEnabled;
-
-    public bool IgnoreRiskProcessing => _config.IgnoreRiskProcessing;
-
     public IUserProfilesRepository UserProfiles { get; }
 
     public ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
 
-    public IFeeCalculationService FeeCalculationService { get; }
-
-    public ILastPriceCacheProvider LastPriceCacheProvider { get; }
-
     public OrderRiskEngine(
-        IOptions<RiskEngineConfiguration> configuration,
         IUserProfilesRepository userProfiles,
-        ISymbolSpecificationProvider symbolSpecificationProvider,
-        IFeeCalculationService feeCalculationService,
-        ILastPriceCacheProvider lastPriceCacheProvider)
+        ISymbolSpecificationProvider symbolSpecificationProvider)
     {
-        _config = configuration.Value;
         UserProfiles = userProfiles;
         SymbolSpecificationProvider = symbolSpecificationProvider;
-        FeeCalculationService = feeCalculationService;
-        LastPriceCacheProvider = lastPriceCacheProvider;
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -47,8 +30,8 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
-                var command = new PreProcessOrderCommand(this, cmd);
-                cmd.ResultCode = command.Execute();
+                var handler = new PreProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
+                cmd.ResultCode = handler.Handle(cmd);
                 return false;
 
             case OrderCommandType.ADD_USER:
@@ -89,18 +72,14 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
 
     public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
-        var command = new PostProcessOrderCommand(this, cmd);
-
-        // TODO: refactor this
-        return command.Execute() != CommandResultCode.SUCCESS;
+        var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
+        return handler.Handle(cmd);
     }
 
     private void Reset()
     {
         UserProfiles.Reset();
         SymbolSpecificationProvider.Reset();
-        FeeCalculationService.Reset();
-        LastPriceCacheProvider.Reset();
     }
 
     private CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
