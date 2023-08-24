@@ -1,11 +1,11 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Accounts.Abstractions;
-using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.RiskEngine.Symbols;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
 
-public class PreProcessOrderHandler
+internal class PreProcessOrderHandler
 {
     private readonly IUserProfilesRepository _userProfiles;
     private readonly ISymbolSpecificationProvider _symbols;

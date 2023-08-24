@@ -1,5 +1,6 @@
 using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Accounts.Enums;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts;
@@ -24,7 +25,14 @@ internal class UserProfile : IUserProfile
     }
 
     public decimal? GetValue(int currency)
-        => _accounts.ContainsKey(currency) ? _accounts[currency] : null;
+    {
+        if (_accounts.TryGetValue(currency, out var value))
+        {
+            return value;
+        }
+
+        return null;
+    }
 
     public bool HasAccounts => _accounts.Values.Any(acc => acc != decimal.Zero);
 
@@ -48,23 +56,22 @@ internal class UserProfile : IUserProfile
     }
 
     public void UpdatePosition(
-        int symbol,
+        ISymbolSpecification spec,
         OrderAction action,
         long tradeSize,
-        decimal tradePrice,
-        int currency)
+        decimal tradePrice)
     {
-        if (!_positions.ContainsKey(symbol))
+        if (!_positions.ContainsKey(spec.SymbolId))
         {
-            _positions.Add(symbol, new Position(Uid, symbol, currency));
+            _positions.Add(spec.SymbolId, new Position(Uid, spec.SymbolId));
         }
 
-        var position = _positions[symbol];
+        var position = _positions[spec.SymbolId];
         position.Update(action, tradeSize, tradePrice);
 
         if (position.IsEmpty)
         {
-            AddToValue(position.Currency, position.RealizedPnL);
+            AddToValue(spec.Currency, position.RealizedPnL);
             _positions.Remove(position.Symbol);
         }
     }

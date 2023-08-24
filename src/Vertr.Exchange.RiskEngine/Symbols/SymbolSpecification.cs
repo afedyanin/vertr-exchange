@@ -1,12 +1,13 @@
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Common.Symbols;
 
-public class CoreSymbolSpecification
+internal class SymbolSpecification : ISymbolSpecification
 {
     public int SymbolId { get; set; }
 
     public SymbolType Type { get; set; }
 
-    public int QuoteCurrency { get; } // quote/counter currency (OR futures contract currency)
+    public int Currency { get; }
 }

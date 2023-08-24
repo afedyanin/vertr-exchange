@@ -3,8 +3,7 @@ using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.Common.Symbols;
-using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.RiskEngine.Symbols;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
 
@@ -48,7 +47,7 @@ internal class PostProcessOrderHandler
 
     private void HandleMatcherEvent(
         IMatcherTradeEvent tradeEvent,
-        CoreSymbolSpecification spec,
+        ISymbolSpecification spec,
         OrderAction takerAction,
         IUserProfile takerProfile)
     {
@@ -58,22 +57,11 @@ internal class PostProcessOrderHandler
         }
 
         // update taker's position
-        takerProfile.UpdatePosition(
-            spec.SymbolId,
-            takerAction,
-            tradeEvent.Size,
-            tradeEvent.Price,
-            spec.QuoteCurrency);
+        takerProfile.UpdatePosition(spec, takerAction, tradeEvent.Size, tradeEvent.Price);
 
         // update maker's position
         var makerProfile = _userProfiles.GetOrAdd(tradeEvent.MatchedOrderUid, Accounts.Enums.UserStatus.SUSPENDED);
-
-        makerProfile.UpdatePosition(
-            spec.SymbolId,
-            GetOppositeAction(takerAction),
-            tradeEvent.Size,
-            tradeEvent.Price,
-            spec.QuoteCurrency);
+        makerProfile.UpdatePosition(spec, GetOppositeAction(takerAction), tradeEvent.Size, tradeEvent.Price);
     }
 
     private OrderAction GetOppositeAction(OrderAction action)

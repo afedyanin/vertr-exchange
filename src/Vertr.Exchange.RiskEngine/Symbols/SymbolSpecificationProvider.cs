@@ -1,17 +1,17 @@
-using Vertr.Exchange.Common.Symbols;
-using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.RiskEngine.Symbols;
+
 internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
 {
-    private readonly IDictionary<int, CoreSymbolSpecification> _symbolSpecs;
+    private readonly IDictionary<int, ISymbolSpecification> _symbolSpecs;
 
     public SymbolSpecificationProvider()
     {
-        _symbolSpecs = new Dictionary<int, CoreSymbolSpecification>();
+        _symbolSpecs = new Dictionary<int, ISymbolSpecification>();
     }
 
-    public bool AddSymbol(CoreSymbolSpecification symbolSpecification)
+    public bool AddSymbol(ISymbolSpecification symbolSpecification)
     {
         if (GetSymbolSpecification(symbolSpecification.SymbolId) != null)
         {
@@ -24,7 +24,7 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
         }
     }
 
-    public void AddSymbols(CoreSymbolSpecification[] symbols)
+    public void AddSymbols(ISymbolSpecification[] symbols)
     {
         foreach (var spec in symbols)
         {
@@ -32,13 +32,13 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
         }
     }
 
-    public CoreSymbolSpecification? GetSymbolSpecification(int symbol)
+    public ISymbolSpecification? GetSymbolSpecification(int symbol)
     {
         _symbolSpecs.TryGetValue(symbol, out var specification);
         return specification;
     }
 
-    public void RegisterSymbol(int symbol, CoreSymbolSpecification spec)
+    public void RegisterSymbol(int symbol, ISymbolSpecification spec)
     {
         if (!_symbolSpecs.ContainsKey(symbol))
         {

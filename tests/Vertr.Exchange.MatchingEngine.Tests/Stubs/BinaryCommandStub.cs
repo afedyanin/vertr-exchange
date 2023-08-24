@@ -8,11 +8,11 @@ internal static class BinaryCommandStub
 {
     public static OrderCommand CreateAddSymbolsCommand(int[] symbolIds)
     {
-        var symbols = new List<CoreSymbolSpecification>(symbolIds.Length);
+        var symbols = new List<SymbolSpecification>(symbolIds.Length);
 
         foreach (int symbolId in symbolIds)
         {
-            var spec = new CoreSymbolSpecification
+            var spec = new SymbolSpecification
             {
                 SymbolId = symbolId,
                 Type = Common.Enums.SymbolType.CURRENCY_EXCHANGE_PAIR

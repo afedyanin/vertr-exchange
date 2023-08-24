@@ -1,4 +1,5 @@
 using Vertr.Exchange.Accounts.Enums;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts.Abstractions;
@@ -17,5 +18,5 @@ public interface IUserProfile
 
     IPosition? GetPosition(int symbol);
 
-    void UpdatePosition(int symbol, OrderAction action, long tradeSize, decimal tradePrice, int currency);
+    void UpdatePosition(ISymbolSpecification spec, OrderAction action, long tradeSize, decimal tradePrice);
 }

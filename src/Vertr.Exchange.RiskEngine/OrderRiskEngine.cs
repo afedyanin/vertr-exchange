@@ -1,12 +1,12 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.RiskEngine.Abstractions;
 using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.RiskEngine.Orders;
 using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Accounts.UserCommands;
+using Vertr.Exchange.RiskEngine.Symbols;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
@@ -101,7 +101,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
     {
         if (binCmd is BatchAddSymbolsCommand batchAddSymbolsCommand)
         {
-            SymbolSpecificationProvider.AddSymbols(batchAddSymbolsCommand.Symbols, IsMarginTradingEnabled);
+            SymbolSpecificationProvider.AddSymbols(batchAddSymbolsCommand.Symbols);
         }
         else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
         {

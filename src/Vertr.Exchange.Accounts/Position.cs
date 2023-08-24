@@ -15,8 +15,6 @@ internal class Position : IPosition
 
     public int Symbol { get; }
 
-    public int Currency { get; }
-
     public PositionDirection Direction { get; private set; }
 
     // Size
@@ -25,15 +23,13 @@ internal class Position : IPosition
     // Realized PnL
     public decimal RealizedPnL { get; private set; }
 
-    public bool IsEmpty
-        => Direction == PositionDirection.EMPTY;
+    public bool IsEmpty => Direction == PositionDirection.EMPTY;
 
-    public Position(long uid, int symbol, int currency)
+    public Position(long uid, int symbol)
     {
         Uid = uid;
         Symbol = symbol;
         Direction = PositionDirection.EMPTY;
-        Currency = currency;
     }
 
     public decimal GetUnrealizedPnL(decimal price)

@@ -8,8 +8,6 @@ public interface IPosition
 
     int Symbol { get; }
 
-    int Currency { get; }
-
     PositionDirection Direction { get; }
 
     // Size
