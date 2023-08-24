@@ -1,5 +1,4 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Enums;
 
@@ -9,7 +8,7 @@ internal static class BinaryCommandStub
 {
     public static OrderCommand CreateAddSymbolsCommand(int[] symbolIds)
     {
-        var symbols = new List<ISymbolSpecification>(symbolIds.Length);
+        var symbols = new List<SymbolSpecification>(symbolIds.Length);
 
         foreach (int symbolId in symbolIds)
         {
@@ -29,14 +28,5 @@ internal static class BinaryCommandStub
         };
 
         return cmd.ToOrderCommand();
-    }
-
-    private sealed class SymbolSpecification : ISymbolSpecification
-    {
-        public int SymbolId { get; set; }
-
-        public SymbolType Type { get; set; }
-
-        public int Currency { get; set; }
     }
 }

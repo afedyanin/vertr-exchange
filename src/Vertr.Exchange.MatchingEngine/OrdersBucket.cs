@@ -76,7 +76,7 @@ internal sealed class OrdersBucket
         TotalVolume -= reduceSize;
     }
 
-    public BucketMatcherResult Match(long volumeToCollect, decimal reservedBidPrice = decimal.Zero)
+    public BucketMatcherResult Match(long volumeToCollect)
     {
         var totalMatchingVolume = 0L;
         var ordersToRemove = new List<long>();
@@ -98,12 +98,7 @@ internal sealed class OrdersBucket
 
             var fullMatch = order.Size == order.Filled;
 
-            var bidderHoldPrice =
-                order.Action == OrderAction.ASK ?
-                reservedBidPrice :
-                order.ReserveBidPrice;
-
-            var tradeEvent = CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume, bidderHoldPrice);
+            var tradeEvent = CreateTradeEvent(order, fullMatch, volumeToCollect == 0L, volume);
 
             tradeEvents.AddLast(tradeEvent!);
 
@@ -122,8 +117,7 @@ internal sealed class OrdersBucket
         IOrder matchingOrder,
         bool makerCompleted,
         bool takerCompleted,
-        long size,
-        decimal bidderHoldPrice)
+        long size)
     {
         return new MatcherTradeEvent
         {
@@ -134,7 +128,6 @@ internal sealed class OrdersBucket
             MatchedOrderCompleted = makerCompleted,
             Price = matchingOrder.Price,
             Size = size,
-            BidderHoldPrice = bidderHoldPrice,
         };
     }
 }

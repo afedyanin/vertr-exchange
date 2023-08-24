@@ -20,8 +20,7 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
         var result = OrderBook.TryMatchInstantly(
             OrderCommand.Action.Value,
             OrderCommand.Price,
-            OrderCommand.Size,
-            OrderCommand.ReserveBidPrice);
+            OrderCommand.Size);
 
         AttachTradeEvents(result.TradeEvents);
 
@@ -36,7 +35,6 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
             OrderCommand.Action.Value,
             OrderCommand.OrderId,
             OrderCommand.Price,
-            OrderCommand.ReserveBidPrice,
             OrderCommand.Size,
             result.Filled,
             OrderCommand.Uid,

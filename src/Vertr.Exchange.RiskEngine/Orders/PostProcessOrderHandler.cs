@@ -47,7 +47,7 @@ internal class PostProcessOrderHandler
 
     private void HandleMatcherEvent(
         IMatcherTradeEvent tradeEvent,
-        ISymbolSpecification spec,
+        SymbolSpecification spec,
         OrderAction takerAction,
         IUserProfile takerProfile)
     {

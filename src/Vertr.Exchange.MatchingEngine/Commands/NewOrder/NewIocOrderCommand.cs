@@ -20,8 +20,7 @@ internal sealed class NewIocOrderCommand : OrderBookCommand
         var result = OrderBook.TryMatchInstantly(
             OrderCommand.Action.Value,
             OrderCommand.Price,
-            OrderCommand.Size,
-            OrderCommand.ReserveBidPrice);
+            OrderCommand.Size);
 
         AttachTradeEvents(result.TradeEvents);
 

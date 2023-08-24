@@ -95,7 +95,6 @@ internal sealed class OrderBook : IOrderBook
         OrderAction action,
         decimal price,
         long size,
-        decimal reservedBidPrice,
         long filled = 0L)
     {
         var matchingBuckets = GetBucketsForMatching(action);
@@ -123,7 +122,7 @@ internal sealed class OrderBook : IOrderBook
             }
 
             var sizeLeft = size - filled;
-            var bucketMatchings = bucket.Match(sizeLeft, reservedBidPrice);
+            var bucketMatchings = bucket.Match(sizeLeft);
 
             filledOrderIds.AddRange(bucketMatchings.OrdersToRemove);
 
