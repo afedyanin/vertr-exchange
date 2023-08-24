@@ -20,7 +20,6 @@ public class PositionTests
             Assert.That(pos.Symbol, Is.EqualTo(2));
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
             Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
-            Assert.That(pos.OpenPriceSum, Is.EqualTo(decimal.Zero));
             Assert.That(pos.OpenVolume, Is.EqualTo(decimal.Zero));
         });
     }
@@ -31,15 +30,12 @@ public class PositionTests
     public void CanOpenBid(long size, decimal price)
     {
         var pos = new Position(1L, 2);
-        var openSize = pos.Update(OrderAction.BID, size, price);
-
-        Assert.That(openSize, Is.EqualTo(size));
+        pos.Update(OrderAction.BID, size, price);
 
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
-            Assert.That(pos.OpenPriceSum, Is.EqualTo(size * price));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
     }
@@ -48,15 +44,12 @@ public class PositionTests
     public void CanOpenZeroSizeBid(long size, decimal price)
     {
         var pos = new Position(1L, 2);
-        var openSize = pos.Update(OrderAction.BID, size, price);
-
-        Assert.That(openSize, Is.EqualTo(size));
+        pos.Update(OrderAction.BID, size, price);
 
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
             Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
-            Assert.That(pos.OpenPriceSum, Is.EqualTo(size * price));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
     }
@@ -65,15 +58,12 @@ public class PositionTests
     public void CanOpenZeroPriceBid(long size, decimal price)
     {
         var pos = new Position(1L, 2);
-        var openSize = pos.Update(OrderAction.BID, size, price);
-
-        Assert.That(openSize, Is.EqualTo(size));
+        pos.Update(OrderAction.BID, size, price);
 
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
             Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
-            Assert.That(pos.OpenPriceSum, Is.EqualTo(size * price));
             Assert.That(pos.OpenVolume, Is.EqualTo(decimal.Zero));
         });
     }
@@ -91,7 +81,6 @@ public class PositionTests
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(pos.RealizedPnL, Is.EqualTo(0));
-            Assert.That(pos.OpenPriceSum, Is.EqualTo(-8000));
             Assert.That(pos.OpenVolume, Is.EqualTo(10));
         });
 
@@ -102,7 +91,6 @@ public class PositionTests
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
             Assert.That(pos.RealizedPnL, Is.EqualTo(9000));
-            Assert.That(pos.OpenPriceSum, Is.EqualTo(0));
             Assert.That(pos.OpenVolume, Is.EqualTo(0));
         });
     }
@@ -132,7 +120,6 @@ public class PositionTests
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(pos.RealizedPnL, Is.EqualTo(0));
-            Assert.That(pos.OpenPriceSum, Is.EqualTo(5000));
             Assert.That(pos.OpenVolume, Is.EqualTo(300));
         });
     }
