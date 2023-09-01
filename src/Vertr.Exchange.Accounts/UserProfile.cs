@@ -1,6 +1,5 @@
-using Vertr.Exchange.Accounts.Abstractions;
-using Vertr.Exchange.Accounts.Enums;
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts;

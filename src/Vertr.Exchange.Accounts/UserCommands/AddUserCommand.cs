@@ -1,5 +1,5 @@
-using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts.UserCommands;
@@ -19,7 +19,7 @@ internal class AddUserCommand : UserCommandBase
             return CommandResultCode.USER_MGMT_USER_ALREADY_EXISTS;
         }
 
-        UserProfilesRepository.GetOrAdd(OrderCommand.Uid, Enums.UserStatus.ACTIVE);
+        UserProfilesRepository.GetOrAdd(OrderCommand.Uid, UserStatus.ACTIVE);
         return CommandResultCode.SUCCESS;
     }
 }

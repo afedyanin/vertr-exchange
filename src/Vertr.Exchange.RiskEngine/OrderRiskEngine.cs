@@ -4,7 +4,6 @@ using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.RiskEngine.Orders;
-using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Accounts.UserCommands;
 using Vertr.Exchange.RiskEngine.Symbols;
 

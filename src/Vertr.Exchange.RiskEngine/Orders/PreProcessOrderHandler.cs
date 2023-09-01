@@ -1,7 +1,7 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.RiskEngine.Symbols;
+using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
 

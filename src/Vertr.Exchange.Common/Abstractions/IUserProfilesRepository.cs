@@ -1,6 +1,6 @@
-using Vertr.Exchange.Accounts.Enums;
+using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.Accounts.Abstractions;
+namespace Vertr.Exchange.Common.Abstractions;
 
 public interface IUserProfilesRepository
 {

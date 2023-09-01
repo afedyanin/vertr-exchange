@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Vertr.Exchange.Accounts.Abstractions;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
@@ -34,7 +33,7 @@ internal class PostProcessOrderHandler
         Debug.Assert(spec != null);
 
         var takerAction = orderCommand.Action!.Value;
-        var takerProfile = _userProfiles.GetOrAdd(orderCommand.Uid, Accounts.Enums.UserStatus.SUSPENDED);
+        var takerProfile = _userProfiles.GetOrAdd(orderCommand.Uid, UserStatus.SUSPENDED);
 
         do
         {
@@ -60,7 +59,7 @@ internal class PostProcessOrderHandler
         takerProfile.UpdatePosition(spec, takerAction, tradeEvent.Size, tradeEvent.Price);
 
         // update maker's position
-        var makerProfile = _userProfiles.GetOrAdd(tradeEvent.MatchedOrderUid, Accounts.Enums.UserStatus.SUSPENDED);
+        var makerProfile = _userProfiles.GetOrAdd(tradeEvent.MatchedOrderUid, UserStatus.SUSPENDED);
         makerProfile.UpdatePosition(spec, GetOppositeAction(takerAction), tradeEvent.Size, tradeEvent.Price);
     }
 

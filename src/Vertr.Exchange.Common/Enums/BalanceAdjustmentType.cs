@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Accounts.Enums;
+namespace Vertr.Exchange.Common.Enums;
 
 public enum BalanceAdjustmentType
 {
