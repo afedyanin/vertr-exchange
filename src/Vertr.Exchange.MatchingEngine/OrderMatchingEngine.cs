@@ -49,6 +49,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 cmd.ResultCode = AcceptBinaryCommand(cmd);
                 break;
             case OrderCommandType.BINARY_DATA_QUERY:
+
             case OrderCommandType.ADD_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.SUSPEND_USER:
