@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Helpers;
 
-namespace Vertr.Exchange.MatchingEngine;
+namespace Vertr.Exchange.MatchingEngine.OrderBooks;
 
 internal sealed class OrderBook : IOrderBook
 {
@@ -26,6 +26,11 @@ internal sealed class OrderBook : IOrderBook
     {
         _orders.TryGetValue(orderId, out var order);
         return order;
+    }
+
+    public IOrder[] GetOrdersByUid(long uid)
+    {
+        return _orders.Values.Where(ord => ord.Uid == uid).ToArray();
     }
 
     public bool AddOrder(IOrder order)

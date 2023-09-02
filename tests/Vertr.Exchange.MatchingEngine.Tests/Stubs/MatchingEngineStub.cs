@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.MatchingEngine.OrderBooks;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
 internal static class MatchingEngineStub
@@ -13,6 +14,9 @@ internal static class MatchingEngineStub
     public static IOrderBook CreateOrderBook() =>
         new OrderBook();
 
+    public static IOrderBookProvider OrderBookProvider =>
+        new OrderBookProvider(CreateOrderBook);
+
     public static OrderMatchingEngine Instance =>
-        new OrderMatchingEngine(Options.Create(Configuration), CreateOrderBook);
+        new OrderMatchingEngine(Options.Create(Configuration), OrderBookProvider);
 }

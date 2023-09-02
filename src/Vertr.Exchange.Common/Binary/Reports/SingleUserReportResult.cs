@@ -11,7 +11,7 @@ public sealed class SingleUserReportResult
     public UserStatus UserStatus { get; set; }
 
     // Symbol
-    public IDictionary<int, IOrder> Orders { get; set; } = new Dictionary<int, IOrder>();
+    public IDictionary<int, IOrder[]> Orders { get; set; } = new Dictionary<int, IOrder[]>();
 
     // Currency
     public IDictionary<int, decimal> Accounts { get; set; } = new Dictionary<int, decimal>();

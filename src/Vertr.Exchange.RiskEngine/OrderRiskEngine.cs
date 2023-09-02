@@ -7,7 +7,7 @@ using Vertr.Exchange.Accounts.UserCommands;
 using Vertr.Exchange.RiskEngine.Symbols;
 using Vertr.Exchange.Common.Binary.Commands;
 using Vertr.Exchange.Common.Binary.Reports;
-using Vertr.Exchange.RiskEngine.Binary.Reports;
+using Vertr.Exchange.RiskEngine.Binary;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 

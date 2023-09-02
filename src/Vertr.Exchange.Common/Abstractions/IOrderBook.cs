@@ -6,6 +6,8 @@ public interface IOrderBook
 {
     IOrder? GetOrder(long orderId);
 
+    IOrder[] GetOrdersByUid(long uid);
+
     bool RemoveOrder(IOrder order);
 
     bool AddOrder(IOrder order);
