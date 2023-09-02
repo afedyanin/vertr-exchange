@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.MatchingEngine.Helpers;
+using Vertr.Exchange.Common.Events;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal sealed class CancelOrderCommand : OrderBookCommand
@@ -22,7 +22,7 @@ internal sealed class CancelOrderCommand : OrderBookCommand
 
         OrderBook.RemoveOrder(Order);
 
-        OrderCommand.AttachReduceEvent(Order, Order.Remaining, true);
+        EventsHelper.AttachReduceEvent(OrderCommand, Order, Order.Remaining, true);
 
         return CommandResultCode.SUCCESS;
     }

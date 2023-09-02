@@ -26,7 +26,7 @@ public class NewGtcOrderCommandTests
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
-            Assert.That(cmd.MatcherEvent, Is.Null);
+            Assert.That(cmd.EngineEvent, Is.Null);
         });
     }
 
@@ -62,8 +62,8 @@ public class NewGtcOrderCommandTests
             Assert.That(addedBid!.Completed, Is.False);
             Assert.That(addedBid!.Size, Is.EqualTo(bid.Size));
             Assert.That(addedBid!.Filled, Is.EqualTo(ask1.Size + ask2.Size));
-            Assert.That(cmd.MatcherEvent, Is.Not.Null);
-            Assert.That(cmd.MatcherEvent!.EventType, Is.EqualTo(MatcherEventType.TRADE));
+            Assert.That(cmd.EngineEvent, Is.Not.Null);
+            Assert.That(cmd.EngineEvent!.EventType, Is.EqualTo(EngineEventType.TRADE));
         });
     }
 }

@@ -80,12 +80,12 @@ public class MoveOrderCommandTests
             Assert.That(bid.Completed, Is.False);
             Assert.That(bid.Size, Is.EqualTo(23));
             Assert.That(bid.Filled, Is.EqualTo(17));
-            Assert.That(cmd.MatcherEvent, Is.Not.Null);
-            Assert.That(cmd.MatcherEvent!.EventType, Is.EqualTo(MatcherEventType.TRADE));
-            Assert.That(cmd.MatcherEvent!.Size, Is.EqualTo(7));
-            Assert.That(cmd.MatcherEvent!.Price, Is.EqualTo(18.56M));
-            Assert.That(cmd.MatcherEvent!.MatchedOrderId, Is.EqualTo(ask.OrderId));
-            Assert.That(cmd.MatcherEvent!.MatchedOrderUid, Is.EqualTo(ask.Uid));
+            Assert.That(cmd.EngineEvent, Is.Not.Null);
+            Assert.That(cmd.EngineEvent!.EventType, Is.EqualTo(EngineEventType.TRADE));
+            Assert.That(cmd.EngineEvent!.Size, Is.EqualTo(7));
+            Assert.That(cmd.EngineEvent!.Price, Is.EqualTo(18.56M));
+            Assert.That(cmd.EngineEvent!.MatchedOrderId, Is.EqualTo(ask.OrderId));
+            Assert.That(cmd.EngineEvent!.MatchedOrderUid, Is.EqualTo(ask.Uid));
         });
     }
 }

@@ -1,9 +1,9 @@
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Common.Abstractions;
-public interface IMatcherTradeEvent
+public interface IEngineEvent
 {
-    MatcherEventType EventType { get; }
+    EngineEventType EventType { get; }
 
     bool ActiveOrderCompleted { get; }
 
@@ -17,7 +17,7 @@ public interface IMatcherTradeEvent
 
     long Size { get; }
 
-    decimal BidderHoldPrice { get; }
+    byte[] BinaryData { get; }
 
-    IMatcherTradeEvent? NextEvent { get; set; }
+    IEngineEvent? NextEvent { get; set; }
 }

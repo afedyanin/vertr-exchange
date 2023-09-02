@@ -1,7 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.MatchingEngine.Helpers;
+using Vertr.Exchange.Common.Events;
 
 namespace Vertr.Exchange.MatchingEngine.Commands.NewOrder;
 internal sealed class NewGtcOrderCommand : OrderBookCommand
@@ -43,7 +43,7 @@ internal sealed class NewGtcOrderCommand : OrderBookCommand
         if (!OrderBook.AddOrder(order))
         {
             // duplicate order id - can match, but can not place
-            OrderCommand.AttachRejectEvent(order.Price, order.Remaining);
+            EventsHelper.AttachRejectEvent(OrderCommand, order.Price, order.Remaining);
         }
 
         return CommandResultCode.SUCCESS;

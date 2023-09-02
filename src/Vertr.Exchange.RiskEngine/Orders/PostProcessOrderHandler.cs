@@ -21,10 +21,10 @@ internal class PostProcessOrderHandler
 
     public bool Handle(OrderCommand orderCommand)
     {
-        var matcherEvent = orderCommand.MatcherEvent;
+        var matcherEvent = orderCommand.EngineEvent;
 
         // skip events processing if no events (or if contains BINARY EVENT)
-        if (matcherEvent == null || matcherEvent.EventType == MatcherEventType.BINARY_EVENT)
+        if (matcherEvent == null || matcherEvent.EventType == EngineEventType.BINARY_EVENT)
         {
             return false; // ??
         }
@@ -45,12 +45,12 @@ internal class PostProcessOrderHandler
     }
 
     private void HandleMatcherEvent(
-        IMatcherTradeEvent tradeEvent,
+        IEngineEvent tradeEvent,
         SymbolSpecification spec,
         OrderAction takerAction,
         IUserProfile takerProfile)
     {
-        if (tradeEvent.EventType != MatcherEventType.TRADE)
+        if (tradeEvent.EventType != EngineEventType.TRADE)
         {
             return;
         }

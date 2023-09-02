@@ -1,6 +1,6 @@
 using Vertr.Exchange.Common.Abstractions;
 
-namespace Vertr.Exchange.Common.Binary;
+namespace Vertr.Exchange.Common.Binary.Commands;
 
 public sealed class BatchAddSymbolsCommand : IBinaryCommand
 {

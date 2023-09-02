@@ -1,11 +1,13 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.RiskEngine.Orders;
 using Vertr.Exchange.Accounts.UserCommands;
 using Vertr.Exchange.RiskEngine.Symbols;
+using Vertr.Exchange.Common.Binary.Commands;
+using Vertr.Exchange.Common.Binary.Reports;
+using Vertr.Exchange.RiskEngine.Binary.Reports;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
@@ -42,9 +44,14 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
                 return false;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
+                // ignore return result, because it should be set by MatchingEngineRouter
+                AcceptBinaryCommand(cmd);
+                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
+                return false;
+
             case OrderCommandType.BINARY_DATA_QUERY:
                 // ignore return result, because it should be set by MatchingEngineRouter
-                var _ = AcceptBinaryCommand(cmd);
+                AcceptBinaryQuery(cmd);
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return false;
 
@@ -95,6 +102,29 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
         return CommandResultCode.SUCCESS;
     }
+
+    internal CommandResultCode AcceptBinaryQuery(OrderCommand cmd)
+    {
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_QUERY)
+        {
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        var query = BinaryQueryFactory.GetBinaryQuery(cmd.BinaryCommandType, cmd.BinaryData);
+
+        if (query == null)
+        {
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        if (query is SingleUserReportQuery singleUserReport)
+        {
+            return singleUserReport.HandleQuery(cmd);
+        }
+
+        return CommandResultCode.SUCCESS;
+    }
+
 
     private void HandleBinaryCommand(IBinaryCommand binCmd)
     {

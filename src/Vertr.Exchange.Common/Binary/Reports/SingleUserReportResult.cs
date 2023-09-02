@@ -1,8 +1,8 @@
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.Common.Reports;
-internal sealed class SingleUserReportResult
+namespace Vertr.Exchange.Common.Binary.Reports;
+public sealed class SingleUserReportResult
 {
     public long Uid { get; set; }
 

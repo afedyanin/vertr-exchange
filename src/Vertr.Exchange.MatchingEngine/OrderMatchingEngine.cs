@@ -2,8 +2,10 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Binary;
+using Vertr.Exchange.Common.Binary.Commands;
+using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Binary.Reports;
 using Vertr.Exchange.MatchingEngine.Commands;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.MatchingEngine.Tests")]
@@ -49,7 +51,8 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 cmd.ResultCode = AcceptBinaryCommand(cmd);
                 break;
             case OrderCommandType.BINARY_DATA_QUERY:
-
+                cmd.ResultCode = AcceptBinaryQuery(cmd);
+                break;
             case OrderCommandType.ADD_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.SUSPEND_USER:
@@ -88,17 +91,41 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
     internal CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
     {
-        if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_COMMAND)
         {
-            var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
-
-            if (command != null)
-            {
-                return HandleBinaryCommand(command);
-            }
+            return CommandResultCode.BINARY_COMMAND_FAILED;
         }
 
-        return CommandResultCode.BINARY_COMMAND_FAILED;
+        var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
+
+        if (command == null)
+        {
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        return HandleBinaryCommand(command);
+    }
+
+    internal CommandResultCode AcceptBinaryQuery(OrderCommand cmd)
+    {
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_QUERY)
+        {
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        var query = BinaryQueryFactory.GetBinaryQuery(cmd.BinaryCommandType, cmd.BinaryData);
+
+        if (query == null)
+        {
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        if (query is SingleUserReportQuery singleUserReport)
+        {
+            return singleUserReport.HandleQuery(cmd, _orderBooks);
+        }
+
+        return CommandResultCode.SUCCESS;
     }
 
     private CommandResultCode HandleBinaryCommand(IBinaryCommand binCmd)

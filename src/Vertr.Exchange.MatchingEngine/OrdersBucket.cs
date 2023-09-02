@@ -1,5 +1,6 @@
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Common.Events;
 
 namespace Vertr.Exchange.MatchingEngine;
 
@@ -80,7 +81,7 @@ internal sealed class OrdersBucket
     {
         var totalMatchingVolume = 0L;
         var ordersToRemove = new List<long>();
-        var tradeEvents = new LinkedList<MatcherTradeEvent>();
+        var tradeEvents = new LinkedList<IEngineEvent>();
 
         var node = _orders.First;
 
@@ -113,15 +114,15 @@ internal sealed class OrdersBucket
         return new BucketMatcherResult(totalMatchingVolume, ordersToRemove.ToArray(), tradeEvents.ToArray());
     }
 
-    private MatcherTradeEvent CreateTradeEvent(
+    private IEngineEvent CreateTradeEvent(
         IOrder matchingOrder,
         bool makerCompleted,
         bool takerCompleted,
         long size)
     {
-        return new MatcherTradeEvent
+        return new EngineEvent
         {
-            EventType = MatcherEventType.TRADE,
+            EventType = EngineEventType.TRADE,
             ActiveOrderCompleted = takerCompleted,
             MatchedOrderId = matchingOrder.OrderId,
             MatchedOrderUid = matchingOrder.Uid,

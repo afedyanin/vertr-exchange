@@ -1,11 +1,11 @@
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.MatchingEngine;
+namespace Vertr.Exchange.Common.Events;
 
-internal sealed class MatcherTradeEvent : IMatcherTradeEvent
+public sealed class EngineEvent : IEngineEvent
 {
-    public MatcherEventType EventType { get; set; }
+    public EngineEventType EventType { get; set; }
 
     public bool ActiveOrderCompleted { get; set; }
 
@@ -17,9 +17,9 @@ internal sealed class MatcherTradeEvent : IMatcherTradeEvent
 
     public decimal Price { get; set; }
 
-    public decimal BidderHoldPrice { get; set; }
-
     public long Size { get; set; }
 
-    public IMatcherTradeEvent? NextEvent { get; set; }
+    public IEngineEvent? NextEvent { get; set; }
+
+    public byte[] BinaryData { get; set; } = Array.Empty<byte>();
 }

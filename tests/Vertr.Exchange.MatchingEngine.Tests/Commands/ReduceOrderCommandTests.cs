@@ -32,12 +32,12 @@ public class ReduceOrderCommandTests
             Assert.That(bid.Size, Is.EqualTo(20));
             Assert.That(bid.Price, Is.EqualTo(45.23M));
             Assert.That(bid.Filled, Is.EqualTo(14));
-            Assert.That(cmd.MatcherEvent, Is.Not.Null);
-            Assert.That(cmd.MatcherEvent!.EventType, Is.EqualTo(MatcherEventType.REDUCE));
-            Assert.That(cmd.MatcherEvent!.Size, Is.EqualTo(7));
-            Assert.That(cmd.MatcherEvent!.Price, Is.EqualTo(45.23M));
-            Assert.That(cmd.MatcherEvent!.MatchedOrderId, Is.EqualTo(0L));
-            Assert.That(cmd.MatcherEvent!.MatchedOrderUid, Is.EqualTo(0L));
+            Assert.That(cmd.EngineEvent, Is.Not.Null);
+            Assert.That(cmd.EngineEvent!.EventType, Is.EqualTo(EngineEventType.REDUCE));
+            Assert.That(cmd.EngineEvent!.Size, Is.EqualTo(7));
+            Assert.That(cmd.EngineEvent!.Price, Is.EqualTo(45.23M));
+            Assert.That(cmd.EngineEvent!.MatchedOrderId, Is.EqualTo(0L));
+            Assert.That(cmd.EngineEvent!.MatchedOrderUid, Is.EqualTo(0L));
         });
     }
 
@@ -66,12 +66,12 @@ public class ReduceOrderCommandTests
             Assert.That(bid.Size, Is.EqualTo(17));
             Assert.That(bid.Price, Is.EqualTo(45.23M));
             Assert.That(bid.Filled, Is.EqualTo(17));
-            Assert.That(cmd.MatcherEvent, Is.Not.Null);
-            Assert.That(cmd.MatcherEvent!.EventType, Is.EqualTo(MatcherEventType.REDUCE));
-            Assert.That(cmd.MatcherEvent!.Size, Is.EqualTo(10));
-            Assert.That(cmd.MatcherEvent!.Price, Is.EqualTo(45.23M));
-            Assert.That(cmd.MatcherEvent!.MatchedOrderId, Is.EqualTo(0L));
-            Assert.That(cmd.MatcherEvent!.MatchedOrderUid, Is.EqualTo(0L));
+            Assert.That(cmd.EngineEvent, Is.Not.Null);
+            Assert.That(cmd.EngineEvent!.EventType, Is.EqualTo(EngineEventType.REDUCE));
+            Assert.That(cmd.EngineEvent!.Size, Is.EqualTo(10));
+            Assert.That(cmd.EngineEvent!.Price, Is.EqualTo(45.23M));
+            Assert.That(cmd.EngineEvent!.MatchedOrderId, Is.EqualTo(0L));
+            Assert.That(cmd.EngineEvent!.MatchedOrderUid, Is.EqualTo(0L));
         });
     }
 }

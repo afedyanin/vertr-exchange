@@ -1,5 +1,5 @@
 namespace Vertr.Exchange.Common.Enums;
-public enum MatcherEventType
+public enum EngineEventType
 {
     TRADE = 0,
     REJECT = 1,

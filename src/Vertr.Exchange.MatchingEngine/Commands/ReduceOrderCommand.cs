@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.MatchingEngine.Helpers;
+using Vertr.Exchange.Common.Events;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal sealed class ReduceOrderCommand : OrderBookCommand
@@ -28,7 +28,7 @@ internal sealed class ReduceOrderCommand : OrderBookCommand
         Debug.Assert(Order is not null);
 
         var reduced = OrderBook.Reduce(Order, requestedReduceSize);
-        OrderCommand.AttachReduceEvent(Order, reduced, Order.Completed);
+        EventsHelper.AttachReduceEvent(OrderCommand, Order, reduced, Order.Completed);
 
         return CommandResultCode.SUCCESS;
     }

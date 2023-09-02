@@ -8,12 +8,12 @@ internal sealed class BucketMatcherResult
 
     public long[] OrdersToRemove { get; }
 
-    public IMatcherTradeEvent[] TradeEvents { get; }
+    public IEngineEvent[] TradeEvents { get; }
 
     public BucketMatcherResult(
         long volume,
         long[] ordersToRemove,
-        IMatcherTradeEvent[] tradeEvents)
+        IEngineEvent[] tradeEvents)
     {
         Volume = volume;
         OrdersToRemove = ordersToRemove;

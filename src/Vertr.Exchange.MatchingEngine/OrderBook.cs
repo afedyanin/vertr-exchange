@@ -107,7 +107,7 @@ internal sealed class OrderBook : IOrderBook
 
         var emptyBucketIds = new List<decimal>();
         var filledOrderIds = new List<long>();
-        var matcherEvents = new List<IMatcherTradeEvent>();
+        var matcherEvents = new List<IEngineEvent>();
 
         foreach (var bucket in matchingBuckets.Values)
         {

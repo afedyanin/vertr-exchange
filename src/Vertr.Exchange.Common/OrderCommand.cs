@@ -15,7 +15,7 @@ public class OrderCommand
 
     public L2MarketData? MarketData { get; set; }
 
-    public IMatcherTradeEvent? MatcherEvent { get; set; }
+    public IEngineEvent? EngineEvent { get; set; }
 
     public long OrderId { get; set; }
 
