@@ -8,7 +8,7 @@ public static class UserCommandFactory
 {
     public static IUserCommand CreateUserCommand(
         OrderCommand orderCommand,
-        IUserProfilesRepository userProfileRepository)
+        IUserProfileProvider userProfileRepository)
     {
 #pragma warning disable IDE0072 // Add missing cases
         return orderCommand.Command switch

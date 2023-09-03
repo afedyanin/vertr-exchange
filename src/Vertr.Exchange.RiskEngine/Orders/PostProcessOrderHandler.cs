@@ -8,11 +8,11 @@ namespace Vertr.Exchange.RiskEngine.Orders;
 
 internal class PostProcessOrderHandler
 {
-    private readonly IUserProfilesRepository _userProfiles;
+    private readonly IUserProfileProvider _userProfiles;
     private readonly ISymbolSpecificationProvider _symbols;
 
     public PostProcessOrderHandler(
-        IUserProfilesRepository userProfiles,
+        IUserProfileProvider userProfiles,
         ISymbolSpecificationProvider symbols)
     {
         _userProfiles = userProfiles;

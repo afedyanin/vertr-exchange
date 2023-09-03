@@ -7,7 +7,7 @@ internal class AddUserCommand : UserCommandBase
 {
     public AddUserCommand(
         OrderCommand command,
-        IUserProfilesRepository userProfilesRepository)
+        IUserProfileProvider userProfilesRepository)
         : base(command, userProfilesRepository)
     {
     }

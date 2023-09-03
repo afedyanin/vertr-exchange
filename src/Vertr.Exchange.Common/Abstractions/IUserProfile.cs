@@ -8,6 +8,10 @@ public interface IUserProfile
 
     UserStatus Status { get; }
 
+    IDictionary<int, decimal> Accounts { get; }
+
+    IDictionary<int, IPosition> Positions { get; }
+
     decimal AddToValue(int currency, decimal toBeAdded);
 
     CommandResultCode Suspend();

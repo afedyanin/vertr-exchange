@@ -29,9 +29,9 @@ public static class BinaryQueryFactory
             return null;
         }
 
-        var binaryEvent = EventsHelper.GetFirstBinaryEvent(command);
+        var binaryEvent = command.EngineEvent;
 
-        if (binaryEvent == null)
+        if (binaryEvent == null || binaryEvent.EventType != EngineEventType.BINARY_EVENT)
         {
             return null;
         }

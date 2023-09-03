@@ -2,7 +2,7 @@ using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Common.Abstractions;
 
-public interface IUserProfilesRepository
+public interface IUserProfileProvider
 {
     IUserProfile? Get(long uid);
 

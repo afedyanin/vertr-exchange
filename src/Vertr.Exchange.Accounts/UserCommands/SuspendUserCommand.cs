@@ -7,7 +7,7 @@ internal class SuspendUserCommand : UserCommandBase
 {
     public SuspendUserCommand(
         OrderCommand command,
-        IUserProfilesRepository userProfilesRepository)
+        IUserProfileProvider userProfilesRepository)
         : base(command, userProfilesRepository)
     {
     }

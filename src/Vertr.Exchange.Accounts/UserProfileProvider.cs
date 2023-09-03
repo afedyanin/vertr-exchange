@@ -3,12 +3,12 @@ using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts;
 
-internal class UserProfilesRepository : IUserProfilesRepository
+internal class UserProfileProvider : IUserProfileProvider
 {
     // uid
     private readonly IDictionary<long, IUserProfile> _userProfiles;
 
-    public UserProfilesRepository()
+    public UserProfileProvider()
     {
         _userProfiles = new Dictionary<long, IUserProfile>();
     }

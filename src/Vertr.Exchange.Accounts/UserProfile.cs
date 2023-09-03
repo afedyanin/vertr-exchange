@@ -23,6 +23,12 @@ internal class UserProfile : IUserProfile
         _positions = new Dictionary<int, Position>();
     }
 
+    public IDictionary<int, decimal> Accounts
+        => GetSnapshot(_accounts);
+
+    public IDictionary<int, IPosition> Positions
+        => GetSnapshot(_positions);
+
     public decimal? GetValue(int currency)
     {
         if (_accounts.TryGetValue(currency, out var value))
@@ -101,5 +107,29 @@ internal class UserProfile : IUserProfile
 
         Status = UserStatus.ACTIVE;
         return CommandResultCode.SUCCESS;
+    }
+
+    private static IDictionary<int, decimal> GetSnapshot(IDictionary<int, decimal> dict)
+    {
+        var res = new Dictionary<int, decimal>();
+
+        foreach (var kvp in dict)
+        {
+            res.Add(kvp.Key, kvp.Value);
+        }
+
+        return res;
+    }
+
+    private static IDictionary<int, IPosition> GetSnapshot(IDictionary<int, Position> dict)
+    {
+        var res = new Dictionary<int, IPosition>();
+
+        foreach (var kvp in dict)
+        {
+            res.Add(kvp.Key, kvp.Value);
+        }
+
+        return res;
     }
 }

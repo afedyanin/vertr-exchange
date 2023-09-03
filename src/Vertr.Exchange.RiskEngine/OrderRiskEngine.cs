@@ -14,12 +14,12 @@ using Vertr.Exchange.RiskEngine.Binary;
 namespace Vertr.Exchange.RiskEngine;
 internal sealed class OrderRiskEngine : IOrderRiskEngine
 {
-    public IUserProfilesRepository UserProfiles { get; }
+    public IUserProfileProvider UserProfiles { get; }
 
     public ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
 
     public OrderRiskEngine(
-        IUserProfilesRepository userProfiles,
+        IUserProfileProvider userProfiles,
         ISymbolSpecificationProvider symbolSpecificationProvider)
     {
         UserProfiles = userProfiles;
@@ -90,14 +90,26 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
     private CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
     {
-        if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_COMMAND)
         {
-            var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
 
-            if (command != null)
-            {
-                HandleBinaryCommand(command);
-            }
+        var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
+
+        if (command == null)
+        {
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        if (command is BatchAddSymbolsCommand batchAddSymbolsCommand)
+        {
+            return batchAddSymbolsCommand.HandleCommand(SymbolSpecificationProvider);
+        }
+
+        if (command is BatchAddAccountsCommand batchAddAccountsCommand)
+        {
+            return batchAddAccountsCommand.HandleCommand(UserProfiles);
         }
 
         return CommandResultCode.SUCCESS;
@@ -119,22 +131,9 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
         if (query is SingleUserReportQuery singleUserReport)
         {
-            return singleUserReport.HandleQuery(cmd);
+            return singleUserReport.HandleQuery(cmd, UserProfiles);
         }
 
         return CommandResultCode.SUCCESS;
-    }
-
-
-    private void HandleBinaryCommand(IBinaryCommand binCmd)
-    {
-        if (binCmd is BatchAddSymbolsCommand batchAddSymbolsCommand)
-        {
-            SymbolSpecificationProvider.AddSymbols(batchAddSymbolsCommand.Symbols);
-        }
-        else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
-        {
-            UserProfiles.BatchAdd(batchAddAccountsCommand.Users);
-        }
     }
 }

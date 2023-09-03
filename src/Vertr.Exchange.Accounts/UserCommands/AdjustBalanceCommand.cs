@@ -7,7 +7,7 @@ internal class AdjustBalanceCommand : UserCommandBase
 {
     public AdjustBalanceCommand(
         OrderCommand command,
-        IUserProfilesRepository userProfilesRepository)
+        IUserProfileProvider userProfilesRepository)
         : base(command, userProfilesRepository)
     {
     }

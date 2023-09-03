@@ -7,13 +7,13 @@ internal abstract class UserCommandBase : IUserCommand
 {
     protected OrderCommand OrderCommand { get; }
 
-    protected IUserProfilesRepository UserProfilesRepository { get; }
+    protected IUserProfileProvider UserProfilesRepository { get; }
 
     protected IUserProfile? UserProfile => UserProfilesRepository.Get(OrderCommand.Uid);
 
     public UserCommandBase(
         OrderCommand orderCommand,
-        IUserProfilesRepository userProfilesRepository)
+        IUserProfileProvider userProfilesRepository)
     {
         OrderCommand = orderCommand;
         UserProfilesRepository = userProfilesRepository;

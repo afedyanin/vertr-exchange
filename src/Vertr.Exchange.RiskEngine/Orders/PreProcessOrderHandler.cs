@@ -7,11 +7,11 @@ namespace Vertr.Exchange.RiskEngine.Orders;
 
 internal class PreProcessOrderHandler
 {
-    private readonly IUserProfilesRepository _userProfiles;
+    private readonly IUserProfileProvider _userProfiles;
     private readonly ISymbolSpecificationProvider _symbols;
 
     public PreProcessOrderHandler(
-        IUserProfilesRepository userProfiles,
+        IUserProfileProvider userProfiles,
         ISymbolSpecificationProvider symbols)
     {
         _userProfiles = userProfiles;

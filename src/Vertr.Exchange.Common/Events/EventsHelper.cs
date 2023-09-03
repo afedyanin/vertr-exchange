@@ -9,7 +9,7 @@ public static class EventsHelper
         OrderCommand command,
         IEnumerable<IEngineEvent> tradeEvents)
     {
-        IEngineEvent? eventsTail = null;
+        IEngineEvent? eventsTail = command.EngineEvent;
 
         foreach (var evt in tradeEvents)
         {
@@ -74,22 +74,5 @@ public static class EventsHelper
         };
 
         command.EngineEvent = evt;
-    }
-
-    public static IEngineEvent? GetFirstBinaryEvent(OrderCommand command)
-    {
-        var res = command.EngineEvent;
-
-        if (res == null)
-        {
-            return null;
-        }
-
-        while (res != null && res.EventType != EngineEventType.BINARY_EVENT)
-        {
-            res = res.NextEvent;
-        }
-
-        return res;
     }
 }

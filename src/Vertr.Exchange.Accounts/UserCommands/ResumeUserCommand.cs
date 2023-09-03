@@ -8,7 +8,7 @@ internal class ResumeUserCommand : UserCommandBase
 {
     public ResumeUserCommand(
         OrderCommand command,
-        IUserProfilesRepository userProfilesRepository)
+        IUserProfileProvider userProfilesRepository)
         : base(command, userProfilesRepository)
     {
     }
