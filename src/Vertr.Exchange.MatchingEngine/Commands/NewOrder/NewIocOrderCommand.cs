@@ -1,7 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.MatchingEngine.Helpers;
+using Vertr.Exchange.Common.Events;
 
 namespace Vertr.Exchange.MatchingEngine.Commands.NewOrder;
 internal sealed class NewIocOrderCommand : OrderBookCommand
@@ -20,8 +20,7 @@ internal sealed class NewIocOrderCommand : OrderBookCommand
         var result = OrderBook.TryMatchInstantly(
             OrderCommand.Action.Value,
             OrderCommand.Price,
-            OrderCommand.Size,
-            OrderCommand.ReserveBidPrice);
+            OrderCommand.Size);
 
         AttachTradeEvents(result.TradeEvents);
 
@@ -30,7 +29,7 @@ internal sealed class NewIocOrderCommand : OrderBookCommand
         if (rejectedSize != 0L)
         {
             // was not matched completely - send reject for not-completed IoC order
-            OrderCommand.AttachRejectEvent(OrderCommand.Price, rejectedSize);
+            EventsHelper.AttachRejectEvent(OrderCommand, OrderCommand.Price, rejectedSize);
         }
 
         return CommandResultCode.SUCCESS;

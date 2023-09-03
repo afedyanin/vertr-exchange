@@ -2,9 +2,12 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Binary;
+using Vertr.Exchange.Common.Binary.Commands;
+using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.MatchingEngine.Binary;
 using Vertr.Exchange.MatchingEngine.Commands;
+using Vertr.Exchange.MatchingEngine.OrderBooks;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.MatchingEngine.Tests")]
 
@@ -13,18 +16,15 @@ namespace Vertr.Exchange.MatchingEngine;
 public class OrderMatchingEngine : IOrderMatchingEngine
 {
     private readonly MatchingEngineConfiguration _config;
-    private readonly Func<IOrderBook> _orderBookFactory;
 
-    // Key = Symbol
-    private readonly IDictionary<int, IOrderBook> _orderBooks;
+    private readonly IOrderBookProvider _orderBookProvider;
 
     public OrderMatchingEngine(
         IOptions<MatchingEngineConfiguration> options,
-        Func<IOrderBook> orderBookFactory)
+        IOrderBookProvider orderBookProvider)
     {
         _config = options.Value;
-        _orderBooks = new Dictionary<int, IOrderBook>();
-        _orderBookFactory = orderBookFactory;
+        _orderBookProvider = orderBookProvider;
     }
 
     public void ProcessOrder(long seq, OrderCommand cmd)
@@ -39,7 +39,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 ProcessMatchingCommand(cmd);
                 break;
             case OrderCommandType.RESET:
-                _orderBooks.Clear();
+                _orderBookProvider.Reset();
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 break;
             case OrderCommandType.NOP:
@@ -49,6 +49,8 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 cmd.ResultCode = AcceptBinaryCommand(cmd);
                 break;
             case OrderCommandType.BINARY_DATA_QUERY:
+                cmd.ResultCode = AcceptBinaryQuery(cmd);
+                break;
             case OrderCommandType.ADD_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.SUSPEND_USER:
@@ -67,7 +69,9 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
     internal void ProcessMatchingCommand(OrderCommand cmd)
     {
-        if (!_orderBooks.TryGetValue(cmd.Symbol, out var orderBook))
+        var orderBook = _orderBookProvider.GetOrderBook(cmd.Symbol);
+
+        if (orderBook == null)
         {
             cmd.ResultCode = CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID;
             return;
@@ -87,41 +91,45 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
     internal CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
     {
-        if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_COMMAND)
         {
-            var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
-
-            if (command != null)
-            {
-                return HandleBinaryCommand(command);
-            }
+            return CommandResultCode.BINARY_COMMAND_FAILED;
         }
 
-        return CommandResultCode.BINARY_COMMAND_FAILED;
-    }
+        var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
 
-    private CommandResultCode HandleBinaryCommand(IBinaryCommand binCmd)
-    {
-        if (binCmd is BatchAddSymbolsCommand symCmd)
+        if (command == null)
         {
-            foreach (var sym in symCmd.Symbols)
-            {
-                AddSymbol(sym.SymbolId);
-            }
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        if (command is BatchAddSymbolsCommand addSymbolsCommand)
+        {
+            return addSymbolsCommand.HandleCommand(_orderBookProvider);
         }
 
         return CommandResultCode.SUCCESS;
     }
 
-    private void AddSymbol(int symbol)
+    internal CommandResultCode AcceptBinaryQuery(OrderCommand cmd)
     {
-        if (!_orderBooks.ContainsKey(symbol))
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_QUERY)
         {
-            _orderBooks.Add(symbol, _orderBookFactory());
+            return CommandResultCode.BINARY_COMMAND_FAILED;
         }
-        else
+
+        var query = BinaryQueryFactory.GetBinaryQuery(cmd.BinaryCommandType, cmd.BinaryData);
+
+        if (query == null)
         {
-            // Warn: symbol already added.
+            return CommandResultCode.BINARY_COMMAND_FAILED;
         }
+
+        if (query is SingleUserReportQuery singleUserReport)
+        {
+            return singleUserReport.HandleQuery(cmd, _orderBookProvider);
+        }
+
+        return CommandResultCode.SUCCESS;
     }
 }

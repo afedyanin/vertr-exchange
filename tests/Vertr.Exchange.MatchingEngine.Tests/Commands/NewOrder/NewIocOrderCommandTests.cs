@@ -1,5 +1,6 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.MatchingEngine.Commands;
+using Vertr.Exchange.MatchingEngine.OrderBooks;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Commands.NewOrder;
@@ -26,9 +27,9 @@ public class NewIocOrderCommandTests
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
-            Assert.That(cmd.MatcherEvent, Is.Not.Null);
-            Assert.That(cmd.MatcherEvent!.EventType, Is.EqualTo(MatcherEventType.REJECT));
-            Assert.That(cmd.MatcherEvent!.Size, Is.EqualTo(27));
+            Assert.That(cmd.EngineEvent, Is.Not.Null);
+            Assert.That(cmd.EngineEvent!.EventType, Is.EqualTo(EngineEventType.REJECT));
+            Assert.That(cmd.EngineEvent!.Size, Is.EqualTo(27));
         });
     }
 
@@ -60,8 +61,8 @@ public class NewIocOrderCommandTests
             Assert.That(ask2.Completed, Is.True);
             Assert.That(ask1.Completed, Is.False);
             Assert.That(ask1.Remaining, Is.EqualTo(1));
-            Assert.That(cmd.MatcherEvent, Is.Not.Null);
-            Assert.That(cmd.MatcherEvent!.EventType, Is.EqualTo(MatcherEventType.TRADE));
+            Assert.That(cmd.EngineEvent, Is.Not.Null);
+            Assert.That(cmd.EngineEvent!.EventType, Is.EqualTo(EngineEventType.TRADE));
         });
     }
 }

@@ -1,18 +1,17 @@
-using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.Common.Symbols;
-using Vertr.Exchange.RiskEngine.Abstractions;
+using Vertr.Exchange.Common;
 
 namespace Vertr.Exchange.RiskEngine.Symbols;
+
 internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
 {
-    private readonly IDictionary<int, CoreSymbolSpecification> _symbolSpecs;
+    private readonly IDictionary<int, SymbolSpecification> _symbolSpecs;
 
     public SymbolSpecificationProvider()
     {
-        _symbolSpecs = new Dictionary<int, CoreSymbolSpecification>();
+        _symbolSpecs = new Dictionary<int, SymbolSpecification>();
     }
 
-    public bool AddSymbol(CoreSymbolSpecification symbolSpecification)
+    public bool AddSymbol(SymbolSpecification symbolSpecification)
     {
         if (GetSymbolSpecification(symbolSpecification.SymbolId) != null)
         {
@@ -25,28 +24,21 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
         }
     }
 
-    public void AddSymbols(CoreSymbolSpecification[] symbols, bool marginTradingEnabled)
+    public void AddSymbols(SymbolSpecification[] symbols)
     {
         foreach (var spec in symbols)
         {
-            if (spec.Type == SymbolType.CURRENCY_EXCHANGE_PAIR || marginTradingEnabled)
-            {
-                AddSymbol(spec);
-            }
-            else
-            {
-                // log.warn("Margin symbols are not allowed: {}", spec);
-            }
+            AddSymbol(spec);
         }
     }
 
-    public CoreSymbolSpecification? GetSymbolSpecification(int symbol)
+    public SymbolSpecification? GetSymbolSpecification(int symbol)
     {
         _symbolSpecs.TryGetValue(symbol, out var specification);
         return specification;
     }
 
-    public void RegisterSymbol(int symbol, CoreSymbolSpecification spec)
+    public void RegisterSymbol(int symbol, SymbolSpecification spec)
     {
         if (!_symbolSpecs.ContainsKey(symbol))
         {

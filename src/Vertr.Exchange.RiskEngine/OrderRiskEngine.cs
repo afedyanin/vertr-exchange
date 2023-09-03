@@ -1,44 +1,29 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.RiskEngine.Abstractions;
-using Vertr.Exchange.Common.Binary;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Options;
-using Vertr.Exchange.RiskEngine.Users.UserCommands;
 using Vertr.Exchange.RiskEngine.Orders;
+using Vertr.Exchange.Accounts.UserCommands;
+using Vertr.Exchange.RiskEngine.Symbols;
+using Vertr.Exchange.Common.Binary.Commands;
+using Vertr.Exchange.Common.Binary.Reports;
+using Vertr.Exchange.RiskEngine.Binary;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
 namespace Vertr.Exchange.RiskEngine;
-internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineInternal
+internal sealed class OrderRiskEngine : IOrderRiskEngine
 {
-    private readonly RiskEngineConfiguration _config;
-
-    public bool IsMarginTradingEnabled => _config.MarginTradingEnabled;
-
-    public bool IgnoreRiskProcessing => _config.IgnoreRiskProcessing;
-
-    public IUserProfileService UserProfileService { get; }
+    public IUserProfileProvider UserProfiles { get; }
 
     public ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
 
-    public IFeeCalculationService FeeCalculationService { get; }
-
-    public ILastPriceCacheProvider LastPriceCacheProvider { get; }
-
     public OrderRiskEngine(
-        IOptions<RiskEngineConfiguration> configuration,
-        IUserProfileService userProfileService,
-        ISymbolSpecificationProvider symbolSpecificationProvider,
-        IFeeCalculationService feeCalculationService,
-        ILastPriceCacheProvider lastPriceCacheProvider)
+        IUserProfileProvider userProfiles,
+        ISymbolSpecificationProvider symbolSpecificationProvider)
     {
-        _config = configuration.Value;
-        UserProfileService = userProfileService;
+        UserProfiles = userProfiles;
         SymbolSpecificationProvider = symbolSpecificationProvider;
-        FeeCalculationService = feeCalculationService;
-        LastPriceCacheProvider = lastPriceCacheProvider;
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -46,22 +31,27 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
-                var command = new PreProcessOrderCommand(this, cmd);
-                cmd.ResultCode = command.Execute();
+                var handler = new PreProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
+                cmd.ResultCode = handler.Handle(cmd);
                 return false;
 
             case OrderCommandType.ADD_USER:
             case OrderCommandType.SUSPEND_USER:
             case OrderCommandType.RESUME_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
-                var userCommand = UserCommandFactory.CreateUserCommand(this, cmd);
+                var userCommand = UserCommandFactory.CreateUserCommand(cmd, UserProfiles);
                 cmd.ResultCode = userCommand.Execute();
                 return false;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
+                // ignore return result, because it should be set by MatchingEngineRouter
+                AcceptBinaryCommand(cmd);
+                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
+                return false;
+
             case OrderCommandType.BINARY_DATA_QUERY:
                 // ignore return result, because it should be set by MatchingEngineRouter
-                var _ = AcceptBinaryCommand(cmd);
+                AcceptBinaryQuery(cmd);
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return false;
 
@@ -88,44 +78,62 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine, IOrderRiskEngineIntern
 
     public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
-        var command = new PostProcessOrderCommand(this, cmd);
-
-        // TODO: refactor this
-        return command.Execute() != CommandResultCode.SUCCESS;
+        var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
+        return handler.Handle(cmd);
     }
 
     private void Reset()
     {
-        UserProfileService.Reset();
+        UserProfiles.Reset();
         SymbolSpecificationProvider.Reset();
-        FeeCalculationService.Reset();
-        LastPriceCacheProvider.Reset();
     }
 
     private CommandResultCode AcceptBinaryCommand(OrderCommand cmd)
     {
-        if (cmd.Command is OrderCommandType.BINARY_DATA_COMMAND)
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_COMMAND)
         {
-            var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
 
-            if (command != null)
-            {
-                HandleBinaryCommand(command);
-            }
+        var command = BinaryCommandFactory.GetBinaryCommand(cmd.BinaryCommandType, cmd.BinaryData);
+
+        if (command == null)
+        {
+            return CommandResultCode.BINARY_COMMAND_FAILED;
+        }
+
+        if (command is BatchAddSymbolsCommand batchAddSymbolsCommand)
+        {
+            return batchAddSymbolsCommand.HandleCommand(SymbolSpecificationProvider);
+        }
+
+        if (command is BatchAddAccountsCommand batchAddAccountsCommand)
+        {
+            return batchAddAccountsCommand.HandleCommand(UserProfiles);
         }
 
         return CommandResultCode.SUCCESS;
     }
 
-    private void HandleBinaryCommand(IBinaryCommand binCmd)
+    internal CommandResultCode AcceptBinaryQuery(OrderCommand cmd)
     {
-        if (binCmd is BatchAddSymbolsCommand batchAddSymbolsCommand)
+        if (cmd.Command is not OrderCommandType.BINARY_DATA_QUERY)
         {
-            SymbolSpecificationProvider.AddSymbols(batchAddSymbolsCommand.Symbols, IsMarginTradingEnabled);
+            return CommandResultCode.BINARY_COMMAND_FAILED;
         }
-        else if (binCmd is BatchAddAccountsCommand batchAddAccountsCommand)
+
+        var query = BinaryQueryFactory.GetBinaryQuery(cmd.BinaryCommandType, cmd.BinaryData);
+
+        if (query == null)
         {
-            UserProfileService.BatchAddAccounts(batchAddAccountsCommand.Users);
+            return CommandResultCode.BINARY_COMMAND_FAILED;
         }
+
+        if (query is SingleUserReportQuery singleUserReport)
+        {
+            return singleUserReport.HandleQuery(cmd, UserProfiles);
+        }
+
+        return CommandResultCode.SUCCESS;
     }
 }

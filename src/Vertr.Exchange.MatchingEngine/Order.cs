@@ -11,8 +11,6 @@ internal sealed class Order : IOrder
 
     public decimal Price { get; private set; }
 
-    public decimal ReserveBidPrice { get; set; }
-
     public long Size { get; private set; }
 
     public long Filled { get; private set; }
@@ -29,7 +27,6 @@ internal sealed class Order : IOrder
         OrderAction action,
         long orderId,
         decimal price,
-        decimal reserveBidPrice,
         long size,
         long filled,
         long uid,
@@ -41,7 +38,6 @@ internal sealed class Order : IOrder
         Action = action;
         OrderId = orderId;
         Price = price;
-        ReserveBidPrice = reserveBidPrice; // TODO: Add validation
         Size = size;
         Filled = filled;
         Uid = uid;

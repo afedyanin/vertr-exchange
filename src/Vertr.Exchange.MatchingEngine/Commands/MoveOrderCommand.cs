@@ -26,7 +26,6 @@ internal sealed class MoveOrderCommand : OrderBookCommand
             Order.Action,
             OrderCommand.Price,
             OrderCommand.Size,
-            Order.ReserveBidPrice,
             Order.Filled);
 
         AttachTradeEvents(result.TradeEvents);

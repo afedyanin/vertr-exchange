@@ -16,7 +16,6 @@ internal static class OrderStub
             action,
             orderId: OrderGen.NextId,
             price: price,
-            reserveBidPrice: decimal.Zero,
             size: size,
             filled: filled,
             uid: OrderGen.UserId,

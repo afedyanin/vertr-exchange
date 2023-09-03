@@ -4,11 +4,11 @@ public sealed class MatcherResult
 {
     public long Filled { get; }
 
-    public IEnumerable<IMatcherTradeEvent> TradeEvents { get; }
+    public IEnumerable<IEngineEvent> TradeEvents { get; }
 
-    public MatcherResult(long filled, IEnumerable<IMatcherTradeEvent>? tradeEvents = null)
+    public MatcherResult(long filled, IEnumerable<IEngineEvent>? tradeEvents = null)
     {
         Filled = filled;
-        TradeEvents = tradeEvents ?? Array.Empty<IMatcherTradeEvent>();
+        TradeEvents = tradeEvents ?? Array.Empty<IEngineEvent>();
     }
 }

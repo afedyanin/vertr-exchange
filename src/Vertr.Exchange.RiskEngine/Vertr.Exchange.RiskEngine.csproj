@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vertr.Exchange.Accounts\Vertr.Exchange.Accounts.csproj" />
     <ProjectReference Include="..\Vertr.Exchange.Common\Vertr.Exchange.Common.csproj" />
   </ItemGroup>
 

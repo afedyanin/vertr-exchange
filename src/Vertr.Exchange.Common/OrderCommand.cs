@@ -15,7 +15,7 @@ public class OrderCommand
 
     public L2MarketData? MarketData { get; set; }
 
-    public IMatcherTradeEvent? MatcherEvent { get; set; }
+    public IEngineEvent? EngineEvent { get; set; }
 
     public long OrderId { get; set; }
 
@@ -24,8 +24,6 @@ public class OrderCommand
     public long Size { get; set; }
 
     public decimal Price { get; set; }
-
-    public decimal ReserveBidPrice { get; set; }
 
     public DateTime Timestamp { get; set; }
 
