@@ -1,3 +1,5 @@
+using Vertr.Exchange.Common;
+
 namespace Vertr.Exchange.Infrastructure.Tests;
 
 [TestFixture(Category = "Unit")]
@@ -8,9 +10,24 @@ public class RequestAwatingServiceTests
     {
         var svc = new RequestAwatingService();
         var orderId = 17L;
-        var cts = new CancellationTokenSource(100);
+        var cts = new CancellationTokenSource(200);
+
+        var t1 = Task.Run(async () =>
+        {
+            await Task.Delay(10);
+
+            var cmd = new OrderCommand
+            {
+                OrderId = orderId,
+            };
+
+            var resp = new AwaitingResponse(cmd);
+            await svc.Complete(resp);
+
+        });
+
         var res = await svc.Register(orderId, cts.Token);
 
-        Assert.Pass();
+        Assert.That(res.OrderCommand.OrderId, Is.EqualTo(orderId));
     }
 }
