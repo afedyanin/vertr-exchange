@@ -28,14 +28,16 @@ internal class RequestAwatingService : IRequestAwaitingService
         return tcs.Task;
     }
 
-    public Task Complete(AwaitingResponse response)
+    public void Complete(AwaitingResponse response)
     {
         if (_requests.TryRemove(response.OrderCommand.OrderId, out var tcs))
         {
             tcs.SetResult(response);
         }
-
-        return Task.CompletedTask;
+        else
+        {
+            // ???
+        }
     }
 
     public Task<long[]> GetAwatingRequests()

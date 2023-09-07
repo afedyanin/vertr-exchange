@@ -6,5 +6,5 @@ public interface IRequestAwaitingService
 
     Task<long[]> GetAwatingRequests();
 
-    Task Complete(AwaitingResponse response);
+    void Complete(AwaitingResponse response);
 }
