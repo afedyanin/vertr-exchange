@@ -35,6 +35,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.ExchCore.Infrastructu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.ExchCore.Server", "src\_archive\Vertr.ExchCore.Server\Vertr.ExchCore.Server.csproj", "{70F21D36-AD22-4AF7-9ED3-E49C68A64780}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.Infrastructure", "src\Vertr.Exchange.Infrastructure\Vertr.Exchange.Infrastructure.csproj", "{54697FD4-1B77-4926-8744-74BF7672BD87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.Infrastructure.Tests", "tests\Vertr.Exchange.Infrastructure.Tests\Vertr.Exchange.Infrastructure.Tests.csproj", "{2E339CC7-2C74-49F0-8444-6778CC56EE70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +81,14 @@ Global
 		{70F21D36-AD22-4AF7-9ED3-E49C68A64780}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70F21D36-AD22-4AF7-9ED3-E49C68A64780}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70F21D36-AD22-4AF7-9ED3-E49C68A64780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54697FD4-1B77-4926-8744-74BF7672BD87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54697FD4-1B77-4926-8744-74BF7672BD87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54697FD4-1B77-4926-8744-74BF7672BD87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54697FD4-1B77-4926-8744-74BF7672BD87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E339CC7-2C74-49F0-8444-6778CC56EE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E339CC7-2C74-49F0-8444-6778CC56EE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E339CC7-2C74-49F0-8444-6778CC56EE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E339CC7-2C74-49F0-8444-6778CC56EE70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +103,8 @@ Global
 		{4679BAF2-E29E-4154-9BAD-FC29382FE24F} = {9C59A7AC-5C91-4BC5-97B7-72B20D752B2C}
 		{E07EF6A9-6F63-4567-B968-D61F6E1EDB21} = {4B42857C-FD8E-4EB6-B9D6-200FD3E19168}
 		{70F21D36-AD22-4AF7-9ED3-E49C68A64780} = {4B42857C-FD8E-4EB6-B9D6-200FD3E19168}
+		{54697FD4-1B77-4926-8744-74BF7672BD87} = {4B42857C-FD8E-4EB6-B9D6-200FD3E19168}
+		{2E339CC7-2C74-49F0-8444-6778CC56EE70} = {9C59A7AC-5C91-4BC5-97B7-72B20D752B2C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AED32BEA-7168-480C-BA57-E1182383356F}
