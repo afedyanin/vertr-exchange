@@ -8,7 +8,8 @@ public class RequestAwatingServiceTests
     [Test]
     public async Task CanRegisterRequest()
     {
-        var svc = new RequestAwatingService();
+        var logger = LoggerStub.CreateConsoleLogger<RequestAwatingService>();
+        var svc = new RequestAwatingService(logger);
         var orderId = 17L;
         var cts = new CancellationTokenSource(200);
 

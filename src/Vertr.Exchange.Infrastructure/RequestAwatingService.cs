@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Infrastructure.Tests")]
 
@@ -8,9 +9,11 @@ namespace Vertr.Exchange.Infrastructure;
 internal class RequestAwatingService : IRequestAwaitingService
 {
     private readonly ConcurrentDictionary<long, TaskCompletionSource<AwaitingResponse>> _requests;
+    private readonly ILogger<RequestAwatingService> _logger;
 
-    public RequestAwatingService()
+    public RequestAwatingService(ILogger<RequestAwatingService> logger)
     {
+        _logger = logger;
         _requests = new ConcurrentDictionary<long, TaskCompletionSource<AwaitingResponse>>();
     }
 
@@ -23,6 +26,8 @@ internal class RequestAwatingService : IRequestAwaitingService
             throw new InvalidOperationException($"Request with orderId={orderId} is already registered.");
         }
 
+        _logger.LogInformation("Awating request with OrderId={OrderId} is registered.", orderId);
+
         cancellationToken.Register(UnregisterWait, new WaitContext(orderId, cancellationToken));
 
         return tcs.Task;
@@ -30,13 +35,15 @@ internal class RequestAwatingService : IRequestAwaitingService
 
     public void Complete(AwaitingResponse response)
     {
-        if (_requests.TryRemove(response.OrderCommand.OrderId, out var tcs))
+        var orderId = response.OrderCommand.OrderId;
+        if (_requests.TryRemove(orderId, out var tcs))
         {
+            _logger.LogInformation("Awating request with OrderId={OrderId} is completed.", orderId);
             tcs.SetResult(response);
         }
         else
         {
-            // ???
+            _logger.LogError("Cannot remove awating request with OrderId={OrderId}.", orderId);
         }
     }
 

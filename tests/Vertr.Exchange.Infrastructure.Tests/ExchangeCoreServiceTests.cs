@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Infrastructure.EventHandlers;
 
@@ -11,24 +10,24 @@ public class ExchangeCoreServiceTests
     public void CanStartExchange()
     {
         var handlers = new List<IOrderCommandEventHandler>() { };
-        using var exchange = CreateExchangeService(handlers);
+        var awatingService = new RequestAwatingService(LoggerStub.CreateConsoleLogger<RequestAwatingService>());
+        using var service = new ExchangeCoreService(handlers, awatingService, LoggerStub.CreateConsoleLogger<ExchangeCoreService>());
         Assert.Pass();
     }
 
     [Test]
     public async Task CanProcessOrderSimpleFlow()
     {
-        var requestAwatingService = new RequestAwatingService();
-        var logger = CreateConsoleLogger<LoggingProcessor>();
-        var loggingProcessor = new LoggingProcessor(logger);
-        var requestCompletetionProcessor = new RequestCompletionProcessor(requestAwatingService);
+        var requestAwatingService = new RequestAwatingService(LoggerStub.CreateConsoleLogger<RequestAwatingService>());
+        var loggingProcessor = new LoggingProcessor(LoggerStub.CreateConsoleLogger<LoggingProcessor>());
+        var requestCompletetionProcessor = new RequestCompletionProcessor(requestAwatingService, LoggerStub.CreateConsoleLogger<RequestCompletionProcessor>());
 
         var handlers = new List<IOrderCommandEventHandler>()
         {
             requestCompletetionProcessor, loggingProcessor
         };
 
-        using var exchange = CreateExchangeService(handlers);
+        using var exchange = new ExchangeCoreService(handlers, requestAwatingService, LoggerStub.CreateConsoleLogger<ExchangeCoreService>());
 
         var cmd = new OrderCommand
         {
@@ -42,30 +41,5 @@ public class ExchangeCoreServiceTests
         var res = await exchange.Process(cmd, cts.Token);
 
         Assert.That(res.OrderId, Is.EqualTo(cmd.OrderId));
-    }
-
-
-
-    private static IExchangeCoreService CreateExchangeService(IEnumerable<IOrderCommandEventHandler> handlers)
-    {
-        var awatingService = new RequestAwatingService();
-        var logger = CreateConsoleLogger<ExchangeCoreService>();
-        var service = new ExchangeCoreService(handlers, awatingService, logger);
-
-        return service;
-    }
-
-    private static ILogger<T> CreateConsoleLogger<T>()
-    {
-        var loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder.AddFilter("Microsoft", LogLevel.Warning)
-                   .AddFilter("System", LogLevel.Warning)
-                   .AddConsole();
-        });
-
-        var logger = loggerFactory.CreateLogger<T>();
-
-        return logger;
     }
 }
