@@ -22,8 +22,7 @@ public class RequestAwatingServiceTests
             };
 
             var resp = new AwaitingResponse(cmd);
-            await svc.Complete(resp);
-
+            svc.Complete(resp);
         });
 
         var res = await svc.Register(orderId, cts.Token);
