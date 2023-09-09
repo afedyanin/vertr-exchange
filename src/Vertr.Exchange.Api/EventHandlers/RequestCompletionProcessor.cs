@@ -4,12 +4,13 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Infrastructure.EventHandlers;
 
 namespace Vertr.Exchange.Api.EventHandlers;
+
 internal class RequestCompletionProcessor : IOrderCommandEventHandler
 {
     private readonly IRequestAwaitingService _requestAwaitingService;
     private readonly ILogger<RequestCompletionProcessor> _logger;
 
-    public int ProcessingStep => 10000;
+    public int ProcessingStep => 1000;
 
     public RequestCompletionProcessor(
         IRequestAwaitingService requestAwaitingService,

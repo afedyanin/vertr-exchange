@@ -2,9 +2,9 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Infrastructure.Extensions;
-internal static class OrderCommandExtensions
+public static class OrderCommandExtensions
 {
-    private static OrderCommand _emptyCommand { get; }
+    public static OrderCommand EmptyCommand { get; }
         = new OrderCommand()
         {
             Action = OrderAction.ASK,
@@ -26,7 +26,7 @@ internal static class OrderCommandExtensions
 
     public static void Clean(this OrderCommand cmd)
     {
-        cmd.Fill(_emptyCommand);
+        cmd.Fill(EmptyCommand);
     }
 
     public static void Fill(this OrderCommand cmd, OrderCommand src)
