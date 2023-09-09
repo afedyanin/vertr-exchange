@@ -10,24 +10,21 @@ public class ExchangeCoreServiceTests
     public void CanStartExchange()
     {
         var handlers = new List<IOrderCommandEventHandler>() { };
-        var awatingService = new RequestAwatingService(LoggerStub.CreateConsoleLogger<RequestAwatingService>());
-        using var service = new ExchangeCoreService(handlers, awatingService, LoggerStub.CreateConsoleLogger<ExchangeCoreService>());
+        using var service = new ExchangeCoreService(handlers, LoggerStub.CreateConsoleLogger<ExchangeCoreService>());
         Assert.Pass();
     }
 
     [Test]
-    public async Task CanProcessOrderSimpleFlow()
+    public void CanProcessOrderSimpleFlow()
     {
-        var requestAwatingService = new RequestAwatingService(LoggerStub.CreateConsoleLogger<RequestAwatingService>());
         var loggingProcessor = new LoggingProcessor(LoggerStub.CreateConsoleLogger<LoggingProcessor>());
-        var requestCompletetionProcessor = new RequestCompletionProcessor(requestAwatingService, LoggerStub.CreateConsoleLogger<RequestCompletionProcessor>());
 
         var handlers = new List<IOrderCommandEventHandler>()
         {
-            requestCompletetionProcessor, loggingProcessor
+            loggingProcessor
         };
 
-        using var exchange = new ExchangeCoreService(handlers, requestAwatingService, LoggerStub.CreateConsoleLogger<ExchangeCoreService>());
+        using var exchange = new ExchangeCoreService(handlers, LoggerStub.CreateConsoleLogger<ExchangeCoreService>());
 
         var cmd = new OrderCommand
         {
@@ -37,9 +34,8 @@ public class ExchangeCoreServiceTests
             Price = 1,
         };
 
-        var cts = new CancellationTokenSource(20000);
-        var res = await exchange.Process(cmd, cts.Token);
+        exchange.Send(cmd);
 
-        Assert.That(res.OrderId, Is.EqualTo(cmd.OrderId));
+        Assert.Pass();
     }
 }

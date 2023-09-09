@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 
 namespace Vertr.Exchange.Infrastructure.Tests;
-internal static class LoggerStub
+public static class LoggerStub
 {
     private static readonly ILoggerFactory _loggerFactory =
         LoggerFactory.Create(builder =>
