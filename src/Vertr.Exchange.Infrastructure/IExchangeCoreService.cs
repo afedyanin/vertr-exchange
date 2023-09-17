@@ -1,8 +1,8 @@
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.Infrastructure;
 
 public interface IExchangeCoreService : IDisposable
 {
-    void Send(OrderCommand orderCommand);
+    void Send(IApiCommand apiCommand);
 }

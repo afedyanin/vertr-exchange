@@ -1,7 +1,9 @@
+using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class PlaceOrderCommand : ApiCommand
+public record class PlaceOrderCommand : IApiCommand
 {
     public decimal Price { get; set; }
 
@@ -16,4 +18,9 @@ public record class PlaceOrderCommand : ApiCommand
     public long Uid { get; set; }
 
     public int Symbol { get; set; }
+
+    public void Fill(ref OrderCommand command)
+    {
+        throw new NotImplementedException();
+    }
 }

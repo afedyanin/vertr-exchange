@@ -3,8 +3,8 @@ using Disruptor;
 using Disruptor.Dsl;
 using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Infrastructure.EventHandlers;
-using Vertr.Exchange.Infrastructure.Extensions;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Infrastructure.Tests")]
 
@@ -31,11 +31,11 @@ internal class ExchangeCoreService : IExchangeCoreService
         _logger.LogInformation("Exchange core started at {Time}. BufferSize={Size}", DateTime.Now, _ringBuffer.BufferSize);
     }
 
-    public void Send(OrderCommand orderCommand)
+    public void Send(IApiCommand apiCommand)
     {
         using var scope = _disruptor.PublishEvent();
         var cmd = scope.Event();
-        cmd.Fill(orderCommand);
+        apiCommand.Fill(ref cmd);
     }
 
     public void Dispose()

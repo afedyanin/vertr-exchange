@@ -3,9 +3,9 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Infrastructure.Extensions;
 
 namespace Vertr.Exchange.Api.Factories;
-internal static class OrderCommandFactory
+internal class OrderCommandFactory : IOrderCommandFactory
 {
-    public static OrderCommand Create(ApiCommand cmd)
+    public OrderCommand Create(IApiCommand cmd)
     {
         return cmd switch
         {
@@ -24,55 +24,55 @@ internal static class OrderCommandFactory
         };
     }
 
-    private static OrderCommand Create(AddUserCommand cmd)
+    private OrderCommand Create(AddUserCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(AdjustUserBalanceCommand cmd)
+    private OrderCommand Create(AdjustUserBalanceCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(CancelOrderCommand cmd)
+    private OrderCommand Create(CancelOrderCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(MoveOrderCommand cmd)
+    private OrderCommand Create(MoveOrderCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(NopCommand cmd)
+    private OrderCommand Create(NopCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(OrderBookRequest cmd)
+    private OrderCommand Create(OrderBookRequest cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(PlaceOrderCommand cmd)
+    private OrderCommand Create(PlaceOrderCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(ReduceOrderCommand cmd)
+    private OrderCommand Create(ReduceOrderCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
-    private static OrderCommand Create(ResetCommand cmd)
+    private OrderCommand Create(ResetCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
-    private static OrderCommand Create(ResumeUserCommand cmd)
+    private OrderCommand Create(ResumeUserCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }
 
-    private static OrderCommand Create(SuspendUserCommand cmd)
+    private OrderCommand Create(SuspendUserCommand cmd)
     {
         return OrderCommandExtensions.EmptyCommand;
     }

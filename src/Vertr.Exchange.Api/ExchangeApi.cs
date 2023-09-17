@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using Vertr.Exchange.Api.Awaiting;
 using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Factories;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Infrastructure;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Api.Tests")]
@@ -21,29 +22,21 @@ internal sealed class ExchangeApi
         _exchangeCoreService = exchangeCoreService;
     }
 
-    public long Execute(ApiCommand command)
+    public long Execute(IApiCommand command)
     {
-        var orderId = 123L;
-        ExecuteInternal(command, orderId);
-        return orderId;
+        _exchangeCoreService.Send(command);
+        return command.OrderId;
     }
 
-    public async Task<ApiCommandResult> ExecuteAsync(ApiCommand command, CancellationToken token = default)
+    public async Task<ApiCommandResult> ExecuteAsync(IApiCommand command, CancellationToken token = default)
     {
-        var orderId = 123L;
+        var orderId = command.OrderId;
         var awaitngTask = _requestAwaitingService.Register(orderId, token);
 
-        ExecuteInternal(command, orderId);
+        _exchangeCoreService.Send(command);
 
         var awaitingResponse = await awaitngTask;
         var apiResult = ApiCommandResultFactory.CreateResult(awaitingResponse.OrderCommand);
         return apiResult;
-    }
-
-    private void ExecuteInternal(ApiCommand command, long orderId)
-    {
-        var orderCommand = OrderCommandFactory.Create(command);
-        orderCommand.OrderId = orderId;
-        _exchangeCoreService.Send(orderCommand);
     }
 }

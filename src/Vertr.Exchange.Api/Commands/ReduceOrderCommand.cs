@@ -1,5 +1,8 @@
+using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
+
 namespace Vertr.Exchange.Api.Commands;
-public record class ReduceOrderCommand : ApiCommand
+public record class ReduceOrderCommand : IApiCommand
 {
     public long OrderId { get; set; }
 
@@ -9,4 +12,8 @@ public record class ReduceOrderCommand : ApiCommand
 
     public int ReduceSize { get; set; }
 
+    public void Fill(ref OrderCommand command)
+    {
+        throw new NotImplementedException();
+    }
 }
