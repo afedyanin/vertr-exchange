@@ -1,4 +1,5 @@
 using Vertr.Exchange.Api.Awaiting;
+using Vertr.Exchange.Api.EventHandlers;
 using Vertr.Exchange.Infrastructure;
 using Vertr.Exchange.Infrastructure.EventHandlers;
 using Vertr.Exchange.Tests.Stubs;
@@ -7,7 +8,8 @@ namespace Vertr.Exchange.Api.Tests.Stubs;
 
 internal static class ExcnageApiStub
 {
-    private static IRequestAwaitingService AwaitingService { get; } = new RequestAwatingService(LoggerStub.CreateConsoleLogger<RequestAwatingService>());
+    private static IRequestAwaitingService AwaitingService { get; } =
+        new RequestAwatingService(LoggerStub.CreateConsoleLogger<RequestAwatingService>());
 
     public static IExchangeApi GetNoEnginesApi()
     {
@@ -19,11 +21,17 @@ internal static class ExcnageApiStub
     {
         get
         {
-            var loggingProcessor = new LoggingProcessor(LoggerStub.CreateConsoleLogger<LoggingProcessor>());
+            var loggingProcessor = new LoggingProcessor(
+                LoggerStub.CreateConsoleLogger<LoggingProcessor>());
+
+            var requestCompleteionProcessor = new RequestCompletionProcessor(
+                AwaitingService,
+                LoggerStub.CreateConsoleLogger<RequestCompletionProcessor>());
 
             var handlers = new List<IOrderCommandEventHandler>()
             {
-                loggingProcessor
+                loggingProcessor,
+                requestCompleteionProcessor,
             };
 
             return GetExchangeCoreService(handlers);

@@ -28,6 +28,10 @@ public class NopCommandTests
 
         var res = await api.SendAsync(cmd);
 
-        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+        Assert.Multiple(() =>
+        {
+            Assert.That(res.OrderId, Is.EqualTo(cmd.OrderId));
+            Assert.That(res.Timestamp, Is.EqualTo(cmd.Timestamp));
+        });
     }
 }
