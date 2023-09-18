@@ -19,7 +19,7 @@ public class NopCommandTests
     [SetUp]
     public void Setup()
     {
-        _api = _serviceProvider.GetRequiredService<IExchangeApi>(); 
+        _api = _serviceProvider.GetRequiredService<IExchangeApi>();
     }
 
     [TearDown]

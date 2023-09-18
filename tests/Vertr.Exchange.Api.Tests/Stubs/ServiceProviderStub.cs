@@ -9,9 +9,6 @@ internal static class ServiceProviderStub
     {
         var serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddAwating();
-        serviceCollection.AddBasicEventHandlers();
-        serviceCollection.AddExchangeCore();
         serviceCollection.AddExchangeApi();
 
         serviceCollection.AddLogging(configure => configure.AddConsole())
