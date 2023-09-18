@@ -8,22 +8,27 @@ using Vertr.Exchange.RiskEngine.Symbols;
 using Vertr.Exchange.Common.Binary.Commands;
 using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.RiskEngine.Binary;
+using Microsoft.Extensions.Logging;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
 namespace Vertr.Exchange.RiskEngine;
 internal sealed class OrderRiskEngine : IOrderRiskEngine
 {
+    private readonly ILogger<OrderRiskEngine> _logger;
+
     public IUserProfileProvider UserProfiles { get; }
 
     public ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
 
     public OrderRiskEngine(
         IUserProfileProvider userProfiles,
-        ISymbolSpecificationProvider symbolSpecificationProvider)
+        ISymbolSpecificationProvider symbolSpecificationProvider,
+        ILogger<OrderRiskEngine> logger)
     {
         UserProfiles = userProfiles;
         SymbolSpecificationProvider = symbolSpecificationProvider;
+        _logger = logger;
     }
 
     public bool PreProcessCommand(long seq, OrderCommand cmd)
@@ -60,6 +65,10 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 return false;
 
+            case OrderCommandType.NOP:
+                _logger.LogDebug("Pre processing NOP command. Id={OrderId}", cmd.OrderId);
+                return false;
+
             case OrderCommandType.MOVE_ORDER:
             case OrderCommandType.CANCEL_ORDER:
             case OrderCommandType.REDUCE_ORDER:
@@ -67,7 +76,6 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             case OrderCommandType.PERSIST_STATE_MATCHING:
             case OrderCommandType.PERSIST_STATE_RISK:
             case OrderCommandType.GROUPING_CONTROL:
-            case OrderCommandType.NOP:
             case OrderCommandType.SHUTDOWN_SIGNAL:
             case OrderCommandType.RESERVED_COMPRESSED:
             default:
@@ -78,6 +86,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
     public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
+        _logger.LogDebug("Post processing command. Id={OrderId}", cmd.OrderId);
         var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
         return handler.Handle(cmd);
     }

@@ -8,12 +8,20 @@ namespace Vertr.Exchange.Api.Tests.Stubs;
 
 internal static class ExcnageApiStub
 {
-    private static IRequestAwaitingService AwaitingService { get; } =
+    private static readonly IRequestAwaitingService _awaitingService =
         new RequestAwatingService(LoggerStub.CreateConsoleLogger<RequestAwatingService>());
+
+    private static readonly LoggingProcessor _loggingProcessor =
+        new LoggingProcessor(LoggerStub.CreateConsoleLogger<LoggingProcessor>());
+
+    private static readonly RequestCompletionProcessor _completionProcessor =
+        new RequestCompletionProcessor(
+                _awaitingService,
+                LoggerStub.CreateConsoleLogger<RequestCompletionProcessor>());
 
     public static IExchangeApi GetNoEnginesApi()
     {
-        var api = new ExchangeApi(AwaitingService, NoEnginesExchange);
+        var api = new ExchangeApi(_awaitingService, NoEnginesExchange);
         return api;
     }
 
@@ -21,17 +29,10 @@ internal static class ExcnageApiStub
     {
         get
         {
-            var loggingProcessor = new LoggingProcessor(
-                LoggerStub.CreateConsoleLogger<LoggingProcessor>());
-
-            var requestCompleteionProcessor = new RequestCompletionProcessor(
-                AwaitingService,
-                LoggerStub.CreateConsoleLogger<RequestCompletionProcessor>());
-
             var handlers = new List<IOrderCommandEventHandler>()
             {
-                loggingProcessor,
-                requestCompleteionProcessor,
+                _loggingProcessor,
+                _completionProcessor,
             };
 
             return GetExchangeCoreService(handlers);
