@@ -1,20 +1,39 @@
+using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Tests.Stubs;
-using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
 public class NopCommandTests
 {
+    private IServiceProvider _serviceProvider;
+    private IExchangeApi _api;
+
+    [OneTimeSetUp]
+    public void OneTimeSetup()
+    {
+        _serviceProvider = ServiceProviderStub.BuildServiceProvider();
+    }
+
+    [SetUp]
+    public void Setup()
+    {
+        _api = _serviceProvider.GetRequiredService<IExchangeApi>(); 
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _api?.Dispose();
+    }
+
     [Test]
     public void CanSendNopCommand()
     {
-        using var api = ExcnageApiStub.GetNoEnginesApi();
-
         var cmd = new NopCommand(1L, DateTime.UtcNow);
 
-        api.Send(cmd);
+        _api.Send(cmd);
 
         Assert.Pass();
     }
@@ -22,11 +41,9 @@ public class NopCommandTests
     [Test]
     public async Task CanSendAsyncNopCommand()
     {
-        using var api = ExcnageApiStub.GetNoEnginesApi();
-
         var cmd = new NopCommand(1L, DateTime.UtcNow);
 
-        var res = await api.SendAsync(cmd);
+        var res = await _api.SendAsync(cmd);
 
         Assert.Multiple(() =>
         {
