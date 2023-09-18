@@ -10,4 +10,17 @@ public static class ExchangeCoreRegistrar
         serviceCollection.AddSingleton<IExchangeCoreService, ExchangeCoreService>();
         return serviceCollection;
     }
+
+    public static IServiceCollection UseRiskEngine(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, RiskEnginePreProcessor>();
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, RiskEnginePostProcessor>();
+        return serviceCollection;
+    }
+
+    public static IServiceCollection UseMatchingEngine(this IServiceCollection serviceCollection)
+    {
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, MatchingEngineProcessor>();
+        return serviceCollection;
+    }
 }
