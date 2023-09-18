@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.Api.Awaiting;
 using Vertr.Exchange.Api.Commands;
-using Vertr.Exchange.Api.Factories;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Infrastructure;
 
@@ -9,7 +8,7 @@ using Vertr.Exchange.Infrastructure;
 
 namespace Vertr.Exchange.Api;
 
-internal sealed class ExchangeApi
+internal sealed class ExchangeApi : IExchangeApi
 {
     private readonly IRequestAwaitingService _requestAwaitingService;
     private readonly IExchangeCoreService _exchangeCoreService;
@@ -28,7 +27,7 @@ internal sealed class ExchangeApi
         return command.OrderId;
     }
 
-    public async Task<ApiCommandResult> ExecuteAsync(IApiCommand command, CancellationToken token = default)
+    public async Task<IApiCommandResult> ExecuteAsync(IApiCommand command, CancellationToken token = default)
     {
         var orderId = command.OrderId;
         var awaitngTask = _requestAwaitingService.Register(orderId, token);
@@ -36,7 +35,11 @@ internal sealed class ExchangeApi
         _exchangeCoreService.Send(command);
 
         var awaitingResponse = await awaitngTask;
-        var apiResult = ApiCommandResultFactory.CreateResult(awaitingResponse.OrderCommand);
+        var apiResult = ApiCommandResult.Create(awaitingResponse.OrderCommand);
         return apiResult;
+    }
+    public void Dispose()
+    {
+        _exchangeCoreService?.Dispose();
     }
 }

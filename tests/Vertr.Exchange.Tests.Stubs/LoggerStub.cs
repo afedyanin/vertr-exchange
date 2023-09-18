@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 
-namespace Vertr.Exchange.Infrastructure.Tests;
+namespace Vertr.Exchange.Tests.Stubs;
+
 public static class LoggerStub
 {
     private static readonly ILoggerFactory _loggerFactory =

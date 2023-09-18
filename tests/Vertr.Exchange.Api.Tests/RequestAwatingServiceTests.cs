@@ -1,6 +1,6 @@
 using Vertr.Exchange.Api.Awaiting;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Infrastructure.Tests;
+using Vertr.Exchange.Tests.Stubs;
 
 namespace Vertr.Exchange.Api.Tests;
 

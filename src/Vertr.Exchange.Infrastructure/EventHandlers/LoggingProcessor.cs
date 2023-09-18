@@ -3,7 +3,7 @@ using Vertr.Exchange.Common;
 
 namespace Vertr.Exchange.Infrastructure.EventHandlers;
 
-internal class LoggingProcessor : IOrderCommandEventHandler
+public class LoggingProcessor : IOrderCommandEventHandler
 {
     private readonly ILogger<LoggingProcessor> _logger;
 

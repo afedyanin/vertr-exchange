@@ -1,7 +1,17 @@
+using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class ApiCommandResult
+internal class ApiCommandResult : IApiCommandResult
 {
     public CommandResultCode ResultCode { get; set; }
+
+    public static IApiCommandResult Create(OrderCommand command)
+    {
+        return new ApiCommandResult
+        {
+            ResultCode = command.ResultCode,
+        };
+    }
 }

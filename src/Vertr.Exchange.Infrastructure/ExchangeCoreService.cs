@@ -7,6 +7,7 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Infrastructure.EventHandlers;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Infrastructure.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Exchange.Api.Tests")]
 
 namespace Vertr.Exchange.Infrastructure;
 

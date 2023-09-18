@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vertr.Exchange.Infrastructure\Vertr.Exchange.Infrastructure.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Tests.Stubs\Vertr.Exchange.Tests.Stubs.csproj" />
   </ItemGroup>
 
 </Project>
