@@ -21,21 +21,20 @@ internal sealed class ExchangeApi : IExchangeApi
         _exchangeCoreService = exchangeCoreService;
     }
 
-    public long Execute(IApiCommand command)
+    public void Send(IApiCommand command)
     {
         _exchangeCoreService.Send(command);
-        return command.OrderId;
     }
 
-    public async Task<IApiCommandResult> ExecuteAsync(IApiCommand command, CancellationToken token = default)
+    public async Task<IApiCommandResult> SendAsync(IApiCommand command, CancellationToken token = default)
     {
-        var orderId = command.OrderId;
-        var awaitngTask = _requestAwaitingService.Register(orderId, token);
+        var awaitngTask = _requestAwaitingService.Register(command.OrderId, token);
 
         _exchangeCoreService.Send(command);
 
         var awaitingResponse = await awaitngTask;
         var apiResult = ApiCommandResult.Create(awaitingResponse.OrderCommand);
+
         return apiResult;
     }
     public void Dispose()

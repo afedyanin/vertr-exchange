@@ -4,7 +4,7 @@ namespace Vertr.Exchange.Api;
 
 public interface IExchangeApi : IDisposable
 {
-    long Execute(IApiCommand command);
+    void Send(IApiCommand command);
 
-    Task<IApiCommandResult> ExecuteAsync(IApiCommand command, CancellationToken token = default);
+    Task<IApiCommandResult> SendAsync(IApiCommand command, CancellationToken token = default);
 }
