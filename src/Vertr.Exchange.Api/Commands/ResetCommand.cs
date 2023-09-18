@@ -1,11 +1,13 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class ResetCommand : IApiCommand
+public class ResetCommand : ApiCommandBase
 {
-    public void Fill(ref OrderCommand command)
+    public override OrderCommandType CommandType => OrderCommandType.RESET;
+
+    public ResetCommand(
+        long orderId,
+        DateTime timestamp) : base(orderId, timestamp)
     {
-        throw new NotImplementedException();
     }
 }

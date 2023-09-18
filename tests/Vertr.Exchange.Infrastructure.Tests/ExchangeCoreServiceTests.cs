@@ -1,4 +1,5 @@
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Infrastructure.EventHandlers;
 
 namespace Vertr.Exchange.Infrastructure.Tests;
@@ -26,16 +27,24 @@ public class ExchangeCoreServiceTests
 
         using var exchange = new ExchangeCoreService(handlers, LoggerStub.CreateConsoleLogger<ExchangeCoreService>());
 
-        var cmd = new OrderCommand
-        {
-            OrderId = 1,
-            OrderType = Common.Enums.OrderType.GTC,
-            Command = Common.Enums.OrderCommandType.NOP,
-            Price = 1,
-        };
+        var cmd = new NopCommand();
 
         exchange.Send(cmd);
 
         Assert.Pass();
+    }
+
+    private sealed class NopCommand : IApiCommand
+    {
+        public long OrderId => 1L;
+
+        public DateTime Timestamp => DateTime.UtcNow;
+
+        public void Fill(ref OrderCommand command)
+        {
+            command.Command = Common.Enums.OrderCommandType.NOP;
+            command.OrderId = OrderId;
+            command.Timestamp = Timestamp;
+        }
     }
 }

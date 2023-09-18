@@ -10,6 +10,8 @@ public abstract class ApiCommandBase : IApiCommand
 
     public DateTime Timestamp { get; }
 
+    public abstract OrderCommandType CommandType { get; }
+
     public ApiCommandBase(long orderId, DateTime timestamp)
     {
         OrderId = orderId;
@@ -23,8 +25,10 @@ public abstract class ApiCommandBase : IApiCommand
 
     protected virtual void Reset(ref OrderCommand command)
     {
+        command.Command = CommandType;
         command.OrderId = OrderId;
         command.Timestamp = Timestamp;
+        command.ResultCode = CommandResultCode.NEW;
 
         command.Uid = long.MinValue;
         command.Action = OrderAction.ASK;
@@ -36,7 +40,6 @@ public abstract class ApiCommandBase : IApiCommand
         command.MarketData = null;
         command.OrderType = OrderType.GTC;
         command.Price = decimal.MinValue;
-        command.ResultCode = CommandResultCode.NEW;
         command.Size = long.MinValue;
         command.Symbol = int.MinValue;
     }

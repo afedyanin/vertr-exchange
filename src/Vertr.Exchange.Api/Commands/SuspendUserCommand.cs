@@ -1,13 +1,24 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class SuspendUserCommand : IApiCommand
+public class SuspendUserCommand : ApiCommandBase
 {
-    public long Uid { get; set; }
+    public override OrderCommandType CommandType => OrderCommandType.SUSPEND_USER;
+    public long Uid { get; }
 
-    public void Fill(ref OrderCommand command)
+    public SuspendUserCommand(
+        long orderId,
+        DateTime timestamp,
+        long uid) : base(orderId, timestamp)
     {
-        throw new NotImplementedException();
+        Uid = uid;
+    }
+
+    public override void Fill(ref OrderCommand command)
+    {
+        base.Fill(ref command);
+
+        command.Uid = Uid;
     }
 }

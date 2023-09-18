@@ -1,19 +1,35 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class ReduceOrderCommand : IApiCommand
+public class ReduceOrderCommand : ApiCommandBase
 {
-    public long OrderId { get; set; }
+    public override OrderCommandType CommandType => OrderCommandType.REDUCE_ORDER;
 
-    public long Uid { get; set; }
+    public long Uid { get; }
 
-    public int Symbol { get; set; }
+    public int Symbol { get; }
 
-    public int ReduceSize { get; set; }
+    public int ReduceSize { get; }
 
-    public void Fill(ref OrderCommand command)
+    public ReduceOrderCommand(
+        long orderId,
+        DateTime timestamp,
+        long uid,
+        int symbol,
+        int reduceSize) : base(orderId, timestamp)
     {
-        throw new NotImplementedException();
+        Uid = uid;
+        Symbol = symbol;
+        ReduceSize = reduceSize;
+    }
+
+    public override void Fill(ref OrderCommand command)
+    {
+        base.Fill(ref command);
+
+        command.Uid = Uid;
+        command.Symbol = Symbol;
+        command.Size = ReduceSize;
     }
 }

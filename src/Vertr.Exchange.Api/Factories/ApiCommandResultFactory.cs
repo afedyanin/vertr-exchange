@@ -6,6 +6,9 @@ internal static class ApiCommandResultFactory
 {
     public static ApiCommandResult CreateResult(OrderCommand command)
     {
-        return new ApiCommandResult();
+        return new ApiCommandResult()
+        {
+            ResultCode = command.ResultCode,
+        };
     }
 }

@@ -1,26 +1,50 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class PlaceOrderCommand : IApiCommand
+public class PlaceOrderCommand : ApiCommandBase
 {
-    public decimal Price { get; set; }
+    public override OrderCommandType CommandType => OrderCommandType.PLACE_ORDER;
 
-    public long Size { get; set; }
+    public decimal Price { get; }
 
-    public long OrderId { get; set; }
+    public long Size { get; }
 
-    public OrderAction Action { get; set; }
+    public OrderAction Action { get; }
 
-    public OrderType OrderType { get; set; }
+    public OrderType OrderType { get; }
 
-    public long Uid { get; set; }
+    public long Uid { get; }
 
-    public int Symbol { get; set; }
+    public int Symbol { get; }
 
-    public void Fill(ref OrderCommand command)
+    public PlaceOrderCommand(
+        long orderId,
+        DateTime timestamp,
+        decimal price,
+        long size,
+        OrderAction action,
+        OrderType orderType,
+        long uid,
+        int symbol) : base(orderId, timestamp)
     {
-        throw new NotImplementedException();
+        Price = price;
+        Size = size;
+        Action = action;
+        OrderType = orderType;
+        Uid = uid;
+        Symbol = symbol;
+    }
+
+    public override void Fill(ref OrderCommand command)
+    {
+        base.Fill(ref command);
+
+        command.Price = Price;
+        command.Size = Size;
+        command.Action = Action;
+        command.OrderType = OrderType;
+        command.Uid = Uid;
+        command.Symbol = Symbol;
     }
 }

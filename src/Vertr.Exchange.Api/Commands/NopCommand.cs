@@ -1,11 +1,14 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class NopCommand : IApiCommand
+
+public class NopCommand : ApiCommandBase
 {
-    public void Fill(ref OrderCommand command)
+    public override OrderCommandType CommandType => OrderCommandType.NOP;
+
+    public NopCommand(
+        long orderId,
+        DateTime timestamp) : base(orderId, timestamp)
     {
-        throw new NotImplementedException();
     }
 }

@@ -1,13 +1,25 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class ResumeUserCommand : IApiCommand
+public class ResumeUserCommand : ApiCommandBase
 {
-    public long Uid { get; set; }
+    public override OrderCommandType CommandType => OrderCommandType.RESUME_USER;
 
-    public void Fill(ref OrderCommand command)
+    public long Uid { get; }
+
+    public ResumeUserCommand(
+        long orderId,
+        DateTime timestamp,
+        long uid) : base(orderId, timestamp)
     {
-        throw new NotImplementedException();
+        Uid = uid;
+    }
+
+    public override void Fill(ref OrderCommand command)
+    {
+        base.Fill(ref command);
+
+        command.Uid = Uid;
     }
 }

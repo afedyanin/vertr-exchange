@@ -1,17 +1,31 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public record class CancelOrderCommand : IApiCommand
+
+public class CancelOrderCommand : ApiCommandBase
 {
-    public long OrderId { get; set; }
+    public override OrderCommandType CommandType => OrderCommandType.CANCEL_ORDER;
 
-    public long Uid { get; set; }
+    public long Uid { get; }
 
-    public int Symbol { get; set; }
+    public int Symbol { get; }
 
-    public void Fill(ref OrderCommand command)
+    public CancelOrderCommand(
+        long orderId,
+        DateTime timestamp,
+        long uid,
+        int symbol) : base(orderId, timestamp)
     {
-        throw new NotImplementedException();
+        Uid = uid;
+        Symbol = symbol;
+    }
+
+    public override void Fill(ref OrderCommand command)
+    {
+        base.Fill(ref command);
+
+        command.Uid = Uid;
+        command.Symbol = Symbol;
     }
 }
