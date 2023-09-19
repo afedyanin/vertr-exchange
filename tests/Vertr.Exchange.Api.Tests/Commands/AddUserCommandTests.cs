@@ -6,7 +6,7 @@ using Vertr.Exchange.Common.Enums;
 namespace Vertr.Exchange.Api.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
-public class NopCommandTests
+public class AddUserCommandTests
 {
     private IServiceProvider _serviceProvider;
     private IExchangeApi _api;
@@ -30,19 +30,9 @@ public class NopCommandTests
     }
 
     [Test]
-    public void CanSendNopCommand()
+    public async Task CanAddUser()
     {
-        var cmd = new NopCommand(1L, DateTime.UtcNow);
-
-        _api.Send(cmd);
-
-        Assert.Pass();
-    }
-
-    [Test]
-    public async Task CanSendAsyncNopCommand()
-    {
-        var cmd = new NopCommand(1L, DateTime.UtcNow);
+        var cmd = new AddUserCommand(1L, DateTime.UtcNow, 100L);
 
         var res = await _api.SendAsync(cmd);
 

@@ -16,6 +16,6 @@ internal class LoggingProcessor : IOrderCommandEventHandler
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        _logger.LogDebug("Processing: OrderId={OrderId}  Sequence={Sequence}", data.OrderId, sequence);
+        _logger.LogDebug("Processing: OrderId={OrderId}  CommandType={CommandType}", data.OrderId, data.Command);
     }
 }

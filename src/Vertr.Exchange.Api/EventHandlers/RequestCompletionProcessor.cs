@@ -22,7 +22,7 @@ internal class RequestCompletionProcessor : IOrderCommandEventHandler
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        _logger.LogInformation("ProcessingStep={ProcessingStep}. Completing order request. OrderId={OrderId}", ProcessingStep, data.OrderId);
+        _logger.LogDebug("Completing order request. OrderId={OrderId}", data.OrderId);
 
         var response = new AwaitingResponse(data);
         _requestAwaitingService.Complete(response);
