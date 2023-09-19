@@ -31,14 +31,14 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
         _logger = logger;
     }
 
-    public bool PreProcessCommand(long seq, OrderCommand cmd)
+    public void PreProcessCommand(long seq, OrderCommand cmd)
     {
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
                 var handler = new PreProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
                 cmd.ResultCode = handler.Handle(cmd);
-                return false;
+                return;
 
             case OrderCommandType.ADD_USER:
             case OrderCommandType.SUSPEND_USER:
@@ -46,28 +46,28 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             case OrderCommandType.BALANCE_ADJUSTMENT:
                 var userCommand = UserCommandFactory.CreateUserCommand(cmd, UserProfiles);
                 cmd.ResultCode = userCommand.Execute();
-                return false;
+                return;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
                 // ignore return result, because it should be set by MatchingEngineRouter
                 AcceptBinaryCommand(cmd);
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-                return false;
+                return;
 
             case OrderCommandType.BINARY_DATA_QUERY:
                 // ignore return result, because it should be set by MatchingEngineRouter
                 AcceptBinaryQuery(cmd);
                 cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-                return false;
+                return;
 
             case OrderCommandType.RESET:
                 Reset();
                 cmd.ResultCode = CommandResultCode.SUCCESS;
-                return false;
+                return;
 
             case OrderCommandType.NOP:
                 _logger.LogDebug("Pre processing NOP command. OrderId={OrderId}", cmd.OrderId);
-                return false;
+                return;
 
             case OrderCommandType.MOVE_ORDER:
             case OrderCommandType.CANCEL_ORDER:
@@ -81,14 +81,13 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             default:
                 break;
         }
-        return false;
     }
 
-    public bool PostProcessCommand(long seq, OrderCommand cmd)
+    public void PostProcessCommand(long seq, OrderCommand cmd)
     {
         _logger.LogDebug("Post processing command. OrderId={OrderId}", cmd.OrderId);
         var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
-        return handler.Handle(cmd);
+        handler.Handle(cmd);
     }
 
     private void Reset()

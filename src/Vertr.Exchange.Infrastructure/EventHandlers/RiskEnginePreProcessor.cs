@@ -15,6 +15,6 @@ internal class RiskEnginePreProcessor : IOrderCommandEventHandler
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        var result = _orderRiskEngine.PreProcessCommand(sequence, data);
+        _orderRiskEngine.PreProcessCommand(sequence, data);
     }
 }

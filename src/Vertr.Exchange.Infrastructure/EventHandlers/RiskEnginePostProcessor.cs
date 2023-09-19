@@ -16,6 +16,6 @@ internal class RiskEnginePostProcessor : IOrderCommandEventHandler
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
-        var result = _orderRiskEngine.PostProcessCommand(sequence, data);
+        _orderRiskEngine.PostProcessCommand(sequence, data);
     }
 }
