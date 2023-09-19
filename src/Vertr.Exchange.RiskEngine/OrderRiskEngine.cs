@@ -66,7 +66,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
                 return false;
 
             case OrderCommandType.NOP:
-                _logger.LogDebug("Pre processing NOP command. Id={OrderId}", cmd.OrderId);
+                _logger.LogDebug("Pre processing NOP command. OrderId={OrderId}", cmd.OrderId);
                 return false;
 
             case OrderCommandType.MOVE_ORDER:
@@ -86,7 +86,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
     public bool PostProcessCommand(long seq, OrderCommand cmd)
     {
-        _logger.LogDebug("Post processing command. Id={OrderId}", cmd.OrderId);
+        _logger.LogDebug("Post processing command. OrderId={OrderId}", cmd.OrderId);
         var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
         return handler.Handle(cmd);
     }

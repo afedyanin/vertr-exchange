@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
@@ -18,13 +19,16 @@ public class OrderMatchingEngine : IOrderMatchingEngine
     private readonly MatchingEngineConfiguration _config;
 
     private readonly IOrderBookProvider _orderBookProvider;
+    private readonly ILogger<OrderMatchingEngine> _logger;
 
     public OrderMatchingEngine(
+        IOrderBookProvider orderBookProvider,
         IOptions<MatchingEngineConfiguration> options,
-        IOrderBookProvider orderBookProvider)
+        ILogger<OrderMatchingEngine> logger)
     {
         _config = options.Value;
         _orderBookProvider = orderBookProvider;
+        _logger = logger;
     }
 
     public void ProcessOrder(long seq, OrderCommand cmd)
@@ -44,6 +48,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 break;
             case OrderCommandType.NOP:
                 cmd.ResultCode = CommandResultCode.SUCCESS;
+                _logger.LogDebug("Processing NOP command. OrderId={OrderId}", cmd.OrderId);
                 break;
             case OrderCommandType.BINARY_DATA_COMMAND:
                 cmd.ResultCode = AcceptBinaryCommand(cmd);

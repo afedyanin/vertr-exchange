@@ -23,7 +23,7 @@ internal class RequestAwatingService : IRequestAwaitingService
             throw new InvalidOperationException($"Request with orderId={orderId} is already registered.");
         }
 
-        _logger.LogInformation("Awating request with OrderId={OrderId} is registered.", orderId);
+        _logger.LogDebug("Awating request with OrderId={OrderId} is registered.", orderId);
 
         cancellationToken.Register(UnregisterWait, new WaitContext(orderId, cancellationToken));
 
@@ -35,7 +35,7 @@ internal class RequestAwatingService : IRequestAwaitingService
         var orderId = response.OrderCommand.OrderId;
         if (_requests.TryRemove(orderId, out var tcs))
         {
-            _logger.LogInformation("Awating request with OrderId={OrderId} is completed.", orderId);
+            _logger.LogDebug("Awating request with OrderId={OrderId} is completed.", orderId);
             tcs.SetResult(response);
         }
         else
