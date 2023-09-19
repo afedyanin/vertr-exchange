@@ -65,6 +65,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             case OrderCommandType.GROUPING_CONTROL:
             case OrderCommandType.SHUTDOWN_SIGNAL:
             case OrderCommandType.RESERVED_COMPRESSED:
+                _logger.LogDebug("Skipping command={CommandType} OrderId={OrderId}", cmd.Command, cmd.OrderId);
                 break;
             default:
                 // TODO: How to handle exception here

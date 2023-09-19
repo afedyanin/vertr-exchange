@@ -45,6 +45,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             case OrderCommandType.RESUME_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
                 var userCommand = UserCommandFactory.CreateUserCommand(cmd, UserProfiles);
+                _logger.LogDebug("Executing UserCommand={CommandType} OrderId={OrderId} Uid={Uid}", cmd.Command, cmd.OrderId, cmd.Uid);
                 cmd.ResultCode = userCommand.Execute();
                 return;
 

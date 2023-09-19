@@ -43,4 +43,20 @@ public class AddUserCommandTests
             Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
         });
     }
+
+    [Test]
+    public async Task CannotAddUserTwice()
+    {
+        var cmd1 = new AddUserCommand(1L, DateTime.UtcNow, 100L);
+        var cmd2 = new AddUserCommand(2L, DateTime.UtcNow, 100L);
+
+        var res1 = await _api.SendAsync(cmd1);
+        var res2 = await _api.SendAsync(cmd2);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(res1.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+            Assert.That(res2.ResultCode, Is.EqualTo(CommandResultCode.USER_MGMT_USER_ALREADY_EXISTS));
+        });
+    }
 }
