@@ -1,40 +1,17 @@
-using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Api.Commands;
-using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
-public class AddUserCommandTests
+public class AddUserCommandTests : CommandTestBase
 {
-    private IServiceProvider _serviceProvider;
-    private IExchangeApi _api;
-
-    [OneTimeSetUp]
-    public void OneTimeSetup()
-    {
-        _serviceProvider = ServiceProviderStub.BuildServiceProvider();
-    }
-
-    [SetUp]
-    public void Setup()
-    {
-        _api = _serviceProvider.GetRequiredService<IExchangeApi>();
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _api?.Dispose();
-    }
-
     [Test]
     public async Task CanAddUser()
     {
         var cmd = new AddUserCommand(1L, DateTime.UtcNow, 100L);
 
-        var res = await _api.SendAsync(cmd);
+        var res = await Api.SendAsync(cmd);
 
         Assert.Multiple(() =>
         {
@@ -50,8 +27,8 @@ public class AddUserCommandTests
         var cmd1 = new AddUserCommand(1L, DateTime.UtcNow, 100L);
         var cmd2 = new AddUserCommand(2L, DateTime.UtcNow, 100L);
 
-        var res1 = await _api.SendAsync(cmd1);
-        var res2 = await _api.SendAsync(cmd2);
+        var res1 = await Api.SendAsync(cmd1);
+        var res2 = await Api.SendAsync(cmd2);
 
         Assert.Multiple(() =>
         {

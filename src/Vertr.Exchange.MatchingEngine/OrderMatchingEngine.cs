@@ -57,9 +57,9 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 cmd.ResultCode = AcceptBinaryQuery(cmd);
                 break;
             case OrderCommandType.ADD_USER:
-            case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.SUSPEND_USER:
             case OrderCommandType.RESUME_USER:
+            case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.PERSIST_STATE_MATCHING:
             case OrderCommandType.PERSIST_STATE_RISK:
             case OrderCommandType.GROUPING_CONTROL:
