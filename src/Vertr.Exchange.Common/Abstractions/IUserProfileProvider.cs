@@ -8,7 +8,7 @@ public interface IUserProfileProvider
 
     public IUserProfile GetOrAdd(long uid, UserStatus status);
 
-    void BatchAdd(IDictionary<int, IDictionary<int, long>> users);
+    void BatchAdd(IDictionary<int, IDictionary<int, decimal>> users);
 
     void Reset();
 }

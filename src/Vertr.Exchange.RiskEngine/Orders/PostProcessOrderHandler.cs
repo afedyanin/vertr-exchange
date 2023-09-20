@@ -29,7 +29,7 @@ internal class PostProcessOrderHandler
             return;
         }
 
-        var spec = _symbols.GetSymbolSpecification(orderCommand.Symbol);
+        var spec = _symbols.GetSymbol(orderCommand.Symbol);
         Debug.Assert(spec != null);
 
         var takerAction = orderCommand.Action!.Value;

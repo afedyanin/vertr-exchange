@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Binary.Commands;
 using Vertr.Exchange.Common.Enums;
@@ -27,6 +29,18 @@ internal static class BinaryCommandStub
             Symbols = symbols.ToArray(),
         };
 
-        return cmd.ToOrderCommand();
+        return ToOrderCommand(cmd);
+    }
+
+    private static OrderCommand ToOrderCommand(BatchAddSymbolsCommand cmd)
+    {
+        var orderCommand = new OrderCommand()
+        {
+            Command = OrderCommandType.BINARY_DATA_COMMAND,
+            BinaryCommandType = BinaryDataType.COMMAND_ADD_SYMBOLS,
+            BinaryData = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(cmd)),
+        };
+
+        return orderCommand;
     }
 }

@@ -51,14 +51,13 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
             case OrderCommandType.BINARY_DATA_COMMAND:
                 // ignore return result, because it should be set by MatchingEngineRouter
+                _logger.LogDebug("Processing BinaryCommand={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
                 AcceptBinaryCommand(cmd);
-                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return;
 
             case OrderCommandType.BINARY_DATA_QUERY:
                 // ignore return result, because it should be set by MatchingEngineRouter
                 AcceptBinaryQuery(cmd);
-                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
                 return;
 
             case OrderCommandType.RESET:
@@ -113,6 +112,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
         if (command is BatchAddSymbolsCommand batchAddSymbolsCommand)
         {
+            _logger.LogDebug("Saving symbols into SymbolSpecificationProvider. OrderId={OrderId}", cmd.OrderId);
             return batchAddSymbolsCommand.HandleCommand(SymbolSpecificationProvider);
         }
 

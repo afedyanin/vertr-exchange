@@ -1,4 +1,5 @@
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.RiskEngine.Symbols;
 
@@ -11,34 +12,42 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
         _symbolSpecs = new Dictionary<int, SymbolSpecification>();
     }
 
-    public bool AddSymbol(SymbolSpecification symbolSpecification)
+    public CommandResultCode AddSymbols(SymbolSpecification[] symbols)
     {
-        if (GetSymbolSpecification(symbolSpecification.SymbolId) != null)
-        {
-            return false; // CommandResultCode.SYMBOL_MGMT_SYMBOL_ALREADY_EXISTS;
-        }
-        else
-        {
-            RegisterSymbol(symbolSpecification.SymbolId, symbolSpecification);
-            return true;
-        }
-    }
+        // TODO: Validate for duplicates
 
-    public void AddSymbols(SymbolSpecification[] symbols)
-    {
         foreach (var spec in symbols)
         {
             AddSymbol(spec);
         }
+
+        return CommandResultCode.SUCCESS;
     }
 
-    public SymbolSpecification? GetSymbolSpecification(int symbol)
+    public SymbolSpecification? GetSymbol(int symbol)
     {
         _symbolSpecs.TryGetValue(symbol, out var specification);
         return specification;
     }
 
-    public void RegisterSymbol(int symbol, SymbolSpecification spec)
+    public void Reset()
+    {
+        _symbolSpecs.Clear();
+    }
+
+    private CommandResultCode AddSymbol(SymbolSpecification symbolSpecification)
+    {
+        if (GetSymbol(symbolSpecification.SymbolId) != null)
+        {
+            return CommandResultCode.SYMBOL_MGMT_SYMBOL_ALREADY_EXISTS;
+        }
+        else
+        {
+            RegisterSymbol(symbolSpecification.SymbolId, symbolSpecification);
+            return CommandResultCode.SUCCESS;
+        }
+    }
+    private void RegisterSymbol(int symbol, SymbolSpecification spec)
     {
         if (!_symbolSpecs.ContainsKey(symbol))
         {
@@ -47,10 +56,5 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
         }
 
         _symbolSpecs.Add(symbol, spec);
-    }
-
-    public void Reset()
-    {
-        _symbolSpecs.Clear();
     }
 }

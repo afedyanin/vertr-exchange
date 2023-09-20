@@ -51,6 +51,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 _logger.LogDebug("Processing NOP command. OrderId={OrderId}", cmd.OrderId);
                 break;
             case OrderCommandType.BINARY_DATA_COMMAND:
+                _logger.LogDebug("Processing BinaryCommand={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
                 cmd.ResultCode = AcceptBinaryCommand(cmd);
                 break;
             case OrderCommandType.BINARY_DATA_QUERY:
@@ -111,6 +112,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
         if (command is BatchAddSymbolsCommand addSymbolsCommand)
         {
+            _logger.LogDebug("Adding symbols into order books. OrderId={OrderId}", cmd.OrderId);
             return addSymbolsCommand.HandleCommand(_orderBookProvider);
         }
 

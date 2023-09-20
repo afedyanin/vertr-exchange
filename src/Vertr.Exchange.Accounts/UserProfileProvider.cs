@@ -36,7 +36,7 @@ internal class UserProfileProvider : IUserProfileProvider
         _userProfiles.Clear();
     }
 
-    public void BatchAdd(IDictionary<int, IDictionary<int, long>> users)
+    public void BatchAdd(IDictionary<int, IDictionary<int, decimal>> users)
     {
         foreach (var (uid, accounts) in users)
         {

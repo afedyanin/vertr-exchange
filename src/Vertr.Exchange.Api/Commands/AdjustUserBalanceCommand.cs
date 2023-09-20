@@ -12,8 +12,6 @@ public class AdjustUserBalanceCommand : ApiCommandBase
 
     public decimal Amount { get; }
 
-    public long TransactionId { get; }
-
     public BalanceAdjustmentType AdjustmentType => BalanceAdjustmentType.ADJUSTMENT;
 
     public AdjustUserBalanceCommand(
@@ -21,13 +19,11 @@ public class AdjustUserBalanceCommand : ApiCommandBase
         DateTime timestamp,
         long uid,
         int currency,
-        decimal amount,
-        long transactionid) : base(orderId, timestamp)
+        decimal amount) : base(orderId, timestamp)
     {
         Uid = uid;
         Currency = currency;
         Amount = amount;
-        TransactionId = transactionid;
     }
 
     public override void Fill(ref OrderCommand command)
@@ -37,7 +33,6 @@ public class AdjustUserBalanceCommand : ApiCommandBase
         command.Uid = Uid;
         command.Symbol = Currency; // !
         command.Price = Amount; // !
-        command.OrderId = TransactionId; // !
-        command.OrderType = (OrderType)AdjustmentType; // !
+        command.OrderType = (OrderType)AdjustmentType; // ! never used
     }
 }

@@ -7,6 +7,6 @@ public sealed class BatchAddAccountsCommand : IBinaryCommand
     // ExtKey = uud
     // IntKey = symbol
     // Value = balance
-    public IDictionary<int, IDictionary<int, long>> Users { get; set; } =
-        new Dictionary<int, IDictionary<int, long>>();
+    public IDictionary<int, IDictionary<int, decimal>> Users { get; set; } =
+        new Dictionary<int, IDictionary<int, decimal>>();
 }
