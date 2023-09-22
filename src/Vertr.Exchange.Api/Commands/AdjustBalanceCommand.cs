@@ -2,7 +2,7 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public class AdjustUserBalanceCommand : ApiCommandBase
+public class AdjustBalanceCommand : ApiCommandBase
 {
     public override OrderCommandType CommandType => OrderCommandType.BALANCE_ADJUSTMENT;
 
@@ -14,7 +14,7 @@ public class AdjustUserBalanceCommand : ApiCommandBase
 
     public BalanceAdjustmentType AdjustmentType => BalanceAdjustmentType.ADJUSTMENT;
 
-    public AdjustUserBalanceCommand(
+    public AdjustBalanceCommand(
         long orderId,
         DateTime timestamp,
         long uid,
