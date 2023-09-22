@@ -43,12 +43,13 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 ProcessMatchingCommand(cmd);
                 break;
             case OrderCommandType.RESET:
+                _logger.LogWarning("Processing RESET command OrderId={OrderId}", cmd.OrderId);
                 _orderBookProvider.Reset();
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 break;
             case OrderCommandType.NOP:
-                cmd.ResultCode = CommandResultCode.SUCCESS;
                 _logger.LogDebug("Processing NOP command. OrderId={OrderId}", cmd.OrderId);
+                cmd.ResultCode = CommandResultCode.SUCCESS;
                 break;
             case OrderCommandType.BINARY_DATA_COMMAND:
                 _logger.LogDebug("Processing BinaryCommand={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);

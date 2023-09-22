@@ -60,6 +60,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
                 return;
 
             case OrderCommandType.RESET:
+                _logger.LogWarning("Processing RESET command OrderId={OrderId}", cmd.OrderId);
                 Reset();
                 cmd.ResultCode = CommandResultCode.SUCCESS;
                 return;
