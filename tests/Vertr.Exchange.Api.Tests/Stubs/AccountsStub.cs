@@ -1,6 +1,10 @@
 namespace Vertr.Exchange.Api.Tests.Stubs;
 public static class AccountsStub
 {
+    public static long FirstUserUid => UserAccounts.First().Key;
+
+    public static IDictionary<int, decimal> FirstUserAccounts => UserAccounts.First().Value;
+
     public static IDictionary<long, IDictionary<int, decimal>> UserAccounts
         => new Dictionary<long, IDictionary<int, decimal>>
         {

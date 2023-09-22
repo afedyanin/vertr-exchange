@@ -10,4 +10,5 @@ public interface IApiCommandResult
 
     public DateTime Timestamp { get; }
 
+    public IEngineEvent? RootEvent { get; }
 }

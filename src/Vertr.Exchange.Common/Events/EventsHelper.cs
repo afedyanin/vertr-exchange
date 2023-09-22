@@ -67,6 +67,7 @@ public static class EventsHelper
         OrderCommand command,
         byte[] data)
     {
+
         var evt = new EngineEvent
         {
             EventType = EngineEventType.BINARY_EVENT,

@@ -15,6 +15,7 @@ internal static class ReportExtensions
     {
         var result = BinaryQueryFactory.GetSingleUserReportResult(command);
         result ??= new SingleUserReportResult();
+
         result.Uid = query.Uid;
 
         var userProfile = userProfiles.Get(command.Uid);
@@ -24,6 +25,7 @@ internal static class ReportExtensions
             result.UserStatus = userProfile.Status;
             result.Accounts = userProfile.Accounts;
             result.Positions = userProfile.Positions;
+            result.ExecutionStatus = QueryExecutionStatus.OK;
         }
 
         EventsHelper.AttachBinaryEvent(command, result.ToBinary());

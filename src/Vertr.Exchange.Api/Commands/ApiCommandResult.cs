@@ -11,6 +11,8 @@ internal class ApiCommandResult : IApiCommandResult
 
     public DateTime Timestamp { get; init; }
 
+    public IEngineEvent? RootEvent { get; init; }
+
     public static IApiCommandResult Create(OrderCommand command)
     {
         return new ApiCommandResult
@@ -18,6 +20,7 @@ internal class ApiCommandResult : IApiCommandResult
             ResultCode = command.ResultCode,
             OrderId = command.OrderId,
             Timestamp = command.Timestamp,
+            RootEvent = command.EngineEvent,
         };
     }
 }

@@ -6,9 +6,9 @@ public sealed class SingleUserReportResult
 {
     public long Uid { get; set; }
 
-    public QueryExecutionStatus ExecutionStatus { get; set; }
+    public QueryExecutionStatus ExecutionStatus { get; set; } = QueryExecutionStatus.USER_NOT_FOUND;
 
-    public UserStatus UserStatus { get; set; }
+    public UserStatus UserStatus { get; set; } = UserStatus.SUSPENDED;
 
     // Symbol
     public IDictionary<int, IOrder[]> Orders { get; set; } = new Dictionary<int, IOrder[]>();

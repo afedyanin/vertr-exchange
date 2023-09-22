@@ -31,17 +31,16 @@ public class AdjustBalanceCommandTests : CommandTestBase
     [Test]
     public async Task CanAdjustBalanceAfterAddingAccounts()
     {
-        var accounts = AccountsStub.UserAccounts;
-        var cmd = new AddAccountsCommand(1L, DateTime.UtcNow, accounts);
+        var cmd = new AddAccountsCommand(1L, DateTime.UtcNow, AccountsStub.UserAccounts);
         var res = await Api.SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var userAccounts = accounts.First();
-        var uid = userAccounts.Key;
-        var currency = userAccounts.Value.First().Key;
-        var adj = new AdjustBalanceCommand(2L, DateTime.UtcNow, uid, currency, 45.34M);
+        var currency = AccountsStub.FirstUserAccounts.Keys.First();
+        var adj = new AdjustBalanceCommand(2L, DateTime.UtcNow, AccountsStub.FirstUserUid, currency, 45.34M);
         res = await Api.SendAsync(adj);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+
+        // TODO: Chcek adjusted amount
     }
 }

@@ -50,13 +50,12 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
                 return;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
-                // ignore return result, because it should be set by MatchingEngineRouter
                 _logger.LogDebug("Processing BinaryCommand={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
                 cmd.ResultCode = AcceptBinaryCommand(cmd);
                 return;
 
             case OrderCommandType.BINARY_DATA_QUERY:
-                // ignore return result, because it should be set by MatchingEngineRouter
+                _logger.LogDebug("Processing BinaryQuery={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
                 cmd.ResultCode = AcceptBinaryQuery(cmd);
                 return;
 
@@ -141,6 +140,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
         if (query is SingleUserReportQuery singleUserReport)
         {
+            _logger.LogDebug("Populate SingleUserReportQuery result. OrderId={OrderId}", cmd.OrderId);
             return singleUserReport.HandleQuery(cmd, UserProfiles);
         }
 

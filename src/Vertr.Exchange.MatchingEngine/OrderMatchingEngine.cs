@@ -55,6 +55,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
                 cmd.ResultCode = AcceptBinaryCommand(cmd);
                 break;
             case OrderCommandType.BINARY_DATA_QUERY:
+                _logger.LogDebug("Processing BinaryQuery={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
                 cmd.ResultCode = AcceptBinaryQuery(cmd);
                 break;
             case OrderCommandType.ADD_USER:
@@ -147,6 +148,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
         if (query is SingleUserReportQuery singleUserReport)
         {
+            _logger.LogDebug("Populate SingleUserReportQuery result. OrderId={OrderId}", cmd.OrderId);
             return singleUserReport.HandleQuery(cmd, _orderBookProvider);
         }
 
