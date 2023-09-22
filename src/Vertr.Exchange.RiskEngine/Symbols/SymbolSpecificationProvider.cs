@@ -14,11 +14,14 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
 
     public CommandResultCode AddSymbols(SymbolSpecification[] symbols)
     {
-        // TODO: Validate for duplicates
+        if (HasDuplicates(symbols))
+        {
+            return CommandResultCode.SYMBOL_MGMT_SYMBOL_ALREADY_EXISTS;
+        }
 
         foreach (var spec in symbols)
         {
-            AddSymbol(spec);
+            _symbolSpecs.Add(spec.SymbolId, spec);
         }
 
         return CommandResultCode.SUCCESS;
@@ -35,26 +38,16 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
         _symbolSpecs.Clear();
     }
 
-    private CommandResultCode AddSymbol(SymbolSpecification symbolSpecification)
+    private bool HasDuplicates(SymbolSpecification[] symbols)
     {
-        if (GetSymbol(symbolSpecification.SymbolId) != null)
+        foreach (var symbol in symbols)
         {
-            return CommandResultCode.SYMBOL_MGMT_SYMBOL_ALREADY_EXISTS;
-        }
-        else
-        {
-            RegisterSymbol(symbolSpecification.SymbolId, symbolSpecification);
-            return CommandResultCode.SUCCESS;
-        }
-    }
-    private void RegisterSymbol(int symbol, SymbolSpecification spec)
-    {
-        if (!_symbolSpecs.ContainsKey(symbol))
-        {
-            _symbolSpecs[symbol] = spec;
-            return;
+            if (_symbolSpecs.ContainsKey(symbol.SymbolId))
+            {
+                return true;
+            }
         }
 
-        _symbolSpecs.Add(symbol, spec);
+        return false;
     }
 }

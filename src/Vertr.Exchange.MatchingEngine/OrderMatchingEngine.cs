@@ -112,6 +112,12 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
         if (command is BatchAddSymbolsCommand addSymbolsCommand)
         {
+            // after risk engine
+            if (cmd.ResultCode != CommandResultCode.SUCCESS)
+            {
+                return cmd.ResultCode;
+            }
+
             _logger.LogDebug("Adding symbols into order books. OrderId={OrderId}", cmd.OrderId);
             return addSymbolsCommand.HandleCommand(_orderBookProvider);
         }

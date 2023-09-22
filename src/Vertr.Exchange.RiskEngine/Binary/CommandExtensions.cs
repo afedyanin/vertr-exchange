@@ -11,8 +11,7 @@ internal static class CommandExtensions
         this BatchAddSymbolsCommand command,
         ISymbolSpecificationProvider symbolSpecificationProvider)
     {
-        symbolSpecificationProvider.AddSymbols(command.Symbols);
-        return CommandResultCode.SUCCESS;
+        return symbolSpecificationProvider.AddSymbols(command.Symbols);
     }
 
     public static CommandResultCode HandleCommand(

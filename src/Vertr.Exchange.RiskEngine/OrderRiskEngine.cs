@@ -52,12 +52,12 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             case OrderCommandType.BINARY_DATA_COMMAND:
                 // ignore return result, because it should be set by MatchingEngineRouter
                 _logger.LogDebug("Processing BinaryCommand={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
-                AcceptBinaryCommand(cmd);
+                cmd.ResultCode = AcceptBinaryCommand(cmd);
                 return;
 
             case OrderCommandType.BINARY_DATA_QUERY:
                 // ignore return result, because it should be set by MatchingEngineRouter
-                AcceptBinaryQuery(cmd);
+                cmd.ResultCode = AcceptBinaryQuery(cmd);
                 return;
 
             case OrderCommandType.RESET:
