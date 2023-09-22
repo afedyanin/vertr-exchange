@@ -4,6 +4,10 @@ using Vertr.Exchange.Common.Enums;
 namespace Vertr.Exchange.Api.Tests.Stubs;
 internal static class SymbolSpecificationStub
 {
+    internal static int[] Symbols = new int[] { 1, 2, 3, 4 };
+
+    internal static int[] Currencies = new int[] { 10, 20, 30, 40 };
+
     public static SymbolSpecification[] GetSymbols
         => new SymbolSpecification[]
         {

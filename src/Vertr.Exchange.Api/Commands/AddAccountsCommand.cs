@@ -9,15 +9,15 @@ namespace Vertr.Exchange.Api.Commands;
 
 public class AddAccountsCommand : ApiCommandBase
 {
-    private readonly IDictionary<int, IDictionary<int, decimal>> _users;
+    private readonly IDictionary<long, IDictionary<int, decimal>> _users;
     public override OrderCommandType CommandType => OrderCommandType.BINARY_DATA_COMMAND;
 
     public AddAccountsCommand(
         long orderId,
         DateTime timestamp,
-        IDictionary<int, IDictionary<int, decimal>> users) : base(orderId, timestamp)
+        IDictionary<long, IDictionary<int, decimal>> users) : base(orderId, timestamp)
     {
-        _users = users ?? new Dictionary<int, IDictionary<int, decimal>>();
+        _users = users ?? new Dictionary<long, IDictionary<int, decimal>>();
     }
 
     public override void Fill(ref OrderCommand command)

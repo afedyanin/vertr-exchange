@@ -118,10 +118,11 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
         if (command is BatchAddAccountsCommand batchAddAccountsCommand)
         {
+            _logger.LogDebug("Adding accounts into UserProfilesProvider. OrderId={OrderId}", cmd.OrderId);
             return batchAddAccountsCommand.HandleCommand(UserProfiles);
         }
 
-        return CommandResultCode.SUCCESS;
+        return cmd.ResultCode;
     }
 
     internal CommandResultCode AcceptBinaryQuery(OrderCommand cmd)
@@ -143,6 +144,6 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             return singleUserReport.HandleQuery(cmd, UserProfiles);
         }
 
-        return CommandResultCode.SUCCESS;
+        return cmd.ResultCode;
     }
 }

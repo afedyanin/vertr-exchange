@@ -110,19 +110,19 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             return CommandResultCode.BINARY_COMMAND_FAILED;
         }
 
+        // after risk engine
+        if (HasErrorResult(cmd))
+        {
+            return cmd.ResultCode;
+        }
+
         if (command is BatchAddSymbolsCommand addSymbolsCommand)
         {
-            // after risk engine
-            if (cmd.ResultCode != CommandResultCode.SUCCESS)
-            {
-                return cmd.ResultCode;
-            }
-
             _logger.LogDebug("Adding symbols into order books. OrderId={OrderId}", cmd.OrderId);
             return addSymbolsCommand.HandleCommand(_orderBookProvider);
         }
 
-        return CommandResultCode.SUCCESS;
+        return cmd.ResultCode;
     }
 
     internal CommandResultCode AcceptBinaryQuery(OrderCommand cmd)
@@ -139,11 +139,24 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             return CommandResultCode.BINARY_COMMAND_FAILED;
         }
 
+        // after risk engine
+        if (HasErrorResult(cmd))
+        {
+            return cmd.ResultCode;
+        }
+
         if (query is SingleUserReportQuery singleUserReport)
         {
             return singleUserReport.HandleQuery(cmd, _orderBookProvider);
         }
 
         return CommandResultCode.SUCCESS;
+    }
+
+    private bool HasErrorResult(OrderCommand cmd)
+    {
+        return cmd.ResultCode is
+            not CommandResultCode.SUCCESS and
+            not CommandResultCode.NEW;
     }
 }

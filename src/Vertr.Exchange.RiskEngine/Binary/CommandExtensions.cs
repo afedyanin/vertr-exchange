@@ -18,7 +18,6 @@ internal static class CommandExtensions
         this BatchAddAccountsCommand command,
         IUserProfileProvider userProfiles)
     {
-        userProfiles.BatchAdd(command.Users);
-        return CommandResultCode.SUCCESS;
+        return userProfiles.BatchAdd(command.Users);
     }
 }
