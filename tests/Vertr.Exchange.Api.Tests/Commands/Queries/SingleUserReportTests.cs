@@ -7,7 +7,7 @@ namespace Vertr.Exchange.Api.Tests.Commands.Queries;
 
 
 [TestFixture(Category = "Unit")]
-public class SingleUserReportTests : CommandTestBase
+public class SingleUserReportTests : ApiTestBase
 {
     [Test]
     public async Task CanGetUserReport()

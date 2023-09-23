@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Enums;
 namespace Vertr.Exchange.Api.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
-public class MoveOrderCommandTests : CommandTestBase
+public class MoveOrderCommandTests : ApiTestBase
 {
     [Test]
     public async Task CanMoveOrder()

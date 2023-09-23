@@ -5,7 +5,7 @@ using Vertr.Exchange.Common.Enums;
 namespace Vertr.Exchange.Api.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
-public class AddSymbolsCommandTests : CommandTestBase
+public class AddSymbolsCommandTests : ApiTestBase
 {
     [Test]
     public async Task CanAddSymbols()

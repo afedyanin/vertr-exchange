@@ -4,7 +4,7 @@ using Vertr.Exchange.Common.Enums;
 namespace Vertr.Exchange.Api.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
-public class SuspendUserCommandTests : CommandTestBase
+public class SuspendUserCommandTests : ApiTestBase
 {
     [Test]
     public async Task CanSuspendUser()
@@ -55,8 +55,8 @@ public class SuspendUserCommandTests : CommandTestBase
         await AddUser(makerUid);
         await AddUser(takerUid);
         await AddSymbol(symbol);
-        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34);
-        await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30);
+        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34, 23L);
+        await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30, 24L);
 
         var susp = new SuspendUserCommand(23L, DateTime.UtcNow, makerUid);
         var res = await Api.SendAsync(susp);

@@ -7,8 +7,8 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Common.Enums;
 
-namespace Vertr.Exchange.Api.Tests.Commands;
-public abstract class CommandTestBase
+namespace Vertr.Exchange.Api.Tests;
+public abstract class ApiTestBase
 {
     protected IServiceProvider ServiceProvider { get; private set; }
 
@@ -77,10 +77,11 @@ public abstract class CommandTestBase
         long uid,
         int symbol,
         decimal price,
-        long size)
+        long size,
+        long orderId = 1030L)
     {
         var cmd = new PlaceOrderCommand(
-            1030L,
+            orderId,
             DateTime.UtcNow,
             price,
             size,

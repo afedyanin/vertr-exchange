@@ -5,7 +5,7 @@ using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Commands;
 
-public class ResetCommandTests : CommandTestBase
+public class ResetCommandTests : ApiTestBase
 {
     [Test]
     public async Task CanSendResetCommand()
