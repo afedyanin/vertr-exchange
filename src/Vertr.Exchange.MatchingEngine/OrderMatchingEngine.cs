@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common;
@@ -40,6 +41,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             case OrderCommandType.CANCEL_ORDER:
             case OrderCommandType.MOVE_ORDER:
             case OrderCommandType.ORDER_BOOK_REQUEST:
+                _logger.LogDebug("Processing command={CommandType} OrderId={OrderId} Uid={Uid}", cmd.Command, cmd.OrderId, cmd.Uid);
                 ProcessMatchingCommand(cmd);
                 break;
             case OrderCommandType.RESET:
@@ -78,6 +80,11 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
     internal void ProcessMatchingCommand(OrderCommand cmd)
     {
+        if (HasErrorResult(cmd))
+        {
+            return;
+        }
+
         var orderBook = _orderBookProvider.GetOrderBook(cmd.Symbol);
 
         if (orderBook == null)
@@ -160,6 +167,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
     {
         return cmd.ResultCode is
             not CommandResultCode.SUCCESS and
-            not CommandResultCode.NEW;
+            not CommandResultCode.NEW and
+            not CommandResultCode.VALID_FOR_MATCHING_ENGINE;
     }
 }

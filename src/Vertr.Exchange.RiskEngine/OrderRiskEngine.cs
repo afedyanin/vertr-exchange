@@ -36,6 +36,7 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
+                _logger.LogDebug("Pre-processing PLACE_ORDER OrderId={OrderId} Uid={Uid}", cmd.OrderId, cmd.Uid);
                 var handler = new PreProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
                 cmd.ResultCode = handler.Handle(cmd);
                 return;

@@ -1,5 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
+using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Tests.Stubs;
+using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Commands;
 public abstract class CommandTestBase
@@ -25,4 +28,33 @@ public abstract class CommandTestBase
     {
         Api?.Dispose();
     }
+
+    protected async Task AddUser(long userId)
+    {
+        var cmd = new AddUserCommand(1000L, DateTime.UtcNow, userId);
+
+        var res = await Api.SendAsync(cmd);
+
+        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+    }
+
+    protected async Task AddSymbol(
+        int symbol,
+        int currency = 100,
+        SymbolType symbolType = SymbolType.CURRENCY_EXCHANGE_PAIR)
+    {
+        var symSpec = new SymbolSpecification
+        {
+            Currency = currency,
+            Type = symbolType,
+            SymbolId = symbol
+        };
+
+        var cmd = new AddSymbolsCommand(1010L, DateTime.UtcNow, new SymbolSpecification[] { symSpec });
+
+        var res = await Api.SendAsync(cmd);
+
+        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+    }
+
 }
