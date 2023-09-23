@@ -3,6 +3,7 @@ using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Commands.Queries;
 using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Common.Enums;
 
@@ -71,7 +72,7 @@ public abstract class CommandTestBase
         return report;
     }
 
-    protected async Task PlaceGTCOrder(
+    protected async Task<IApiCommandResult> PlaceGTCOrder(
         OrderAction orderAction,
         long uid,
         int symbol,
@@ -89,6 +90,6 @@ public abstract class CommandTestBase
             symbol);
 
         var res = await Api.SendAsync(cmd);
-        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+        return res;
     }
 }

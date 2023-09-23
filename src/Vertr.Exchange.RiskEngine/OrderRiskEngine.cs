@@ -80,13 +80,14 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             case OrderCommandType.SHUTDOWN_SIGNAL:
             case OrderCommandType.RESERVED_COMPRESSED:
             default:
+                _logger.LogDebug("Skip processing Command={CommandType} OrderId={OrderId}", cmd.Command, cmd.OrderId);
                 break;
         }
     }
 
     public void PostProcessCommand(long seq, OrderCommand cmd)
     {
-        _logger.LogDebug("Post processing command. OrderId={OrderId}", cmd.OrderId);
+        _logger.LogDebug("Post processing Command={CommandType} OrderId={OrderId}", cmd.Command, cmd.OrderId);
         var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
         handler.Handle(cmd);
     }
