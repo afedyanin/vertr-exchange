@@ -13,6 +13,9 @@ internal class ApiCommandResult : IApiCommandResult
 
     public IEngineEvent? RootEvent { get; init; }
 
+    public L2MarketData? MarketData { get; init; }
+
+
     public static IApiCommandResult Create(OrderCommand command)
     {
         return new ApiCommandResult
@@ -21,6 +24,7 @@ internal class ApiCommandResult : IApiCommandResult
             OrderId = command.OrderId,
             Timestamp = command.Timestamp,
             RootEvent = command.EngineEvent,
+            MarketData = command.MarketData,
         };
     }
 }

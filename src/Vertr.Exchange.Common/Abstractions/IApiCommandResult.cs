@@ -11,4 +11,6 @@ public interface IApiCommandResult
     public DateTime Timestamp { get; }
 
     public IEngineEvent? RootEvent { get; }
+
+    public L2MarketData? MarketData { get; }
 }

@@ -26,5 +26,6 @@ public class OrderBookRequest : ApiCommandBase
 
         command.Symbol = Symbol;
         command.Size = Size;
+        command.Uid = 0L;
     }
 }
