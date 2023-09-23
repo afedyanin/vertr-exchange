@@ -70,4 +70,25 @@ public abstract class CommandTestBase
 
         return report;
     }
+
+    protected async Task PlaceGTCOrder(
+        OrderAction orderAction,
+        long uid,
+        int symbol,
+        decimal price,
+        long size)
+    {
+        var cmd = new PlaceOrderCommand(
+            1030L,
+            DateTime.UtcNow,
+            price,
+            size,
+            orderAction,
+            OrderType.GTC,
+            uid,
+            symbol);
+
+        var res = await Api.SendAsync(cmd);
+        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+    }
 }

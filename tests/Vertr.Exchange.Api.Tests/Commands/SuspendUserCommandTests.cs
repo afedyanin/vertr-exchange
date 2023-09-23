@@ -46,18 +46,36 @@ public class SuspendUserCommandTests : CommandTestBase
     }
 
     [Test]
-    public Task CannotSuspendUserHasPositions()
+    public async Task CannotSuspendUserHasPositions()
     {
-        // TODO: Implement this
-        // Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_HAS_POSITIONS));
-        return Task.CompletedTask;
+        var makerUid = 100L;
+        var takerUid = 102L;
+        var symbol = 2;
+
+        await AddUser(makerUid);
+        await AddUser(takerUid);
+        await AddSymbol(symbol);
+        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34);
+        await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30);
+
+        var susp = new SuspendUserCommand(23L, DateTime.UtcNow, makerUid);
+        var res = await Api.SendAsync(susp);
+
+        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_HAS_POSITIONS));
     }
 
     [Test]
-    public Task CannotSuspendUserNonEmptyAccounts()
+    public async Task CannotSuspendUserNonEmptyAccounts()
     {
-        // TODO: Implement this
-        // Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_NON_EMPTY_ACCOUNTS));
-        return Task.CompletedTask;
+        var uid = 100L;
+        await AddUser(uid);
+
+        var adj = new AdjustBalanceCommand(21L, DateTime.UtcNow, uid, 10, 45.34M);
+        var res = await Api.SendAsync(adj);
+
+        var susp = new SuspendUserCommand(23L, DateTime.UtcNow, uid);
+        res = await Api.SendAsync(susp);
+
+        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.USER_MGMT_USER_NOT_SUSPENDABLE_NON_EMPTY_ACCOUNTS));
     }
 }
