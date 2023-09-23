@@ -19,8 +19,9 @@ internal class AdjustBalanceCommand : UserCommandBase
             return CommandResultCode.USER_MGMT_USER_NOT_FOUND;
         }
 
+        var currency = OrderCommand.Symbol;
         // TODO: Check if suspended?
-        UserProfile.AddToValue(OrderCommand.Symbol, OrderCommand.Price); // Should be currency
+        UserProfile.AddToValue(currency, OrderCommand.Price); // Should be currency
 
         return CommandResultCode.SUCCESS;
     }

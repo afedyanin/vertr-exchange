@@ -19,17 +19,17 @@ internal class PostProcessOrderHandler
         _symbols = symbols;
     }
 
-    public bool Handle(OrderCommand orderCommand)
+    public void Handle(OrderCommand orderCommand)
     {
         var matcherEvent = orderCommand.EngineEvent;
 
         // skip events processing if no events (or if contains BINARY EVENT)
         if (matcherEvent == null || matcherEvent.EventType == EngineEventType.BINARY_EVENT)
         {
-            return false; // ??
+            return;
         }
 
-        var spec = _symbols.GetSymbolSpecification(orderCommand.Symbol);
+        var spec = _symbols.GetSymbol(orderCommand.Symbol);
         Debug.Assert(spec != null);
 
         var takerAction = orderCommand.Action!.Value;
@@ -40,8 +40,6 @@ internal class PostProcessOrderHandler
             HandleMatcherEvent(matcherEvent, spec, takerAction, takerProfile);
             matcherEvent = matcherEvent.NextEvent;
         } while (matcherEvent != null);
-
-        return false; // ??
     }
 
     private void HandleMatcherEvent(

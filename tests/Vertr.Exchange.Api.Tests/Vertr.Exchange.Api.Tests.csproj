@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Accounts\Vertr.Exchange.Accounts.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Api\Vertr.Exchange.Api.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Infrastructure\Vertr.Exchange.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Infrastructure.Tests\Vertr.Exchange.Infrastructure.Tests.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Tests.Stubs\Vertr.Exchange.Tests.Stubs.csproj" />
+  </ItemGroup>
+
+</Project>

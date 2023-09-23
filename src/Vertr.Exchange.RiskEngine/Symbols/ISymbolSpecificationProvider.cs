@@ -1,16 +1,13 @@
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.RiskEngine.Symbols;
 
 internal interface ISymbolSpecificationProvider
 {
-    bool AddSymbol(SymbolSpecification symbolSpecification);
+    SymbolSpecification? GetSymbol(int symbol);
 
-    SymbolSpecification? GetSymbolSpecification(int symbol);
-
-    void AddSymbols(SymbolSpecification[] symbols);
-
-    void RegisterSymbol(int symbol, SymbolSpecification spec);
+    CommandResultCode AddSymbols(SymbolSpecification[] symbols);
 
     public void Reset();
 }

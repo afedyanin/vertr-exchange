@@ -29,7 +29,7 @@ internal class PreProcessOrderHandler
             return CommandResultCode.AUTH_INVALID_USER;
         }
 
-        var spec = _symbols.GetSymbolSpecification(orderCommand.Symbol);
+        var spec = _symbols.GetSymbol(orderCommand.Symbol);
 
         if (spec == null)
         {

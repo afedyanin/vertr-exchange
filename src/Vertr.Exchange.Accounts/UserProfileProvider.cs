@@ -15,7 +15,8 @@ internal class UserProfileProvider : IUserProfileProvider
 
     public IUserProfile? Get(long uid)
     {
-        return _userProfiles.TryGetValue(uid, out var profile) ? profile : null;
+        _userProfiles.TryGetValue(uid, out var profile);
+        return profile;
     }
 
     public IUserProfile GetOrAdd(long uid, UserStatus status)
@@ -36,7 +37,7 @@ internal class UserProfileProvider : IUserProfileProvider
         _userProfiles.Clear();
     }
 
-    public void BatchAdd(IDictionary<int, IDictionary<int, long>> users)
+    public CommandResultCode BatchAdd(IDictionary<long, IDictionary<int, decimal>> users)
     {
         foreach (var (uid, accounts) in users)
         {
@@ -47,5 +48,7 @@ internal class UserProfileProvider : IUserProfileProvider
                 profile.AddToValue(currency, balance);
             }
         }
+
+        return CommandResultCode.SUCCESS;
     }
 }

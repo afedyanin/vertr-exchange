@@ -94,6 +94,11 @@ internal class UserProfile : IUserProfile
 
         }
 
+        if (Status == UserStatus.SUSPENDED)
+        {
+            return CommandResultCode.USER_MGMT_USER_ALREADY_SUSPENDED;
+        }
+
         Status = UserStatus.SUSPENDED;
         return CommandResultCode.SUCCESS;
     }

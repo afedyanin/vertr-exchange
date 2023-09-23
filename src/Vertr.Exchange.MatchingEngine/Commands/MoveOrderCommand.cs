@@ -19,13 +19,18 @@ internal sealed class MoveOrderCommand : OrderBookCommand
 
         Debug.Assert(Order is not null);
 
-        OrderBook.RemoveOrder(Order);
+        var removed = OrderBook.RemoveOrder(Order);
+
+        if (!removed)
+        {
+            return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
+        }
 
         // try match with new price
         var result = OrderBook.TryMatchInstantly(
             Order.Action,
             OrderCommand.Price,
-            OrderCommand.Size,
+            Order.Size,
             Order.Filled);
 
         AttachTradeEvents(result.TradeEvents);
@@ -36,9 +41,14 @@ internal sealed class MoveOrderCommand : OrderBookCommand
         }
 
         // if not filled completely - put it into corresponding bucket
-        Order.Update(OrderCommand.Price, OrderCommand.Size, result.Filled);
+        Order.Update(OrderCommand.Price, Order.Size, result.Filled);
         var added = OrderBook.AddOrder(Order);
 
-        return added ? CommandResultCode.SUCCESS : CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID; // TODO: Return ErrorResultCode
+        if (!added)
+        {
+            return CommandResultCode.MATCHING_UNKNOWN_ORDER_ID;
+        }
+
+        return CommandResultCode.SUCCESS;
     }
 }

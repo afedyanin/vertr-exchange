@@ -8,57 +8,67 @@ using Vertr.Exchange.RiskEngine.Symbols;
 using Vertr.Exchange.Common.Binary.Commands;
 using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.RiskEngine.Binary;
+using Microsoft.Extensions.Logging;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
 namespace Vertr.Exchange.RiskEngine;
 internal sealed class OrderRiskEngine : IOrderRiskEngine
 {
+    private readonly ILogger<OrderRiskEngine> _logger;
+
     public IUserProfileProvider UserProfiles { get; }
 
     public ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
 
     public OrderRiskEngine(
         IUserProfileProvider userProfiles,
-        ISymbolSpecificationProvider symbolSpecificationProvider)
+        ISymbolSpecificationProvider symbolSpecificationProvider,
+        ILogger<OrderRiskEngine> logger)
     {
         UserProfiles = userProfiles;
         SymbolSpecificationProvider = symbolSpecificationProvider;
+        _logger = logger;
     }
 
-    public bool PreProcessCommand(long seq, OrderCommand cmd)
+    public void PreProcessCommand(long seq, OrderCommand cmd)
     {
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
+                _logger.LogDebug("Pre-processing PLACE_ORDER OrderId={OrderId} Uid={Uid}", cmd.OrderId, cmd.Uid);
                 var handler = new PreProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
                 cmd.ResultCode = handler.Handle(cmd);
-                return false;
+                return;
 
             case OrderCommandType.ADD_USER:
             case OrderCommandType.SUSPEND_USER:
             case OrderCommandType.RESUME_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
                 var userCommand = UserCommandFactory.CreateUserCommand(cmd, UserProfiles);
+                _logger.LogDebug("Executing UserCommand={CommandType} OrderId={OrderId} Uid={Uid}", cmd.Command, cmd.OrderId, cmd.Uid);
                 cmd.ResultCode = userCommand.Execute();
-                return false;
+                return;
 
             case OrderCommandType.BINARY_DATA_COMMAND:
-                // ignore return result, because it should be set by MatchingEngineRouter
-                AcceptBinaryCommand(cmd);
-                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-                return false;
+                _logger.LogDebug("Processing BinaryCommand={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
+                cmd.ResultCode = AcceptBinaryCommand(cmd);
+                return;
 
             case OrderCommandType.BINARY_DATA_QUERY:
-                // ignore return result, because it should be set by MatchingEngineRouter
-                AcceptBinaryQuery(cmd);
-                cmd.ResultCode = CommandResultCode.VALID_FOR_MATCHING_ENGINE;
-                return false;
+                _logger.LogDebug("Processing BinaryQuery={CommandType} OrderId={OrderId}", cmd.BinaryCommandType, cmd.OrderId);
+                cmd.ResultCode = AcceptBinaryQuery(cmd);
+                return;
 
             case OrderCommandType.RESET:
+                _logger.LogWarning("Processing RESET command OrderId={OrderId}", cmd.OrderId);
                 Reset();
                 cmd.ResultCode = CommandResultCode.SUCCESS;
-                return false;
+                return;
+
+            case OrderCommandType.NOP:
+                _logger.LogDebug("Pre processing NOP command. OrderId={OrderId}", cmd.OrderId);
+                return;
 
             case OrderCommandType.MOVE_ORDER:
             case OrderCommandType.CANCEL_ORDER:
@@ -67,19 +77,19 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
             case OrderCommandType.PERSIST_STATE_MATCHING:
             case OrderCommandType.PERSIST_STATE_RISK:
             case OrderCommandType.GROUPING_CONTROL:
-            case OrderCommandType.NOP:
             case OrderCommandType.SHUTDOWN_SIGNAL:
             case OrderCommandType.RESERVED_COMPRESSED:
             default:
+                _logger.LogDebug("Skip processing Command={CommandType} OrderId={OrderId}", cmd.Command, cmd.OrderId);
                 break;
         }
-        return false;
     }
 
-    public bool PostProcessCommand(long seq, OrderCommand cmd)
+    public void PostProcessCommand(long seq, OrderCommand cmd)
     {
+        _logger.LogDebug("Post processing Command={CommandType} OrderId={OrderId}", cmd.Command, cmd.OrderId);
         var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
-        return handler.Handle(cmd);
+        handler.Handle(cmd);
     }
 
     private void Reset()
@@ -104,15 +114,17 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
         if (command is BatchAddSymbolsCommand batchAddSymbolsCommand)
         {
+            _logger.LogDebug("Saving symbols into SymbolSpecificationProvider. OrderId={OrderId}", cmd.OrderId);
             return batchAddSymbolsCommand.HandleCommand(SymbolSpecificationProvider);
         }
 
         if (command is BatchAddAccountsCommand batchAddAccountsCommand)
         {
+            _logger.LogDebug("Adding accounts into UserProfilesProvider. OrderId={OrderId}", cmd.OrderId);
             return batchAddAccountsCommand.HandleCommand(UserProfiles);
         }
 
-        return CommandResultCode.SUCCESS;
+        return cmd.ResultCode;
     }
 
     internal CommandResultCode AcceptBinaryQuery(OrderCommand cmd)
@@ -131,9 +143,10 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
         if (query is SingleUserReportQuery singleUserReport)
         {
+            _logger.LogDebug("Populate SingleUserReportQuery result. OrderId={OrderId}", cmd.OrderId);
             return singleUserReport.HandleQuery(cmd, UserProfiles);
         }
 
-        return CommandResultCode.SUCCESS;
+        return cmd.ResultCode;
     }
 }

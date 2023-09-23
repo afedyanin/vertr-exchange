@@ -1,6 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Reports;
+using Vertr.Exchange.Common.Binary.Reports.Dtos;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Common.Events;
 
@@ -15,6 +16,7 @@ internal static class ReportExtensions
     {
         var result = BinaryQueryFactory.GetSingleUserReportResult(command);
         result ??= new SingleUserReportResult();
+
         result.Uid = query.Uid;
 
         var userProfile = userProfiles.Get(command.Uid);
@@ -23,11 +25,36 @@ internal static class ReportExtensions
         {
             result.UserStatus = userProfile.Status;
             result.Accounts = userProfile.Accounts;
-            result.Positions = userProfile.Positions;
+            result.Positions = userProfile.Positions.ToDto();
+            result.ExecutionStatus = QueryExecutionStatus.OK;
         }
 
         EventsHelper.AttachBinaryEvent(command, result.ToBinary());
 
         return CommandResultCode.SUCCESS;
+    }
+
+    private static IDictionary<int, PositionDto> ToDto(this IDictionary<int, IPosition> dict)
+    {
+        var res = new Dictionary<int, PositionDto>(dict.Count);
+
+        foreach (var key in dict.Keys)
+        {
+            res.Add(key, dict[key].ToDto());
+        }
+
+        return res;
+    }
+
+    private static PositionDto ToDto(this IPosition pos)
+    {
+        return new PositionDto
+        {
+            Direction = pos.Direction,
+            OpenVolume = pos.OpenVolume,
+            RealizedPnL = pos.RealizedPnL,
+            Symbol = pos.Symbol,
+            Uid = pos.Uid,
+        };
     }
 }
