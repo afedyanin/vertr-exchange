@@ -1,7 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Api.Commands;
+using Vertr.Exchange.Api.Commands.Queries;
 using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Common;
+using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Commands;
@@ -57,4 +59,15 @@ public abstract class CommandTestBase
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
     }
 
+    protected async Task<SingleUserReportResult?> GetUserReport(long uid)
+    {
+        var rep = new SingleUserReport(1020L, DateTime.UtcNow, uid);
+        var res = await Api.SendAsync(rep);
+
+        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
+
+        var report = rep.GetResult(res);
+
+        return report;
+    }
 }

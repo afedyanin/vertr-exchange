@@ -82,6 +82,11 @@ public class OrderMatchingEngine : IOrderMatchingEngine
     {
         if (HasErrorResult(cmd))
         {
+            _logger.LogDebug("Skip command={CommandType} OrderId={OrderId}. InvalidStae={ResultCode}",
+                cmd.Command,
+                cmd.OrderId,
+                cmd.ResultCode);
+
             return;
         }
 
@@ -89,6 +94,10 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
         if (orderBook == null)
         {
+            _logger.LogWarning("Order book not found for Symbol={Symbol} OrderId={OrderId}.",
+                cmd.Symbol,
+                cmd.OrderId);
+
             cmd.ResultCode = CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID;
             return;
         }
@@ -96,11 +105,16 @@ public class OrderMatchingEngine : IOrderMatchingEngine
         var orderBookCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
 
         // TODO: Catch and handle exceptions
+        _logger.LogDebug("Executing orderCommand={commandType} OrderId={OrderId}",
+            orderBookCommand.GetType(),
+            cmd.OrderId);
+
         cmd.ResultCode = orderBookCommand.Execute();
 
         if (cmd.Command != OrderCommandType.ORDER_BOOK_REQUEST
             && cmd.ResultCode == CommandResultCode.SUCCESS)
         {
+            _logger.LogDebug("Attach market data for OrderId={OrderId}", cmd.OrderId);
             cmd.MarketData = orderBook.GetL2MarketDataSnapshot(_config.L2RefreshDepth);
         }
     }
