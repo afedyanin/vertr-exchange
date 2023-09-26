@@ -26,8 +26,7 @@ public class GreeterServiceTests
             HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
 
-        using var channel = GrpcChannel.ForAddress(
-            "https://localhost:7149",
+        using var channel = GrpcChannel.ForAddress("https://localhost:7149",
             new GrpcChannelOptions { HttpHandler = handler });
 
         var client = new Greeter.GreeterClient(channel);
