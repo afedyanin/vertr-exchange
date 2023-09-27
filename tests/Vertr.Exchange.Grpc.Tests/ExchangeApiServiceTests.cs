@@ -40,10 +40,29 @@ public class ExchangeApiServiceTests
         {
             Assert.That(result.CommandResultCode, Is.EqualTo(CommandResultCode.Success));
             Assert.That(result.MarketData, Is.Not.Null);
+            Assert.That(result.Events, Is.Empty);
         });
 
         var prices = result.MarketData.AskPrices.Select(p => p.ToDecimal());
         var str = string.Join(";", prices);
         Console.WriteLine(str);
+    }
+
+    [Test]
+    public async Task CanCallNopCommandViaHttps()
+    {
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+
+        using var channel = GrpcChannel.ForAddress("https://localhost:7149",
+            new GrpcChannelOptions { HttpHandler = handler });
+
+        var client = new ExchangeApi.ExchangeApiClient(channel);
+        var result = await client.NopAsync(new ApiCommandNoParams());
+
+        Assert.That(result, Is.Not.Null);
     }
 }

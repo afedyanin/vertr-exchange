@@ -7,6 +7,9 @@
     <NoWarn>CS8981, CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\src\Vertr.Exchange.Grpc\Helpers\DecimalValue.cs" Link="DecimalValue.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.13.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.32.0" />
     <PackageReference Include="Grpc.Tools" Version="2.32.0" PrivateAssets="All" />
@@ -17,7 +20,6 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
   <ItemGroup>
-    <Protobuf Include="..\..\src\Vertr.Exchange.Grpc\Protos\greet.proto" GrpcServices="Client" Link="Protos\greet.proto" />
     <Protobuf Include="..\..\src\Vertr.Exchange.Grpc\Protos\vertr-exchange-api.proto" GrpcServices="Client" Link="Protos\vertr-exchange-api.proto" />
   </ItemGroup>
 </Project>
