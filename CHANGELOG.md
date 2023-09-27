@@ -1,7 +1,21 @@
-## 24-09-24
+## 27-09-23
 
 ## GRPC
-- шаринг прото-файлов между клиентом и серверм
+- OrderIdGen service
+- CurrentTime service
+- Full API
+- Server Stream
+- Integration tests
+ 
+## Next
+- Event streams
+- UI 
+- CLI
+
+## 24-09-23
+
+## GRPC
+- [x] шаринг прото-файлов между клиентом и серверм
 - серверный стриминг - пример
 
 ## Генерация и передача стримов на клиента 
@@ -14,8 +28,8 @@
 - слой Application Services
 
 ### Следующий этап 
-- GRPC host
-- GRPC client
+- [x] GRPC host
+- [x] GRPC client
  
 ## 22-09-23
 
