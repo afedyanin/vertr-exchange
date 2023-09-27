@@ -15,4 +15,13 @@
     <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.57.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.Exchange.Accounts\Vertr.Exchange.Accounts.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Api\Vertr.Exchange.Api.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Common\Vertr.Exchange.Common.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Infrastructure\Vertr.Exchange.Infrastructure.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
+  </ItemGroup>
+
 </Project>

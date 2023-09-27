@@ -1,38 +1,49 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Vertr.Exchange.Api;
+using Vertr.Exchange.Api.Commands;
 
 namespace Vertr.Exchange.Grpc.Services;
 
-public class ExchangeApiService : ExchangeApi.ExchangeApiBase
+public class ExchangeApiService : Exchange.ExchangeBase
 {
+    private readonly IExchangeApi _api;
+
     private readonly ILogger<ExchangeApiService> _logger;
 
-    public ExchangeApiService(ILogger<ExchangeApiService> logger)
+    public ExchangeApiService(
+        IExchangeApi api,
+        ILogger<ExchangeApiService> logger)
     {
+        _api = api;
         _logger = logger;
     }
 
-    public override Task<ApiCommandResult> Nop(ApiCommandNoParams request, ServerCallContext context)
+    public override async Task<CommandResult> Nop(CommandNoParams request, ServerCallContext context)
     {
         _logger.LogDebug("NOP command received.");
 
-        var res = new ApiCommandResult()
+        var cmd = new NopCommand(100L, DateTime.UtcNow);
+
+        var result = await _api.SendAsync(cmd);
+
+        var res = new CommandResult()
         {
-            CommandResultCode = CommandResultCode.Success,
+            CommandResultCode = ResultCode.Success,
             OrderId = 1000L,
             Timestamp = DateTime.UtcNow.ToTimestamp(),
         };
 
-        return Task.FromResult(res);
+        return res;
     }
 
-    public override Task<ApiCommandResult> GetOrderBook(OrderBookRequest request, ServerCallContext context)
+    public override Task<CommandResult> GetOrderBook(OrderBookRequest request, ServerCallContext context)
     {
         _logger.LogDebug("GetOrderBook command received.");
 
-        var res = new ApiCommandResult()
+        var res = new CommandResult()
         {
-            CommandResultCode = CommandResultCode.Success,
+            CommandResultCode = ResultCode.Success,
             OrderId = 1000L,
             Timestamp = DateTime.UtcNow.ToTimestamp(),
             MarketData = CreateMarketData(),
@@ -41,9 +52,9 @@ public class ExchangeApiService : ExchangeApi.ExchangeApiBase
         return Task.FromResult(res);
     }
 
-    private static L2MarketData CreateMarketData()
+    private static Level2MarketData CreateMarketData()
     {
-        var res = new L2MarketData
+        var res = new Level2MarketData
         {
             AskSize = 1,
             BidSize = 1,

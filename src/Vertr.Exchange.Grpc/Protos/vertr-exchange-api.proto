@@ -7,27 +7,27 @@ option csharp_namespace = "Vertr.Exchange.Grpc";
 
 package exchange;
 
-service ExchangeApi {
-  rpc Nop (ApiCommandNoParams) returns (ApiCommandResult);
-  rpc GetOrderBook(OrderBookRequest) returns (ApiCommandResult);
+service Exchange {
+  rpc Nop (CommandNoParams) returns (CommandResult);
+  rpc GetOrderBook(OrderBookRequest) returns (CommandResult);
 }
 
-message ApiCommandNoParams {}
+message CommandNoParams {}
 
 message OrderBookRequest {
     int32 Symbol = 1;
     int32 Size = 2;
 }
 
-message ApiCommandResult {
-  CommandResultCode CommandResultCode = 1;
+message CommandResult {
+  ResultCode CommandResultCode = 1;
   int64 OrderId = 2;
   google.protobuf.Timestamp Timestamp = 3;
-  L2MarketData MarketData = 4;
-  repeated EngineEvent Events = 5;
+  Level2MarketData MarketData = 4;
+  repeated ExchangeEvent Events = 5;
 }
 
-enum CommandResultCode {
+enum ResultCode {
     NEW = 0;
     VALID_FOR_MATCHING_ENGINE = 1;
 
@@ -81,15 +81,15 @@ enum CommandResultCode {
     DROP = -9999;
 }
 
-enum EngineEventType {
+enum EventType {
     TRADE = 0;
     REJECT = 1;
     REDUCE = 2;
     BINARY_EVENT = 3;
 }
 
-message EngineEvent {
-    EngineEventType EventType = 1;
+message ExchangeEvent {
+    EventType EventType = 1;
     bool ActiveOrderCompleted = 2;
     bool MatchedOrderCompleted = 3;
     int64 MatchedOrderId = 4;
@@ -99,7 +99,7 @@ message EngineEvent {
     bytes BinaryData = 8;
 }
 
-message L2MarketData {
+message Level2MarketData {
     int32 AskSize = 1;
     int32 BidSize = 2;
     repeated DecimalValue AskPrices = 3; // TODO: convert to decimal

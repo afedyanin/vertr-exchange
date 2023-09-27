@@ -1,3 +1,8 @@
+using Vertr.Exchange.Api;
+using Vertr.Exchange.Infrastructure;
+using Vertr.Exchange.RiskEngine;
+using Vertr.Exchange.Accounts;
+using Vertr.Exchange.MatchingEngine;
 using Vertr.Exchange.Grpc.Services;
 
 namespace Vertr.Exchange.Grpc;
@@ -10,6 +15,15 @@ public class Program
         // Add services to the container.
         builder.Services.AddGrpc();
         builder.Services.AddGrpcReflection();
+
+        // TODO: Refactor this
+        // Register Exchange
+        builder.Services.AddExchangeApi();
+        builder.Services.AddUserProfileProvider();
+        builder.Services.AddOrderRiskEngine();
+        builder.Services.AddOrderMatchingEngine();
+        builder.Services.UseRiskEngine();
+        builder.Services.UseMatchingEngine();
 
         var app = builder.Build();
 

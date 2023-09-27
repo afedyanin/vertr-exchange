@@ -10,13 +10,13 @@ public class ExchangeApiServiceTests
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
-        var client = new ExchangeApi.ExchangeApiClient(channel);
-        var result = await client.NopAsync(new ApiCommandNoParams());
+        var client = new Exchange.ExchangeClient(channel);
+        var result = await client.NopAsync(new CommandNoParams());
 
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(result.CommandResultCode, Is.EqualTo(CommandResultCode.Success));
+            Assert.That(result.CommandResultCode, Is.EqualTo(ResultCode.Success));
             Assert.That(result.OrderId, Is.GreaterThan(0L));
             Assert.That(result.Timestamp.ToDateTime(), Is.GreaterThan(DateTime.MinValue));
             Assert.That(result.MarketData, Is.Null);
@@ -28,7 +28,7 @@ public class ExchangeApiServiceTests
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
-        var client = new ExchangeApi.ExchangeApiClient(channel);
+        var client = new Exchange.ExchangeClient(channel);
         var result = await client.GetOrderBookAsync(new OrderBookRequest
         {
             Symbol = 1,
@@ -38,7 +38,7 @@ public class ExchangeApiServiceTests
         Assert.That(result, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(result.CommandResultCode, Is.EqualTo(CommandResultCode.Success));
+            Assert.That(result.CommandResultCode, Is.EqualTo(ResultCode.Success));
             Assert.That(result.MarketData, Is.Not.Null);
             Assert.That(result.Events, Is.Empty);
         });
@@ -60,8 +60,8 @@ public class ExchangeApiServiceTests
         using var channel = GrpcChannel.ForAddress("https://localhost:7149",
             new GrpcChannelOptions { HttpHandler = handler });
 
-        var client = new ExchangeApi.ExchangeApiClient(channel);
-        var result = await client.NopAsync(new ApiCommandNoParams());
+        var client = new Exchange.ExchangeClient(channel);
+        var result = await client.NopAsync(new CommandNoParams());
 
         Assert.That(result, Is.Not.Null);
     }
