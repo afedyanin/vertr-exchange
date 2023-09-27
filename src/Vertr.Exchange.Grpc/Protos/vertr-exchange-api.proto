@@ -9,14 +9,31 @@ package exchange;
 
 service ExchangeApi {
   rpc Nop (ApiCommandNoParams) returns (ApiCommandResult);
+  rpc GetOrderBook(OrderBookRequest) returns (ApiCommandResult);
 }
 
 message ApiCommandNoParams {}
+
+message OrderBookRequest {
+    int32 Symbol = 1;
+    int32 Size = 2;
+}
 
 message ApiCommandResult {
   CommandResultCode CommandResultCode = 1;
   int64 OrderId = 2;
   google.protobuf.Timestamp Timestamp = 3;
+  L2MarketData MarketData = 4;
+}
+
+message DecimalValue {
+
+    // Whole units part of the amount
+    int64 Units = 1;
+
+    // Nano units of the amount (10^-9)
+    // Must be same sign as units
+    sfixed32 Nanos = 2;
 }
 
 enum CommandResultCode {
@@ -71,4 +88,17 @@ enum CommandResultCode {
     STATE_PERSIST_MATCHING_ENGINE_FAILED = -8020;
 
     DROP = -9999;
+}
+
+message L2MarketData {
+    int32 AskSize = 1;
+    int32 BidSize = 2;
+    repeated DecimalValue AskPrices = 3; // TODO: convert to decimal
+    repeated int64 AskVolumes = 4;
+    repeated int64 AskOrders = 5;
+    repeated DecimalValue BidPrices = 6;
+    repeated int64 BidVolumes = 7;
+    repeated int64 BidOrders = 8;
+    google.protobuf.Timestamp Timestamp = 9;
+    int64 ReferenceSeq = 10;
 }

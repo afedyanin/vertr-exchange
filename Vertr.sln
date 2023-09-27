@@ -41,9 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Api", "src\V
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Tests.Stubs", "tests\Vertr.Exchange.Tests.Stubs\Vertr.Exchange.Tests.Stubs.csproj", "{BCC22B40-DF47-47FB-A85E-134C26D771DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.Grpc", "src\Vertr.Exchange.Grpc\Vertr.Exchange.Grpc.csproj", "{6F230A60-F874-4A46-A5A4-B71DF7CA24D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Grpc", "src\Vertr.Exchange.Grpc\Vertr.Exchange.Grpc.csproj", "{6F230A60-F874-4A46-A5A4-B71DF7CA24D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.Grpc.Tests", "tests\Vertr.Exchange.Grpc.Tests\Vertr.Exchange.Grpc.Tests.csproj", "{20098DD0-0188-45AA-92D2-F928DCAE5038}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Grpc.Tests", "tests\Vertr.Exchange.Grpc.Tests\Vertr.Exchange.Grpc.Tests.csproj", "{20098DD0-0188-45AA-92D2-F928DCAE5038}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
