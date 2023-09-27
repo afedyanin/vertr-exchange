@@ -18,5 +18,6 @@
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="..\..\src\Vertr.Exchange.Grpc\Protos\greet.proto" GrpcServices="Client" Link="Protos\greet.proto" />
+    <Protobuf Include="..\..\src\Vertr.Exchange.Grpc\Protos\vertr-exchange-api.proto" GrpcServices="Client" Link="Protos\vertr-exchange-api.proto" />
   </ItemGroup>
 </Project>
