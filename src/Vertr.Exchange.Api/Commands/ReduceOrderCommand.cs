@@ -10,14 +10,14 @@ public class ReduceOrderCommand : ApiCommandBase
 
     public int Symbol { get; }
 
-    public int ReduceSize { get; }
+    public long ReduceSize { get; }
 
     public ReduceOrderCommand(
         long orderId,
         DateTime timestamp,
         long uid,
         int symbol,
-        int reduceSize) : base(orderId, timestamp)
+        long reduceSize) : base(orderId, timestamp)
     {
         Uid = uid;
         Symbol = symbol;

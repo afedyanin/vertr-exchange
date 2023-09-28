@@ -4,6 +4,7 @@ using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
 using Vertr.Exchange.Grpc.Services;
+using Vertr.Exchange.Grpc.Generators;
 
 namespace Vertr.Exchange.Grpc;
 public class Program
@@ -15,6 +16,9 @@ public class Program
         // Add services to the container.
         builder.Services.AddGrpc();
         builder.Services.AddGrpcReflection();
+
+        builder.Services.AddSingleton<IOrderIdGenerator, OrderIdGenerator>();
+        builder.Services.AddSingleton<ITimestampGenerator, TimestampGenerator>();
 
         // TODO: Refactor this
         // Register Exchange
