@@ -50,6 +50,8 @@ message AdjustBalanceRequest {
 
 message CancelOrderRequest {
     int64 OrderId = 1;
+    int64 UserId = 2;
+    int32 Symbol = 3;
 }
 
 message MoveOrderRequest {

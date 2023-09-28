@@ -55,53 +55,123 @@ public class ExchangeApiService : Exchange.ExchangeBase
         return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> AddUser(UserRequest request, ServerCallContext context)
+    public override async Task<CommandResult> AddUser(UserRequest request, ServerCallContext context)
     {
-        return base.AddUser(request, context);
+        var cmd = new AddUserCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime,
+            request.UserId);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> AddAccounts(AddAccountsRequest request, ServerCallContext context)
+    public override async Task<CommandResult> AddAccounts(AddAccountsRequest request, ServerCallContext context)
     {
-        return base.AddAccounts(request, context);
+        var cmd = new AddAccountsCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime,
+            request.UserAccounts.ToDomain());
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
+    }
+    public override async Task<CommandResult> PlaceOrder(PlaceOrderRequest request, ServerCallContext context)
+    {
+        var cmd = new PlaceOrderCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime,
+            request.Price,
+            request.Size,
+            request.Action.ToDomain(),
+            request.OrderType.ToDomain(),
+            request.UserId,
+            request.Symbol);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> AdjustBalance(AdjustBalanceRequest request, ServerCallContext context)
+    public override async Task<CommandResult> AdjustBalance(AdjustBalanceRequest request, ServerCallContext context)
     {
-        return base.AdjustBalance(request, context);
+        var cmd = new AdjustBalanceCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime,
+            request.UserId,
+            request.Currency,
+            request.Amount);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> CancelOrder(CancelOrderRequest request, ServerCallContext context)
+    public override async Task<CommandResult> CancelOrder(CancelOrderRequest request, ServerCallContext context)
     {
-        return base.CancelOrder(request, context);
+        var cmd = new CancelOrderCommand(
+            request.OrderId,
+            _timestampGenerator.CurrentTime,
+            request.UserId,
+            request.Symbol);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> MoveOrder(MoveOrderRequest request, ServerCallContext context)
+    public override async Task<CommandResult> MoveOrder(MoveOrderRequest request, ServerCallContext context)
     {
-        return base.MoveOrder(request, context);
+        var cmd = new MoveOrderCommand(
+            request.OrderId,
+            _timestampGenerator.CurrentTime,
+            request.UserId,
+            request.NewPrice,
+            request.Symbol);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> PlaceOrder(PlaceOrderRequest request, ServerCallContext context)
+    public override async Task<CommandResult> ReduceOrder(ReduceOrderRequest request, ServerCallContext context)
     {
-        return base.PlaceOrder(request, context);
+        var cmd = new ReduceOrderCommand(
+            request.OrderId,
+            _timestampGenerator.CurrentTime,
+            request.UserId,
+            request.Symbol,
+            request.ReduceSize);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> ReduceOrder(ReduceOrderRequest request, ServerCallContext context)
+    public override async Task<CommandResult> Reset(CommandNoParams request, ServerCallContext context)
     {
-        return base.ReduceOrder(request, context);
+        var cmd = new ResetCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> Reset(CommandNoParams request, ServerCallContext context)
+    public override async Task<CommandResult> ResumeUser(UserRequest request, ServerCallContext context)
     {
-        return base.Reset(request, context);
+        var cmd = new ResumeUserCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime,
+            request.UserId);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 
-    public override Task<CommandResult> ResumeUser(UserRequest request, ServerCallContext context)
+    public override async Task<CommandResult> SuspendUser(UserRequest request, ServerCallContext context)
     {
-        return base.ResumeUser(request, context);
-    }
+        var cmd = new SuspendUserCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime,
+            request.UserId);
 
-    public override Task<CommandResult> SuspendUser(UserRequest request, ServerCallContext context)
-    {
-        return base.SuspendUser(request, context);
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
     }
 }
