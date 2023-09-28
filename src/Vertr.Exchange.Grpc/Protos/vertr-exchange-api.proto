@@ -1,0 +1,213 @@
+syntax = "proto3";
+
+import "google/protobuf/duration.proto";  
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Vertr.Exchange.Grpc";
+
+package exchange;
+
+service Exchange {
+  rpc Nop (CommandNoParams) returns (CommandResult);
+  rpc GetOrderBook(OrderBookRequest) returns (CommandResult);
+  rpc AddSymbols(AddSymbolsRequest) returns (CommandResult);
+  rpc AddUser(UserRequest) returns (CommandResult);
+  rpc AddAccounts(AddAccountsRequest) returns (CommandResult);
+  rpc AdjustBalance(AdjustBalanceRequest) returns (CommandResult);
+  rpc CancelOrder(CancelOrderRequest) returns (CommandResult);
+  rpc MoveOrder(MoveOrderRequest) returns (CommandResult);
+  rpc PlaceOrder(PlaceOrderRequest) returns (CommandResult);
+  rpc ReduceOrder(ReduceOrderRequest) returns (CommandResult);
+  rpc Reset(CommandNoParams) returns (CommandResult);
+  rpc ResumeUser(UserRequest) returns (CommandResult);
+  rpc SuspendUser(UserRequest) returns (CommandResult);
+  rpc GetSingleUserReport(UserRequest) returns (CommandResult);
+}
+
+message CommandNoParams {}
+
+message OrderBookRequest {
+    int32 Symbol = 1;
+    int32 Size = 2;
+}
+
+message AddSymbolsRequest {
+    repeated SymbolSpecification Symbols = 1;
+}
+
+message UserRequest {
+    int64 UserId = 1;
+}
+
+message AddAccountsRequest {
+    repeated UserAccount UserAccounts = 1;
+}
+
+message AdjustBalanceRequest {
+    int64 UserId = 1;
+    int32 Currency = 2;
+    DecimalValue Amount = 3;
+}
+
+message CancelOrderRequest {
+    int64 OrderId = 1;
+    int64 UserId = 2;
+    int32 Symbol = 3;
+}
+
+message MoveOrderRequest {
+    int64 OrderId = 1;
+    int64 UserId = 2;
+    int32 Symbol = 3;
+    DecimalValue NewPrice = 4;
+}
+
+message PlaceOrderRequest {
+    int64 UserId = 1;
+    int32 Symbol = 2;
+    DecimalValue Price = 3;
+    int64 Size = 4;
+    OrderAction Action = 5;
+    OrderType OrderType = 6;
+}
+
+message ReduceOrderRequest {
+    int64 OrderId = 1;
+    int64 UserId = 2;
+    int32 Symbol = 3;
+    int64 ReduceSize = 4;
+}
+
+message UserAccount {
+    int64 UserId = 1;
+    map<int32, DecimalValue> Balances = 2;  
+}
+
+message CommandResult {
+  ResultCode CommandResultCode = 1;
+  int64 OrderId = 2;
+  google.protobuf.Timestamp Timestamp = 3;
+  Level2MarketData MarketData = 4;
+  repeated ExchangeEvent Events = 5;
+}
+
+enum ResultCode {
+    NEW = 0;
+    VALID_FOR_MATCHING_ENGINE = 1;
+
+    SUCCESS = 100;
+    ACCEPTED = 110;
+
+    AUTH_INVALID_USER = -1001;
+    AUTH_TOKEN_EXPIRED = -1002;
+
+    INVALID_SYMBOL = -1201;
+    INVALID_PRICE_STEP = -1202;
+    UNSUPPORTED_SYMBOL_TYPE = -1203;
+
+    RISK_NSF = -2001;
+    RISK_INVALID_RESERVE_BID_PRICE = -2002;
+    RISK_ASK_PRICE_LOWER_THAN_FEE = -2003;
+    RISK_MARGIN_TRADING_DISABLED = -2004;
+
+    MATCHING_UNKNOWN_ORDER_ID = -3002;
+    MATCHING_DUPLICATE_ORDER_ID = -3003;
+    MATCHING_UNSUPPORTED_COMMAND = -3004;
+    MATCHING_INVALID_ORDER_BOOK_ID = -3005;
+    MATCHING_ORDER_BOOK_ALREADY_EXISTS = -3006;
+    MATCHING_UNSUPPORTED_ORDER_TYPE = -3007;
+    MATCHING_MOVE_REJECTED_DIFFERENT_PRICE = -3040;
+    MATCHING_MOVE_FAILED_PRICE_OVER_RISK_LIMIT = -3041;
+    MATCHING_REDUCE_FAILED_WRONG_SIZE = -3051;
+
+    USER_MGMT_USER_ALREADY_EXISTS = -4001;
+
+    USER_MGMT_ACCOUNT_BALANCE_ADJUSTMENT_ZERO = -4100;
+    USER_MGMT_ACCOUNT_BALANCE_ADJUSTMENT_ALREADY_APPLIED_SAME = -4101;
+    USER_MGMT_ACCOUNT_BALANCE_ADJUSTMENT_ALREADY_APPLIED_MANY = -4102;
+    USER_MGMT_ACCOUNT_BALANCE_ADJUSTMENT_NSF = -4103;
+    USER_MGMT_NON_ZERO_ACCOUNT_BALANCE = -4104;
+
+    USER_MGMT_USER_NOT_SUSPENDABLE_HAS_POSITIONS = -4130;
+    USER_MGMT_USER_NOT_SUSPENDABLE_NON_EMPTY_ACCOUNTS = -4131;
+    USER_MGMT_USER_NOT_SUSPENDED = -4132;
+    USER_MGMT_USER_ALREADY_SUSPENDED = -4133;
+
+    USER_MGMT_USER_NOT_FOUND = -4201;
+
+    SYMBOL_MGMT_SYMBOL_ALREADY_EXISTS = -5001;
+
+    BINARY_COMMAND_FAILED = -8001;
+    REPORT_QUERY_UNKNOWN_TYPE = -8003;
+    STATE_PERSIST_RISK_ENGINE_FAILED = -8010;
+    STATE_PERSIST_MATCHING_ENGINE_FAILED = -8020;
+
+    DROP = -9999;
+}
+
+enum EventType {
+    TRADE = 0;
+    REJECT = 1;
+    REDUCE = 2;
+    BINARY_EVENT = 3;
+}
+
+enum SymbolType {
+    CURRENCY_EXCHANGE_PAIR = 0;
+    FUTURES_CONTRACT = 1;
+    OPTION = 2;
+    EQUITY = 3;
+}
+
+enum OrderAction {
+    ASK = 0;
+    BID = 1;
+}
+
+enum OrderType {
+    GTC = 0;
+    IOC = 1;
+    IOC_BUDGET = 2;
+    FOK = 3;
+    FOK_BUDGET = 4;
+}
+
+message ExchangeEvent {
+    EventType EventType = 1;
+    bool ActiveOrderCompleted = 2;
+    bool MatchedOrderCompleted = 3;
+    int64 MatchedOrderId = 4;
+    int64 MatchedOrderUid = 5;
+    DecimalValue Price = 6;
+    int64 Size = 7;
+    bytes BinaryData = 8;
+}
+
+message Level2MarketData {
+    int32 AskSize = 1;
+    int32 BidSize = 2;
+    repeated DecimalValue AskPrices = 3; // TODO: convert to decimal
+    repeated int64 AskVolumes = 4;
+    repeated int64 AskOrders = 5;
+    repeated DecimalValue BidPrices = 6;
+    repeated int64 BidVolumes = 7;
+    repeated int64 BidOrders = 8;
+    google.protobuf.Timestamp Timestamp = 9;
+    int64 ReferenceSeq = 10;
+}
+
+message SymbolSpecification {
+    int32 SymbolId = 1;
+    SymbolType Type = 2;
+    int32 Currency = 3;
+}
+
+message DecimalValue {
+
+    // Whole units part of the amount
+    int64 Units = 1;
+
+    // Nano units of the amount (10^-9)
+    // Must be same sign as units
+    sfixed32 Nanos = 2;
+}
