@@ -21,6 +21,7 @@ service Exchange {
   rpc Reset(CommandNoParams) returns (CommandResult);
   rpc ResumeUser(UserRequest) returns (CommandResult);
   rpc SuspendUser(UserRequest) returns (CommandResult);
+  rpc GetSingleUserReport(UserRequest) returns (CommandResult);
 }
 
 message CommandNoParams {}

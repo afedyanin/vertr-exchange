@@ -1,6 +1,7 @@
 using Grpc.Core;
 using Vertr.Exchange.Api;
 using Vertr.Exchange.Api.Commands;
+using Vertr.Exchange.Api.Commands.Queries;
 using Vertr.Exchange.Grpc.Extensions;
 using Vertr.Exchange.Grpc.Generators;
 
@@ -167,6 +168,17 @@ public class ExchangeApiService : Exchange.ExchangeBase
     public override async Task<CommandResult> SuspendUser(UserRequest request, ServerCallContext context)
     {
         var cmd = new SuspendUserCommand(
+            _orderIdGenerator.NextId,
+            _timestampGenerator.CurrentTime,
+            request.UserId);
+
+        var apiResult = await _api.SendAsync(cmd);
+        return apiResult.ToGrpc();
+    }
+
+    public override async Task<CommandResult> GetSingleUserReport(UserRequest request, ServerCallContext context)
+    {
+        var cmd = new SingleUserReport(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
