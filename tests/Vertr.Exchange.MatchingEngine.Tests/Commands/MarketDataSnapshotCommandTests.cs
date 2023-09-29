@@ -26,7 +26,7 @@ public class MarketDataSnapshotCommandTests
 
         var cmd = OrderCommandStub.OrderBookRequest(100);
 
-        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
 
         Assert.Multiple(() =>

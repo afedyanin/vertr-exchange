@@ -16,7 +16,7 @@ internal static class ApiCommandResultExtensions
 
         if (apiRes.MarketData != null)
         {
-            res.MarketData = apiRes.MarketData.ToGrpc();
+            res.MarketData = apiRes.MarketData.ToGrpc(apiRes.Timestamp);
         }
 
         if (apiRes.RootEvent != null)

@@ -24,12 +24,46 @@ public class ExchangeApiServiceTests
     }
 
     [Test]
+    public async Task AddSymbolsCommand()
+    {
+        using var channel = GrpcChannel.ForAddress("http://localhost:5294");
+
+        var client = new Exchange.ExchangeClient(channel);
+
+        var symRequest = new AddSymbolsRequest();
+
+        symRequest.Symbols.Add(new SymbolSpecification
+        {
+            Currency = 1,
+            SymbolId = 1,
+            Type = SymbolType.Equity
+        });
+
+        var result = await client.AddSymbolsAsync(symRequest);
+        Assert.That(result.CommandResultCode, Is.EqualTo(ResultCode.Success));
+    }
+
+    [Test]
     public async Task GetOrderBookCommand()
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
         var client = new Exchange.ExchangeClient(channel);
-        var result = await client.GetOrderBookAsync(new OrderBookRequest
+
+        var symRequest = new AddSymbolsRequest();
+
+        symRequest.Symbols.Add(new SymbolSpecification
+        {
+            Currency = 1,
+            SymbolId = 1,
+            Type = SymbolType.Equity
+        });
+
+        var result = await client.AddSymbolsAsync(symRequest);
+        Assert.That(result.CommandResultCode, Is.EqualTo(ResultCode.Success));
+
+
+        result = await client.GetOrderBookAsync(new OrderBookRequest
         {
             Symbol = 1,
             Size = 100

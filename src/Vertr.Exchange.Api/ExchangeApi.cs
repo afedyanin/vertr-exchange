@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.Api.Awaiting;
 using Vertr.Exchange.Api.Commands;
+using Vertr.Exchange.Api.Generators;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Infrastructure;
 
@@ -12,13 +13,16 @@ internal sealed class ExchangeApi : IExchangeApi
 {
     private readonly IRequestAwaitingService _requestAwaitingService;
     private readonly IExchangeCoreService _exchangeCoreService;
+    private readonly ITimestampGenerator _timestampGenerator;
 
     public ExchangeApi(
         IRequestAwaitingService requestAwaitingService,
-        IExchangeCoreService exchangeCoreService)
+        IExchangeCoreService exchangeCoreService,
+        ITimestampGenerator timestampGenerator)
     {
         _requestAwaitingService = requestAwaitingService;
         _exchangeCoreService = exchangeCoreService;
+        _timestampGenerator = timestampGenerator;
     }
 
     public void Send(IApiCommand command)
@@ -33,7 +37,7 @@ internal sealed class ExchangeApi : IExchangeApi
         _exchangeCoreService.Send(command);
 
         var awaitingResponse = await awaitngTask;
-        var apiResult = ApiCommandResult.Create(awaitingResponse.OrderCommand);
+        var apiResult = ApiCommandResult.Create(awaitingResponse.OrderCommand, _timestampGenerator.CurrentTime);
 
         return apiResult;
     }

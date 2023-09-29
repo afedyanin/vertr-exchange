@@ -18,13 +18,12 @@ public class L2MarketData
 
     public long[] BidOrders { get; set; } = Array.Empty<long>();
 
-    public DateTime Timestamp { get; set; }
-
     public long ReferenceSeq { get; set; }
 
-    public L2MarketData(int askSize, int bidSize)
+    public L2MarketData(int askSize, int bidSize, long refSeq)
     {
         AskSize = askSize;
         BidSize = bidSize;
+        ReferenceSeq = refSeq;
     }
 }

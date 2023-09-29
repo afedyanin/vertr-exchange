@@ -20,7 +20,7 @@ public class ReduceOrderCommandTests
             bid.Uid,
             7);
 
-        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
 
         // Size = 27-7 = 20
@@ -54,7 +54,7 @@ public class ReduceOrderCommandTests
             bid.Uid,
             19);
 
-        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
 
         // Size = 27 - 10 = 17

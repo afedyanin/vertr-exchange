@@ -5,14 +5,14 @@ namespace Vertr.Exchange.Grpc.Extensions;
 
 internal static class L2MarketDataExtensions
 {
-    public static Level2MarketData ToGrpc(this L2MarketData data)
+    public static Level2MarketData ToGrpc(this L2MarketData data, DateTime currentTime)
     {
         var res = new Level2MarketData
         {
             AskSize = data.AskSize,
             BidSize = data.BidSize,
-            Timestamp = data.Timestamp.ToTimestamp(),
             ReferenceSeq = data.ReferenceSeq,
+            Timestamp = currentTime.ToTimestamp(),
         };
 
         res.AskVolumes.AddRange(data.AskVolumes);

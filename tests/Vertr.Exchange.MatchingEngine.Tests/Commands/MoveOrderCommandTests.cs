@@ -21,7 +21,7 @@ public class MoveOrderCommandTests
             47.97M,
             23);
 
-        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
 
         Assert.Multiple(() =>
@@ -48,7 +48,7 @@ public class MoveOrderCommandTests
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+            var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
             var res = orderCommand.Execute();
         });
     }
@@ -69,7 +69,7 @@ public class MoveOrderCommandTests
             18.60M,
             23);
 
-        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
 
         Assert.Multiple(() =>
