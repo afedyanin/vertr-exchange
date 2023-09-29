@@ -11,6 +11,7 @@ public static class ExchangeApiRegistrar
     public static IServiceCollection AddExchangeApi(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IOrderCommandEventHandler, RequestCompletionProcessor>();
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, SimpleMessageProcessor>();
         serviceCollection.AddSingleton<IRequestAwaitingService, RequestAwatingService>();
         serviceCollection.AddSingleton<IExchangeApi, ExchangeApi>();
         serviceCollection.AddExchangeCore();

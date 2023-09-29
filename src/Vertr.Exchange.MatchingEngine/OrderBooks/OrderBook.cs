@@ -136,8 +136,6 @@ internal sealed class OrderBook : IOrderBook
                 emptyBucketIds.Add(bucket.Price);
             }
 
-            // orderCommand.AttachMatcherEvents(bucketMatchings);
-
             matcherEvents.AddRange(bucketMatchings.TradeEvents);
             filled += bucketMatchings.Volume;
         }
