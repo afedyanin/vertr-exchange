@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Grpc.Generators;
+namespace Vertr.Exchange.Api.Generators;
 
 internal sealed class OrderIdGenerator : IOrderIdGenerator
 {

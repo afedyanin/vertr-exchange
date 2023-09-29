@@ -1,14 +1,14 @@
-using Vertr.Exchange.Api.Factories;
+using Vertr.Exchange.Api.Generators;
 
 namespace Vertr.Exchange.Api.Tests;
 
 [TestFixture(Category = "Unit")]
-public class OrderIdFactoryTests
+public class OrderIdGeneratorTests
 {
     [Test]
     public void CanGetIncremetedIds()
     {
-        var factory = new OrderIdFactorty();
+        var factory = new OrderIdGenerator();
         var id1 = factory.NextId;
         var id2 = factory.NextId;
         var id3 = factory.NextId;
@@ -24,7 +24,7 @@ public class OrderIdFactoryTests
     public void CanGetIdsInParallel()
     {
         var items = 1_000_000;
-        var factory = new OrderIdFactorty();
+        var factory = new OrderIdGenerator();
         var hs = new long[items];
 
         var options = new ParallelOptions()

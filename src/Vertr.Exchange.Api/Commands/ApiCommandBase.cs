@@ -35,7 +35,6 @@ public abstract class ApiCommandBase : IApiCommand
         command.BinaryCommandType = BinaryDataType.NONE;
         command.BinaryData = Array.Empty<byte>();
         command.EngineEvent = null;
-        command.Filled = long.MinValue;
         command.MarketData = null;
         command.OrderType = OrderType.GTC;
         command.Price = decimal.MinValue;

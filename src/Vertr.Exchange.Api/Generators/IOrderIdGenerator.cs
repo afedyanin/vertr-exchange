@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Grpc.Generators;
+namespace Vertr.Exchange.Api.Generators;
 
 public interface IOrderIdGenerator
 {

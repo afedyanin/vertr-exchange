@@ -2,8 +2,8 @@ using Grpc.Core;
 using Vertr.Exchange.Api;
 using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Commands.Queries;
+using Vertr.Exchange.Api.Generators;
 using Vertr.Exchange.Grpc.Extensions;
-using Vertr.Exchange.Grpc.Generators;
 
 namespace Vertr.Exchange.Grpc.Services;
 

@@ -1,3 +1,9 @@
 namespace Vertr.Exchange.Messages;
 
-public record class OrderBookRecord(decimal Price, long Volume, int Orders);
+public record class OrderBookRecord
+{
+    public decimal Price { get; init; }
+    public long Volume { get; init; }
+    public long Orders { get; init; }
+}
+

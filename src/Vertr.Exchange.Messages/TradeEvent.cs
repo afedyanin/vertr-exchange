@@ -8,5 +8,5 @@ public record class TradeEvent
     public OrderAction TakerAction { get; init; }
     public bool TakeOrderCompleted { get; init; }
     public DateTime Timestamp { get; init; }
-    public IList<Trade> Trades { get; init; } = new List<Trade>();
+    public IEnumerable<Trade> Trades { get; init; } = new List<Trade>();
 }

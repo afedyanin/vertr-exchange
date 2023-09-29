@@ -4,7 +4,8 @@ using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
 using Vertr.Exchange.Grpc.Services;
-using Vertr.Exchange.Grpc.Generators;
+using Vertr.Exchange.Messages;
+using Vertr.Exchange.Grpc.MessageHandlers;
 
 namespace Vertr.Exchange.Grpc;
 public class Program
@@ -17,9 +18,6 @@ public class Program
         builder.Services.AddGrpc();
         builder.Services.AddGrpcReflection();
 
-        builder.Services.AddSingleton<IOrderIdGenerator, OrderIdGenerator>();
-        builder.Services.AddSingleton<ITimestampGenerator, TimestampGenerator>();
-
         // TODO: Refactor this
         // Register Exchange
         builder.Services.AddExchangeApi();
@@ -28,6 +26,8 @@ public class Program
         builder.Services.AddOrderMatchingEngine();
         builder.Services.UseRiskEngine();
         builder.Services.UseMatchingEngine();
+
+        builder.Services.AddSingleton<IMessageHandler, LoggingMessageHandler>();
 
         var app = builder.Build();
 

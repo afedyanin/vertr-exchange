@@ -38,17 +38,30 @@ internal static class MessageFactory
             ReducedVolume = evt.Size,
         };
 
-    public static TradeEvent CreateTradeEvent(OrderCommand cmd, IEnumerable<IEngineEvent> trades)
+    public static TradeEvent CreateTradeEvent(OrderCommand cmd, IEnumerable<IEngineEvent> tradeEngineEvents)
         => new TradeEvent
         {
-            // TakeOrderCompleted = evt.ActiveOrderCompleted,
+            TakeOrderCompleted = tradeEngineEvents.Any(t => t.ActiveOrderCompleted),
             TakerAction = (OrderAction)cmd.Action!,
             TakerOrderId = cmd.OrderId,
             TakerUid = cmd.Uid,
-            // TotalVolume = evt.Size, // TODO
+            TotalVolume = tradeEngineEvents.Sum(t => t.Size),
+            Trades = CreateTrades(tradeEngineEvents).ToArray(),
             Symbol = cmd.Symbol,
             Timestamp = cmd.Timestamp,
-            Trades = Array.Empty<Trade>() // TODO
+        };
+
+    private static IEnumerable<Trade> CreateTrades(IEnumerable<IEngineEvent> trades)
+        => trades.Select(t => CreateTrade(t));
+
+    private static Trade CreateTrade(IEngineEvent tradeEvt)
+        => new Trade
+        {
+            MakerOrderCompleted = tradeEvt.MatchedOrderCompleted,
+            MakerOrderId = tradeEvt.MatchedOrderId,
+            MakerUid = tradeEvt.MatchedOrderUid,
+            Price = tradeEvt.Price,
+            Volume = tradeEvt.Size,
         };
 
     public static OrderBook CreateOrderBook(OrderCommand cmd, L2MarketData marketData)
@@ -62,13 +75,35 @@ internal static class MessageFactory
 
     private static IEnumerable<OrderBookRecord> CreateAsks(L2MarketData mdata)
     {
-        // TODO
-        return Array.Empty<OrderBookRecord>();
+        var res = new OrderBookRecord[mdata.AskSize];
+
+        for (int i = 0; i < mdata.AskSize; i++)
+        {
+            res[i] = new OrderBookRecord
+            {
+                Orders = mdata.AskOrders[i],
+                Price = mdata.AskPrices[i],
+                Volume = mdata.AskVolumes[i],
+            };
+        }
+
+        return res;
     }
 
     private static IEnumerable<OrderBookRecord> CreateBids(L2MarketData mdata)
     {
-        // TODO
-        return Array.Empty<OrderBookRecord>();
+        var res = new OrderBookRecord[mdata.BidSize];
+
+        for (int i = 0; i < mdata.BidSize; i++)
+        {
+            res[i] = new OrderBookRecord
+            {
+                Orders = mdata.BidOrders[i],
+                Price = mdata.BidPrices[i],
+                Volume = mdata.BidVolumes[i],
+            };
+        }
+
+        return res;
     }
 }
