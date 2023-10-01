@@ -26,7 +26,6 @@ public class NatsBasicTests
                 Console.WriteLine($"[SUB] received {msg.Subject}: {order}");
             }
 
-
             Console.WriteLine($"[SUB] unsubscribed");
         });
 
