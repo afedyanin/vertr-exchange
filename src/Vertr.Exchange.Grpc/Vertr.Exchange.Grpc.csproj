@@ -21,6 +21,7 @@
     <ProjectReference Include="..\Vertr.Exchange.Common\Vertr.Exchange.Common.csproj" />
     <ProjectReference Include="..\Vertr.Exchange.Infrastructure\Vertr.Exchange.Infrastructure.csproj" />
     <ProjectReference Include="..\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Nats\Vertr.Exchange.Nats.csproj" />
     <ProjectReference Include="..\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
   </ItemGroup>
 

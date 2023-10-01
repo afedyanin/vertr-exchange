@@ -5,7 +5,7 @@ using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
 using Vertr.Exchange.Grpc.Services;
 using Vertr.Exchange.Messages;
-using Vertr.Exchange.Grpc.MessageHandlers;
+using Vertr.Exchange.Nats;
 
 namespace Vertr.Exchange.Grpc;
 public class Program
@@ -27,7 +27,9 @@ public class Program
         builder.Services.UseRiskEngine();
         builder.Services.UseMatchingEngine();
 
-        builder.Services.AddSingleton<IMessageHandler, LoggingMessageHandler>();
+        //builder.Services.AddSingleton<IMessageHandler, LoggingMessageHandler>();
+        builder.Services.AddSingleton<IMessageHandler, NatsMessageHandler>();
+        builder.Services.AddSingleton<NatsConfiguration>();
 
         var app = builder.Build();
 
