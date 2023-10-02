@@ -2,13 +2,13 @@ namespace Vertr.Exchange.Messages;
 
 public interface IMessageHandler
 {
-    void CommandResult(ApiCommandResult apiCommandResult);
+    Task CommandResult(ApiCommandResult apiCommandResult);
 
-    void TradeEvent(TradeEvent tradeEvent);
+    Task TradeEvent(TradeEvent tradeEvent);
 
-    void RejectEvent(RejectEvent rejectEvent);
+    Task RejectEvent(RejectEvent rejectEvent);
 
-    void ReduceEvent(ReduceEvent reduceEvent);
+    Task ReduceEvent(ReduceEvent reduceEvent);
 
-    void OrderBook(OrderBook orderBook);
+    Task OrderBook(OrderBook orderBook);
 }

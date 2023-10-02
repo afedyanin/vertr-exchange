@@ -50,6 +50,9 @@ public class ExchangeApiServiceTests
 
         var client = new Exchange.ExchangeClient(channel);
 
+        var resetReq = new CommandNoParams();
+        await client.ResetAsync(resetReq);
+
         var symRequest = new AddSymbolsRequest();
 
         symRequest.Symbols.Add(new SymbolSpecification

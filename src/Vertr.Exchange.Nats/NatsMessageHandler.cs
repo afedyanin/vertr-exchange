@@ -23,34 +23,34 @@ public class NatsMessageHandler : IMessageHandler, IAsyncDisposable
         _conn = new NatsConnection(opts);
     }
 
-    public void CommandResult(ApiCommandResult apiCommandResult)
+    public async Task CommandResult(ApiCommandResult apiCommandResult)
     {
         _logger.LogDebug("Publish ApiCommandResult");
-        var vTask = _conn.PublishAsync("command", apiCommandResult);
+        await _conn.PublishAsync($"commands.{apiCommandResult.OrderId}", apiCommandResult);
     }
 
-    public void OrderBook(OrderBook orderBook)
+    public async Task OrderBook(OrderBook orderBook)
     {
         _logger.LogDebug("Publish OrderBook");
-        var vTask = _conn.PublishAsync("orderbook", orderBook);
+        await _conn.PublishAsync("orderbooks", orderBook);
     }
 
-    public void ReduceEvent(ReduceEvent reduceEvent)
+    public async Task ReduceEvent(ReduceEvent reduceEvent)
     {
         _logger.LogDebug("Publish ReduceEvent");
-        var vTask = _conn.PublishAsync("reduce", reduceEvent);
+        await _conn.PublishAsync("reduces", reduceEvent);
     }
 
-    public void RejectEvent(RejectEvent rejectEvent)
+    public async Task RejectEvent(RejectEvent rejectEvent)
     {
         _logger.LogDebug("Publish RejectEvent");
-        var vTask = _conn.PublishAsync("reject", rejectEvent);
+        await _conn.PublishAsync("rejects", rejectEvent);
     }
 
-    public void TradeEvent(TradeEvent tradeEvent)
+    public async Task TradeEvent(TradeEvent tradeEvent)
     {
         _logger.LogDebug("Publish TradeEvent");
-        var vTask = _conn.PublishAsync("trade", tradeEvent);
+        await _conn.PublishAsync("trades", tradeEvent);
     }
 
     public async ValueTask DisposeAsync()
