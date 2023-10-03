@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.57.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\Vertr.Exchange.Api\Vertr.Exchange.Api.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.Grpc\Vertr.Exchange.Grpc.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.Nats\Vertr.Exchange.Nats.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
+  </ItemGroup>
+  
+</Project>

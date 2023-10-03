@@ -1,13 +1,14 @@
+using Vertr.Exchange.Grpc.Services;
+using Vertr.Exchange.Messages;
+using Vertr.Exchange.Nats;
 using Vertr.Exchange.Api;
 using Vertr.Exchange.Core;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
-using Vertr.Exchange.Grpc.Services;
-using Vertr.Exchange.Messages;
-using Vertr.Exchange.Nats;
 
-namespace Vertr.Exchange.Grpc;
+namespace Vertr.Exchange.Server;
+
 public class Program
 {
     public static void Main(string[] args)
