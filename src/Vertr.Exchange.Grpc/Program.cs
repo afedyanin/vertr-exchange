@@ -1,5 +1,5 @@
 using Vertr.Exchange.Api;
-using Vertr.Exchange.Infrastructure;
+using Vertr.Exchange.Core;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;

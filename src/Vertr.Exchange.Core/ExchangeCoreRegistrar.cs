@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Exchange.Infrastructure.EventHandlers;
+using Vertr.Exchange.Core.EventHandlers;
 
-namespace Vertr.Exchange.Infrastructure;
+namespace Vertr.Exchange.Core;
 public static class ExchangeCoreRegistrar
 {
     public static IServiceCollection AddExchangeCore(this IServiceCollection serviceCollection)

@@ -3,7 +3,7 @@ using Vertr.Exchange.Api.Awaiting;
 using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Generators;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Infrastructure;
+using Vertr.Exchange.Core;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Api.Tests")]
 

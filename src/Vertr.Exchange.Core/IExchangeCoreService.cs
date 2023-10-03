@@ -1,6 +1,6 @@
 using Vertr.Exchange.Common.Abstractions;
 
-namespace Vertr.Exchange.Infrastructure;
+namespace Vertr.Exchange.Core;
 
 public interface IExchangeCoreService : IDisposable
 {

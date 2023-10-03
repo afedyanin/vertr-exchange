@@ -1,9 +1,9 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Infrastructure.EventHandlers;
+using Vertr.Exchange.Core.EventHandlers;
 using Vertr.Exchange.Tests.Stubs;
 
-namespace Vertr.Exchange.Infrastructure.Tests;
+namespace Vertr.Exchange.Core.Tests;
 
 [TestFixture(Category = "Unit")]
 public class ExchangeCoreServiceTests

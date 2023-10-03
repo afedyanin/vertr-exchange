@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Common;
 
-namespace Vertr.Exchange.Infrastructure.EventHandlers;
+namespace Vertr.Exchange.Core.EventHandlers;
 
 internal class LoggingProcessor : IOrderCommandEventHandler
 {

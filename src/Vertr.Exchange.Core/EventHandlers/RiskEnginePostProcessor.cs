@@ -1,7 +1,7 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 
-namespace Vertr.Exchange.Infrastructure.EventHandlers;
+namespace Vertr.Exchange.Core.EventHandlers;
 
 internal class RiskEnginePostProcessor : IOrderCommandEventHandler
 {

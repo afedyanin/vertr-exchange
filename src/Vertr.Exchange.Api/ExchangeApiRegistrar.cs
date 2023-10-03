@@ -2,8 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Api.Awaiting;
 using Vertr.Exchange.Api.EventHandlers;
 using Vertr.Exchange.Api.Generators;
-using Vertr.Exchange.Infrastructure;
-using Vertr.Exchange.Infrastructure.EventHandlers;
+using Vertr.Exchange.Core;
+using Vertr.Exchange.Core.EventHandlers;
 
 namespace Vertr.Exchange.Api;
 

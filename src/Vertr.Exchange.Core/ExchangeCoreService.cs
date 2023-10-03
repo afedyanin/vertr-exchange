@@ -4,12 +4,12 @@ using Disruptor.Dsl;
 using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Infrastructure.EventHandlers;
+using Vertr.Exchange.Core.EventHandlers;
 
-[assembly: InternalsVisibleTo("Vertr.Exchange.Infrastructure.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Exchange.Core.Tests")]
 [assembly: InternalsVisibleTo("Vertr.Exchange.Api.Tests")]
 
-namespace Vertr.Exchange.Infrastructure;
+namespace Vertr.Exchange.Core;
 
 internal class ExchangeCoreService : IExchangeCoreService
 {

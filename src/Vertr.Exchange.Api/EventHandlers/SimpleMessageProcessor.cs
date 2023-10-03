@@ -3,7 +3,7 @@ using Vertr.Exchange.Api.Factories;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
-using Vertr.Exchange.Infrastructure.EventHandlers;
+using Vertr.Exchange.Core.EventHandlers;
 using Vertr.Exchange.Messages;
 
 namespace Vertr.Exchange.Api.EventHandlers;

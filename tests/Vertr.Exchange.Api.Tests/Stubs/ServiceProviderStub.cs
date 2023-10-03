@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Infrastructure;
+using Vertr.Exchange.Core;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
