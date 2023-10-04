@@ -4,6 +4,7 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Protos;
 
 namespace Vertr.Exchange.Api.Factories;
+
 internal static class MessageFactory
 {
     public static ApiCommandResult CreateApiCommandResult(OrderCommand cmd, long seq)

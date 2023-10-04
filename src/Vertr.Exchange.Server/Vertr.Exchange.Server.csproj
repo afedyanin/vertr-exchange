@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <ProjectReference Include="..\Vertr.Exchange.ApiAdapter\Vertr.Exchange.ApiAdapter.csproj" />
 	  <ProjectReference Include="..\Vertr.Exchange.Api\Vertr.Exchange.Api.csproj" />
 	  <ProjectReference Include="..\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
 	  <ProjectReference Include="..\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
