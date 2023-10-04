@@ -7,15 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
     <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.57.0" />
+    <PackageReference Include="NATS.Client.Core" Version="2.0.0-alpha.3" />
   </ItemGroup>
 
   <ItemGroup>
 	  <ProjectReference Include="..\Vertr.Exchange.Api\Vertr.Exchange.Api.csproj" />
-	  <ProjectReference Include="..\Vertr.Exchange.Grpc\Vertr.Exchange.Grpc.csproj" />
 	  <ProjectReference Include="..\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
-	  <ProjectReference Include="..\Vertr.Exchange.Nats\Vertr.Exchange.Nats.csproj" />
 	  <ProjectReference Include="..\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
   </ItemGroup>
   

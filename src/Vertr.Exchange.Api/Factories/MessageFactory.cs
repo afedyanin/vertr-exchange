@@ -1,6 +1,7 @@
+using Google.Protobuf.WellKnownTypes;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Messages;
+using Vertr.Exchange.Protos;
 
 namespace Vertr.Exchange.Api.Factories;
 internal static class MessageFactory
@@ -10,9 +11,9 @@ internal static class MessageFactory
         {
             OrderId = cmd.OrderId,
             Uid = cmd.Uid,
-            ResultCode = (CommandResultCode)cmd.ResultCode,
+            ResultCode = (ResultCode)cmd.ResultCode,
             Seq = seq,
-            Timestamp = cmd.Timestamp,
+            Timestamp = cmd.Timestamp.ToTimestamp(),
         };
 
     public static RejectEvent CreateRejectEvent(OrderCommand cmd, IEngineEvent evt)
@@ -21,7 +22,7 @@ internal static class MessageFactory
             OrderId = cmd.OrderId,
             Price = evt.Price,
             Symbol = cmd.Symbol,
-            Timestamp = cmd.Timestamp,
+            Timestamp = cmd.Timestamp.ToTimestamp(),
             Uid = cmd.Uid,
             RejectedVolume = evt.Size
         };
@@ -32,24 +33,29 @@ internal static class MessageFactory
             OrderId = cmd.OrderId,
             Price = evt.Price,
             Symbol = cmd.Symbol,
-            Timestamp = cmd.Timestamp,
+            Timestamp = cmd.Timestamp.ToTimestamp(),
             Uid = cmd.Uid,
             OrderCompleted = evt.ActiveOrderCompleted,
             ReducedVolume = evt.Size,
         };
 
     public static TradeEvent CreateTradeEvent(OrderCommand cmd, IEnumerable<IEngineEvent> tradeEngineEvents)
-        => new TradeEvent
+    {
+        var res = new TradeEvent
         {
             TakeOrderCompleted = tradeEngineEvents.Any(t => t.ActiveOrderCompleted),
             TakerAction = (OrderAction)cmd.Action!,
             TakerOrderId = cmd.OrderId,
             TakerUid = cmd.Uid,
             TotalVolume = tradeEngineEvents.Sum(t => t.Size),
-            Trades = CreateTrades(tradeEngineEvents).ToArray(),
             Symbol = cmd.Symbol,
-            Timestamp = cmd.Timestamp,
+            Timestamp = cmd.Timestamp.ToTimestamp(),
         };
+
+        res.Trades.AddRange(CreateTrades(tradeEngineEvents));
+
+        return res;
+    }
 
     private static IEnumerable<Trade> CreateTrades(IEnumerable<IEngineEvent> trades)
         => trades.Select(t => CreateTrade(t));
@@ -65,13 +71,18 @@ internal static class MessageFactory
         };
 
     public static OrderBook CreateOrderBook(OrderCommand cmd, L2MarketData marketData)
-        => new OrderBook
+    {
+        var res = new OrderBook
         {
-            Asks = CreateAsks(marketData),
-            Bids = CreateBids(marketData),
-            Timestamp = cmd.Timestamp,
+            Timestamp = cmd.Timestamp.ToTimestamp(),
             Symbol = cmd.Symbol,
         };
+
+        res.Asks.AddRange(CreateAsks(marketData));
+        res.Bids.AddRange(CreateBids(marketData));
+
+        return res;
+    }
 
     private static IEnumerable<OrderBookRecord> CreateAsks(L2MarketData mdata)
     {

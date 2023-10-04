@@ -4,7 +4,7 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Core.EventHandlers;
-using Vertr.Exchange.Messages;
+using Vertr.Exchange.Protos;
 
 namespace Vertr.Exchange.Api.EventHandlers;
 

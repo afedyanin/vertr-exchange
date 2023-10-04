@@ -1,5 +1,5 @@
 using NATS.Client.Core;
-using Vertr.Exchange.Messages;
+using Vertr.Exchange.Protos;
 
 namespace Vertr.Exchange.Client.ConsoleApp;
 

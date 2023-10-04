@@ -1,11 +1,12 @@
-using Vertr.Exchange.Grpc.Services;
-using Vertr.Exchange.Messages;
-using Vertr.Exchange.Nats;
 using Vertr.Exchange.Api;
 using Vertr.Exchange.Core;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
+using Vertr.Exchange.Protos;
+using Vertr.Exchange.Server.Configuration;
+using Vertr.Exchange.Server.MessageHandlers;
+using Vertr.Exchange.Server.Services;
 
 namespace Vertr.Exchange.Server;
 

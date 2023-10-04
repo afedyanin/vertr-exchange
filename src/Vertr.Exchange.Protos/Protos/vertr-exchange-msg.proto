@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+import "Protos/vertr-exchange-common.proto";
+
+// import "google/protobuf/duration.proto";  
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Vertr.Exchange.Protos";
+
+package exchange;
+
+
+message Trade {
+    int64 MakerOrderId = 1;
+    int64 MakerUid = 2;
+    bool MakerOrderCompleted = 3;
+    DecimalValue Price = 4;
+    int64 Volume = 5;
+}
+
+message TradeEvent {
+    int32 Symbol = 1;
+    int64 TotalVolume = 2;
+    int64 TakerOrderId = 3;
+    int64 TakerUid = 4;
+    OrderAction TakerAction = 5;
+    bool TakeOrderCompleted = 6;
+    google.protobuf.Timestamp Timestamp = 7;
+    repeated Trade Trades = 8;
+}
+
+message RejectEvent {
+    int32 Symbol = 1;
+    int64 RejectedVolume = 2;
+    DecimalValue Price = 3;
+    int64 OrderId = 4;
+    int64 Uid = 5;
+    google.protobuf.Timestamp Timestamp = 6;
+}
+
+message ReduceEvent {
+    int32 Symbol = 1;
+    int64 ReducedVolume = 2;
+    bool OrderCompleted = 3;
+    DecimalValue Price = 4;
+    int64 OrderId = 5;
+    int64 Uid = 6;
+    google.protobuf.Timestamp Timestamp = 7;
+}
+
+message OrderBookRecord
+{
+    DecimalValue Price = 1;
+    int64 Volume = 2;
+    int64 Orders = 3;
+}
+
+message OrderBook {
+    int32 Symbol = 1;
+    repeated OrderBookRecord Asks = 2;
+    repeated OrderBookRecord Bids = 3;
+    google.protobuf.Timestamp Timestamp = 4;
+}
+
+message CommandExecutionResult {
+    int32 Symbol = 1;
+    int64 Volume = 2;
+    DecimalValue Price = 3;
+    int64 OrderId = 4;
+    int64 Uid = 5;
+    google.protobuf.Timestamp Timestamp = 6;
+}
+
+message ApiCommandResult {
+    int64 OrderId = 1;
+    int64 Uid = 2;
+    ResultCode ResultCode = 3;
+    google.protobuf.Timestamp Timestamp = 4;
+    int64 Seq = 5;
+}
+

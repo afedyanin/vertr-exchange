@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Exchange.Common\Vertr.Exchange.Common.csproj" />
     <ProjectReference Include="..\Vertr.Exchange.Core\Vertr.Exchange.Core.csproj" />
-    <ProjectReference Include="..\Vertr.Exchange.Messages\Vertr.Exchange.Messages.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Protos\Vertr.Exchange.Protos.csproj" />
   </ItemGroup>
 
 </Project>
