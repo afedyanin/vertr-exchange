@@ -3,11 +3,11 @@ using Vertr.Exchange.Common.Messages;
 
 namespace Vertr.Exchange.Server.MessageHandlers;
 
-public class LoggingMessageHandler : IMessageHandler
+public class LogMessageHandler : IMessageHandler
 {
-    private readonly ILogger<LoggingMessageHandler> _logger;
+    private readonly ILogger<LogMessageHandler> _logger;
 
-    public LoggingMessageHandler(ILogger<LoggingMessageHandler> logger)
+    public LogMessageHandler(ILogger<LogMessageHandler> logger)
     {
         _logger = logger;
     }

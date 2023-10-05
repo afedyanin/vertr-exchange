@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Core;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
@@ -14,12 +13,9 @@ internal static class ServiceProviderStub
         var serviceCollection = new ServiceCollection();
 
         serviceCollection.AddExchangeApi();
-        serviceCollection.AddUserProfileProvider();
-        serviceCollection.AddOrderRiskEngine();
-        serviceCollection.AddOrderMatchingEngine();
-
-        serviceCollection.UseRiskEngine();
-        serviceCollection.UseMatchingEngine();
+        serviceCollection.AddAccounts();
+        serviceCollection.AddRiskEngine();
+        serviceCollection.AddMatchingEngine();
 
         serviceCollection.AddLogging(configure => configure.AddConsole())
             .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Debug);

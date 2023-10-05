@@ -1,5 +1,6 @@
 using NATS.Client.Core;
-using Vertr.Exchange.Messages;
+using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Common.Messages;
 
 namespace Vertr.Exchange.Nats.Tests;
 

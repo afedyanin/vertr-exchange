@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\vertr-exchange-common.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\vertr-exchange-api.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\vertr-exchange-msg.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\vertr-exchange-common.proto" GrpcServices="Both" />
+    <Protobuf Include="Protos\vertr-exchange-api.proto" GrpcServices="Both" />
+    <Protobuf Include="Protos\vertr-exchange-msg.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>

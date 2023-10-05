@@ -2,9 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.Accounts;
-public static class UserProfileProviderRegistrar
+public static class AccountsRegistrar
 {
-    public static IServiceCollection AddUserProfileProvider(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddAccounts(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IUserProfileProvider, UserProfileProvider>();
         return serviceCollection;

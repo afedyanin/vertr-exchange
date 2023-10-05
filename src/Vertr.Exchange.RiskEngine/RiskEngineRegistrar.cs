@@ -4,9 +4,9 @@ using Vertr.Exchange.RiskEngine.Symbols;
 
 namespace Vertr.Exchange.RiskEngine;
 
-public static class OrderRiskEngineRegistrar
+public static class RiskEngineRegistrar
 {
-    public static IServiceCollection AddOrderRiskEngine(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddRiskEngine(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<ISymbolSpecificationProvider, SymbolSpecificationProvider>();
         serviceCollection.AddSingleton<IOrderRiskEngine, OrderRiskEngine>();

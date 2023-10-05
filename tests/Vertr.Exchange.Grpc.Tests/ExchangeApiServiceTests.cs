@@ -1,4 +1,5 @@
 using Grpc.Net.Client;
+using Vertr.Exchange.Protos;
 
 namespace Vertr.Exchange.Grpc.Tests;
 
@@ -10,7 +11,7 @@ public class ExchangeApiServiceTests
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
-        var client = new Exchange.ExchangeClient(channel);
+        var client = new Protos.Exchange.ExchangeClient(channel);
         var result = await client.NopAsync(new CommandNoParams());
 
         Assert.That(result, Is.Not.Null);
@@ -28,7 +29,7 @@ public class ExchangeApiServiceTests
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
-        var client = new Exchange.ExchangeClient(channel);
+        var client = new Protos.Exchange.ExchangeClient(channel);
 
         var symRequest = new AddSymbolsRequest();
 
@@ -48,7 +49,7 @@ public class ExchangeApiServiceTests
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
-        var client = new Exchange.ExchangeClient(channel);
+        var client = new Protos.Exchange.ExchangeClient(channel);
 
         var resetReq = new CommandNoParams();
         await client.ResetAsync(resetReq);
@@ -97,7 +98,7 @@ public class ExchangeApiServiceTests
         using var channel = GrpcChannel.ForAddress("https://localhost:7149",
             new GrpcChannelOptions { HttpHandler = handler });
 
-        var client = new Exchange.ExchangeClient(channel);
+        var client = new Protos.Exchange.ExchangeClient(channel);
         var result = await client.NopAsync(new CommandNoParams());
 
         Assert.That(result, Is.Not.Null);

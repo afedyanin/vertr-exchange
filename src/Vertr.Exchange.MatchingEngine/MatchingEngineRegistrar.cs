@@ -3,9 +3,9 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
 
 namespace Vertr.Exchange.MatchingEngine;
-public static class OrderMatchingEngineRegistrar
+public static class MatchingEngineRegistrar
 {
-    public static IServiceCollection AddOrderMatchingEngine(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddMatchingEngine(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IOrderBookProvider, OrderBookProvider>();
         serviceCollection.AddSingleton<IOrderMatchingEngine, OrderMatchingEngine>();

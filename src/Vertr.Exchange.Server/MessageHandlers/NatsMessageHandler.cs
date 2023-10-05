@@ -1,3 +1,5 @@
+using System.Buffers;
+using Google.Protobuf;
 using Microsoft.Extensions.Options;
 using NATS.Client.Core;
 using Vertr.Exchange.Common.Abstractions;
@@ -11,54 +13,69 @@ public class NatsMessageHandler : IMessageHandler, IAsyncDisposable
 {
     private readonly NatsConnection _conn;
     private readonly ILogger<NatsMessageHandler> _logger;
+    private readonly NatsConfiguration _natsConfiguration;
 
     public NatsMessageHandler(
-        IOptions<NatsConfiguration> natsOptions,
+        IOptions<NatsConfiguration> natsConfigOptions,
         ILogger<NatsMessageHandler> logger)
     {
         _logger = logger;
+        _natsConfiguration = natsConfigOptions.Value;
 
-        var serverUrl = natsOptions.Value.NatsServerUrl;
-        var opts = NatsOpts.Default with { Url = serverUrl };
+        var opts = NatsOpts.Default with
+        {
+            Url = _natsConfiguration.ServerUrl,
+        };
 
-        _logger.LogDebug("Connecting to NATS server: {ServerUrl}", serverUrl);
+        _logger.LogDebug("Connecting to NATS server: {ServerUrl}", _natsConfiguration.ServerUrl);
         _conn = new NatsConnection(opts);
     }
 
     public async Task CommandResult(ApiCommandResult apiCommandResult)
     {
         _logger.LogDebug("Publish ApiCommandResult");
-
-        await _conn.PublishAsync($"commands.{apiCommandResult.OrderId}", apiCommandResult.ToProto());
+        await SendMessage($"commands.{apiCommandResult.OrderId}", apiCommandResult.ToProto().ToByteArray());
     }
 
     public async Task OrderBook(OrderBook orderBook)
     {
         _logger.LogDebug("Publish OrderBook");
-        await _conn.PublishAsync("orderbooks", orderBook.ToProto());
+        await SendMessage("orderbooks", orderBook.ToProto().ToByteArray());
     }
 
     public async Task ReduceEvent(ReduceEvent reduceEvent)
     {
         _logger.LogDebug("Publish ReduceEvent");
-        await _conn.PublishAsync("reduces", reduceEvent.ToProto());
+        await SendMessage("reduces", reduceEvent.ToProto().ToByteArray());
     }
 
     public async Task RejectEvent(RejectEvent rejectEvent)
     {
         _logger.LogDebug("Publish RejectEvent");
-        await _conn.PublishAsync("rejects", rejectEvent.ToProto());
+        await SendMessage("rejects", rejectEvent.ToProto().ToByteArray());
     }
 
     public async Task TradeEvent(TradeEvent tradeEvent)
     {
         _logger.LogDebug("Publish TradeEvent");
-        await _conn.PublishAsync("trades", tradeEvent.ToProto());
+        await SendMessage("trades", tradeEvent.ToProto().ToByteArray());
     }
 
     public async ValueTask DisposeAsync()
     {
         _logger.LogDebug("Disconnecting from NATS server.");
         await _conn.DisposeAsync();
+    }
+
+    private async Task SendMessage(string subject, byte[] data)
+    {
+        try
+        {
+            await _conn.PublishAsync(subject, new ReadOnlySequence<byte>(data));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error sending message to NATS. Subject={Subject}", subject);
+        }
     }
 }

@@ -20,18 +20,15 @@ public class Program
         builder.Services.AddGrpc();
         builder.Services.AddGrpcReflection();
 
-        // TODO: Refactor this
-        // Register Exchange
         builder.Services.AddExchangeApi();
-        builder.Services.AddUserProfileProvider();
-        builder.Services.AddOrderRiskEngine();
-        builder.Services.AddOrderMatchingEngine();
-        builder.Services.UseRiskEngine();
-        builder.Services.UseMatchingEngine();
+        builder.Services.AddExchangeCore();
+        builder.Services.AddAccounts();
+        builder.Services.AddRiskEngine();
+        builder.Services.AddMatchingEngine();
 
-        //builder.Services.AddSingleton<IMessageHandler, LoggingMessageHandler>();
+        //builder.Services.AddSingleton<IMessageHandler, LogMessageHandler>();
         builder.Services.AddSingleton<IMessageHandler, NatsMessageHandler>();
-        builder.Services.AddSingleton<NatsConfiguration>();
+        builder.Services.AddOptions<NatsConfiguration>();
 
         var app = builder.Build();
 
