@@ -62,15 +62,6 @@ message OrderBook {
     google.protobuf.Timestamp Timestamp = 4;
 }
 
-message CommandExecutionResult {
-    int32 Symbol = 1;
-    int64 Volume = 2;
-    DecimalValue Price = 3;
-    int64 OrderId = 4;
-    int64 Uid = 5;
-    google.protobuf.Timestamp Timestamp = 6;
-}
-
 message ApiCommandResult {
     int64 OrderId = 1;
     int64 Uid = 2;

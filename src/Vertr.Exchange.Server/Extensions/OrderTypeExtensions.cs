@@ -1,8 +1,8 @@
 using Vertr.Exchange.Protos;
 
-namespace Vertr.Exchange.Api.Extensions;
+namespace Vertr.Exchange.Server.Extensions;
 
-public static class OrderTypeExtensions
+internal static class OrderTypeExtensions
 {
     public static Common.Enums.OrderType ToDomain(this OrderType orderType)
     {

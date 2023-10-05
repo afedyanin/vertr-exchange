@@ -1,9 +1,9 @@
 using Google.Protobuf.Collections;
 using Vertr.Exchange.Protos;
 
-namespace Vertr.Exchange.Api.Extensions;
+namespace Vertr.Exchange.Server.Extensions;
 
-public static class UserAccountExtensions
+internal static class UserAccountExtensions
 {
     public static IDictionary<long, IDictionary<int, decimal>> ToDomain(this IEnumerable<UserAccount> accounts)
     {

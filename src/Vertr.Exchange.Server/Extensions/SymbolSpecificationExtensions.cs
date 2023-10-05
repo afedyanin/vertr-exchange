@@ -1,8 +1,8 @@
 using Vertr.Exchange.Protos;
 
-namespace Vertr.Exchange.Api.Extensions;
+namespace Vertr.Exchange.Server.Extensions;
 
-public static class SymbolSpecificationExtensions
+internal static class SymbolSpecificationExtensions
 {
     public static Common.SymbolSpecification[] ToDomain(this IEnumerable<SymbolSpecification> specs)
         => specs.Select(spec => spec.ToDomain()).ToArray();

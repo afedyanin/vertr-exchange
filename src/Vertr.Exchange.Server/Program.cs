@@ -3,10 +3,10 @@ using Vertr.Exchange.Core;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
-using Vertr.Exchange.Protos;
 using Vertr.Exchange.Server.Configuration;
 using Vertr.Exchange.Server.MessageHandlers;
 using Vertr.Exchange.Server.Services;
+using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.Server;
 

@@ -1,4 +1,5 @@
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Common.Messages;
 
 namespace Vertr.Exchange.Server.MessageHandlers;
 

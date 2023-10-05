@@ -2,9 +2,9 @@ using Grpc.Core;
 using Vertr.Exchange.Api;
 using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Commands.Queries;
-using Vertr.Exchange.Api.Extensions;
 using Vertr.Exchange.Api.Generators;
 using Vertr.Exchange.Protos;
+using Vertr.Exchange.Server.Extensions;
 
 namespace Vertr.Exchange.Server.Services;
 
@@ -31,7 +31,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             _timestampGenerator.CurrentTime);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> GetOrderBook(Protos.OrderBookRequest request, ServerCallContext context)
@@ -43,7 +43,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.Size);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> AddSymbols(AddSymbolsRequest request, ServerCallContext context)
@@ -54,7 +54,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.Symbols.ToDomain());
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> AddUser(UserRequest request, ServerCallContext context)
@@ -65,7 +65,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.UserId);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> AddAccounts(AddAccountsRequest request, ServerCallContext context)
@@ -76,7 +76,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.UserAccounts.ToDomain());
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
     public override async Task<CommandResult> PlaceOrder(PlaceOrderRequest request, ServerCallContext context)
     {
@@ -91,7 +91,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.Symbol);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> AdjustBalance(AdjustBalanceRequest request, ServerCallContext context)
@@ -104,7 +104,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.Amount);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> CancelOrder(CancelOrderRequest request, ServerCallContext context)
@@ -116,7 +116,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.Symbol);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> MoveOrder(MoveOrderRequest request, ServerCallContext context)
@@ -129,7 +129,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.Symbol);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> ReduceOrder(ReduceOrderRequest request, ServerCallContext context)
@@ -142,7 +142,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.ReduceSize);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> Reset(CommandNoParams request, ServerCallContext context)
@@ -152,7 +152,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             _timestampGenerator.CurrentTime);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> ResumeUser(UserRequest request, ServerCallContext context)
@@ -163,7 +163,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.UserId);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> SuspendUser(UserRequest request, ServerCallContext context)
@@ -174,7 +174,7 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.UserId);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 
     public override async Task<CommandResult> GetSingleUserReport(UserRequest request, ServerCallContext context)
@@ -185,6 +185,6 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
             request.UserId);
 
         var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToGrpc();
+        return apiResult.ToProto();
     }
 }

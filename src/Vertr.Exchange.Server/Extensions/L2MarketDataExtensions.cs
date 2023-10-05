@@ -2,11 +2,11 @@ using Google.Protobuf.WellKnownTypes;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Protos;
 
-namespace Vertr.Exchange.Api.Extensions;
+namespace Vertr.Exchange.Server.Extensions;
 
-public static class L2MarketDataExtensions
+internal static class L2MarketDataExtensions
 {
-    public static Level2MarketData ToGrpc(this L2MarketData data, DateTime currentTime)
+    public static Level2MarketData ToProto(this L2MarketData data, DateTime currentTime)
     {
         var res = new Level2MarketData
         {

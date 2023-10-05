@@ -1,11 +1,11 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Protos;
 
-namespace Vertr.Exchange.Api.Extensions;
+namespace Vertr.Exchange.Server.Extensions;
 
-public static class CommandResultCodeExtensions
+internal static class CommandResultCodeExtensions
 {
-    public static ResultCode ToGrpc(this CommandResultCode resultCode)
+    public static ResultCode ToProto(this CommandResultCode resultCode)
     {
         return resultCode switch
         {

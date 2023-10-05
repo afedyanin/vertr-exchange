@@ -1,4 +1,6 @@
-namespace Vertr.Exchange.Protos;
+using Vertr.Exchange.Common.Messages;
+
+namespace Vertr.Exchange.Common.Abstractions;
 
 public interface IMessageHandler
 {

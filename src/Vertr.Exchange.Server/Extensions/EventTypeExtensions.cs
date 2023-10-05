@@ -1,11 +1,11 @@
 using Vertr.Exchange.Common.Enums;
 using Vertr.Exchange.Protos;
 
-namespace Vertr.Exchange.Api.Extensions;
+namespace Vertr.Exchange.Server.Extensions;
 
-public static class EventTypeExtensions
+internal static class EventTypeExtensions
 {
-    public static EventType ToGrpc(this EngineEventType evt)
+    public static EventType ToProto(this EngineEventType evt)
     {
         return evt switch
         {

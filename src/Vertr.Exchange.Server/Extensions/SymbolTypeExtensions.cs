@@ -1,8 +1,8 @@
 using Vertr.Exchange.Protos;
 
-namespace Vertr.Exchange.Api.Extensions;
+namespace Vertr.Exchange.Server.Extensions;
 
-public static class SymbolTypeExtensions
+internal static class SymbolTypeExtensions
 {
     public static Common.Enums.SymbolType ToDomain(this SymbolType sType)
     {
