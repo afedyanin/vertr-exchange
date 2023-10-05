@@ -26,10 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vertr.Exchange.Accounts\Vertr.Exchange.Accounts.csproj" />
     <ProjectReference Include="..\..\src\Vertr.Exchange.Api\Vertr.Exchange.Api.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Exchange.Infrastructure\Vertr.Exchange.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
     <ProjectReference Include="..\..\src\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
-    <ProjectReference Include="..\Vertr.Exchange.Infrastructure.Tests\Vertr.Exchange.Infrastructure.Tests.csproj" />
     <ProjectReference Include="..\Vertr.Exchange.Tests.Stubs\Vertr.Exchange.Tests.Stubs.csproj" />
   </ItemGroup>
 

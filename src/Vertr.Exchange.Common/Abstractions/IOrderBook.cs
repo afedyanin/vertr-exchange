@@ -14,7 +14,7 @@ public interface IOrderBook
 
     long Reduce(IOrder order, long requestedReduceSize);
 
-    L2MarketData GetL2MarketDataSnapshot(int size);
+    L2MarketData GetL2MarketDataSnapshot(int size, long seq);
 
     MatcherResult TryMatchInstantly(OrderAction action, decimal price, long size, long filled = 0L);
 }

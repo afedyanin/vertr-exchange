@@ -20,7 +20,7 @@ public class RejectOrderCommandTests
             bid.Price,
             bid.Size);
 
-        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
 
         Assert.Multiple(() =>

@@ -6,7 +6,10 @@ using Vertr.Exchange.MatchingEngine.Commands.NewOrder;
 namespace Vertr.Exchange.MatchingEngine.Commands;
 internal static class OrderBookCommandFactory
 {
-    public static OrderBookCommand CreateOrderBookCommand(IOrderBook orderBook, OrderCommand cmd)
+    public static OrderBookCommand CreateOrderBookCommand(
+        IOrderBook orderBook,
+        OrderCommand cmd,
+        long sequence)
     {
         switch (cmd.Command)
         {
@@ -23,7 +26,7 @@ internal static class OrderBookCommandFactory
             case OrderCommandType.MOVE_ORDER:
                 return new MoveOrderCommand(orderBook, cmd);
             case OrderCommandType.ORDER_BOOK_REQUEST:
-                return new MarketDataSnapshotCommand(orderBook, cmd);
+                return new MarketDataSnapshotCommand(orderBook, cmd, sequence);
             case OrderCommandType.ADD_USER:
             case OrderCommandType.BALANCE_ADJUSTMENT:
             case OrderCommandType.SUSPEND_USER:

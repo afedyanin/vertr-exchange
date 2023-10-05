@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common;
@@ -42,7 +41,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             case OrderCommandType.MOVE_ORDER:
             case OrderCommandType.ORDER_BOOK_REQUEST:
                 _logger.LogDebug("Processing command={CommandType} OrderId={OrderId} Uid={Uid}", cmd.Command, cmd.OrderId, cmd.Uid);
-                ProcessMatchingCommand(cmd);
+                ProcessMatchingCommand(cmd, seq);
                 break;
             case OrderCommandType.RESET:
                 _logger.LogWarning("Processing RESET command OrderId={OrderId}", cmd.OrderId);
@@ -78,7 +77,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
         }
     }
 
-    internal void ProcessMatchingCommand(OrderCommand cmd)
+    internal void ProcessMatchingCommand(OrderCommand cmd, long seq)
     {
         if (HasErrorResult(cmd))
         {
@@ -102,7 +101,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             return;
         }
 
-        var orderBookCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd);
+        var orderBookCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, seq);
 
         // TODO: Catch and handle exceptions
         _logger.LogDebug("Executing orderCommand={commandType} OrderId={OrderId}",
@@ -115,7 +114,7 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             && cmd.ResultCode == CommandResultCode.SUCCESS)
         {
             _logger.LogDebug("Attach market data for OrderId={OrderId}", cmd.OrderId);
-            cmd.MarketData = orderBook.GetL2MarketDataSnapshot(_config.L2RefreshDepth);
+            cmd.MarketData = orderBook.GetL2MarketDataSnapshot(_config.L2RefreshDepth, seq);
         }
     }
 

@@ -27,8 +27,6 @@ public class OrderCommand
 
     public DateTime Timestamp { get; set; }
 
-    public long Filled { get; set; }
-
     public int Symbol { get; set; }
 
     public byte[] BinaryData { get; set; } = Array.Empty<byte>();

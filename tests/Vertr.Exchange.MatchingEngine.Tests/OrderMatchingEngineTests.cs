@@ -86,7 +86,7 @@ public class OrderMatchingEngineTests
             bid.Size,
             13);
 
-        ome.ProcessMatchingCommand(cmd);
+        ome.ProcessMatchingCommand(cmd, 100);
 
         Assert.That(cmd.ResultCode, Is.EqualTo(CommandResultCode.MATCHING_INVALID_ORDER_BOOK_ID));
     }
@@ -108,7 +108,7 @@ public class OrderMatchingEngineTests
             bid.Price,
             bid.Size);
 
-        ome.ProcessMatchingCommand(cmd);
+        ome.ProcessMatchingCommand(cmd, 100);
 
         Assert.That(cmd.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
     }

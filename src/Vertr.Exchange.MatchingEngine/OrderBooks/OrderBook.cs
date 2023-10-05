@@ -86,11 +86,11 @@ internal sealed class OrderBook : IOrderBook
         return true;
     }
 
-    public L2MarketData GetL2MarketDataSnapshot(int size)
+    public L2MarketData GetL2MarketDataSnapshot(int size, long seq)
     {
         var asksSize = GetTotalAskBuckets(size);
         var bidsSize = GetTotalBidBuckets(size);
-        var data = new L2MarketData(asksSize, bidsSize);
+        var data = new L2MarketData(asksSize, bidsSize, seq);
         FillAsks(asksSize, data);
         FillBids(bidsSize, data);
         return data;
@@ -135,8 +135,6 @@ internal sealed class OrderBook : IOrderBook
             {
                 emptyBucketIds.Add(bucket.Price);
             }
-
-            // orderCommand.AttachMatcherEvents(bucketMatchings);
 
             matcherEvents.AddRange(bucketMatchings.TradeEvents);
             filled += bucketMatchings.Volume;

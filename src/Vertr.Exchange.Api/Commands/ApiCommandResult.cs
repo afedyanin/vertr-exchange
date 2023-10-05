@@ -15,16 +15,15 @@ internal class ApiCommandResult : IApiCommandResult
 
     public L2MarketData? MarketData { get; init; }
 
-
-    public static IApiCommandResult Create(OrderCommand command)
+    public static IApiCommandResult Create(OrderCommand command, DateTime timestamp)
     {
         return new ApiCommandResult
         {
             ResultCode = command.ResultCode,
             OrderId = command.OrderId,
-            Timestamp = command.Timestamp,
             RootEvent = command.EngineEvent,
             MarketData = command.MarketData,
+            Timestamp = timestamp,
         };
     }
 }

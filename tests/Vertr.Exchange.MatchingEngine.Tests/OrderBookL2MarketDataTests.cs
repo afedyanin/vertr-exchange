@@ -10,7 +10,7 @@ public class OrderBookL2MarketDataTests
     public void CanGetL2MarketData()
     {
         var orderBook = new OrderBook();
-        var snapshot = orderBook.GetL2MarketDataSnapshot(100);
+        var snapshot = orderBook.GetL2MarketDataSnapshot(100, 100);
 
         Assert.That(snapshot, Is.Not.Null);
 
@@ -36,7 +36,7 @@ public class OrderBookL2MarketDataTests
         var bid = OrderStub.CreateBidOrder(45.98M, 783);
         orderBook.AddOrder(bid);
 
-        var snapshot = orderBook.GetL2MarketDataSnapshot(100);
+        var snapshot = orderBook.GetL2MarketDataSnapshot(100, 100);
 
         Assert.That(snapshot, Is.Not.Null);
 
@@ -67,7 +67,7 @@ public class OrderBookL2MarketDataTests
         orderBook.AddOrder(bid1);
         orderBook.AddOrder(bid2);
 
-        var snapshot = orderBook.GetL2MarketDataSnapshot(100);
+        var snapshot = orderBook.GetL2MarketDataSnapshot(100, 100);
 
         Assert.That(snapshot, Is.Not.Null);
 
@@ -93,7 +93,7 @@ public class OrderBookL2MarketDataTests
         var ask = OrderStub.CreateAskOrder(78.12M, 435);
         orderBook.AddOrder(ask);
 
-        var snapshot = orderBook.GetL2MarketDataSnapshot(100);
+        var snapshot = orderBook.GetL2MarketDataSnapshot(100, 100);
 
         Assert.That(snapshot, Is.Not.Null);
 

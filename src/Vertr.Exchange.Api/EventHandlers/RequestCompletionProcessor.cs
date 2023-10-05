@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Api.Awaiting;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Infrastructure.EventHandlers;
+using Vertr.Exchange.Core.EventHandlers;
 
 namespace Vertr.Exchange.Api.EventHandlers;
 

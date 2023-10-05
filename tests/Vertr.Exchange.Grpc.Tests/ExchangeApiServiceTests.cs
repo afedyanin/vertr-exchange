@@ -1,4 +1,5 @@
 using Grpc.Net.Client;
+using Vertr.Exchange.Protos;
 
 namespace Vertr.Exchange.Grpc.Tests;
 
@@ -10,7 +11,7 @@ public class ExchangeApiServiceTests
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
-        var client = new Exchange.ExchangeClient(channel);
+        var client = new Protos.Exchange.ExchangeClient(channel);
         var result = await client.NopAsync(new CommandNoParams());
 
         Assert.That(result, Is.Not.Null);
@@ -24,12 +25,49 @@ public class ExchangeApiServiceTests
     }
 
     [Test]
+    public async Task AddSymbolsCommand()
+    {
+        using var channel = GrpcChannel.ForAddress("http://localhost:5294");
+
+        var client = new Protos.Exchange.ExchangeClient(channel);
+
+        var symRequest = new AddSymbolsRequest();
+
+        symRequest.Symbols.Add(new SymbolSpecification
+        {
+            Currency = 1,
+            SymbolId = 1,
+            Type = SymbolType.Equity
+        });
+
+        var result = await client.AddSymbolsAsync(symRequest);
+        Assert.That(result.CommandResultCode, Is.EqualTo(ResultCode.Success));
+    }
+
+    [Test]
     public async Task GetOrderBookCommand()
     {
         using var channel = GrpcChannel.ForAddress("http://localhost:5294");
 
-        var client = new Exchange.ExchangeClient(channel);
-        var result = await client.GetOrderBookAsync(new OrderBookRequest
+        var client = new Protos.Exchange.ExchangeClient(channel);
+
+        var resetReq = new CommandNoParams();
+        await client.ResetAsync(resetReq);
+
+        var symRequest = new AddSymbolsRequest();
+
+        symRequest.Symbols.Add(new SymbolSpecification
+        {
+            Currency = 1,
+            SymbolId = 1,
+            Type = SymbolType.Equity
+        });
+
+        var result = await client.AddSymbolsAsync(symRequest);
+        Assert.That(result.CommandResultCode, Is.EqualTo(ResultCode.Success));
+
+
+        result = await client.GetOrderBookAsync(new OrderBookRequest
         {
             Symbol = 1,
             Size = 100
@@ -60,7 +98,7 @@ public class ExchangeApiServiceTests
         using var channel = GrpcChannel.ForAddress("https://localhost:7149",
             new GrpcChannelOptions { HttpHandler = handler });
 
-        var client = new Exchange.ExchangeClient(channel);
+        var client = new Protos.Exchange.ExchangeClient(channel);
         var result = await client.NopAsync(new CommandNoParams());
 
         Assert.That(result, Is.Not.Null);
