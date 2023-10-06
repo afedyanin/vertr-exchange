@@ -11,4 +11,5 @@ public record class TradeEvent
     public bool TakeOrderCompleted { get; init; }
     public DateTime Timestamp { get; init; }
     public IEnumerable<Trade> Trades { get; init; } = new List<Trade>();
+    public long Seq { get; init; }
 }

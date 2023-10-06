@@ -8,4 +8,5 @@ public record class ReduceEvent
     public long OrderId { get; init; }
     public long Uid { get; init; }
     public DateTime Timestamp { get; init; }
+    public long Seq { get; init; }
 }

@@ -11,6 +11,7 @@ internal static class OrderBookExtensions
         {
             Symbol = orderBook.Symbol,
             Timestamp = orderBook.Timestamp.ToTimestamp(),
+            Seq = orderBook.Seq,
         };
 
         res.Asks.AddRange(orderBook.Asks.ToProto());

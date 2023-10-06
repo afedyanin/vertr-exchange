@@ -30,6 +30,7 @@ internal static class EventExtensions
             Symbol = rejectEvent.Symbol,
             Timestamp = rejectEvent.Timestamp.ToTimestamp(),
             Uid = rejectEvent.Uid,
+            Seq = rejectEvent.Seq,
         };
 
     public static ReduceEvent ToProto(this Common.Messages.ReduceEvent reduceEvent)
@@ -42,6 +43,7 @@ internal static class EventExtensions
             OrderId = reduceEvent.OrderId,
             ReducedVolume = reduceEvent.ReducedVolume,
             Timestamp = reduceEvent.Timestamp.ToTimestamp(),
+            Seq = reduceEvent.Seq,
         };
 
     public static TradeEvent ToProto(this Common.Messages.TradeEvent tradeEvent)
@@ -55,6 +57,7 @@ internal static class EventExtensions
             TakerOrderId = tradeEvent.TakerOrderId,
             Timestamp = tradeEvent.Timestamp.ToTimestamp(),
             TotalVolume = tradeEvent.TotalVolume,
+            Seq = tradeEvent.Seq,
         };
 
         res.Trades.AddRange(tradeEvent.Trades.ToProto());
