@@ -16,7 +16,7 @@ public static class MessageFactory
             Timestamp = cmd.Timestamp,
         };
 
-    public static RejectEvent CreateRejectEvent(OrderCommand cmd, IEngineEvent evt)
+    public static RejectEvent CreateRejectEvent(OrderCommand cmd, IEngineEvent evt, long seq)
         => new RejectEvent
         {
             OrderId = cmd.OrderId,
@@ -24,10 +24,11 @@ public static class MessageFactory
             Symbol = cmd.Symbol,
             Timestamp = cmd.Timestamp,
             Uid = cmd.Uid,
-            RejectedVolume = evt.Size
+            RejectedVolume = evt.Size,
+            Seq = seq,
         };
 
-    public static ReduceEvent CreateReduceEvent(OrderCommand cmd, IEngineEvent evt)
+    public static ReduceEvent CreateReduceEvent(OrderCommand cmd, IEngineEvent evt, long seq)
         => new ReduceEvent
         {
             OrderId = cmd.OrderId,
@@ -37,9 +38,10 @@ public static class MessageFactory
             Uid = cmd.Uid,
             OrderCompleted = evt.ActiveOrderCompleted,
             ReducedVolume = evt.Size,
+            Seq = seq,
         };
 
-    public static TradeEvent CreateTradeEvent(OrderCommand cmd, IEnumerable<IEngineEvent> tradeEngineEvents)
+    public static TradeEvent CreateTradeEvent(OrderCommand cmd, IEnumerable<IEngineEvent> tradeEngineEvents, long seq)
     {
         var res = new TradeEvent
         {
@@ -50,13 +52,14 @@ public static class MessageFactory
             TotalVolume = tradeEngineEvents.Sum(t => t.Size),
             Symbol = cmd.Symbol,
             Timestamp = cmd.Timestamp,
-            Trades = CreateTrades(tradeEngineEvents)
+            Trades = CreateTrades(tradeEngineEvents),
+            Seq = seq,
         };
 
         return res;
     }
 
-    public static OrderBook CreateOrderBook(OrderCommand cmd, L2MarketData marketData)
+    public static OrderBook CreateOrderBook(OrderCommand cmd, L2MarketData marketData, long seq)
     {
         var res = new OrderBook
         {
@@ -64,6 +67,7 @@ public static class MessageFactory
             Symbol = cmd.Symbol,
             Asks = CreateAsks(marketData),
             Bids = CreateBids(marketData),
+            Seq = seq,
         };
 
         return res;

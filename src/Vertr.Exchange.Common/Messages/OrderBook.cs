@@ -7,4 +7,5 @@ public record class OrderBook
     public IEnumerable<OrderBookRecord> Bids { get; init; } = Enumerable.Empty<OrderBookRecord>();
 
     public DateTime Timestamp { get; init; }
+    public long Seq { get; init; }
 }
