@@ -66,12 +66,13 @@ internal class UserProfile : IUserProfile
         long tradeSize,
         decimal tradePrice)
     {
-        if (!_positions.ContainsKey(spec.SymbolId))
+        if (!_positions.TryGetValue(spec.SymbolId, out var value))
         {
-            _positions.Add(spec.SymbolId, new Position(Uid, spec.SymbolId));
+            value = new Position(Uid, spec.SymbolId);
+            _positions.Add(spec.SymbolId, value);
         }
 
-        var position = _positions[spec.SymbolId];
+        var position = value;
         position.Update(action, tradeSize, tradePrice);
 
         if (position.IsEmpty)

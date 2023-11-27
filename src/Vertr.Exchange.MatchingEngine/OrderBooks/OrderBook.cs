@@ -44,12 +44,13 @@ internal sealed class OrderBook : IOrderBook
 
         var buckets = GetBucketsByAction(order.Action);
 
-        if (!buckets.ContainsKey(order.Price))
+        if (!buckets.TryGetValue(order.Price, out var value))
         {
-            buckets.Add(order.Price, new OrdersBucket(order.Price));
+            value = new OrdersBucket(order.Price);
+            buckets.Add(order.Price, value);
         }
 
-        var bucket = buckets[order.Price];
+        var bucket = value;
         bucket.Put(order);
 
         return true;
