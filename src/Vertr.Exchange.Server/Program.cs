@@ -3,7 +3,6 @@ using Vertr.Exchange.Core;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
-using Vertr.Exchange.Server.Configuration;
 using Vertr.Exchange.Server.MessageHandlers;
 using Vertr.Exchange.Server.Services;
 using Vertr.Exchange.Common.Abstractions;
@@ -26,9 +25,7 @@ public class Program
         builder.Services.AddRiskEngine();
         builder.Services.AddMatchingEngine();
 
-        //builder.Services.AddSingleton<IMessageHandler, LogMessageHandler>();
-        builder.Services.AddSingleton<IMessageHandler, NatsMessageHandler>();
-        builder.Services.AddOptions<NatsConfiguration>();
+        builder.Services.AddSingleton<IMessageHandler, LogMessageHandler>();
 
         var app = builder.Build();
 
