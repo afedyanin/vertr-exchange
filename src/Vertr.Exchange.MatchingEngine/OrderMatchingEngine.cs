@@ -33,6 +33,16 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
     public void ProcessOrder(long seq, OrderCommand cmd)
     {
+        if (HasErrorResult(cmd))
+        {
+            _logger.LogInformation("Skip command={CommandType} OrderId={OrderId}. InvalidState={ResultCode}",
+                cmd.Command,
+                cmd.OrderId,
+                cmd.ResultCode);
+
+            return;
+        }
+
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
@@ -79,16 +89,6 @@ public class OrderMatchingEngine : IOrderMatchingEngine
 
     internal void ProcessMatchingCommand(OrderCommand cmd, long seq)
     {
-        if (HasErrorResult(cmd))
-        {
-            _logger.LogDebug("Skip command={CommandType} OrderId={OrderId}. InvalidStae={ResultCode}",
-                cmd.Command,
-                cmd.OrderId,
-                cmd.ResultCode);
-
-            return;
-        }
-
         var orderBook = _orderBookProvider.GetOrderBook(cmd.Symbol);
 
         if (orderBook == null)
@@ -132,12 +132,6 @@ public class OrderMatchingEngine : IOrderMatchingEngine
             return CommandResultCode.BINARY_COMMAND_FAILED;
         }
 
-        // after risk engine
-        if (HasErrorResult(cmd))
-        {
-            return cmd.ResultCode;
-        }
-
         if (command is BatchAddSymbolsCommand addSymbolsCommand)
         {
             _logger.LogDebug("Adding symbols into order books. OrderId={OrderId}", cmd.OrderId);
@@ -159,12 +153,6 @@ public class OrderMatchingEngine : IOrderMatchingEngine
         if (query == null)
         {
             return CommandResultCode.BINARY_COMMAND_FAILED;
-        }
-
-        // after risk engine
-        if (HasErrorResult(cmd))
-        {
-            return cmd.ResultCode;
         }
 
         if (query is SingleUserReportQuery singleUserReport)

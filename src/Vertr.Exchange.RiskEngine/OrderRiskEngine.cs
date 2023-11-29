@@ -33,6 +33,16 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
     public void PreProcessCommand(long seq, OrderCommand cmd)
     {
+        if (HasErrorResult(cmd))
+        {
+            _logger.LogInformation("Skip command={CommandType} OrderId={OrderId}. InvalidState={ResultCode}",
+                cmd.Command,
+                cmd.OrderId,
+                cmd.ResultCode);
+
+            return;
+        }
+
         switch (cmd.Command)
         {
             case OrderCommandType.PLACE_ORDER:
@@ -87,6 +97,16 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
 
     public void PostProcessCommand(long seq, OrderCommand cmd)
     {
+        if (HasErrorResult(cmd))
+        {
+            _logger.LogInformation("Skip command={CommandType} OrderId={OrderId}. InvalidState={ResultCode}",
+                cmd.Command,
+                cmd.OrderId,
+                cmd.ResultCode);
+
+            return;
+        }
+
         _logger.LogDebug("Post processing Command={CommandType} OrderId={OrderId}", cmd.Command, cmd.OrderId);
         var handler = new PostProcessOrderHandler(UserProfiles, SymbolSpecificationProvider);
         handler.Handle(cmd);
@@ -148,5 +168,12 @@ internal sealed class OrderRiskEngine : IOrderRiskEngine
         }
 
         return cmd.ResultCode;
+    }
+
+    private bool HasErrorResult(OrderCommand cmd)
+    {
+        return cmd.ResultCode is
+            not CommandResultCode.SUCCESS and
+            not CommandResultCode.NEW;
     }
 }

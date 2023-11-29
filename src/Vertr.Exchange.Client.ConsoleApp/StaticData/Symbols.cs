@@ -14,7 +14,7 @@ internal static class Symbols
 
     public static readonly Symbol SBER = new Symbol(1100, Currencies.RUB, "SBER", "Сбербанк", SymbolType.Equity);
     public static readonly Symbol GMKN = new Symbol(1200, Currencies.RUB, "GMKN", "ГМК Норникель", SymbolType.Equity);
-    public static readonly Symbol ROSN = new Symbol(1300, Currencies.RUB, "ROSN", "Роснефть", SymbolType.Equity);
+    public static readonly Symbol ROSN = new Symbol(1200, Currencies.RUB, "ROSN", "Роснефть", SymbolType.Equity);
 
     public static readonly Symbol[] All = new[] { MSFT, AAPL, GOOG, SBER, GMKN, ROSN };
 

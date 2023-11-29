@@ -32,13 +32,11 @@ internal sealed class ExchangeApi : IExchangeApi
 
     public async Task<IApiCommandResult> SendAsync(IApiCommand command, CancellationToken token = default)
     {
+        // TODO: refactor this
         var awaitngTask = _requestAwaitingService.Register(command.OrderId, token);
-
         _exchangeCoreService.Send(command);
-
         var awaitingResponse = await awaitngTask;
         var apiResult = ApiCommandResult.Create(awaitingResponse.OrderCommand, _timestampGenerator.CurrentTime);
-
         return apiResult;
     }
     public void Dispose()

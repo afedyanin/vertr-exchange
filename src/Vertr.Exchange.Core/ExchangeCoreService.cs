@@ -17,6 +17,8 @@ internal class ExchangeCoreService : IExchangeCoreService
     private readonly RingBuffer<OrderCommand> _ringBuffer;
     private readonly ILogger<ExchangeCoreService> _logger;
 
+    private bool _disposed;
+
     public ExchangeCoreService(
         IEnumerable<IOrderCommandEventHandler> handlers,
         ILogger<ExchangeCoreService> logger)
@@ -41,8 +43,14 @@ internal class ExchangeCoreService : IExchangeCoreService
 
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
         _logger.LogInformation("Exchange core shutdown at {Time}", DateTime.Now);
         _disruptor.Shutdown();
+        _disposed = true;
     }
 
     private void ConfigureHandlers(IEnumerable<IOrderCommandEventHandler> handlers)

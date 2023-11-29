@@ -21,7 +21,14 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
 
         foreach (var spec in symbols)
         {
-            _symbolSpecs.Add(spec.SymbolId, spec);
+            if (_symbolSpecs.ContainsKey(spec.SymbolId))
+            {
+                _symbolSpecs[spec.SymbolId] = spec;
+            }
+            else
+            {
+                _symbolSpecs.Add(spec.SymbolId, spec);
+            }
         }
 
         return CommandResultCode.SUCCESS;

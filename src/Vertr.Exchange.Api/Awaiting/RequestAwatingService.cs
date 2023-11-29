@@ -51,6 +51,7 @@ internal class RequestAwatingService : IRequestAwaitingService
 
     private void UnregisterWait(object? idObject)
     {
+        // Как это работает?
         var context = (WaitContext)idObject!;
 
         if (_requests.TryRemove(context.OrderId, out var tcs))
