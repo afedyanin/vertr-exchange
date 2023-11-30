@@ -35,7 +35,9 @@ public class Program
         builder.Services.AddMatchingEngine();
 
         // builder.Services.AddSingleton<IMessageHandler, LogMessageHandler>();
-        builder.Services.AddSingleton<IObservableMessageHandler, ObservableMessageHandler>();
+        builder.Services.AddSingleton<ObservableMessageHandler>();
+        builder.Services.AddSingleton<IObservableMessageHandler>(x => x.GetRequiredService<ObservableMessageHandler>());
+        builder.Services.AddSingleton<IMessageHandler>(x => x.GetRequiredService<ObservableMessageHandler>());
 
         var app = builder.Build();
 
