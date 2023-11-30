@@ -1,5 +1,10 @@
 using Grpc.Net.Client;
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Client.ConsoleApp.Extensions;
+using Vertr.Exchange.Protos;
 using static Vertr.Exchange.Protos.Exchange;
 
 namespace Vertr.Exchange.Client.ConsoleApp;
@@ -8,31 +13,74 @@ public class Program
 {
     public static async Task Main()
     {
-        using var channel = GrpcChannel.ForAddress("http://localhost:5000");
-        var client = new ExchangeClient(channel);
-        var reply = await client.RegisterSymbols();
-        Console.WriteLine($"code={reply.CommandResultCode} orderId={reply.OrderId}");
-        // заменть inMemoryDB - сделать отдельный grpc API к БД + grpc стриминг к ней
-        // либо попробовать SignalR хабы
+        await ConnectToHub();
     }
 
-    /*
-    private static async Task SubscribeToNats()
+    private static async Task ConnectToHub()
     {
-        var opts = NatsOpts.Default with { Url = "127.0.0.1:4222" };
-        Console.WriteLine($"Connecting to {opts.Url}...");
+        var connection = new HubConnectionBuilder()
+            .WithUrl(
+            url: "http://localhost:5000/market-data",
+            transports: HttpTransportType.WebSockets,
+            options =>
+            {
+                options.SkipNegotiation = true;
+            })
+            .ConfigureLogging(logging =>
+            {
+                logging.AddConsole();
+            })
+            .AddMessagePackProtocol()
+            .Build();
 
-        await using var natsConn = new NatsConnection(opts);
+        await connection.StartAsync();
 
-        await using var sub = await natsConn.SubscribeAsync<ApiCommandResult>("commands.>");
+        Console.WriteLine("Starting connection. Press Ctrl-C to close.");
+        var cts = new CancellationTokenSource();
 
-        Console.WriteLine("[SUB] waiting for messages...");
-
-        await foreach (var msg in sub.Msgs.ReadAllAsync())
+        Console.CancelKeyPress += (sender, a) =>
         {
-            var commandResult = msg.Data;
-            Console.WriteLine($"[SUB] received {msg.Subject}: {commandResult}");
-        }
+            a.Cancel = true;
+            cts.Cancel();
+        };
+
+        connection.Closed += e =>
+        {
+            Console.WriteLine("Connection closed with error: {0}", e);
+
+            cts.Cancel();
+            return Task.CompletedTask;
+        };
+
+        var t1 = ListenToApiCommandReultStream(connection, cts);
+        var t2 = SetupSymbols();
+        await Task.WhenAll(t1, t2);
     }
-    */
+
+    private static Task ListenToApiCommandReultStream(HubConnection connection, CancellationTokenSource cts)
+    {
+        return Task.Run(async () =>
+        {
+            Console.WriteLine($"Start listening API Command result stream...");
+            var channel = await connection.StreamAsChannelAsync<ApiCommandResult>("ApiCommandResults", CancellationToken.None);
+            while (await channel.WaitToReadAsync() && !cts.IsCancellationRequested)
+            {
+                while (channel.TryRead(out var apiCommandResult))
+                {
+                    Console.WriteLine($"API Commad result received. OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
+                }
+            }
+        });
+    }
+    private static Task SetupSymbols()
+    {
+        return Task.Run(async () =>
+        {
+            Console.WriteLine($"Setup Symbols...");
+            using var channel = GrpcChannel.ForAddress("http://localhost:5002");
+            var client = new ExchangeClient(channel);
+            var reply = await client.RegisterSymbols();
+            Console.WriteLine($"Symbol setup completed. OrderId={reply.OrderId} ResultCode={reply.CommandResultCode} ");
+        });
+    }
 }

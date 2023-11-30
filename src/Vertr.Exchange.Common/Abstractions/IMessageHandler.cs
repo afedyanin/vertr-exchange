@@ -4,13 +4,13 @@ namespace Vertr.Exchange.Common.Abstractions;
 
 public interface IMessageHandler
 {
-    Task CommandResult(ApiCommandResult apiCommandResult);
+    void CommandResult(ApiCommandResult apiCommandResult);
 
-    Task TradeEvent(TradeEvent tradeEvent);
+    void TradeEvent(TradeEvent tradeEvent);
 
-    Task RejectEvent(RejectEvent rejectEvent);
+    void RejectEvent(RejectEvent rejectEvent);
 
-    Task ReduceEvent(ReduceEvent reduceEvent);
+    void ReduceEvent(ReduceEvent reduceEvent);
 
-    Task OrderBook(OrderBook orderBook);
+    void OrderBook(OrderBook orderBook);
 }

@@ -12,33 +12,28 @@ public class LogMessageHandler : IMessageHandler
         _logger = logger;
     }
 
-    public Task CommandResult(ApiCommandResult apiCommandResult)
+    public void CommandResult(ApiCommandResult apiCommandResult)
     {
         _logger.LogInformation($"CommandResult: OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
-        return Task.CompletedTask;
     }
 
-    public Task OrderBook(OrderBook orderBook)
+    public void OrderBook(OrderBook orderBook)
     {
         _logger.LogInformation($"OrderBook: Symbol={orderBook.Symbol}");
-        return Task.CompletedTask;
     }
 
-    public Task ReduceEvent(ReduceEvent reduceEvent)
+    public void ReduceEvent(ReduceEvent reduceEvent)
     {
         _logger.LogInformation($"ReduceEvent: OrderId={reduceEvent.OrderId} ReducedVolume={reduceEvent.ReducedVolume}");
-        return Task.CompletedTask;
     }
 
-    public Task RejectEvent(RejectEvent rejectEvent)
+    public void RejectEvent(RejectEvent rejectEvent)
     {
         _logger.LogInformation($"RejectEvent: OrderId={rejectEvent.OrderId} RejectedVolume={rejectEvent.RejectedVolume}");
-        return Task.CompletedTask;
     }
 
-    public Task TradeEvent(TradeEvent tradeEvent)
+    public void TradeEvent(TradeEvent tradeEvent)
     {
         _logger.LogInformation($"TradeEvent: OrderId={tradeEvent.TakerOrderId} TakeOrderCompleted={tradeEvent.TakeOrderCompleted}");
-        return Task.CompletedTask;
     }
 }

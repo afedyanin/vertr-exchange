@@ -27,10 +27,9 @@ internal class SimpleMessageProcessor : IOrderCommandEventHandler
     {
         try
         {
-            // TODO: Fix it
-            SendCommandResult(data, sequence).GetAwaiter().GetResult();
-            SendTradeEvents(data, sequence).GetAwaiter().GetResult();
-            SendMarketData(data, sequence).GetAwaiter().GetResult();
+            SendCommandResult(data, sequence);
+            SendTradeEvents(data, sequence);
+            SendMarketData(data, sequence);
         }
         catch (Exception ex)
         {
@@ -38,13 +37,13 @@ internal class SimpleMessageProcessor : IOrderCommandEventHandler
         }
     }
 
-    private async Task SendCommandResult(OrderCommand data, long sequence)
+    private void SendCommandResult(OrderCommand data, long sequence)
     {
         var cmdRes = MessageFactory.CreateApiCommandResult(data, sequence);
-        await _messageHandler.CommandResult(cmdRes);
+        _messageHandler.CommandResult(cmdRes);
     }
 
-    private async Task SendTradeEvents(OrderCommand data, long sequence)
+    private void SendTradeEvents(OrderCommand data, long sequence)
     {
         var trades = new List<IEngineEvent>();
         var current = data.EngineEvent;
@@ -54,12 +53,12 @@ internal class SimpleMessageProcessor : IOrderCommandEventHandler
             if (current.EventType == EngineEventType.REJECT)
             {
                 var reject = MessageFactory.CreateRejectEvent(data, current, sequence);
-                await _messageHandler.RejectEvent(reject);
+                _messageHandler.RejectEvent(reject);
             }
             if (current.EventType == EngineEventType.REDUCE)
             {
                 var reduce = MessageFactory.CreateReduceEvent(data, current, sequence);
-                await _messageHandler.ReduceEvent(reduce);
+                _messageHandler.ReduceEvent(reduce);
             }
             if (current.EventType == EngineEventType.TRADE)
             {
@@ -72,11 +71,11 @@ internal class SimpleMessageProcessor : IOrderCommandEventHandler
         if (trades.Any())
         {
             var tradeEvent = MessageFactory.CreateTradeEvent(data, trades, sequence);
-            await _messageHandler.TradeEvent(tradeEvent);
+            _messageHandler.TradeEvent(tradeEvent);
         }
     }
 
-    private async Task SendMarketData(OrderCommand data, long sequence)
+    private void SendMarketData(OrderCommand data, long sequence)
     {
         if (data.MarketData == null)
         {
@@ -84,6 +83,6 @@ internal class SimpleMessageProcessor : IOrderCommandEventHandler
         }
 
         var orderBook = MessageFactory.CreateOrderBook(data, data.MarketData, sequence);
-        await _messageHandler.OrderBook(orderBook);
+        _messageHandler.OrderBook(orderBook);
     }
 }

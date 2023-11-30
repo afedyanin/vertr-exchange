@@ -13,15 +13,18 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
     private readonly IExchangeApi _api;
     private readonly IOrderIdGenerator _orderIdGenerator;
     private readonly ITimestampGenerator _timestampGenerator;
+    private readonly ILogger<ExchangeApiService> _logger;
 
     public ExchangeApiService(
         IExchangeApi api,
         IOrderIdGenerator orderIdGenerator,
-        ITimestampGenerator timestampGenerator)
+        ITimestampGenerator timestampGenerator,
+        ILogger<ExchangeApiService> logger)
     {
         _api = api;
         _orderIdGenerator = orderIdGenerator;
         _timestampGenerator = timestampGenerator;
+        _logger = logger;
     }
 
     public override async Task<CommandResult> Nop(CommandNoParams request, ServerCallContext context)
@@ -48,11 +51,14 @@ public class ExchangeApiService : Protos.Exchange.ExchangeBase
 
     public override async Task<CommandResult> AddSymbols(AddSymbolsRequest request, ServerCallContext context)
     {
+        _logger.LogDebug("AddSymbols command received.");
+
         var cmd = new AddSymbolsCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.Symbols.ToDomain());
 
+        _logger.LogDebug("AddSymbols command completed.");
         var apiResult = await _api.SendAsync(cmd);
         return apiResult.ToProto();
     }
