@@ -1,9 +1,8 @@
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Messages;
+using Vertr.Exchange.Protos;
 
 namespace Vertr.Exchange.Server.MessageHandlers;
 
-public interface IObservableMessageHandler : IMessageHandler
+public interface IObservableMessageHandler
 {
     IObservable<ApiCommandResult> ApiCommandResultStream();
 

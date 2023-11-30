@@ -1,6 +1,6 @@
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
-using Vertr.Exchange.Common.Messages;
+using Vertr.Exchange.Protos;
 using Vertr.Exchange.Server.Extensions;
 using Vertr.Exchange.Server.MessageHandlers;
 
