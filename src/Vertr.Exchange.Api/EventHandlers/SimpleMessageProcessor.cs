@@ -8,20 +8,14 @@ using Vertr.Exchange.Core.EventHandlers;
 
 namespace Vertr.Exchange.Api.EventHandlers;
 
-internal class SimpleMessageProcessor : IOrderCommandEventHandler
+internal class SimpleMessageProcessor(
+    IMessageHandler messageHandler,
+    ILogger<SimpleMessageProcessor> logger) : IOrderCommandEventHandler
 {
-    private readonly IMessageHandler _messageHandler;
-    private readonly ILogger<SimpleMessageProcessor> _logger;
+    private readonly IMessageHandler _messageHandler = messageHandler;
+    private readonly ILogger<SimpleMessageProcessor> _logger = logger;
 
     public int ProcessingStep => 1010;
-
-    public SimpleMessageProcessor(
-        IMessageHandler messageHandler,
-        ILogger<SimpleMessageProcessor> logger)
-    {
-        _messageHandler = messageHandler;
-        _logger = logger;
-    }
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
@@ -68,7 +62,7 @@ internal class SimpleMessageProcessor : IOrderCommandEventHandler
             current = current.NextEvent;
         }
 
-        if (trades.Any())
+        if (trades.Count != 0)
         {
             var tradeEvent = MessageFactory.CreateTradeEvent(data, trades, sequence);
             _messageHandler.TradeEvent(tradeEvent);

@@ -26,7 +26,7 @@ internal static class ReportExtensions
         return CommandResultCode.SUCCESS;
     }
 
-    private static IDictionary<int, OrderDto[]> ToDto(this IDictionary<int, IOrder[]> dict)
+    private static Dictionary<int, OrderDto[]> ToDto(this IDictionary<int, IOrder[]> dict)
     {
         var res = new Dictionary<int, OrderDto[]>(dict.Count);
 

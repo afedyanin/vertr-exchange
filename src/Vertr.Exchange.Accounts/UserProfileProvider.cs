@@ -6,11 +6,11 @@ namespace Vertr.Exchange.Accounts;
 internal class UserProfileProvider : IUserProfileProvider
 {
     // uid
-    private readonly IDictionary<long, IUserProfile> _userProfiles;
+    private readonly Dictionary<long, IUserProfile> _userProfiles;
 
     public UserProfileProvider()
     {
-        _userProfiles = new Dictionary<long, IUserProfile>();
+        _userProfiles = [];
     }
 
     public IUserProfile? Get(long uid)

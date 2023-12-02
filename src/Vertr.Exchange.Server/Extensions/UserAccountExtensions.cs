@@ -20,7 +20,7 @@ internal static class UserAccountExtensions
         return res;
     }
 
-    private static IDictionary<int, decimal> ToDomain(this MapField<int, DecimalValue> balances)
+    private static Dictionary<int, decimal> ToDomain(this MapField<int, DecimalValue> balances)
     {
         var res = new Dictionary<int, decimal>();
 

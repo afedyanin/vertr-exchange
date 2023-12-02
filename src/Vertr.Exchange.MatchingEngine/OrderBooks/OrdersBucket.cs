@@ -111,10 +111,10 @@ internal sealed class OrdersBucket
             node = node.Next;
         }
 
-        return new BucketMatcherResult(totalMatchingVolume, ordersToRemove.ToArray(), tradeEvents.ToArray());
+        return new BucketMatcherResult(totalMatchingVolume, [.. ordersToRemove], [.. tradeEvents]);
     }
 
-    private IEngineEvent CreateTradeEvent(
+    private EngineEvent CreateTradeEvent(
         IOrder matchingOrder,
         bool makerCompleted,
         bool takerCompleted,

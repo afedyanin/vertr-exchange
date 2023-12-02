@@ -9,7 +9,7 @@ namespace Vertr.Exchange.MatchingEngine.OrderBooks;
 internal sealed class OrderBook : IOrderBook
 {
     // Key = OrderId
-    private readonly IDictionary<long, IOrder> _orders;
+    private readonly Dictionary<long, IOrder> _orders;
 
     // Key = Price 
     private readonly SortedDictionary<decimal, OrdersBucket> _bidBuckets;
@@ -17,8 +17,8 @@ internal sealed class OrderBook : IOrderBook
 
     public OrderBook()
     {
-        _orders = new Dictionary<long, IOrder>();
-        _askBuckets = new SortedDictionary<decimal, OrdersBucket>();
+        _orders = [];
+        _askBuckets = [];
         _bidBuckets = new SortedDictionary<decimal, OrdersBucket>(DecimalDescendingComparer.Instance);
     }
 
@@ -105,7 +105,7 @@ internal sealed class OrderBook : IOrderBook
     {
         var matchingBuckets = GetBucketsForMatching(action);
 
-        if (!matchingBuckets.Any())
+        if (matchingBuckets.Count == 0)
         {
             // no orders to match
             return new MatcherResult(filled);
