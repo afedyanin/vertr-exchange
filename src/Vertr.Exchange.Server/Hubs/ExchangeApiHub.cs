@@ -47,17 +47,16 @@ public class ExchangeApiHub : Hub
     public ChannelReader<TradeEvent> TradeEvents()
         => _messageHandler.TradeEventStream().AsChannelReader(_maxBufferSize);
 
-    public async Task<CommandResult> Nop()
+    public void Nop()
     {
         var cmd = new Api.Commands.NopCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> GetOrderBook(OrderBookRequest request)
+    public void GetOrderBook(OrderBookRequest request)
     {
         var cmd = new Api.Commands.OrderBookRequest(
             _orderIdGenerator.NextId,
@@ -65,11 +64,10 @@ public class ExchangeApiHub : Hub
             request.Symbol,
             request.Size);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> AddSymbols(AddSymbolsRequest request)
+    public void AddSymbols(AddSymbolsRequest request)
     {
         _logger.LogDebug("AddSymbols command received.");
 
@@ -79,32 +77,29 @@ public class ExchangeApiHub : Hub
             request.Symbols.ToDomain());
 
         _logger.LogDebug("AddSymbols command completed.");
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> AddUser(UserRequest request)
+    public void AddUser(UserRequest request)
     {
         var cmd = new Api.Commands.AddUserCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> AddAccounts(AddAccountsRequest request)
+    public void AddAccounts(AddAccountsRequest request)
     {
         var cmd = new Api.Commands.AddAccountsCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserAccounts.ToDomain());
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
-    public async Task<CommandResult> PlaceOrder(PlaceOrderRequest request)
+    public void PlaceOrder(PlaceOrderRequest request)
     {
         var cmd = new Api.Commands.PlaceOrderCommand(
             _orderIdGenerator.NextId,
@@ -116,11 +111,10 @@ public class ExchangeApiHub : Hub
             request.UserId,
             request.Symbol);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> AdjustBalance(AdjustBalanceRequest request)
+    public void AdjustBalance(AdjustBalanceRequest request)
     {
         var cmd = new Api.Commands.AdjustBalanceCommand(
             _orderIdGenerator.NextId,
@@ -129,11 +123,10 @@ public class ExchangeApiHub : Hub
             request.Currency,
             request.Amount);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> CancelOrder(CancelOrderRequest request)
+    public void CancelOrder(CancelOrderRequest request)
     {
         var cmd = new Api.Commands.CancelOrderCommand(
             request.OrderId,
@@ -141,11 +134,10 @@ public class ExchangeApiHub : Hub
             request.UserId,
             request.Symbol);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> MoveOrder(MoveOrderRequest request)
+    public void MoveOrder(MoveOrderRequest request)
     {
         var cmd = new Api.Commands.MoveOrderCommand(
             request.OrderId,
@@ -154,11 +146,10 @@ public class ExchangeApiHub : Hub
             request.NewPrice,
             request.Symbol);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> ReduceOrder(ReduceOrderRequest request)
+    public void ReduceOrder(ReduceOrderRequest request)
     {
         var cmd = new Api.Commands.ReduceOrderCommand(
             request.OrderId,
@@ -167,50 +158,45 @@ public class ExchangeApiHub : Hub
             request.Symbol,
             request.ReduceSize);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> Reset()
+    public void Reset()
     {
         var cmd = new Api.Commands.ResetCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> ResumeUser(UserRequest request)
+    public void ResumeUser(UserRequest request)
     {
         var cmd = new Api.Commands.ResumeUserCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> SuspendUser(UserRequest request)
+    public void SuspendUser(UserRequest request)
     {
         var cmd = new Api.Commands.SuspendUserCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 
-    public async Task<CommandResult> GetSingleUserReport(UserRequest request)
+    public void GetSingleUserReport(UserRequest request)
     {
         var cmd = new Api.Commands.Queries.SingleUserReport(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
 
-        var apiResult = await _api.SendAsync(cmd);
-        return apiResult.ToProto();
+        _api.Send(cmd);
     }
 }

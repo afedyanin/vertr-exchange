@@ -76,8 +76,8 @@ public class Program
         {
             Console.WriteLine($"Setup Symbols...");
             var req = CreateAddSymbolsRequest();
-            var reply = await connection.InvokeCoreAsync<CommandResult>("AddSymbols", new object[] { req });
-            Console.WriteLine($"Symbol setup completed. OrderId={reply.OrderId} ResultCode={reply.CommandResultCode} ");
+            await connection.InvokeCoreAsync("AddSymbols", new object[] { req });
+            Console.WriteLine($"Symbol setup completed.");
         });
     }
 
