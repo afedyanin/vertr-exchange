@@ -1,11 +1,9 @@
-using Grpc.Net.Client;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Client.ConsoleApp.Extensions;
+using Vertr.Exchange.Client.ConsoleApp.StaticData;
 using Vertr.Exchange.Protos;
-using static Vertr.Exchange.Protos.Exchange;
 
 namespace Vertr.Exchange.Client.ConsoleApp;
 
@@ -20,7 +18,7 @@ public class Program
     {
         var connection = new HubConnectionBuilder()
             .WithUrl(
-            url: "http://localhost:5000/market-data",
+            url: "http://localhost:5000/exchange",
             transports: HttpTransportType.WebSockets,
             options =>
             {
@@ -53,7 +51,7 @@ public class Program
         };
 
         var t1 = ListenToApiCommandReultStream(connection, cts);
-        var t2 = SetupSymbols();
+        var t2 = SetupSymbols(connection);
         await Task.WhenAll(t1, t2);
     }
 
@@ -72,15 +70,21 @@ public class Program
             }
         });
     }
-    private static Task SetupSymbols()
+    private static Task SetupSymbols(HubConnection connection)
     {
         return Task.Run(async () =>
         {
             Console.WriteLine($"Setup Symbols...");
-            using var channel = GrpcChannel.ForAddress("http://localhost:5002");
-            var client = new ExchangeClient(channel);
-            var reply = await client.RegisterSymbols();
+            var req = CreateAddSymbolsRequest();
+            var reply = await connection.InvokeCoreAsync<CommandResult>("AddSymbols", new object[] { req });
             Console.WriteLine($"Symbol setup completed. OrderId={reply.OrderId} ResultCode={reply.CommandResultCode} ");
         });
+    }
+
+    private static AddSymbolsRequest CreateAddSymbolsRequest()
+    {
+        var req = new AddSymbolsRequest();
+        req.Symbols.Add(Symbols.All.Select(s => s.GetSpecification()));
+        return req;
     }
 }
