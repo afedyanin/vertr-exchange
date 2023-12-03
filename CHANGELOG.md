@@ -1,3 +1,11 @@
+## 03-12-23
+
+### Background services
+- https://habr.com/ru/articles/658847/
+- https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-8.0&tabs=visual-studio
+- https://learn.microsoft.com/ru-ru/dotnet/architecture/microservices/multi-container-microservice-net-applications/background-tasks-with-ihostedservice
+
+
 ## 02-12-23
 
 - [x] выпилен GRPC
