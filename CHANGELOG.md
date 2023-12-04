@@ -1,3 +1,27 @@
+## 04-12-23
+
+### Client Side
+- admin adds users
+- await model for commands (tcs + Cancel)
+- market dashboard
+- orderbooks dashboard
+- order history
+- symbols CRUD
+
+#### Client Strategies
+- Market Maker
+- Random Walk
+
+### Tech Debt
+- remove protobuf
+- integration tests
+- startup/shutdown
+- reconnect on disconnect
+
+### Blazor client
+
+
+
 ## 03-12-23
 
 ### Background services
