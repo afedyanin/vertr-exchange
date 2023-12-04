@@ -1,12 +1,17 @@
 ## 04-12-23
 
 ### Client Side
-- admin adds users
-- await model for commands (tcs + Cancel)
-- market dashboard
-- orderbooks dashboard
-- order history
-- symbols CRUD
+- [ ] await model for commands (tcs + cancel)
+- [ ] fix invalid user bug - place order
+- [ ] fix POST params - place order
+- [ ] market data feed (background service)
+- [ ] orderbooks feed (background service)
+- [ ] user reports (user account, user status, orders)
+- [ ] market dashboard
+- [ ] orderbooks dashboard
+- [ ] order history
+- [ ] symbols CRUD
+- [x] admin adds users
 
 #### Client Strategies
 - Market Maker
@@ -19,7 +24,6 @@
 - reconnect on disconnect
 
 ### Blazor client
-
 
 
 ## 03-12-23

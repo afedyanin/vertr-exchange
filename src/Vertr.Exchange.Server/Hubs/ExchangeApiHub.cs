@@ -99,6 +99,7 @@ public class ExchangeApiHub : Hub
 
         _api.Send(cmd);
     }
+
     public void PlaceOrder(PlaceOrderRequest request)
     {
         var cmd = new Api.Commands.PlaceOrderCommand(
