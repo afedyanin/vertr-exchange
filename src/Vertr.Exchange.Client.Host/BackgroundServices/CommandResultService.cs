@@ -15,8 +15,8 @@ public class CommandResultService(
     {
         _logger.LogInformation($"Start listening API Command result stream...");
         var connection = await _connectionProvider.GetConnection();
-        var channel = await connection.StreamAsChannelAsync<ApiCommandResult>("ApiCommandResults", CancellationToken.None);
-        while (await channel.WaitToReadAsync() && !stoppingToken.IsCancellationRequested)
+        var channel = await connection.StreamAsChannelAsync<ApiCommandResult>("ApiCommandResults", stoppingToken);
+        while (await channel.WaitToReadAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
         {
             while (channel.TryRead(out var apiCommandResult))
             {

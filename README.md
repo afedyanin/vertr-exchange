@@ -36,40 +36,29 @@ Inspired by
 - [Streaming and Authentication in gRPC (ASP.Net Core)](https://dotnetcorecentral.com/blog/streaming-and-authentication-in-grpc/)
 - [Authentication](https://grpc.io/docs/guides/auth/)
 
-## NATS
 
-### NATS and Docker
+## SignalR
 
-- [NATS Server Containerization](https://docs.nats.io/running-a-nats-service/nats_docker)
+https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-8.0
+https://github.com/aspnet/SignalR-samples/tree/main
 
-```
-docker pull nats:latest
+## Channels
 
-docker run -p 4222:4222 -ti nats:latest
+- [An Introduction to System.Threading.Channels](https://devblogs.microsoft.com/dotnet/an-introduction-to-system-threading-channels/)
+- [System.Threading.Channels library](https://learn.microsoft.com/en-us/dotnet/core/extensions/channels)
+- [System.Threading.Channels — высокопроизводительный производитель-потребитель и асинхронность без аллокаций и стэк дайва](https://habr.com/ru/post/508726/)
+- [Processing data in parallel using Channels](https://maciejz.dev/processing-data-in-parallel-channels/)
+- [Producer/consumer pipelines with System.Threading.Channels](https://blog.maartenballiauw.be/post/2020/08/26/producer-consumer-pipelines-with-system-threading-channels.html)
+- [Asynchronous Producer Consumer Pattern in .NET (C#)](https://www.dotnetcurry.com/dotnetcore/1509/async-dotnetcore-pattern)
+- [Concurrent Pipeline with .NET Channels](https://www.rickyterrell.com/?p=247)
 
-```
+### Denis Kyashif's Blog
+- [C# Channels - Publish / Subscribe Workflows](https://deniskyashif.com/2019/12/08/csharp-channels-part-1/)
+- [C# Channels - Timeout and Cancellation](https://deniskyashif.com/2019/12/11/csharp-channels-part-2/)
+- [C# Channels - Async Data Pipelines](https://deniskyashif.com/2020/01/07/csharp-channels-part-3/)
 
-### NATS resources
+- [C# Channels - Publish / Subscribe Workflows](https://deniskyashif.com/2019/12/08/csharp-channels-part-1/)
+- [How to: Implement a producer-consumer dataflow pattern](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-implement-a-producer-consumer-dataflow-pattern)
 
-- [GitHub](https://github.com/nats-io)
-- [Learn NATS by Example](https://natsbyexample.com/)
-- [NATS Tools](https://docs.nats.io/using-nats/nats-tools)
-- [NATS CLI](https://docs.nats.io/using-nats/nats-tools/nats_cli)
 
-### Dotnet Clients
-- [NATS.NET V2](https://github.com/nats-io/nats.net.v2)
-- [NATS - .NET C# Client](https://github.com/nats-io/nats.net)
-
-### Check NATS
-
-```
-nats sub msg.test
-
-nats pub msg.test nats-message-1
-```
-
-### C# examples
-
-- [Core Publish-Subscribe in Messaging](https://natsbyexample.com/examples/messaging/pub-sub/dotnet2)
-- [GitHub](https://github.com/ConnectEverything/nats-by-example)
  

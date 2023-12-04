@@ -19,7 +19,8 @@ public class Program
         builder.Services.AddSignalR(hubOptions =>
         {
             hubOptions.EnableDetailedErrors = true;
-            hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
+            // https://stackoverflow.com/questions/76371471/signalr-timeoutexception-every-30-seconds
+            hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(15);
         }).AddMessagePackProtocol();
 
         builder.Services.AddExchangeApi();
