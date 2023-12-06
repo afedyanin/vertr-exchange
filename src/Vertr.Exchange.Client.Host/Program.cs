@@ -1,3 +1,4 @@
+using Vertr.Exchange.Client.Host.Awaiting;
 using Vertr.Exchange.Client.Host.BackgroundServices;
 using Vertr.Exchange.Client.Host.Providers;
 
@@ -15,6 +16,7 @@ public class Program
 
         builder.Services.AddSingleton<HubConnectionProvider>();
         builder.Services.AddHostedService<CommandResultService>();
+        builder.Services.AddSingleton<ICommandAwaitingService, CommandAwaitingService>();
 
         var app = builder.Build();
 

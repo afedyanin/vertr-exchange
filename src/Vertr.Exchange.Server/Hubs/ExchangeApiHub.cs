@@ -8,29 +8,20 @@ using Vertr.Exchange.Server.MessageHandlers;
 
 namespace Vertr.Exchange.Server.Hubs;
 
-public class ExchangeApiHub : Hub
+public class ExchangeApiHub(
+    IExchangeApi api,
+    IOrderIdGenerator orderIdGenerator,
+    ITimestampGenerator timestampGenerator,
+    ILogger<ExchangeApiHub> logger,
+    IObservableMessageHandler messageHandler) : Hub
 {
-    private readonly IExchangeApi _api;
-    private readonly IOrderIdGenerator _orderIdGenerator;
-    private readonly ITimestampGenerator _timestampGenerator;
-    private readonly ILogger<ExchangeApiHub> _logger;
-    private readonly IObservableMessageHandler _messageHandler;
+    private readonly IExchangeApi _api = api;
+    private readonly IOrderIdGenerator _orderIdGenerator = orderIdGenerator;
+    private readonly ITimestampGenerator _timestampGenerator = timestampGenerator;
+    private readonly ILogger<ExchangeApiHub> _logger = logger;
+    private readonly IObservableMessageHandler _messageHandler = messageHandler;
 
     private const int _maxBufferSize = 10;
-
-    public ExchangeApiHub(
-        IExchangeApi api,
-        IOrderIdGenerator orderIdGenerator,
-        ITimestampGenerator timestampGenerator,
-        ILogger<ExchangeApiHub> logger,
-        IObservableMessageHandler messageHandler)
-    {
-        _api = api;
-        _orderIdGenerator = orderIdGenerator;
-        _timestampGenerator = timestampGenerator;
-        _logger = logger;
-        _messageHandler = messageHandler;
-    }
 
     public ChannelReader<ApiCommandResult> ApiCommandResults()
         => _messageHandler.ApiCommandResultStream().AsChannelReader(_maxBufferSize);
@@ -47,16 +38,17 @@ public class ExchangeApiHub : Hub
     public ChannelReader<TradeEvent> TradeEvents()
         => _messageHandler.TradeEventStream().AsChannelReader(_maxBufferSize);
 
-    public void Nop()
+    public long Nop()
     {
         var cmd = new Api.Commands.NopCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void GetOrderBook(OrderBookRequest request)
+    public long GetOrderBook(OrderBookRequest request)
     {
         var cmd = new Api.Commands.OrderBookRequest(
             _orderIdGenerator.NextId,
@@ -65,9 +57,10 @@ public class ExchangeApiHub : Hub
             request.Size);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void AddSymbols(AddSymbolsRequest request)
+    public long AddSymbols(AddSymbolsRequest request)
     {
         _logger.LogDebug("AddSymbols command received.");
 
@@ -78,9 +71,10 @@ public class ExchangeApiHub : Hub
 
         _logger.LogDebug("AddSymbols command completed.");
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void AddUser(UserRequest request)
+    public long AddUser(UserRequest request)
     {
         var cmd = new Api.Commands.AddUserCommand(
             _orderIdGenerator.NextId,
@@ -88,9 +82,10 @@ public class ExchangeApiHub : Hub
             request.UserId);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void AddAccounts(AddAccountsRequest request)
+    public long AddAccounts(AddAccountsRequest request)
     {
         var cmd = new Api.Commands.AddAccountsCommand(
             _orderIdGenerator.NextId,
@@ -98,9 +93,10 @@ public class ExchangeApiHub : Hub
             request.UserAccounts.ToDomain());
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void PlaceOrder(PlaceOrderRequest request)
+    public long PlaceOrder(PlaceOrderRequest request)
     {
         var cmd = new Api.Commands.PlaceOrderCommand(
             _orderIdGenerator.NextId,
@@ -113,9 +109,10 @@ public class ExchangeApiHub : Hub
             request.Symbol);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void AdjustBalance(AdjustBalanceRequest request)
+    public long AdjustBalance(AdjustBalanceRequest request)
     {
         var cmd = new Api.Commands.AdjustBalanceCommand(
             _orderIdGenerator.NextId,
@@ -125,9 +122,10 @@ public class ExchangeApiHub : Hub
             request.Amount);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void CancelOrder(CancelOrderRequest request)
+    public long CancelOrder(CancelOrderRequest request)
     {
         var cmd = new Api.Commands.CancelOrderCommand(
             request.OrderId,
@@ -136,9 +134,10 @@ public class ExchangeApiHub : Hub
             request.Symbol);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void MoveOrder(MoveOrderRequest request)
+    public long MoveOrder(MoveOrderRequest request)
     {
         var cmd = new Api.Commands.MoveOrderCommand(
             request.OrderId,
@@ -148,9 +147,10 @@ public class ExchangeApiHub : Hub
             request.Symbol);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void ReduceOrder(ReduceOrderRequest request)
+    public long ReduceOrder(ReduceOrderRequest request)
     {
         var cmd = new Api.Commands.ReduceOrderCommand(
             request.OrderId,
@@ -160,18 +160,20 @@ public class ExchangeApiHub : Hub
             request.ReduceSize);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void Reset()
+    public long Reset()
     {
         var cmd = new Api.Commands.ResetCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void ResumeUser(UserRequest request)
+    public long ResumeUser(UserRequest request)
     {
         var cmd = new Api.Commands.ResumeUserCommand(
             _orderIdGenerator.NextId,
@@ -179,9 +181,10 @@ public class ExchangeApiHub : Hub
             request.UserId);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void SuspendUser(UserRequest request)
+    public long SuspendUser(UserRequest request)
     {
         var cmd = new Api.Commands.SuspendUserCommand(
             _orderIdGenerator.NextId,
@@ -189,9 +192,10 @@ public class ExchangeApiHub : Hub
             request.UserId);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 
-    public void GetSingleUserReport(UserRequest request)
+    public long GetSingleUserReport(UserRequest request)
     {
         var cmd = new Api.Commands.Queries.SingleUserReport(
             _orderIdGenerator.NextId,
@@ -199,5 +203,6 @@ public class ExchangeApiHub : Hub
             request.UserId);
 
         _api.Send(cmd);
+        return cmd.OrderId;
     }
 }

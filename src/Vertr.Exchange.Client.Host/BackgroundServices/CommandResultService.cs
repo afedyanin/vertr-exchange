@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR.Client;
+using Vertr.Exchange.Client.Host.Awaiting;
 using Vertr.Exchange.Client.Host.Providers;
 using Vertr.Exchange.Protos;
 
@@ -6,10 +7,12 @@ namespace Vertr.Exchange.Client.Host.BackgroundServices;
 
 public class CommandResultService(
     HubConnectionProvider hubConnectionProvider,
+    ICommandAwaitingService commandAwaitingService,
     ILogger<CommandResultService> logger) : BackgroundService
 {
     private readonly HubConnectionProvider _connectionProvider = hubConnectionProvider;
     private readonly ILogger<CommandResultService> _logger = logger;
+    private readonly ICommandAwaitingService _commandAwaitingService = commandAwaitingService;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -21,6 +24,8 @@ public class CommandResultService(
             while (channel.TryRead(out var apiCommandResult))
             {
                 _logger.LogInformation($"API Commad result received. OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
+                var resp = new CommandResponse(apiCommandResult);
+                _commandAwaitingService.Complete(resp);
             }
         }
     }

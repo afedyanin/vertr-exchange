@@ -1,7 +1,15 @@
+## 06-12-23
+
+- [ ] refitClient and Contracts
+- [ ] console client via refit client - use cases and scenarios
+
+### Tech Debt
+- awating - cancel, race conditions
+
 ## 04-12-23
 
 ### Client Side
-- [ ] await model for commands (tcs + cancel)
+- [x] await model for commands (tcs + cancel)
 - [ ] fix invalid user bug - place order
 - [ ] fix POST params - place order
 - [ ] market data feed (background service)

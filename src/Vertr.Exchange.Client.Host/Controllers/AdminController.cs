@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
+using Vertr.Exchange.Client.Host.Awaiting;
 using Vertr.Exchange.Client.Host.Providers;
 using Vertr.Exchange.Client.Host.StaticData;
 using Vertr.Exchange.Protos;
@@ -9,47 +10,53 @@ namespace Vertr.Exchange.Client.Host.Controllers;
 [ApiController]
 public class AdminController(
     HubConnectionProvider connectionProvider,
+    ICommandAwaitingService commandAwaitingService,
     ILogger<AdminController> logger) : ControllerBase
 {
     private readonly ILogger<AdminController> _logger = logger;
     private readonly HubConnectionProvider _connectionProvider = connectionProvider;
+    private readonly ICommandAwaitingService _commandAwaitingService = commandAwaitingService;
 
     [HttpPost("symbols")]
-    public async Task AddSymbols()
+    public async Task<IActionResult> AddSymbols()
     {
         _logger.LogInformation($"Setup Symbols...");
         var req = CreateAddSymbolsRequest();
         var connection = await _connectionProvider.GetConnection();
-        await connection.InvokeCoreAsync("AddSymbols", new object[] { req });
-        _logger.LogInformation($"Symbol setup completed.");
+        var commandId = await connection.InvokeCoreAsync<long>("AddSymbols", new object[] { req });
+        var result = await _commandAwaitingService.Register(commandId);
+        return Ok(result.CommandResult);
     }
 
     [HttpPost("accounts")]
-    public async Task AddAccounts()
+    public async Task<IActionResult> AddAccounts()
     {
         _logger.LogInformation($"Setup Accounts...");
         var req = CreateAddAccountsRequest();
         var connection = await _connectionProvider.GetConnection();
-        await connection.InvokeCoreAsync("AddAccounts", new object[] { req });
-        _logger.LogInformation($"Accounts setup completed.");
+        var commandId = await connection.InvokeCoreAsync<long>("AddAccounts", new object[] { req });
+        var result = await _commandAwaitingService.Register(commandId);
+        return Ok(result.CommandResult);
     }
 
     [HttpPost("reset")]
-    public async Task Reset()
+    public async Task<IActionResult> Reset()
     {
         _logger.LogInformation($"Reset exchange...");
         var connection = await _connectionProvider.GetConnection();
-        await connection.InvokeAsync("Reset");
-        _logger.LogInformation($"Reset completed.");
+        var commandId = await connection.InvokeAsync<long>("Reset");
+        var result = await _commandAwaitingService.Register(commandId);
+        return Ok(result.CommandResult);
     }
 
     [HttpPost("nop")]
-    public async Task Nop()
+    public async Task<IActionResult> Nop()
     {
         _logger.LogInformation($"NOP...");
         var connection = await _connectionProvider.GetConnection();
-        await connection.InvokeAsync("Nop");
-        _logger.LogInformation($"NOP completed.");
+        var commandId = await connection.InvokeAsync<long>("Nop");
+        var result = await _commandAwaitingService.Register(commandId);
+        return Ok(result.CommandResult);
     }
 
     [HttpPost("place-order/{user}/{symbol}")]
@@ -75,9 +82,9 @@ public class AdminController(
         _logger.LogInformation($"Place Order started ...");
         var req = CreatePlaceOrderRequest(usr, sym, price, size);
         var connection = await _connectionProvider.GetConnection();
-        await connection.InvokeCoreAsync("PlaceOrder", new object[] { req });
-        _logger.LogInformation($"Place Order completed.");
-        return Ok();
+        var commandId = await connection.InvokeCoreAsync<long>("PlaceOrder", new object[] { req });
+        var result = await _commandAwaitingService.Register(commandId);
+        return Ok(result.CommandResult);
     }
 
     private static AddSymbolsRequest CreateAddSymbolsRequest()
