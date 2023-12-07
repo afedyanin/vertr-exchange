@@ -1,6 +1,6 @@
 using System.Reactive.Subjects;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Server.Extensions;
 
 namespace Vertr.Exchange.Server.MessageHandlers;
@@ -38,31 +38,31 @@ public class ObservableMessageHandler : IObservableMessageHandler, IMessageHandl
     public void CommandResult(Common.Messages.ApiCommandResult apiCommandResult)
     {
         _logger.LogInformation($"CommandResult received: OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
-        _commandResultSubject.OnNext(apiCommandResult.ToProto());
+        _commandResultSubject.OnNext(apiCommandResult.ToDto());
     }
 
     public void OrderBook(Common.Messages.OrderBook orderBook)
     {
         _logger.LogInformation($"OrderBook received: Symbol={orderBook.Symbol}");
-        _orderBookSubject.OnNext(orderBook.ToProto());
+        _orderBookSubject.OnNext(orderBook.ToDto());
     }
 
     public void ReduceEvent(Common.Messages.ReduceEvent reduceEvent)
     {
         _logger.LogInformation($"ReduceEvent received: OrderId={reduceEvent.OrderId} ReducedVolume={reduceEvent.ReducedVolume}");
-        _reduceEventSubject.OnNext(reduceEvent.ToProto());
+        _reduceEventSubject.OnNext(reduceEvent.ToDto());
     }
 
     public void RejectEvent(Common.Messages.RejectEvent rejectEvent)
     {
         _logger.LogInformation($"RejectEvent received: OrderId={rejectEvent.OrderId} RejectedVolume={rejectEvent.RejectedVolume}");
-        _rejectEventSubject.OnNext(rejectEvent.ToProto());
+        _rejectEventSubject.OnNext(rejectEvent.ToDto());
     }
 
     public void TradeEvent(Common.Messages.TradeEvent tradeEvent)
     {
         _logger.LogInformation($"TradeEvent received: OrderId={tradeEvent.TakerOrderId} TakeOrderCompleted={tradeEvent.TakeOrderCompleted}");
-        _tradeEventSubject.OnNext(tradeEvent.ToProto());
+        _tradeEventSubject.OnNext(tradeEvent.ToDto());
     }
 
     public void Dispose()

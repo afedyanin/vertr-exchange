@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Exchange.Client.Host.Awaiting;
 using Vertr.Exchange.Client.Host.Providers;
 using Vertr.Exchange.Client.Host.StaticData;
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts.Enums;
+using Vertr.Exchange.Contracts.Requests;
 
 namespace Vertr.Exchange.Client.Host.Controllers;
 [Route("api/admin")]
@@ -89,16 +90,23 @@ public class AdminController(
 
     private static AddSymbolsRequest CreateAddSymbolsRequest()
     {
-        var req = new AddSymbolsRequest();
-        req.Symbols.Add(Symbols.All.Select(s => s.GetSpecification()));
+        var req = new AddSymbolsRequest()
+        {
+            Symbols = Symbols.All.Select(s => s.GetSpecification()).ToArray(),
+        };
         return req;
     }
 
     private static AddAccountsRequest CreateAddAccountsRequest()
     {
-        var req = new AddAccountsRequest();
-        req.UserAccounts.Add(UserAccounts.AliceAccount.ToProto());
-        req.UserAccounts.Add(UserAccounts.BobAccount.ToProto());
+        var req = new AddAccountsRequest()
+        {
+            UserAccounts =
+            [
+                UserAccounts.AliceAccount.ToDto(),
+                UserAccounts.BobAccount.ToDto()
+            ],
+        };
 
         return req;
     }
@@ -115,8 +123,8 @@ public class AdminController(
             Symbol = symbol.Id,
             Price = price,
             Size = Math.Abs(size),
-            Action = size > 0 ? OrderAction.Bid : OrderAction.Ask,
-            OrderType = price == decimal.Zero ? OrderType.Ioc : OrderType.Gtc,
+            Action = size > 0 ? OrderAction.BID : OrderAction.ASK,
+            OrderType = price == decimal.Zero ? OrderType.IOC : OrderType.GTC,
         };
 
         return req;

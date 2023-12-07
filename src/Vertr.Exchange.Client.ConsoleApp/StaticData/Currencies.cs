@@ -8,7 +8,7 @@ internal static class Currencies
     public static readonly Currency EUR = new Currency(300, "EUR", "Euro");
     public static readonly Currency RUB = new Currency(200, "RUB", "Russian Rub");
 
-    public static readonly Currency[] All = new Currency[] { USD, EUR, RUB };
+    public static readonly Currency[] All = [USD, EUR, RUB];
 
     public static Currency? GetById(int id) => All.FirstOrDefault(x => x.Id == id);
 

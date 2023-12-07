@@ -1,40 +1,39 @@
-using Google.Protobuf.WellKnownTypes;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.Server.Extensions;
 
 internal static class ApiCommandResultExtensions
 {
-    public static CommandResult ToProto(this IApiCommandResult apiRes)
+    public static CommandResult ToDto(this IApiCommandResult apiRes)
     {
         var res = new CommandResult()
         {
-            CommandResultCode = apiRes.ResultCode.ToProto(),
+            CommandResultCode = apiRes.ResultCode.ToDto(),
             OrderId = apiRes.OrderId,
-            Timestamp = apiRes.Timestamp.ToTimestamp(),
+            Timestamp = apiRes.Timestamp,
         };
 
         if (apiRes.MarketData != null)
         {
-            res.MarketData = apiRes.MarketData.ToProto(apiRes.Timestamp);
+            res.MarketData = apiRes.MarketData.ToDto(apiRes.Timestamp);
         }
 
         if (apiRes.RootEvent != null)
         {
-            res.Events.AddRange(apiRes.RootEvent.ToProto());
+            res.Events = apiRes.RootEvent.ToDto().ToArray();
         }
 
         return res;
     }
 
-    public static ApiCommandResult ToProto(this Common.Messages.ApiCommandResult apiRes)
+    public static ApiCommandResult ToDto(this Common.Messages.ApiCommandResult apiRes)
     {
         var res = new ApiCommandResult()
         {
-            ResultCode = apiRes.ResultCode.ToProto(),
+            ResultCode = apiRes.ResultCode.ToDto(),
             OrderId = apiRes.OrderId,
-            Timestamp = apiRes.Timestamp.ToTimestamp(),
+            Timestamp = apiRes.Timestamp,
             Seq = apiRes.Seq,
             Uid = apiRes.Uid,
         };

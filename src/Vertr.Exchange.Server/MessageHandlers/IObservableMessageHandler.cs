@@ -1,4 +1,4 @@
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.Server.MessageHandlers;
 

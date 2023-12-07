@@ -1,6 +1,0 @@
-@Vertr.Exchange.Client.Host_HostAddress = http://localhost:5076
-
-GET {{Vertr.Exchange.Client.Host_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

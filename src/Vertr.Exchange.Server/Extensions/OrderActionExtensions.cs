@@ -1,4 +1,4 @@
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts.Enums;
 
 namespace Vertr.Exchange.Server.Extensions;
 
@@ -8,18 +8,18 @@ internal static class OrderActionExtensions
     {
         return orderAction switch
         {
-            OrderAction.Ask => Common.Enums.OrderAction.ASK,
-            OrderAction.Bid => Common.Enums.OrderAction.BID,
-            _ => Common.Enums.OrderAction.ASK,
+            OrderAction.ASK => Common.Enums.OrderAction.ASK,
+            OrderAction.BID => Common.Enums.OrderAction.BID,
+            _ => throw new InvalidOperationException($"Unknown order action: {orderAction}"),
         };
     }
-    public static OrderAction ToProto(this Common.Enums.OrderAction orderAction)
+    public static OrderAction ToDto(this Common.Enums.OrderAction orderAction)
     {
         return orderAction switch
         {
-            Common.Enums.OrderAction.ASK => OrderAction.Ask,
-            Common.Enums.OrderAction.BID => OrderAction.Bid,
-            _ => OrderAction.Ask,
+            Common.Enums.OrderAction.ASK => OrderAction.ASK,
+            Common.Enums.OrderAction.BID => OrderAction.BID,
+            _ => throw new InvalidOperationException($"Unknown order action: {orderAction}"),
         };
     }
 }

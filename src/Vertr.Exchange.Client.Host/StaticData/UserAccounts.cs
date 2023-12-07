@@ -24,9 +24,9 @@ public static class UserAccounts
                 new Balance(Currencies.RUB, 20_000_000m)
             ]);
 
-    public static Protos.UserAccount ToProto(this UserAccount userAccount)
+    public static Contracts.UserAccount ToDto(this UserAccount userAccount)
     {
-        var account = new Protos.UserAccount()
+        var account = new Contracts.UserAccount()
         {
             UserId = userAccount.User.Id,
         };

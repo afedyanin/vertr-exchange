@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Exchange.Protos\Vertr.Exchange.Protos.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Contracts\Vertr.Exchange.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

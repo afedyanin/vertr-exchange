@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Exchange.Client.Host.Awaiting;
 using Vertr.Exchange.Client.Host.Providers;
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.Client.Host.BackgroundServices;
 

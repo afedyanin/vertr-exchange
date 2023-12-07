@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Client.ConsoleApp.StaticData;
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts;
+using Vertr.Exchange.Contracts.Requests;
 
 namespace Vertr.Exchange.Client.ConsoleApp;
 
@@ -83,8 +84,10 @@ public class Program
 
     private static AddSymbolsRequest CreateAddSymbolsRequest()
     {
-        var req = new AddSymbolsRequest();
-        req.Symbols.Add(Symbols.All.Select(s => s.GetSpecification()));
+        var req = new AddSymbolsRequest()
+        {
+            Symbols = Symbols.All.Select(s => s.GetSpecification()).ToArray(),
+        };
         return req;
     }
 }
