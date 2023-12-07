@@ -14,7 +14,7 @@ public class ExchangeApiHub(
     IOrderIdGenerator orderIdGenerator,
     ITimestampGenerator timestampGenerator,
     ILogger<ExchangeApiHub> logger,
-    IObservableMessageHandler messageHandler) : Hub
+    IObservableMessageHandler messageHandler) : Hub, IExchangeApiClient
 {
     private readonly IExchangeApi _api = api;
     private readonly IOrderIdGenerator _orderIdGenerator = orderIdGenerator;

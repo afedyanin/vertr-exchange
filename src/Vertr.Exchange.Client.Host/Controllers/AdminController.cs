@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Exchange.Client.Host.Awaiting;
 using Vertr.Exchange.Client.Host.Providers;
 using Vertr.Exchange.Client.Host.StaticData;
+using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Enums;
 using Vertr.Exchange.Contracts.Requests;
 
@@ -21,12 +22,9 @@ public class AdminController(
     [HttpPost("symbols")]
     public async Task<IActionResult> AddSymbols()
     {
-        _logger.LogInformation($"Setup Symbols...");
         var req = CreateAddSymbolsRequest();
-        var connection = await _connectionProvider.GetConnection();
-        var commandId = await connection.InvokeCoreAsync<long>("AddSymbols", new object[] { req });
-        var result = await _commandAwaitingService.Register(commandId);
-        return Ok(result.CommandResult);
+        var res = await InvokeHubMethod("AddSymbols", req);
+        return Ok(res);
     }
 
     [HttpPost("accounts")]
@@ -34,30 +32,22 @@ public class AdminController(
     {
         _logger.LogInformation($"Setup Accounts...");
         var req = CreateAddAccountsRequest();
-        var connection = await _connectionProvider.GetConnection();
-        var commandId = await connection.InvokeCoreAsync<long>("AddAccounts", new object[] { req });
-        var result = await _commandAwaitingService.Register(commandId);
-        return Ok(result.CommandResult);
+        var res = await InvokeHubMethod("AddAccounts", req);
+        return Ok(res);
     }
 
     [HttpPost("reset")]
     public async Task<IActionResult> Reset()
     {
-        _logger.LogInformation($"Reset exchange...");
-        var connection = await _connectionProvider.GetConnection();
-        var commandId = await connection.InvokeAsync<long>("Reset");
-        var result = await _commandAwaitingService.Register(commandId);
-        return Ok(result.CommandResult);
+        var res = await InvokeHubMethod("Reset");
+        return Ok(res);
     }
 
     [HttpPost("nop")]
     public async Task<IActionResult> Nop()
     {
-        _logger.LogInformation($"NOP...");
-        var connection = await _connectionProvider.GetConnection();
-        var commandId = await connection.InvokeAsync<long>("Nop");
-        var result = await _commandAwaitingService.Register(commandId);
-        return Ok(result.CommandResult);
+        var res = await InvokeHubMethod("Nop");
+        return Ok(res);
     }
 
     [HttpPost("place-order/{user}/{symbol}")]
@@ -80,12 +70,17 @@ public class AdminController(
             return NotFound("Symbol not found.");
         }
 
-        _logger.LogInformation($"Place Order started ...");
         var req = CreatePlaceOrderRequest(usr, sym, price, size);
+        var res = await InvokeHubMethod("PlaceOrder", req);
+        return Ok(res);
+    }
+
+    private async Task<ApiCommandResult> InvokeHubMethod(string methodName, object? request = null, CancellationToken cancellationToken = default)
+    {
         var connection = await _connectionProvider.GetConnection();
-        var commandId = await connection.InvokeCoreAsync<long>("PlaceOrder", new object[] { req });
+        var commandId = await connection.InvokeCoreAsync<long>(methodName, [request], cancellationToken);
         var result = await _commandAwaitingService.Register(commandId);
-        return Ok(result.CommandResult);
+        return result.CommandResult;
     }
 
     private static AddSymbolsRequest CreateAddSymbolsRequest()

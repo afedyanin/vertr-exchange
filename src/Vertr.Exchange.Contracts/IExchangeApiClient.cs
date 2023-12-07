@@ -3,31 +3,31 @@ using Vertr.Exchange.Contracts.Requests;
 namespace Vertr.Exchange.Contracts;
 public interface IExchangeApiClient
 {
-    CommandResult Nop();
+    long Nop();
 
-    CommandResult GetOrderBook(OrderBookRequest orderBookRequest);
+    long GetOrderBook(OrderBookRequest orderBookRequest);
 
-    CommandResult AddSymbols(AddSymbolsRequest addSymbolsRequest);
+    long AddSymbols(AddSymbolsRequest addSymbolsRequest);
 
-    CommandResult AddUser(UserRequest userRequest);
+    long AddUser(UserRequest userRequest);
 
-    CommandResult AddAccounts(AddAccountsRequest addAccountsRequest);
+    long AddAccounts(AddAccountsRequest addAccountsRequest);
 
-    CommandResult AdjustBalance(AdjustBalanceRequest adjustBalanceRequest);
+    long AdjustBalance(AdjustBalanceRequest adjustBalanceRequest);
 
-    CommandResult CancelOrder(CancelOrderRequest cancelOrderRequest);
+    long CancelOrder(CancelOrderRequest cancelOrderRequest);
 
-    CommandResult MoveOrder(MoveOrderRequest moveOrderRequest);
+    long MoveOrder(MoveOrderRequest moveOrderRequest);
 
-    CommandResult PlaceOrder(PlaceOrderRequest placeOrderRequest);
+    long PlaceOrder(PlaceOrderRequest placeOrderRequest);
 
-    CommandResult ReduceOrder(ReduceOrderRequest reduceOrderRequest);
+    long ReduceOrder(ReduceOrderRequest reduceOrderRequest);
 
-    CommandResult Reset();
+    long Reset();
 
-    CommandResult ResumeUser(UserRequest userRequest);
+    long ResumeUser(UserRequest userRequest);
 
-    CommandResult SuspendUser(UserRequest userRequest);
+    long SuspendUser(UserRequest userRequest);
 
-    CommandResult GetSingleUserReport(UserRequest userRequest);
+    long GetSingleUserReport(UserRequest userRequest);
 }
