@@ -1,4 +1,5 @@
-namespace Vertr.Exchange.Client.Host.StaticData;
+namespace Vertr.Exchange.Client.ConsoleApp.StaticData;
+
 
 public record Balance(Currency Currency, decimal Amount);
 

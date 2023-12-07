@@ -1,6 +1,6 @@
 ## 06-12-23
 
-- [ ] refitClient and Contracts
+- [x] refitClient and Contracts
 - [ ] console client via refit client - use cases and scenarios
 
 ### Tech Debt
@@ -11,7 +11,7 @@
 ### Client Side
 - [x] await model for commands (tcs + cancel)
 - [ ] fix invalid user bug - place order
-- [ ] fix POST params - place order
+- [x] fix POST params - place order
 - [ ] market data feed (background service)
 - [ ] orderbooks feed (background service)
 - [ ] user reports (user account, user status, orders)
@@ -26,7 +26,7 @@
 - Random Walk
 
 ### Tech Debt
-- remove protobuf
+- [x] remove protobuf
 - integration tests
 - startup/shutdown
 - reconnect on disconnect

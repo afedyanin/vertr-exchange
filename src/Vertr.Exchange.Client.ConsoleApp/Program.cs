@@ -1,85 +1,17 @@
-using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Refit;
+using Vert.Exchange.Client.Host.ApiClient;
 using Vertr.Exchange.Client.ConsoleApp.StaticData;
-using Vertr.Exchange.Contracts;
+using Vertr.Exchange.Contracts.Enums;
 using Vertr.Exchange.Contracts.Requests;
-
 namespace Vertr.Exchange.Client.ConsoleApp;
 
 public class Program
 {
     public static async Task Main()
     {
-        await ConnectToHub();
-    }
-
-    private static async Task ConnectToHub()
-    {
-        var connection = new HubConnectionBuilder()
-            .WithUrl(
-            url: "http://localhost:5000/exchange",
-            transports: HttpTransportType.WebSockets,
-            options =>
-            {
-                options.SkipNegotiation = true;
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.AddConsole();
-            })
-            .AddMessagePackProtocol()
-            .Build();
-
-        await connection.StartAsync();
-
-        Console.WriteLine("Starting connection. Press Ctrl-C to close.");
-        var cts = new CancellationTokenSource();
-
-        Console.CancelKeyPress += (sender, a) =>
-        {
-            a.Cancel = true;
-            cts.Cancel();
-        };
-
-        connection.Closed += e =>
-        {
-            Console.WriteLine("Connection closed with error: {0}", e);
-
-            cts.Cancel();
-            return Task.CompletedTask;
-        };
-
-        var t1 = ListenToApiCommandReultStream(connection, cts);
-        var t2 = SetupSymbols(connection);
-        await Task.WhenAll(t1, t2);
-    }
-
-    private static Task ListenToApiCommandReultStream(HubConnection connection, CancellationTokenSource cts)
-    {
-        return Task.Run(async () =>
-        {
-            Console.WriteLine($"Start listening API Command result stream...");
-            var channel = await connection.StreamAsChannelAsync<ApiCommandResult>("ApiCommandResults", CancellationToken.None);
-            while (await channel.WaitToReadAsync() && !cts.IsCancellationRequested)
-            {
-                while (channel.TryRead(out var apiCommandResult))
-                {
-                    Console.WriteLine($"API Commad result received. OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
-                }
-            }
-        });
-    }
-    private static Task SetupSymbols(HubConnection connection)
-    {
-        return Task.Run(async () =>
-        {
-            Console.WriteLine($"Setup Symbols...");
-            var req = CreateAddSymbolsRequest();
-            await connection.InvokeCoreAsync("AddSymbols", new object[] { req });
-            Console.WriteLine($"Symbol setup completed.");
-        });
+        var exchApi = RestService.For<IHostApiClient>("http://localhost:5010");
+        var res = await exchApi.Reset();
+        Console.WriteLine(res);
     }
 
     private static AddSymbolsRequest CreateAddSymbolsRequest()
@@ -88,6 +20,39 @@ public class Program
         {
             Symbols = Symbols.All.Select(s => s.GetSpecification()).ToArray(),
         };
+        return req;
+    }
+
+    private static AddAccountsRequest CreateAddAccountsRequest()
+    {
+        var req = new AddAccountsRequest()
+        {
+            UserAccounts =
+            [
+                UserAccounts.AliceAccount.ToDto(),
+                UserAccounts.BobAccount.ToDto()
+            ],
+        };
+
+        return req;
+    }
+
+    private static PlaceOrderRequest CreatePlaceOrderRequest(
+        User user,
+        Symbol symbol,
+        decimal price,
+        long size)
+    {
+        var req = new PlaceOrderRequest()
+        {
+            UserId = user.Id,
+            Symbol = symbol.Id,
+            Price = price,
+            Size = Math.Abs(size),
+            Action = size > 0 ? OrderAction.BID : OrderAction.ASK,
+            OrderType = price == decimal.Zero ? OrderType.IOC : OrderType.GTC,
+        };
+
         return req;
     }
 }

@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Client.Host.StaticData;
+namespace Vertr.Exchange.Client.ConsoleApp.StaticData;
 
 public record User(int Id, string Name);
 
