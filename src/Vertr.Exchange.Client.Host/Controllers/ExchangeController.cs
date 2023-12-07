@@ -20,7 +20,12 @@ public class ExchangeController(
     [HttpPost("symbols")]
     public async Task<IActionResult> AddSymbols(AddSymbolsRequest request)
     {
+        _logger.LogInformation("AddSymbols request received");
+
         var res = await InvokeHubMethod("AddSymbols", request);
+
+        _logger.LogInformation("AddSymbols request completed {res}", res);
+
         return Ok(res);
     }
 

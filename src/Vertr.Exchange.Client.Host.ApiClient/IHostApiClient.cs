@@ -7,10 +7,10 @@ namespace Vert.Exchange.Client.Host.ApiClient;
 public interface IHostApiClient
 {
     [Post("/api/exchange/symbols")]
-    Task<ApiCommandResult?> AddSymbols(AddSymbolsRequest request);
+    Task<ApiCommandResult?> AddSymbols([Body] AddSymbolsRequest request);
 
     [Post("/api/exchange/accounts")]
-    Task<ApiCommandResult?> AddAccounts(AddAccountsRequest request);
+    Task<ApiCommandResult?> AddAccounts([Body] AddAccountsRequest request);
 
     [Post("/api/exchange/reset")]
     Task<ApiCommandResult?> Reset();
@@ -19,5 +19,5 @@ public interface IHostApiClient
     Task<ApiCommandResult?> Nop();
 
     [Post("/api/exchange/place-order")]
-    Task<ApiCommandResult?> PlaceOrder(PlaceOrderRequest request);
+    Task<ApiCommandResult?> PlaceOrder([Body] PlaceOrderRequest request);
 }

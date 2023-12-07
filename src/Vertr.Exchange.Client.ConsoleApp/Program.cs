@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Refit;
 using Vert.Exchange.Client.Host.ApiClient;
 using Vertr.Exchange.Client.ConsoleApp.StaticData;
@@ -10,8 +11,30 @@ public class Program
     public static async Task Main()
     {
         var exchApi = RestService.For<IHostApiClient>("http://localhost:5010");
-        var res = await exchApi.Reset();
+
+        //var res = await exchApi.Reset();
+        //Console.WriteLine(res);
+
+        //var addSymbolsRequest = CreateAddSymbolsRequest();
+
+        //var json = JsonSerializer.Serialize(addSymbolsRequest);
+        //Console.WriteLine(json);
+
+        //var res = await exchApi.AddSymbols(addSymbolsRequest);
+        //Console.WriteLine(res);
+
+        var addUserAccountsRequest = CreateAddAccountsRequest();
+        var res = await exchApi.AddAccounts(addUserAccountsRequest);
         Console.WriteLine(res);
+
+        /*
+        res = await exchApi.Nop();
+        Console.WriteLine(res);
+
+        var orderReq = CreatePlaceOrderRequest(Users.Bob, Symbols.MSFT, 100m, 5);
+        res = await exchApi.PlaceOrder(orderReq);
+        Console.WriteLine(res);
+        */
     }
 
     private static AddSymbolsRequest CreateAddSymbolsRequest()
