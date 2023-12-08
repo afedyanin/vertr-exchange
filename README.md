@@ -11,32 +11,6 @@ Inspired by
 - [Aeron](https://github.com/real-logic/aeron)
 
 
-## GRPC
-
-## Protobuf
-
--[Language Guide (proto 3)](https://protobuf.dev/programming-guides/proto3/)
-
-## Basic
-
-- [Tutorial: Create a gRPC client and server in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/tutorials/grpc/grpc-start?view=aspnetcore-7.0&tabs=visual-studio)
-- [Введение в gRPC](https://metanit.com/sharp/grpc/1.1.php)
-- [Службы gRPC на языке C#](https://learn.microsoft.com/ru-ru/aspnet/core/grpc/basics?view=aspnetcore-7.0)
-
-- [Test gRPC services with Postman or gRPCurl in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/grpc/test-tools?view=aspnetcore-7.0)
-- [Manage Protobuf references with dotnet-grpc](https://learn.microsoft.com/en-us/aspnet/core/grpc/dotnet-grpc?view=aspnetcore-7.0)
-- [Troubleshoot gRPC on .NET](https://learn.microsoft.com/en-us/aspnet/core/grpc/troubleshoot?view=aspnetcore-7.0&preserve-view=true)
-
-## Decimal Type
-- [.NET Decimal DataType in gRPC](https://itnext.io/net-decimal-datatype-in-grpc-51c2ddb1c153)
-- [C# Decimals in gRPC](https://visualrecode.com/blog/csharp-decimals-in-grpc/)
-- [Создание настраиваемого десятичного типа для protobuf](https://learn.microsoft.com/ru-ru/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types)
-
-## Auth
-- [Streaming and Authentication in gRPC (ASP.Net Core)](https://dotnetcorecentral.com/blog/streaming-and-authentication-in-grpc/)
-- [Authentication](https://grpc.io/docs/guides/auth/)
-
-
 ## SignalR
 
 https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-8.0
@@ -62,3 +36,12 @@ https://github.com/aspnet/SignalR-samples/tree/main
 
 
  
+ ## URLS
+
+C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Server\bin\Debug\net8.0\
+.\Vertr.Exchange.Server.exe
+
+
+C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Client.Host\bin\Debug\net8.0
+.\Vertr.Exchange.Client.Host.exe
+

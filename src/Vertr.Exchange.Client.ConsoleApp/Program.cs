@@ -1,7 +1,10 @@
+using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Refit;
 using Vert.Exchange.Client.Host.ApiClient;
 using Vertr.Exchange.Client.ConsoleApp.StaticData;
+using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Enums;
 using Vertr.Exchange.Contracts.Requests;
 namespace Vertr.Exchange.Client.ConsoleApp;
@@ -12,20 +15,18 @@ public class Program
     {
         var exchApi = RestService.For<IHostApiClient>("http://localhost:5010");
 
+        var addSymbolsRequest = CreateAddSymbolsRequest();
+        var res = await exchApi.AddSymbols(addSymbolsRequest);
+        Console.WriteLine(res);
+
         //var res = await exchApi.Reset();
         //Console.WriteLine(res);
-
-        //var addSymbolsRequest = CreateAddSymbolsRequest();
-
         //var json = JsonSerializer.Serialize(addSymbolsRequest);
         //Console.WriteLine(json);
 
-        //var res = await exchApi.AddSymbols(addSymbolsRequest);
+        //var addUserAccountsRequest = CreateAddAccountsRequest();
+        //var res = await exchApi.AddAccounts(addUserAccountsRequest);
         //Console.WriteLine(res);
-
-        var addUserAccountsRequest = CreateAddAccountsRequest();
-        var res = await exchApi.AddAccounts(addUserAccountsRequest);
-        Console.WriteLine(res);
 
         /*
         res = await exchApi.Nop();
