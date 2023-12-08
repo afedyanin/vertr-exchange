@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Vertr.Exchange.Terminal.Server.Awaiting;
 using Vertr.Exchange.Terminal.Server.BackgroundServices;
 using Vertr.Exchange.Terminal.Server.Providers;
+using Vertr.Exchange.Terminal.Server.Repositories;
 
 namespace Vertr.Exchange.Terminal.Server;
 
@@ -20,7 +21,9 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddSingleton<HubConnectionProvider>();
+        builder.Services.AddSingleton<IOrderBookRepository, OrderBookRepository>();
         builder.Services.AddHostedService<CommandResultService>();
+        builder.Services.AddHostedService<OrderBooksService>();
         builder.Services.AddSingleton<ICommandAwaitingService, CommandAwaitingService>();
 
         var app = builder.Build();

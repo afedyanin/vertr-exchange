@@ -13,10 +13,10 @@
 - [x] fix invalid user bug - place order
 - [x] fix POST params - place order
 - [ ] market data feed (background service)
-- [ ] orderbooks feed (background service)
+- [x] orderbooks feed (background service)
 - [ ] user reports (user account, user status, orders)
 - [ ] market dashboard
-- [ ] orderbooks dashboard
+- [x] orderbooks dashboard
 - [ ] order history
 - [ ] symbols CRUD
 - [x] admin adds users

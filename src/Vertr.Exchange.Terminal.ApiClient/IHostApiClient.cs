@@ -20,4 +20,10 @@ public interface IHostApiClient
 
     [Post("/api/exchange/place-order")]
     Task<ApiCommandResult?> PlaceOrder([Body] PlaceOrderRequest request);
+
+    [Get("/api/exchange/order-books/{symbolId}")]
+    Task<OrderBook?> GetOrderBook(int symbolId);
+
+    [Get("/api/exchange/order-books")]
+    Task<OrderBook[]> GetOrderBooks();
 }

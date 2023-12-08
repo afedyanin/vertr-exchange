@@ -4,6 +4,7 @@ using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Exchange.Terminal.Server.Awaiting;
 using Vertr.Exchange.Terminal.Server.Providers;
+using Vertr.Exchange.Terminal.Server.Repositories;
 
 namespace Vertr.Exchange.Terminal.Server.Controllers;
 
@@ -12,11 +13,13 @@ namespace Vertr.Exchange.Terminal.Server.Controllers;
 public class ExchangeController(
     HubConnectionProvider connectionProvider,
     ICommandAwaitingService commandAwaitingService,
+    IOrderBookRepository orderBookRepository,
     ILogger<ExchangeController> logger) : ControllerBase
 {
     private readonly ILogger<ExchangeController> _logger = logger;
     private readonly HubConnectionProvider _connectionProvider = connectionProvider;
     private readonly ICommandAwaitingService _commandAwaitingService = commandAwaitingService;
+    private readonly IOrderBookRepository _orderBookRepository = orderBookRepository;
 
     [HttpPost("symbols")]
     public async Task<IActionResult> AddSymbols(AddSymbolsRequest request)
@@ -56,6 +59,26 @@ public class ExchangeController(
     {
         var res = await InvokeHubMethod("PlaceOrder", request);
         return Ok(res);
+    }
+
+    [HttpGet("order-books/{symbolId:int}")]
+    public async Task<IActionResult> GetOrderBook(int symbolId)
+    {
+        var ob = await _orderBookRepository.Get(symbolId);
+
+        if (ob is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(ob);
+    }
+
+    [HttpGet("order-books")]
+    public async Task<IActionResult> GetOrderBooks()
+    {
+        var ob = await _orderBookRepository.GetList();
+        return Ok(ob);
     }
 
     private async Task<ApiCommandResult> InvokeHubMethod(string methodName, object request, CancellationToken cancellationToken = default)

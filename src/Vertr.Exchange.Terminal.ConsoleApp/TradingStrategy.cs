@@ -17,8 +17,8 @@ internal static class TradingStrategy
         {
             nextPrice = NextRandomPrice(nextPrice, priceDelta);
             var res = await Commands.PlaceOrder(api, user, symbol, nextPrice, NextRandomQty());
-            Console.WriteLine(res);
-            await Task.Delay(200);
+            // Console.WriteLine(res);
+            // await Task.Delay(10);
         }
     }
     private static decimal NextRandomPrice(decimal baseParice, decimal delta)
