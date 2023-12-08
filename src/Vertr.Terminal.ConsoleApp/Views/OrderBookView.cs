@@ -6,8 +6,6 @@ namespace Vertr.Terminal.ConsoleApp.Views;
 
 internal static class OrderBookView
 {
-    private const string decimalFormat = "####.0000";
-
     public static void Render(OrderBook? orderBook, string subTitle = "")
     {
         if (orderBook == null)
@@ -34,12 +32,12 @@ internal static class OrderBookView
 
         foreach (var ask in ob.Asks.OrderByDescending(ask => ask.Price).Take(maxDepth))
         {
-            table.AddRow(string.Empty, string.Empty, string.Empty, ask.Price.ToString(decimalFormat), ask.Volume.ToString(), ask.Orders.ToString());
+            table.AddRow(string.Empty, string.Empty, string.Empty, ask.Price.ToString(ViewConsts.DecimalFormat), ask.Volume.ToString(), ask.Orders.ToString());
         };
 
         foreach (var bid in ob.Bids.OrderByDescending(bid => bid.Price).Take(maxDepth))
         {
-            table.AddRow(bid.Orders.ToString(), bid.Volume.ToString(), bid.Price.ToString(decimalFormat), string.Empty, string.Empty, string.Empty);
+            table.AddRow(bid.Orders.ToString(), bid.Volume.ToString(), bid.Price.ToString(ViewConsts.DecimalFormat), string.Empty, string.Empty, string.Empty);
         };
 
         return table;
