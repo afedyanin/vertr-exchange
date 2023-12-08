@@ -26,4 +26,7 @@ public interface IHostApiClient
 
     [Get("/api/exchange/order-books")]
     Task<OrderBook[]> GetOrderBooks();
+
+    [Get("/api/exchange/trade-events")]
+    Task<TradeEvent[]> GetTradeEvents();
 }

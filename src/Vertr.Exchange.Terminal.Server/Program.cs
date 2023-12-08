@@ -21,9 +21,11 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddSingleton<HubConnectionProvider>();
-        builder.Services.AddSingleton<IOrderBookRepository, OrderBookRepository>();
+        builder.Services.AddSingleton<IOrderBookSnapshotsRepository, OrderBookSnapshotsRepository>();
+        builder.Services.AddSingleton<ITradeEventsRepository, TradeEventsRepository>();
         builder.Services.AddHostedService<CommandResultService>();
         builder.Services.AddHostedService<OrderBooksService>();
+        builder.Services.AddHostedService<TradeEventsService>();
         builder.Services.AddSingleton<ICommandAwaitingService, CommandAwaitingService>();
 
         var app = builder.Build();

@@ -1,7 +1,6 @@
 using Refit;
 using Vertr.Exchange.Terminal.ApiClient;
 using Vertr.Exchange.Terminal.ConsoleApp.StaticData;
-using Vertr.Exchange.Terminal.ConsoleApp.Views;
 
 namespace Vertr.Exchange.Terminal.ConsoleApp;
 
@@ -32,7 +31,19 @@ public class Program
 
         await Task.WhenAll(aliceTrading, bobTrading);
 
-        var ob = await exchApi.GetOrderBook(Symbols.MSFT.Id);
-        OrderBookView.Render(ob, "Random walk");
+        // var ob = await exchApi.GetOrderBook(Symbols.MSFT.Id);
+        // OrderBookView.Render(ob, "Random walk");
+
+        var tradeEvents = await exchApi.GetTradeEvents();
+
+        foreach (var evt in tradeEvents)
+        {
+            Console.WriteLine(evt);
+
+            foreach (var trade in evt.Trades)
+            {
+                Console.WriteLine($"--->> {trade}\n");
+            }
+        }
     }
 }

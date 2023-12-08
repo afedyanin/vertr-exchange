@@ -13,13 +13,15 @@ namespace Vertr.Exchange.Terminal.Server.Controllers;
 public class ExchangeController(
     HubConnectionProvider connectionProvider,
     ICommandAwaitingService commandAwaitingService,
-    IOrderBookRepository orderBookRepository,
+    IOrderBookSnapshotsRepository orderBookRepository,
+    ITradeEventsRepository tradeEventsRepository,
     ILogger<ExchangeController> logger) : ControllerBase
 {
     private readonly ILogger<ExchangeController> _logger = logger;
     private readonly HubConnectionProvider _connectionProvider = connectionProvider;
     private readonly ICommandAwaitingService _commandAwaitingService = commandAwaitingService;
-    private readonly IOrderBookRepository _orderBookRepository = orderBookRepository;
+    private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
+    private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
 
     [HttpPost("symbols")]
     public async Task<IActionResult> AddSymbols(AddSymbolsRequest request)
@@ -79,6 +81,13 @@ public class ExchangeController(
     {
         var ob = await _orderBookRepository.GetList();
         return Ok(ob);
+    }
+
+    [HttpGet("trade-events")]
+    public async Task<IActionResult> GetTradeEvents()
+    {
+        var te = await _tradeEventsRepository.GetList();
+        return Ok(te);
     }
 
     private async Task<ApiCommandResult> InvokeHubMethod(string methodName, object request, CancellationToken cancellationToken = default)

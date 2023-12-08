@@ -2,7 +2,7 @@ using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.Terminal.Server.Repositories;
 
-public class OrderBookRepository : IOrderBookRepository
+internal sealed class OrderBookSnapshotsRepository : IOrderBookSnapshotsRepository
 {
     private readonly Dictionary<int, OrderBook> _orderBooks = [];
 

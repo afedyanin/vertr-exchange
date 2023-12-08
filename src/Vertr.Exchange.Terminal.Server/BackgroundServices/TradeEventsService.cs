@@ -5,27 +5,28 @@ using Vertr.Exchange.Terminal.Server.Repositories;
 
 namespace Vertr.Exchange.Terminal.Server.BackgroundServices;
 
-public class OrderBooksService(
+public class TradeEventsService(
     HubConnectionProvider hubConnectionProvider,
-    IOrderBookSnapshotsRepository orderBookRepository,
-    ILogger<OrderBooksService> logger) : BackgroundService
+    ITradeEventsRepository tradeEventsRepository,
+    ILogger<TradeEventsService> logger) : BackgroundService
 {
     private readonly HubConnectionProvider _connectionProvider = hubConnectionProvider;
-    private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
-    private readonly ILogger<OrderBooksService> _logger = logger;
+    private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
+    private readonly ILogger<TradeEventsService> _logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation($"Start listening Order Books stream...");
+        _logger.LogInformation($"Start listening Trade Events stream...");
         var connection = await _connectionProvider.GetConnection();
-        var channel = await connection.StreamAsChannelAsync<OrderBook>("OrderBooks", stoppingToken);
+        var channel = await connection.StreamAsChannelAsync<TradeEvent>("TradeEvents", stoppingToken);
         while (await channel.WaitToReadAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
         {
-            while (channel.TryRead(out var orderBook))
+            while (channel.TryRead(out var tradeEvent))
             {
-                await _orderBookRepository.Save(orderBook);
-                _logger.LogInformation("Order Book received: {orderBook}", orderBook);
+                await _tradeEventsRepository.Save(tradeEvent);
+                _logger.LogInformation("Trade Event received: {tradeEvent}", tradeEvent);
             }
         }
     }
 }
+

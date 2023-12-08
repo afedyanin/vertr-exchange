@@ -2,7 +2,7 @@ using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.Terminal.Server.Repositories;
 
-public interface IOrderBookRepository
+public interface IOrderBookSnapshotsRepository
 {
     Task<bool> Save(OrderBook orderBook);
 
