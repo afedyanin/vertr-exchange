@@ -18,10 +18,16 @@ public class Program
         res = await Commands.AddUsers(exchApi);
         Console.WriteLine(res);
 
-        res = await Commands.Nop(exchApi);
-        Console.WriteLine(res);
+        var bobTrading = Task.Run(async () =>
+        {
+            await TradingStrategy.RandomWalkTrading(exchApi, Users.Bob, Symbols.MSFT, 100m);
+        });
 
-        res = await Commands.PlaceOrder(exchApi, Users.Bob, Symbols.MSFT, 100m, 5);
-        Console.WriteLine(res);
+        var aliceTrading = Task.Run(async () =>
+        {
+            await TradingStrategy.RandomWalkTrading(exchApi, Users.Alice, Symbols.MSFT, 100m);
+        });
+
+        await Task.WhenAll(aliceTrading, bobTrading);
     }
 }
