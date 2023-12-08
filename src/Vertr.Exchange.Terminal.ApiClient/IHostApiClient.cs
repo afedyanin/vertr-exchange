@@ -2,7 +2,7 @@ using Refit;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
 
-namespace Vert.Exchange.Client.Host.ApiClient;
+namespace Vertr.Exchange.Terminal.ApiClient;
 
 public interface IHostApiClient
 {

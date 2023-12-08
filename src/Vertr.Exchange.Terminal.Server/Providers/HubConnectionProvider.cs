@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Vertr.Exchange.Client.Host.Providers;
+namespace Vertr.Exchange.Terminal.Server.Providers;
 
 public class HubConnectionProvider : IAsyncDisposable
 {

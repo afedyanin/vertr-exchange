@@ -1,10 +1,10 @@
-using Vert.Exchange.Client.Host.ApiClient;
-using Vertr.Exchange.Client.ConsoleApp.StaticData;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Enums;
 using Vertr.Exchange.Contracts.Requests;
+using Vertr.Exchange.Terminal.ApiClient;
+using Vertr.Exchange.Terminal.ConsoleApp.StaticData;
 
-namespace Vertr.Exchange.Client.ConsoleApp;
+namespace Vertr.Exchange.Terminal.ConsoleApp;
 internal static class Commands
 {
     public static async Task<ApiCommandResult?> AddSymbols(IHostApiClient client)

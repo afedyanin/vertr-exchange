@@ -1,7 +1,7 @@
-using Vert.Exchange.Client.Host.ApiClient;
-using Vertr.Exchange.Client.ConsoleApp.StaticData;
+using Vertr.Exchange.Terminal.ApiClient;
+using Vertr.Exchange.Terminal.ConsoleApp.StaticData;
 
-namespace Vertr.Exchange.Client.ConsoleApp;
+namespace Vertr.Exchange.Terminal.ConsoleApp;
 internal static class TradingStrategy
 {
     public static async Task RandomWalkTrading(
@@ -23,12 +23,12 @@ internal static class TradingStrategy
     }
     private static decimal NextRandomPrice(decimal baseParice, decimal delta)
     {
-        var deltaPrice = (delta * RandomSign()) + 1;
+        var deltaPrice = 1 + (delta * RandomSign());
         return baseParice * deltaPrice;
     }
 
-    private static int NextRandomQty()
-        => Random.Shared.Next(10) * RandomSign();
+    private static int NextRandomQty(int maxValue = 10)
+        => Random.Shared.Next(1, maxValue) * RandomSign();
 
     private static int RandomSign()
         => Random.Shared.NextDouble() >= .51 ? -1 : 1;

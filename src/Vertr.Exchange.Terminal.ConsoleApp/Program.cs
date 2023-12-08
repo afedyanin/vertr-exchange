@@ -1,7 +1,8 @@
 using Refit;
-using Vert.Exchange.Client.Host.ApiClient;
-using Vertr.Exchange.Client.ConsoleApp.StaticData;
-namespace Vertr.Exchange.Client.ConsoleApp;
+using Vertr.Exchange.Terminal.ApiClient;
+using Vertr.Exchange.Terminal.ConsoleApp.StaticData;
+
+namespace Vertr.Exchange.Terminal.ConsoleApp;
 
 public class Program
 {

@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace Vertr.Exchange.Client.Host.Awaiting;
+namespace Vertr.Exchange.Terminal.Server.Awaiting;
 
 internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> logger) : ICommandAwaitingService
 {

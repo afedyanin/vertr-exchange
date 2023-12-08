@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
-using Vertr.Exchange.Client.Host.Awaiting;
-using Vertr.Exchange.Client.Host.Providers;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
+using Vertr.Exchange.Terminal.Server.Awaiting;
+using Vertr.Exchange.Terminal.Server.Providers;
 
-namespace Vertr.Exchange.Client.Host.Controllers;
+namespace Vertr.Exchange.Terminal.Server.Controllers;
+
 [Route("api/exchange")]
 [ApiController]
 public class ExchangeController(

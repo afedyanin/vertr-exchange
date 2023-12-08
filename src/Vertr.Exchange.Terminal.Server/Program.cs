@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
-using Vertr.Exchange.Client.Host.Awaiting;
-using Vertr.Exchange.Client.Host.BackgroundServices;
-using Vertr.Exchange.Client.Host.Providers;
+using Vertr.Exchange.Terminal.Server.Awaiting;
+using Vertr.Exchange.Terminal.Server.BackgroundServices;
+using Vertr.Exchange.Terminal.Server.Providers;
 
-namespace Vertr.Exchange.Client.Host;
+namespace Vertr.Exchange.Terminal.Server;
 
 public class Program
 {

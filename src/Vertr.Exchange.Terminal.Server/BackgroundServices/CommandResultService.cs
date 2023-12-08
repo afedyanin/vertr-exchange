@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.SignalR.Client;
-using Vertr.Exchange.Client.Host.Awaiting;
-using Vertr.Exchange.Client.Host.Providers;
 using Vertr.Exchange.Contracts;
+using Vertr.Exchange.Terminal.Server.Awaiting;
+using Vertr.Exchange.Terminal.Server.Providers;
 
-namespace Vertr.Exchange.Client.Host.BackgroundServices;
+namespace Vertr.Exchange.Terminal.Server.BackgroundServices;
 
 public class CommandResultService(
     HubConnectionProvider hubConnectionProvider,

@@ -1,9 +1,7 @@
-
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Enums;
 
-namespace Vertr.Exchange.Client.ConsoleApp.StaticData;
-
+namespace Vertr.Exchange.Terminal.ConsoleApp.StaticData;
 public record Symbol(int Id, Currency Currency, string Code, string Name, SymbolType SymbolType);
 
 
