@@ -6,9 +6,9 @@ namespace Vertr.Exchange.Terminal.ConsoleApp.Views;
 
 internal static class OrderBookView
 {
-    private const string decimalFormat = "####.####";
+    private const string decimalFormat = "####.0000";
 
-    public static void Render(OrderBook? orderBook)
+    public static void Render(OrderBook? orderBook, string subTitle = "")
     {
         if (orderBook == null)
         {
@@ -17,15 +17,17 @@ internal static class OrderBookView
         }
 
         var symbol = Symbols.GetById(orderBook.Symbol);
-        var obTable = CreateTable(symbol!, orderBook);
+        var obTable = CreateTable(symbol!, orderBook, 10, subTitle);
         AnsiConsole.Write(obTable);
     }
 
-    private static Table CreateTable(Symbol symbol, OrderBook ob, int maxDepth = 10)
+    private static Table CreateTable(Symbol symbol, OrderBook ob, int maxDepth, string subTitle)
     {
+        var title = string.IsNullOrEmpty(subTitle) ? symbol!.Code : $"{symbol!.Code} ({subTitle})";
+
         var table = new Table
         {
-            Title = new TableTitle(symbol!.Code),
+            Title = new TableTitle(title),
         };
 
         table.AddColumns("Bid Orders", "Bid Size", "Bid Price", "Ask Price", "Ask Size", "Ask Orders");

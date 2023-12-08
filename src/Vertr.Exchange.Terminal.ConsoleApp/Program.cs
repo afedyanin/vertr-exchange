@@ -33,6 +33,6 @@ public class Program
         await Task.WhenAll(aliceTrading, bobTrading);
 
         var ob = await exchApi.GetOrderBook(Symbols.MSFT.Id);
-        OrderBookView.Render(ob);
+        OrderBookView.Render(ob, "Random walk");
     }
 }
