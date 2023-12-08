@@ -5,11 +5,11 @@ namespace Vertr.Exchange.RiskEngine.Symbols;
 
 internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
 {
-    private readonly IDictionary<int, SymbolSpecification> _symbolSpecs;
+    private readonly Dictionary<int, SymbolSpecification> _symbolSpecs;
 
     public SymbolSpecificationProvider()
     {
-        _symbolSpecs = new Dictionary<int, SymbolSpecification>();
+        _symbolSpecs = [];
     }
 
     public CommandResultCode AddSymbols(SymbolSpecification[] symbols)
@@ -21,7 +21,10 @@ internal sealed class SymbolSpecificationProvider : ISymbolSpecificationProvider
 
         foreach (var spec in symbols)
         {
-            _symbolSpecs.Add(spec.SymbolId, spec);
+            if (!_symbolSpecs.TryAdd(spec.SymbolId, spec))
+            {
+                _symbolSpecs[spec.SymbolId] = spec;
+            }
         }
 
         return CommandResultCode.SUCCESS;

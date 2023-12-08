@@ -74,7 +74,7 @@ public static class MessageFactory
     }
 
     private static IEnumerable<Trade> CreateTrades(IEnumerable<IEngineEvent> trades)
-        => trades.Select(t => CreateTrade(t));
+        => trades.Select(CreateTrade);
 
     private static Trade CreateTrade(IEngineEvent tradeEvt)
         => new Trade
@@ -86,7 +86,7 @@ public static class MessageFactory
             Volume = tradeEvt.Size,
         };
 
-    private static IEnumerable<OrderBookRecord> CreateAsks(L2MarketData mdata)
+    private static OrderBookRecord[] CreateAsks(L2MarketData mdata)
     {
         var res = new OrderBookRecord[mdata.AskSize];
 
@@ -103,7 +103,7 @@ public static class MessageFactory
         return res;
     }
 
-    private static IEnumerable<OrderBookRecord> CreateBids(L2MarketData mdata)
+    private static OrderBookRecord[] CreateBids(L2MarketData mdata)
     {
         var res = new OrderBookRecord[mdata.BidSize];
 

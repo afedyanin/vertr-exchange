@@ -1,18 +1,12 @@
 using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.MatchingEngine.OrderBooks;
-internal class OrderBookProvider : IOrderBookProvider
+internal class OrderBookProvider(Func<IOrderBook> orderBookFactory) : IOrderBookProvider
 {
-    private readonly Func<IOrderBook> _orderBookFactory;
+    private readonly Func<IOrderBook> _orderBookFactory = orderBookFactory;
 
     // Key = Symbol
-    private readonly IDictionary<int, IOrderBook> _orderBooks;
-
-    public OrderBookProvider(Func<IOrderBook> orderBookFactory)
-    {
-        _orderBooks = new Dictionary<int, IOrderBook>();
-        _orderBookFactory = orderBookFactory;
-    }
+    private readonly Dictionary<int, IOrderBook> _orderBooks = [];
 
     public IOrderBook? GetOrderBook(int symbol)
     {

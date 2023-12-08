@@ -11,65 +11,37 @@ Inspired by
 - [Aeron](https://github.com/real-logic/aeron)
 
 
-## GRPC
+## SignalR
 
-## Protobuf
+https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-8.0
+https://github.com/aspnet/SignalR-samples/tree/main
 
--[Language Guide (proto 3)](https://protobuf.dev/programming-guides/proto3/)
+## Channels
 
-## Basic
+- [An Introduction to System.Threading.Channels](https://devblogs.microsoft.com/dotnet/an-introduction-to-system-threading-channels/)
+- [System.Threading.Channels library](https://learn.microsoft.com/en-us/dotnet/core/extensions/channels)
+- [System.Threading.Channels — высокопроизводительный производитель-потребитель и асинхронность без аллокаций и стэк дайва](https://habr.com/ru/post/508726/)
+- [Processing data in parallel using Channels](https://maciejz.dev/processing-data-in-parallel-channels/)
+- [Producer/consumer pipelines with System.Threading.Channels](https://blog.maartenballiauw.be/post/2020/08/26/producer-consumer-pipelines-with-system-threading-channels.html)
+- [Asynchronous Producer Consumer Pattern in .NET (C#)](https://www.dotnetcurry.com/dotnetcore/1509/async-dotnetcore-pattern)
+- [Concurrent Pipeline with .NET Channels](https://www.rickyterrell.com/?p=247)
 
-- [Tutorial: Create a gRPC client and server in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/tutorials/grpc/grpc-start?view=aspnetcore-7.0&tabs=visual-studio)
-- [Введение в gRPC](https://metanit.com/sharp/grpc/1.1.php)
-- [Службы gRPC на языке C#](https://learn.microsoft.com/ru-ru/aspnet/core/grpc/basics?view=aspnetcore-7.0)
+### Denis Kyashif's Blog
+- [C# Channels - Publish / Subscribe Workflows](https://deniskyashif.com/2019/12/08/csharp-channels-part-1/)
+- [C# Channels - Timeout and Cancellation](https://deniskyashif.com/2019/12/11/csharp-channels-part-2/)
+- [C# Channels - Async Data Pipelines](https://deniskyashif.com/2020/01/07/csharp-channels-part-3/)
 
-- [Test gRPC services with Postman or gRPCurl in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/grpc/test-tools?view=aspnetcore-7.0)
-- [Manage Protobuf references with dotnet-grpc](https://learn.microsoft.com/en-us/aspnet/core/grpc/dotnet-grpc?view=aspnetcore-7.0)
-- [Troubleshoot gRPC on .NET](https://learn.microsoft.com/en-us/aspnet/core/grpc/troubleshoot?view=aspnetcore-7.0&preserve-view=true)
+- [C# Channels - Publish / Subscribe Workflows](https://deniskyashif.com/2019/12/08/csharp-channels-part-1/)
+- [How to: Implement a producer-consumer dataflow pattern](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-implement-a-producer-consumer-dataflow-pattern)
 
-## Decimal Type
-- [.NET Decimal DataType in gRPC](https://itnext.io/net-decimal-datatype-in-grpc-51c2ddb1c153)
-- [C# Decimals in gRPC](https://visualrecode.com/blog/csharp-decimals-in-grpc/)
-- [Создание настраиваемого десятичного типа для protobuf](https://learn.microsoft.com/ru-ru/dotnet/architecture/grpc-for-wcf-developers/protobuf-data-types)
 
-## Auth
-- [Streaming and Authentication in gRPC (ASP.Net Core)](https://dotnetcorecentral.com/blog/streaming-and-authentication-in-grpc/)
-- [Authentication](https://grpc.io/docs/guides/auth/)
-
-## NATS
-
-### NATS and Docker
-
-- [NATS Server Containerization](https://docs.nats.io/running-a-nats-service/nats_docker)
-
-```
-docker pull nats:latest
-
-docker run -p 4222:4222 -ti nats:latest
-
-```
-
-### NATS resources
-
-- [GitHub](https://github.com/nats-io)
-- [Learn NATS by Example](https://natsbyexample.com/)
-- [NATS Tools](https://docs.nats.io/using-nats/nats-tools)
-- [NATS CLI](https://docs.nats.io/using-nats/nats-tools/nats_cli)
-
-### Dotnet Clients
-- [NATS.NET V2](https://github.com/nats-io/nats.net.v2)
-- [NATS - .NET C# Client](https://github.com/nats-io/nats.net)
-
-### Check NATS
-
-```
-nats sub msg.test
-
-nats pub msg.test nats-message-1
-```
-
-### C# examples
-
-- [Core Publish-Subscribe in Messaging](https://natsbyexample.com/examples/messaging/pub-sub/dotnet2)
-- [GitHub](https://github.com/ConnectEverything/nats-by-example)
  
+ ## URLS
+
+C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Server\bin\Debug\net8.0\
+.\Vertr.Exchange.Server.exe
+
+
+C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Client.Host\bin\Debug\net8.0
+.\Vertr.Exchange.Client.Host.exe
+

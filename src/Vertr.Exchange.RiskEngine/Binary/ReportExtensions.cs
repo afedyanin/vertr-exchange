@@ -34,7 +34,7 @@ internal static class ReportExtensions
         return CommandResultCode.SUCCESS;
     }
 
-    private static IDictionary<int, PositionDto> ToDto(this IDictionary<int, IPosition> dict)
+    private static Dictionary<int, PositionDto> ToDto(this IDictionary<int, IPosition> dict)
     {
         var res = new Dictionary<int, PositionDto>(dict.Count);
 

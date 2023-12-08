@@ -1,3 +1,70 @@
+## 06-12-23
+
+- [x] refitClient and Contracts
+- [x] console client via refit client - use cases and scenarios
+
+### Tech Debt
+- awating - cancel, race conditions
+
+## 04-12-23
+
+### Client Side
+- [x] await model for commands (tcs + cancel)
+- [x] fix invalid user bug - place order
+- [x] fix POST params - place order
+- [ ] market data feed (background service)
+- [ ] orderbooks feed (background service)
+- [ ] user reports (user account, user status, orders)
+- [ ] market dashboard
+- [ ] orderbooks dashboard
+- [ ] order history
+- [ ] symbols CRUD
+- [x] admin adds users
+
+#### Client Strategies
+- Market Maker
+- Random Walk
+
+### Tech Debt
+- [x] remove protobuf
+- integration tests
+- startup/shutdown
+- reconnect on disconnect
+
+### Blazor client
+
+
+## 03-12-23
+
+### Background services
+- https://habr.com/ru/articles/658847/
+- https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-8.0&tabs=visual-studio
+- https://learn.microsoft.com/ru-ru/dotnet/architecture/microservices/multi-container-microservice-net-applications/background-tasks-with-ihostedservice
+
+
+## 02-12-23
+
+- [x] выпилен GRPC
+- [x] выпилен tcs & awating service
+- [x] moving to net8.0
+- [ ] восстановить тесты по API
+- [ ] выпилить proto и заменить DTO контрактами
+- [ ] корректный шутдаун хаба - нотификации клиентам
+- [ ] типизированный вызов фукнкций из хаба?
+ 
+## 30-11-23
+
+- [x] выпилен Nats
+- [x] встроен SignalR
+- [x] есть консольный клиент (заготовка)
+
+### Дальше
+- разобраться с tcs: cancel и обработка ошибок
+- интерактивная консоль + мультитред для обработки стримов
+- разобраться с channel и его работой
+- перевести API на SignalR и избавиться от gRPC?
+ 
+
 ## 05-10-23
 - [x] добавить uid во все евенты
 - [x] добавить seq во все евенты

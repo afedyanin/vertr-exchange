@@ -3,25 +3,17 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Accounts;
-internal class UserProfile : IUserProfile
+internal class UserProfile(long uid, UserStatus status) : IUserProfile
 {
     // currency
-    private readonly IDictionary<int, decimal> _accounts;
+    private readonly Dictionary<int, decimal> _accounts = [];
 
     // symbol
-    private readonly IDictionary<int, Position> _positions;
+    private readonly Dictionary<int, Position> _positions = [];
 
-    public long Uid { get; }
+    public long Uid { get; } = uid;
 
-    public UserStatus Status { get; private set; }
-
-    public UserProfile(long uid, UserStatus status)
-    {
-        Uid = uid;
-        Status = status;
-        _accounts = new Dictionary<int, decimal>();
-        _positions = new Dictionary<int, Position>();
-    }
+    public UserStatus Status { get; private set; } = status;
 
     public IDictionary<int, decimal> Accounts
         => GetSnapshot(_accounts);
@@ -45,11 +37,7 @@ internal class UserProfile : IUserProfile
 
     public decimal AddToValue(int currency, decimal toBeAdded)
     {
-        if (!_accounts.ContainsKey(currency))
-        {
-            _accounts.Add(currency, decimal.Zero);
-        }
-
+        _accounts.TryAdd(currency, decimal.Zero);
         _accounts[currency] += toBeAdded;
         return _accounts[currency];
     }
@@ -66,12 +54,13 @@ internal class UserProfile : IUserProfile
         long tradeSize,
         decimal tradePrice)
     {
-        if (!_positions.ContainsKey(spec.SymbolId))
+        if (!_positions.TryGetValue(spec.SymbolId, out var value))
         {
-            _positions.Add(spec.SymbolId, new Position(Uid, spec.SymbolId));
+            value = new Position(Uid, spec.SymbolId);
+            _positions.Add(spec.SymbolId, value);
         }
 
-        var position = _positions[spec.SymbolId];
+        var position = value;
         position.Update(action, tradeSize, tradePrice);
 
         if (position.IsEmpty)
@@ -114,7 +103,7 @@ internal class UserProfile : IUserProfile
         return CommandResultCode.SUCCESS;
     }
 
-    private static IDictionary<int, decimal> GetSnapshot(IDictionary<int, decimal> dict)
+    private static Dictionary<int, decimal> GetSnapshot(Dictionary<int, decimal> dict)
     {
         var res = new Dictionary<int, decimal>();
 
@@ -126,7 +115,7 @@ internal class UserProfile : IUserProfile
         return res;
     }
 
-    private static IDictionary<int, IPosition> GetSnapshot(IDictionary<int, Position> dict)
+    private static Dictionary<int, IPosition> GetSnapshot(Dictionary<int, Position> dict)
     {
         var res = new Dictionary<int, IPosition>();
 

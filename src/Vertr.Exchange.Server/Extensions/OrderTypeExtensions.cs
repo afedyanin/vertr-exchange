@@ -1,4 +1,4 @@
-using Vertr.Exchange.Protos;
+using Vertr.Exchange.Contracts.Enums;
 
 namespace Vertr.Exchange.Server.Extensions;
 
@@ -8,12 +8,12 @@ internal static class OrderTypeExtensions
     {
         return orderType switch
         {
-            OrderType.Ioc => Common.Enums.OrderType.IOC,
-            OrderType.Gtc => Common.Enums.OrderType.GTC,
-            OrderType.IocBudget => Common.Enums.OrderType.IOC_BUDGET,
-            OrderType.Fok => Common.Enums.OrderType.FOK,
-            OrderType.FokBudget => Common.Enums.OrderType.FOK_BUDGET,
-            _ => Common.Enums.OrderType.GTC,
+            OrderType.IOC => Common.Enums.OrderType.IOC,
+            OrderType.GTC => Common.Enums.OrderType.GTC,
+            OrderType.IOC_BUDGET => Common.Enums.OrderType.IOC_BUDGET,
+            OrderType.FOK => Common.Enums.OrderType.FOK,
+            OrderType.FOK_BUDGET => Common.Enums.OrderType.FOK_BUDGET,
+            _ => throw new InvalidOperationException($"Unknown order action: {orderType}"),
         };
     }
 }
