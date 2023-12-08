@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Exchange.Contracts\Vertr.Exchange.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.Terminal.ApiClient\Vertr.Terminal.ApiClient.csproj" />
   </ItemGroup>
 
 </Project>

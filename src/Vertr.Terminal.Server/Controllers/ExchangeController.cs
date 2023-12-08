@@ -83,7 +83,7 @@ public class ExchangeController(
         return Ok(ob);
     }
 
-    [HttpGet("trade-events")]
+    [HttpGet("trades")]
     public async Task<IActionResult> GetTradeEvents()
     {
         var te = await _tradeEventsRepository.GetList();

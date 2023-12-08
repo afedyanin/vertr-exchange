@@ -8,25 +8,25 @@ public class Program
 {
     public static async Task Main()
     {
-        var exchApi = RestService.For<ITerminalApiClient>("http://localhost:5010");
+        var api = RestService.For<ITerminalApiClient>("http://localhost:5010");
 
-        var res = await Commands.Reset(exchApi);
+        var res = await Commands.Reset(api);
         // Console.WriteLine(res);
 
-        res = await Commands.AddSymbols(exchApi);
+        res = await Commands.AddSymbols(api);
         // Console.WriteLine(res);
 
-        res = await Commands.AddUsers(exchApi);
+        res = await Commands.AddUsers(api);
         // Console.WriteLine(res);
 
         var bobTrading = Task.Run(async () =>
         {
-            await TradingStrategy.RandomWalkTrading(exchApi, Users.Bob, Symbols.MSFT, 100m, 0.01m, 100);
+            await TradingStrategy.RandomWalkTrading(api, Users.Bob, Symbols.MSFT, 100m, 0.01m, 100);
         });
 
         var aliceTrading = Task.Run(async () =>
         {
-            await TradingStrategy.RandomWalkTrading(exchApi, Users.Alice, Symbols.MSFT, 100m, 0.01m, 100);
+            await TradingStrategy.RandomWalkTrading(api, Users.Alice, Symbols.MSFT, 100m, 0.01m, 100);
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
@@ -34,16 +34,11 @@ public class Program
         // var ob = await exchApi.GetOrderBook(Symbols.MSFT.Id);
         // OrderBookView.Render(ob, "Random walk");
 
-        var tradeEvents = await exchApi.GetTradeEvents();
+        var trades = await api.GetTrades();
 
-        foreach (var evt in tradeEvents)
+        foreach (var trade in trades)
         {
-            Console.WriteLine(evt);
-
-            foreach (var trade in evt.Trades)
-            {
-                Console.WriteLine($"--->> {trade}\n");
-            }
+            Console.WriteLine(trade);
         }
     }
 }

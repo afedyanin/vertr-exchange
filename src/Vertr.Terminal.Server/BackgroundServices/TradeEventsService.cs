@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Exchange.Contracts;
+using Vertr.Terminal.Server.Converters;
 using Vertr.Terminal.Server.Providers;
 using Vertr.Terminal.Server.Repositories;
 
@@ -23,7 +24,7 @@ public class TradeEventsService(
         {
             while (channel.TryRead(out var tradeEvent))
             {
-                await _tradeEventsRepository.Save(tradeEvent);
+                await _tradeEventsRepository.Save(tradeEvent.ToTradeItems());
                 _logger.LogInformation("Trade Event received: {tradeEvent}", tradeEvent);
             }
         }
