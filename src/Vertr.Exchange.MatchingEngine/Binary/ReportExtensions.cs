@@ -17,8 +17,8 @@ internal static class ReportExtensions
         IOrderBookProvider orderBookProvider)
     {
         var result = BinaryQueryFactory.GetSingleUserReportResult(command);
-        result ??= new SingleUserReportResult();
 
+        result ??= new SingleUserReportResult();
         result.Uid = query.Uid;
         result.Orders = orderBookProvider.GetOrders(query.Uid).ToDto();
 
