@@ -22,14 +22,14 @@ public class Program
         res = await commands.AddUsers();
         //Console.WriteLine(res);
 
-        var bobTrading = Task.Run(async () =>
+        var bobTrading = Task.Run(() =>
         {
-            await TradingStrategy.RandomWalkTrading(api, Users.Bob, Symbols.MSFT, 100m, 0.01m, 100);
+            TradingStrategy.RandomWalkTrading(Users.Bob, Symbols.MSFT, 100m, 0.01m, 100).GetAwaiter().GetResult();
         });
 
-        var aliceTrading = Task.Run(async () =>
+        var aliceTrading = Task.Run(() =>
         {
-            await TradingStrategy.RandomWalkTrading(api, Users.Alice, Symbols.MSFT, 100m, 0.01m, 100);
+            TradingStrategy.RandomWalkTrading(Users.Alice, Symbols.MSFT, 100m, 0.01m, 100).GetAwaiter().GetResult();
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
@@ -48,7 +48,6 @@ public class Program
         var report = await commands.GetSingleUserReport(req);
         SingleUserReportView.Render(report);
 
-        /*
         req = new UserRequest()
         {
             UserId = Users.Alice.Id,
@@ -56,6 +55,5 @@ public class Program
 
         report = await commands.GetSingleUserReport(req);
         SingleUserReportView.Render(report);
-        */
     }
 }
