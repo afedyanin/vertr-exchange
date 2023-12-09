@@ -1,7 +1,7 @@
 using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Shared.Reports.Dtos;
-public class OrderDto
+public record OrderDto
 {
     public OrderAction Action { get; set; }
 

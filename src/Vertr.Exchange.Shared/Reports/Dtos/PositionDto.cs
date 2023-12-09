@@ -1,7 +1,7 @@
 using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Shared.Reports.Dtos;
-public class PositionDto
+public record PositionDto
 {
     public long Uid { get; set; }
 

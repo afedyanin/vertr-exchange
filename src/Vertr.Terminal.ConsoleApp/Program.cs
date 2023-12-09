@@ -22,7 +22,7 @@ public class Program
 
         res = await commands.AddUsers();
         //Console.WriteLine(res);
-
+/*
         var bobTrading = Task.Run(async () =>
         {
             await TradingStrategy.RandomWalkTrading(api, Users.Bob, Symbols.MSFT, 100m, 0.01m, 100);
@@ -34,9 +34,9 @@ public class Program
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
-
-        var ob = await api.GetOrderBook(Symbols.MSFT.Id);
-        OrderBookView.Render(ob, "Random walk");
+*/
+        //var ob = await api.GetOrderBook(Symbols.MSFT.Id);
+        //OrderBookView.Render(ob, "Random walk");
 
         // var trades = await api.GetTrades();
         // TradesView.Render(trades);

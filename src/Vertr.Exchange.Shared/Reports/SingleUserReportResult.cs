@@ -2,7 +2,7 @@ using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Shared.Reports.Dtos;
 
 namespace Vertr.Exchange.Shared.Reports;
-public sealed class SingleUserReportResult
+public record SingleUserReportResult
 {
     public long Uid { get; set; }
 
