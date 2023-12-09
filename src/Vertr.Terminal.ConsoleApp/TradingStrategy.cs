@@ -1,4 +1,3 @@
-using Refit;
 using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.StaticData;
 
@@ -6,19 +5,19 @@ namespace Vertr.Terminal.ConsoleApp;
 internal static class TradingStrategy
 {
     public static async Task RandomWalkTrading(
-        string apiUrl,
+        ITerminalApiClient client,
         User user,
         Symbol symbol,
         decimal basePrice,
         decimal priceDelta = .01m,
         int ordersCount = 10)
     {
-        var api = RestService.For<ITerminalApiClient>(apiUrl);
+        var commands = new Commands(client);
         var nextPrice = basePrice;
         for (var i = 0; i < ordersCount; i++)
         {
             nextPrice = NextRandomPrice(nextPrice, priceDelta);
-            var res = await Commands.PlaceOrder(api, user, symbol, nextPrice, NextRandomQty());
+            _ = await commands.PlaceOrder(user, symbol, nextPrice, NextRandomQty());
             //Console.WriteLine($"{user.Name} {i} => {res}");
             await Task.Delay(10);
         }

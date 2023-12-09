@@ -5,32 +5,34 @@ using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.StaticData;
 
 namespace Vertr.Terminal.ConsoleApp;
-internal static class Commands
+internal sealed class Commands(ITerminalApiClient client)
 {
-    public static async Task<ApiCommandResult?> AddSymbols(ITerminalApiClient client)
+    private readonly ITerminalApiClient _client = client;
+
+    public async Task<ApiCommandResult?> AddSymbols()
     {
         var req = new AddSymbolsRequest()
         {
             Symbols = Symbols.All.Select(s => s.GetSpecification()).ToArray(),
         };
 
-        var res = await client.AddSymbols(req);
+        var res = await _client.AddSymbols(req);
         return res;
     }
 
-    public static async Task<ApiCommandResult?> Reset(ITerminalApiClient client)
+    public async Task<ApiCommandResult?> Reset()
     {
-        var res = await client.Reset();
+        var res = await _client.Reset();
         return res;
     }
 
-    public static async Task<ApiCommandResult?> Nop(ITerminalApiClient client)
+    public async Task<ApiCommandResult?> Nop()
     {
-        var res = await client.Nop();
+        var res = await _client.Nop();
         return res;
     }
 
-    public static async Task<ApiCommandResult?> AddUsers(ITerminalApiClient client)
+    public async Task<ApiCommandResult?> AddUsers()
     {
         var req = new AddAccountsRequest()
         {
@@ -41,19 +43,18 @@ internal static class Commands
             ],
         };
 
-        var res = await client.AddAccounts(req);
+        var res = await _client.AddAccounts(req);
         return res;
     }
 
-    public static async Task<ApiCommandResult?> PlaceOrder(
-        ITerminalApiClient client,
+    public async Task<ApiCommandResult?> PlaceOrder(
         User user,
         Symbol symbol,
         decimal price,
         long size)
     {
         var req = CreatePlaceOrderRequest(user, symbol, price, size);
-        var res = await client.PlaceOrder(req);
+        var res = await _client.PlaceOrder(req);
         return res;
     }
 

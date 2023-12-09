@@ -10,26 +10,26 @@ public class Program
 {
     public static async Task Main()
     {
-        var apiUrl = "http://localhost:5010";
-        var api = RestService.For<ITerminalApiClient>(apiUrl);
+        var api = RestService.For<ITerminalApiClient>("http://localhost:5010");
+        var commands = new Commands(api);
 
-        var res = await Commands.Reset(api);
+        var res = await commands.Reset();
         //Console.WriteLine(res);
 
-        res = await Commands.AddSymbols(api);
+        res = await commands.AddSymbols();
         //Console.WriteLine(res);
 
-        res = await Commands.AddUsers(api);
+        res = await commands.AddUsers();
         //Console.WriteLine(res);
 
         var bobTrading = Task.Run(async () =>
         {
-            await TradingStrategy.RandomWalkTrading(apiUrl, Users.Bob, Symbols.MSFT, 100m, 0.01m, 100);
+            await TradingStrategy.RandomWalkTrading(api, Users.Bob, Symbols.MSFT, 100m, 0.01m, 100);
         });
 
         var aliceTrading = Task.Run(async () =>
         {
-            await TradingStrategy.RandomWalkTrading(apiUrl, Users.Alice, Symbols.MSFT, 100m, 0.01m, 100);
+            await TradingStrategy.RandomWalkTrading(api, Users.Alice, Symbols.MSFT, 100m, 0.01m, 100);
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
