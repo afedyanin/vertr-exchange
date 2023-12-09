@@ -3,7 +3,6 @@ using Vertr.Exchange.Contracts.Requests;
 using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.StaticData;
 using Vertr.Terminal.ConsoleApp.Views;
-// using Vertr.Terminal.ConsoleApp.Views;
 
 namespace Vertr.Terminal.ConsoleApp;
 
@@ -22,7 +21,7 @@ public class Program
 
         res = await commands.AddUsers();
         //Console.WriteLine(res);
-/*
+
         var bobTrading = Task.Run(async () =>
         {
             await TradingStrategy.RandomWalkTrading(api, Users.Bob, Symbols.MSFT, 100m, 0.01m, 100);
@@ -34,7 +33,7 @@ public class Program
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
-*/
+
         //var ob = await api.GetOrderBook(Symbols.MSFT.Id);
         //OrderBookView.Render(ob, "Random walk");
 
@@ -47,6 +46,16 @@ public class Program
         };
 
         var report = await commands.GetSingleUserReport(req);
-        Console.WriteLine(report);
+        SingleUserReportView.Render(report);
+
+        /*
+        req = new UserRequest()
+        {
+            UserId = Users.Alice.Id,
+        };
+
+        report = await commands.GetSingleUserReport(req);
+        SingleUserReportView.Render(report);
+        */
     }
 }
