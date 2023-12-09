@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Vertr.Exchange.Contracts\Vertr.Exchange.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
+
 </Project>

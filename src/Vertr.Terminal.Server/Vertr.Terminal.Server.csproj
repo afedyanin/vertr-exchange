@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Vertr.Terminal.ApiClient\Vertr.Terminal.ApiClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Converters\" />
+  </ItemGroup>
+
 </Project>

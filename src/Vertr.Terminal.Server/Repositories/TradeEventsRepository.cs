@@ -1,19 +1,19 @@
-using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Exchange.Contracts;
 
 namespace Vertr.Terminal.Server.Repositories;
 
 internal sealed class TradeEventsRepository : ITradeEventsRepository
 {
-    private readonly List<TradeItem> _tradeItems = [];
-    public Task<bool> Save(TradeItem[] tradeItems)
+    private readonly Dictionary<long, TradeEvent> _tradeEvents = [];
+    public Task<bool> Save(TradeEvent tradeEvent)
     {
-        _tradeItems.AddRange(tradeItems);
+        _tradeEvents.Add(tradeEvent.Seq, tradeEvent);
         return Task.FromResult(true);
     }
 
-    public Task<TradeItem[]> GetList()
+    public Task<TradeEvent[]> GetList()
     {
-        var res = _tradeItems.OrderBy(ti => ti.Seq).ToArray();
+        var res = _tradeEvents.Values.OrderBy(ti => ti.Seq).ToArray();
         return Task.FromResult(res);
     }
 }

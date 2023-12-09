@@ -1,24 +1,24 @@
 using Spectre.Console;
-using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Exchange.Contracts;
 using Vertr.Terminal.ConsoleApp.StaticData;
 
 namespace Vertr.Terminal.ConsoleApp.Views;
 
 internal static class TradesView
 {
-    public static void Render(TradeItem[] tradeItems)
+    public static void Render(TradeEvent[] tradeEvents)
     {
-        if (tradeItems == null || tradeItems.Length <= 0)
+        if (tradeEvents == null || tradeEvents.Length <= 0)
         {
             Console.WriteLine("<No data>");
             return;
         }
 
-        var obTable = CreateTable(tradeItems);
+        var obTable = CreateTable(tradeEvents);
         AnsiConsole.Write(obTable);
     }
 
-    private static Table CreateTable(TradeItem[] tradeItems)
+    private static Table CreateTable(TradeEvent[] tradeEvents)
     {
         var table = new Table
         {
@@ -26,41 +26,38 @@ internal static class TradesView
         };
 
         table.AddColumns(
+            "Symbol",
             "Seq #",
-            // "Symbol",
             "Timestamp",
-            "Taker Action",
-            "Taker",
-            "Maker",
-            "Taker OrderId",
-            "Maker OrderId",
-            // "Take OrderCompleted",
-            // "Maker OrderCompleted",
+            "Tkr Vol",
+            "Vol",
             "Price",
-            "Volume" //,
-            //"TotalVolume"
+            "Tkr Action",
+            "Tkr OrdId",
+            "Mkr OrdId"
             );
 
-        foreach (var ti in tradeItems)
+        foreach (var tEvent in tradeEvents)
         {
-            var symbol = Symbols.GetById(ti.Symbol);
-            var taker = Users.GetById(ti.TakerUid);
-            var maker = Users.GetById(ti.MakerUid);
+            var symbol = Symbols.GetById(tEvent.Symbol);
 
-            table.AddRow(
-                ti.Seq.ToString(),
-                //symbol!.Code,
-                ti.Timestamp.ToString(ViewConsts.TimeFormat),
-                ti.TakerAction.ToString(),
-                taker!.Name,
-                maker!.Name,
-                ti.TakerOrderId.ToString(),
-                ti.MakerOrderId.ToString(),
-                // ti.TakeOrderCompleted.ToString(),
-                // ti.MakerOrderCompleted.ToString(),
-                ti.Price.ToString(ViewConsts.DecimalFormat),
-                ti.Volume.ToString());
-            // ti.TotalVolume.ToString());
+            for (int i = 0; i < tEvent.Trades.Length; i++)
+            {
+                var trade = tEvent.Trades[i];
+                var maker = Users.GetById(trade.MakerUid);
+
+                table.AddRow(
+                    symbol!.Code,
+                    i == 0 ? tEvent.Seq.ToString() : ViewConsts.Empty,
+                    tEvent.Timestamp.ToString(ViewConsts.TimeFormat),
+                    i == 0 ? tEvent.TotalVolume.ToString() : ViewConsts.Empty,
+                    trade.Volume.ToString(),
+                    trade.Price.ToString(ViewConsts.DecimalFormat),
+                    i == 0 ? tEvent.TakerAction.ToString() : ViewConsts.Empty,
+                    i == 0 ? tEvent.TakerOrderId.ToString() : ViewConsts.Empty,
+                    trade.MakerOrderId.ToString()
+                    );
+            }
         };
 
         return table;

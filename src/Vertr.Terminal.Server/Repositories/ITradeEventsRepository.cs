@@ -1,10 +1,10 @@
-using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Exchange.Contracts;
 
 namespace Vertr.Terminal.Server.Repositories;
 
 public interface ITradeEventsRepository
 {
-    Task<bool> Save(TradeItem[] tradeItems);
+    Task<bool> Save(TradeEvent tradeEvent);
 
-    Task<TradeItem[]> GetList();
+    Task<TradeEvent[]> GetList();
 }
