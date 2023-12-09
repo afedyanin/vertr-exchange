@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Common.Binary.Reports.Dtos;
+namespace Vertr.Exchange.Shared.Reports.Dtos;
 public class OrderDto
 {
     public OrderAction Action { get; set; }

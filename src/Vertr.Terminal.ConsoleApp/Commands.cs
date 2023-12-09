@@ -3,6 +3,8 @@ using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.StaticData;
+using System.Text.Json;
+using Vertr.Exchange.Shared.Reports;
 
 namespace Vertr.Terminal.ConsoleApp;
 internal sealed class Commands(ITerminalApiClient client)
@@ -58,10 +60,19 @@ internal sealed class Commands(ITerminalApiClient client)
         return res;
     }
 
-    public async Task<ApiCommandResult?> GetSingleUserReport(UserRequest request)
+    public async Task<SingleUserReportResult?> GetSingleUserReport(UserRequest request)
     {
         var res = await _client.GetSingleUserReport(request);
-        return res;
+
+        if (res == null ||
+            res.ResultCode != CommandResultCode.SUCCESS ||
+            res.BinaryCommandType != BinaryDataType.QUERY_SINGLE_USER_REPORT)
+        {
+            return null;
+        }
+
+        var report = JsonSerializer.Deserialize<SingleUserReportResult>(res.BinaryData);
+        return report;
     }
 
     private static PlaceOrderRequest CreatePlaceOrderRequest(

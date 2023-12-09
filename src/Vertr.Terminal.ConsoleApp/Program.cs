@@ -46,8 +46,7 @@ public class Program
             UserId = Users.Bob.Id,
         };
 
-        res = await commands.GetSingleUserReport(req);
-
-        Console.WriteLine(res);
+        var report = await commands.GetSingleUserReport(req);
+        Console.WriteLine(report);
     }
 }

@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Common.Binary.Reports.Dtos;
+namespace Vertr.Exchange.Shared.Reports.Dtos;
 public class PositionDto
 {
     public long Uid { get; set; }

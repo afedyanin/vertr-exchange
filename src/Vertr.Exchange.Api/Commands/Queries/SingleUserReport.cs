@@ -4,6 +4,7 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Shared.Reports;
 
 namespace Vertr.Exchange.Api.Commands.Queries;
 

@@ -1,9 +1,10 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Reports;
-using Vertr.Exchange.Common.Binary.Reports.Dtos;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Common.Events;
+using Vertr.Exchange.Shared.Reports.Dtos;
+using Vertr.Exchange.Shared.Reports;
 
 namespace Vertr.Exchange.RiskEngine.Binary;
 

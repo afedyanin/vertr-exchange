@@ -1,7 +1,7 @@
-using Vertr.Exchange.Common.Binary.Reports.Dtos;
 using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Shared.Reports.Dtos;
 
-namespace Vertr.Exchange.Common.Binary.Reports;
+namespace Vertr.Exchange.Shared.Reports;
 public sealed class SingleUserReportResult
 {
     public long Uid { get; set; }
