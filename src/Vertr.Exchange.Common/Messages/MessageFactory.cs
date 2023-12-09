@@ -14,6 +14,8 @@ public static class MessageFactory
             ResultCode = cmd.ResultCode,
             Seq = seq,
             Timestamp = cmd.Timestamp,
+            BinaryCommandType = cmd.BinaryCommandType,
+            BinaryData = cmd.BinaryData,
         };
 
     public static RejectEvent CreateRejectEvent(OrderCommand cmd, IEngineEvent evt, long seq)

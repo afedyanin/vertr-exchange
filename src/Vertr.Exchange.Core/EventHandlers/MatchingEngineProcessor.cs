@@ -3,20 +3,14 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.Core.EventHandlers;
-internal class MatchingEngineProcessor : IOrderCommandEventHandler
+internal class MatchingEngineProcessor(
+    IOrderMatchingEngine orderMatchingEngine,
+    ILogger<MatchingEngineProcessor> logger) : IOrderCommandEventHandler
 {
-    private readonly IOrderMatchingEngine _orderMatchingEngine;
-    private readonly ILogger<MatchingEngineProcessor> _logger;
+    private readonly IOrderMatchingEngine _orderMatchingEngine = orderMatchingEngine;
+    private readonly ILogger<MatchingEngineProcessor> _logger = logger;
 
     public int ProcessingStep => 200;
-
-    public MatchingEngineProcessor(
-        IOrderMatchingEngine orderMatchingEngine,
-        ILogger<MatchingEngineProcessor> logger)
-    {
-        _orderMatchingEngine = orderMatchingEngine;
-        _logger = logger;
-    }
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {

@@ -3,20 +3,14 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.Core.EventHandlers;
-internal class RiskEnginePreProcessor : IOrderCommandEventHandler
+internal class RiskEnginePreProcessor(
+    IOrderRiskEngine orderRiskEngine,
+    ILogger<RiskEnginePreProcessor> logger) : IOrderCommandEventHandler
 {
-    private readonly IOrderRiskEngine _orderRiskEngine;
-    private readonly ILogger<RiskEnginePreProcessor> _logger;
+    private readonly IOrderRiskEngine _orderRiskEngine = orderRiskEngine;
+    private readonly ILogger<RiskEnginePreProcessor> _logger = logger;
 
     public int ProcessingStep => 100;
-
-    public RiskEnginePreProcessor(
-        IOrderRiskEngine orderRiskEngine,
-        ILogger<RiskEnginePreProcessor> logger)
-    {
-        _orderRiskEngine = orderRiskEngine;
-        _logger = logger;
-    }
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {

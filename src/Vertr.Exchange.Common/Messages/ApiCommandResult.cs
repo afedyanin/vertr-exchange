@@ -12,4 +12,8 @@ public record class ApiCommandResult
     public DateTime Timestamp { get; init; }
 
     public long Seq { get; init; }
+
+    public byte[] BinaryData { get; init; } = [];
+
+    public BinaryDataType BinaryCommandType { get; init; }
 }

@@ -1,4 +1,5 @@
 using Refit;
+using Vertr.Exchange.Contracts.Requests;
 using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.StaticData;
 using Vertr.Terminal.ConsoleApp.Views;
@@ -34,10 +35,19 @@ public class Program
 
         await Task.WhenAll(aliceTrading, bobTrading);
 
-        //var ob = await api.GetOrderBook(Symbols.MSFT.Id);
-        //OrderBookView.Render(ob, "Random walk");
+        var ob = await api.GetOrderBook(Symbols.MSFT.Id);
+        OrderBookView.Render(ob, "Random walk");
 
-        var trades = await api.GetTrades();
-        TradesView.Render(trades);
+        // var trades = await api.GetTrades();
+        // TradesView.Render(trades);
+
+        var req = new UserRequest()
+        {
+            UserId = Users.Bob.Id,
+        };
+
+        res = await commands.GetSingleUserReport(req);
+
+        Console.WriteLine(res);
     }
 }

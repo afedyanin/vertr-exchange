@@ -58,6 +58,12 @@ internal sealed class Commands(ITerminalApiClient client)
         return res;
     }
 
+    public async Task<ApiCommandResult?> GetSingleUserReport(UserRequest request)
+    {
+        var res = await _client.GetSingleUserReport(request);
+        return res;
+    }
+
     private static PlaceOrderRequest CreatePlaceOrderRequest(
         User user,
         Symbol symbol,

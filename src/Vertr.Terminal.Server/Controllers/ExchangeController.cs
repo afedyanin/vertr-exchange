@@ -63,6 +63,13 @@ public class ExchangeController(
         return Ok(res);
     }
 
+    [HttpPost("user-report")]
+    public async Task<IActionResult> GetSingleUserReport(UserRequest request)
+    {
+        var res = await InvokeHubMethod("GetSingleUserReport", request);
+        return Ok(res);
+    }
+
     [HttpGet("order-books/{symbolId:int}")]
     public async Task<IActionResult> GetOrderBook(int symbolId)
     {

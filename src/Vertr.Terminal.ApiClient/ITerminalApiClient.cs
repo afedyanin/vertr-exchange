@@ -29,4 +29,7 @@ public interface ITerminalApiClient
 
     [Get("/exchange/trades")]
     Task<TradeEvent[]> GetTrades();
+
+    [Post("/exchange/user-report")]
+    Task<ApiCommandResult?> GetSingleUserReport([Body] UserRequest request);
 }
