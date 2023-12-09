@@ -7,19 +7,14 @@ using Vertr.Exchange.Common.Enums;
 
 namespace Vertr.Exchange.Api.Commands.Queries;
 
-public class SingleUserReport : ApiCommandBase
+public class SingleUserReport(
+    long orderId,
+    DateTime timestamp,
+    long uid) : ApiCommandBase(orderId, timestamp)
 {
     public override OrderCommandType CommandType => OrderCommandType.BINARY_DATA_QUERY;
 
-    private readonly long _uid;
-
-    public SingleUserReport(
-        long orderId,
-        DateTime timestamp,
-        long uid) : base(orderId, timestamp)
-    {
-        _uid = uid;
-    }
+    private readonly long _uid = uid;
 
     public override void Fill(ref OrderCommand command)
     {

@@ -21,7 +21,7 @@ public static class BinaryQueryExtesions
     {
         if (report == null)
         {
-            return Array.Empty<byte>();
+            return [];
         }
 
         var binaryData = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(report));
