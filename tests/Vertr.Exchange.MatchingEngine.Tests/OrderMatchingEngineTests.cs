@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests;

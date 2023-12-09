@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Common.Enums;
+namespace Vertr.Exchange.Shared.Enums;
 public enum SymbolType
 {
     CURRENCY_EXCHANGE_PAIR = 0,

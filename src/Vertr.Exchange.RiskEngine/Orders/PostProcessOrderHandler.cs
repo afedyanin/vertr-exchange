@@ -1,23 +1,17 @@
 using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.RiskEngine.Symbols;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
 
-internal class PostProcessOrderHandler
+internal class PostProcessOrderHandler(
+    IUserProfileProvider userProfiles,
+    ISymbolSpecificationProvider symbols)
 {
-    private readonly IUserProfileProvider _userProfiles;
-    private readonly ISymbolSpecificationProvider _symbols;
-
-    public PostProcessOrderHandler(
-        IUserProfileProvider userProfiles,
-        ISymbolSpecificationProvider symbols)
-    {
-        _userProfiles = userProfiles;
-        _symbols = symbols;
-    }
+    private readonly IUserProfileProvider _userProfiles = userProfiles;
+    private readonly ISymbolSpecificationProvider _symbols = symbols;
 
     public void Handle(OrderCommand orderCommand)
     {

@@ -1,5 +1,5 @@
 using Vertr.Exchange.Contracts;
-using Vertr.Exchange.Contracts.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.StaticData;

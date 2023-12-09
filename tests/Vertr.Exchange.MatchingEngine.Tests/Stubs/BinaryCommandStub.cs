@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.Json;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Binary.Commands;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
@@ -26,7 +26,7 @@ internal static class BinaryCommandStub
 
         var cmd = new BatchAddSymbolsCommand()
         {
-            Symbols = symbols.ToArray(),
+            Symbols = [.. symbols],
         };
 
         return ToOrderCommand(cmd);

@@ -43,7 +43,7 @@ public class ExchangeCoreServiceTests
 
         public void Fill(ref OrderCommand command)
         {
-            command.Command = Common.Enums.OrderCommandType.NOP;
+            command.Command = Shared.Enums.OrderCommandType.NOP;
             command.OrderId = OrderId;
             command.Timestamp = Timestamp;
         }

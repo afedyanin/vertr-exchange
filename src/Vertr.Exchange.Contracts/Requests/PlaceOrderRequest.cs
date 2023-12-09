@@ -1,4 +1,4 @@
-using Vertr.Exchange.Contracts.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Contracts.Requests;
 

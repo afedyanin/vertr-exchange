@@ -1,19 +1,14 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
-internal sealed class MarketDataSnapshotCommand : OrderBookCommand
+internal sealed class MarketDataSnapshotCommand(
+    IOrderBook orderBook,
+    OrderCommand cmd,
+    long sequence) : OrderBookCommand(orderBook, cmd)
 {
-    private readonly long _sequence;
-
-    public MarketDataSnapshotCommand(
-        IOrderBook orderBook,
-        OrderCommand cmd,
-        long sequence) : base(orderBook, cmd)
-    {
-        _sequence = sequence;
-    }
+    private readonly long _sequence = sequence;
 
     public override CommandResultCode Execute()
     {

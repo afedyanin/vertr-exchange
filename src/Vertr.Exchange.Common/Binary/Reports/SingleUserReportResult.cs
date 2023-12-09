@@ -1,5 +1,5 @@
 using Vertr.Exchange.Common.Binary.Reports.Dtos;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Common.Binary.Reports;
 public sealed class SingleUserReportResult

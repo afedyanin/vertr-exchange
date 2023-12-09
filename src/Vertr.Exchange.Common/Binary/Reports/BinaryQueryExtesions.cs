@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.Json;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Common.Binary.Reports;
 public static class BinaryQueryExtesions

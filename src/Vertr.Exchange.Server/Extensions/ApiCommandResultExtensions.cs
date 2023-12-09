@@ -8,13 +8,13 @@ internal static class ApiCommandResultExtensions
     {
         var res = new ApiCommandResult()
         {
-            ResultCode = apiRes.ResultCode.ToDto(),
+            ResultCode = apiRes.ResultCode,
             OrderId = apiRes.OrderId,
             Timestamp = apiRes.Timestamp,
             Seq = apiRes.Seq,
             Uid = apiRes.Uid,
             BinaryData = apiRes.BinaryData,
-            BinaryCommandType = apiRes.BinaryCommandType.ToDto(),
+            BinaryCommandType = apiRes.BinaryCommandType,
         };
 
         return res;

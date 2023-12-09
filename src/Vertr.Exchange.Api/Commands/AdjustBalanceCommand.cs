@@ -1,30 +1,24 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public class AdjustBalanceCommand : ApiCommandBase
+public class AdjustBalanceCommand(
+    long orderId,
+    DateTime timestamp,
+    long uid,
+    int currency,
+    decimal amount)
+    : ApiCommandBase(orderId, timestamp)
 {
     public override OrderCommandType CommandType => OrderCommandType.BALANCE_ADJUSTMENT;
 
-    public long Uid { get; }
+    public long Uid { get; } = uid;
 
-    public int Currency { get; }
+    public int Currency { get; } = currency;
 
-    public decimal Amount { get; }
+    public decimal Amount { get; } = amount;
 
     public BalanceAdjustmentType AdjustmentType => BalanceAdjustmentType.ADJUSTMENT;
-
-    public AdjustBalanceCommand(
-        long orderId,
-        DateTime timestamp,
-        long uid,
-        int currency,
-        decimal amount) : base(orderId, timestamp)
-    {
-        Uid = uid;
-        Currency = currency;
-        Amount = amount;
-    }
 
     public override void Fill(ref OrderCommand command)
     {

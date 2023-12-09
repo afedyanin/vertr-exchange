@@ -20,7 +20,7 @@ internal class RiskEnginePreProcessor(
         }
         catch (Exception ex)
         {
-            data.ResultCode = Common.Enums.CommandResultCode.RISK_GENERIC_ERROR;
+            data.ResultCode = Shared.Enums.CommandResultCode.RISK_GENERIC_ERROR;
             _logger.LogError(ex, "Error processing command OrderId={OrderId} Message={Message}", data.OrderId, ex.Message);
         }
     }

@@ -5,7 +5,7 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Commands;
 using Vertr.Exchange.Common.Binary.Reports;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.MatchingEngine.Binary;
 using Vertr.Exchange.MatchingEngine.Commands;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
@@ -14,22 +14,15 @@ using Vertr.Exchange.MatchingEngine.OrderBooks;
 
 namespace Vertr.Exchange.MatchingEngine;
 
-public class OrderMatchingEngine : IOrderMatchingEngine
+public class OrderMatchingEngine(
+    IOrderBookProvider orderBookProvider,
+    IOptions<MatchingEngineConfiguration> options,
+    ILogger<OrderMatchingEngine> logger) : IOrderMatchingEngine
 {
-    private readonly MatchingEngineConfiguration _config;
+    private readonly MatchingEngineConfiguration _config = options.Value;
 
-    private readonly IOrderBookProvider _orderBookProvider;
-    private readonly ILogger<OrderMatchingEngine> _logger;
-
-    public OrderMatchingEngine(
-        IOrderBookProvider orderBookProvider,
-        IOptions<MatchingEngineConfiguration> options,
-        ILogger<OrderMatchingEngine> logger)
-    {
-        _config = options.Value;
-        _orderBookProvider = orderBookProvider;
-        _logger = logger;
-    }
+    private readonly IOrderBookProvider _orderBookProvider = orderBookProvider;
+    private readonly ILogger<OrderMatchingEngine> _logger = logger;
 
     public void ProcessOrder(long seq, OrderCommand cmd)
     {

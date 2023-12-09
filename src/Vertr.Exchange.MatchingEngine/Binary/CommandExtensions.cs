@@ -1,5 +1,5 @@
 using Vertr.Exchange.Common.Binary.Commands;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
 
 namespace Vertr.Exchange.MatchingEngine.Binary;

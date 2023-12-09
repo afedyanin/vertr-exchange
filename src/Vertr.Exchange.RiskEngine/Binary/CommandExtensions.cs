@@ -1,6 +1,6 @@
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Commands;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.RiskEngine.Symbols;
 
 namespace Vertr.Exchange.RiskEngine.Binary;

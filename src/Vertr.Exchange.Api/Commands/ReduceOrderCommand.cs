@@ -1,28 +1,22 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public class ReduceOrderCommand : ApiCommandBase
+public class ReduceOrderCommand(
+    long orderId,
+    DateTime timestamp,
+    long uid,
+    int symbol,
+    long reduceSize)
+    : ApiCommandBase(orderId, timestamp)
 {
     public override OrderCommandType CommandType => OrderCommandType.REDUCE_ORDER;
 
-    public long Uid { get; }
+    public long Uid { get; } = uid;
 
-    public int Symbol { get; }
+    public int Symbol { get; } = symbol;
 
-    public long ReduceSize { get; }
-
-    public ReduceOrderCommand(
-        long orderId,
-        DateTime timestamp,
-        long uid,
-        int symbol,
-        long reduceSize) : base(orderId, timestamp)
-    {
-        Uid = uid;
-        Symbol = symbol;
-        ReduceSize = reduceSize;
-    }
+    public long ReduceSize { get; } = reduceSize;
 
     public override void Fill(ref OrderCommand command)
     {

@@ -1,24 +1,19 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public class OrderBookRequest : ApiCommandBase
+public class OrderBookRequest(
+    long orderId,
+    DateTime timestamp,
+    int symbol,
+    int size)
+    : ApiCommandBase(orderId, timestamp)
 {
     public override OrderCommandType CommandType => OrderCommandType.ORDER_BOOK_REQUEST;
 
-    public int Symbol { get; }
+    public int Symbol { get; } = symbol;
 
-    public int Size { get; }
-
-    public OrderBookRequest(
-        long orderId,
-        DateTime timestamp,
-        int symbol,
-        int size) : base(orderId, timestamp)
-    {
-        Symbol = symbol;
-        Size = size;
-    }
+    public int Size { get; } = size;
 
     public override void Fill(ref OrderCommand command)
     {

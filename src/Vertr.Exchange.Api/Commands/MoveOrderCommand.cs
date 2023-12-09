@@ -1,28 +1,22 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public class MoveOrderCommand : ApiCommandBase
+public class MoveOrderCommand(
+    long orderId,
+    DateTime timestamp,
+    long uid,
+    decimal newPrice,
+    int symbol)
+    : ApiCommandBase(orderId, timestamp)
 {
     public override OrderCommandType CommandType => OrderCommandType.MOVE_ORDER;
 
-    public long Uid { get; }
+    public long Uid { get; } = uid;
 
-    public int Symbol { get; }
+    public int Symbol { get; } = symbol;
 
-    public decimal NewPrice { get; }
-
-    public MoveOrderCommand(
-        long orderId,
-        DateTime timestamp,
-        long uid,
-        decimal newPrice,
-        int symbol) : base(orderId, timestamp)
-    {
-        Uid = uid;
-        NewPrice = newPrice;
-        Symbol = symbol;
-    }
+    public decimal NewPrice { get; } = newPrice;
 
     public override void Fill(ref OrderCommand command)
     {

@@ -2,7 +2,7 @@ using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Common.Binary.Reports.Dtos;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Common.Events;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
 

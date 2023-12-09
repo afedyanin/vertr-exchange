@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Vertr.Exchange.Shared\Vertr.Exchange.Shared.csproj" />
-  </ItemGroup>
-
 </Project>
