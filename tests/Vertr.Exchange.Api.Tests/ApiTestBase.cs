@@ -4,8 +4,8 @@ using Vertr.Exchange.Api.Commands.Queries;
 using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Binary.Reports;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Shared.Reports;
 
 namespace Vertr.Exchange.Api.Tests;
 public abstract class ApiTestBase
@@ -53,7 +53,7 @@ public abstract class ApiTestBase
             SymbolId = symbol
         };
 
-        var cmd = new AddSymbolsCommand(1010L, DateTime.UtcNow, new SymbolSpecification[] { symSpec });
+        var cmd = new AddSymbolsCommand(1010L, DateTime.UtcNow, [symSpec]);
 
         var res = await Api.SendAsync(cmd);
 

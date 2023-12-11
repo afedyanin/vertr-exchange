@@ -10,6 +10,39 @@ public class Program
 {
     public static async Task Main()
     {
+        var bobTrading = Task.Run(async () =>
+        {
+            await Work(Users.Bob.Name, 100);
+        });
+
+        var aliceTrading = Task.Run(async () =>
+        {
+            await Work(Users.Alice.Name, 100);
+        });
+
+        await Task.WhenAll(aliceTrading, bobTrading);
+
+        Console.WriteLine($"Execution completed.");
+    }
+
+    private static async Task Work(string name, int count)
+    {
+        Console.WriteLine($"Job {name} started.");
+        var client = RestService.For<ITerminalApiClient>("http://localhost:5010");
+        var commands = new Commands(client);
+
+        for (var i = 0; i < count; i++)
+        {
+            var res = await commands.Nop();
+            await Task.Delay(Random.Shared.Next(0, 10));
+            Console.WriteLine($"Job {name} iteration #{i} completed. Seq={res!.Seq}  OrderId={res.OrderId}");
+        }
+
+        Console.WriteLine($"Job {name} completed.");
+    }
+
+    public static async Task RunStrategy()
+    {
         var api = RestService.For<ITerminalApiClient>("http://localhost:5010");
         var commands = new Commands(api);
 
