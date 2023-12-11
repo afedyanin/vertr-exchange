@@ -1,11 +1,8 @@
-using System.Collections.Concurrent;
-
 namespace Vertr.Terminal.Server.Awaiting;
 
 internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> logger) : ICommandAwaitingService
 {
-    private readonly ConcurrentDictionary<long, TaskCompletionSource<CommandResponse>> _commands =
-        new ConcurrentDictionary<long, TaskCompletionSource<CommandResponse>>();
+    private readonly Dictionary<long, TaskCompletionSource<CommandResponse>> _commands = [];
 
     private readonly ILogger<CommandAwaitingService> _logger = logger;
 
@@ -16,7 +13,7 @@ internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> log
         lock (_lock)
         {
             // Check if it is already done.
-            if (_commands.TryRemove(commandId, out var tcs))
+            if (_commands.Remove(commandId, out var tcs))
             {
                 _logger.LogInformation("Command Id={commandId} already completed.", commandId);
                 return tcs.Task;
@@ -43,7 +40,7 @@ internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> log
         {
             var commandId = response.CommandResult.OrderId;
 
-            if (_commands.TryRemove(commandId, out var tcs))
+            if (_commands.Remove(commandId, out var tcs))
             {
                 _logger.LogInformation("Command Id={commandId} is completed.", commandId);
                 tcs.SetResult(response);
@@ -65,7 +62,7 @@ internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> log
     {
         var context = (WaitContext)idObject!;
 
-        if (_commands.TryRemove(context.CommandId, out var tcs))
+        if (_commands.Remove(context.CommandId, out var tcs))
         {
             tcs.TrySetCanceled(context.CancellationToken);
         }

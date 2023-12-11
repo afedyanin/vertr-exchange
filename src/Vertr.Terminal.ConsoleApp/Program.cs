@@ -12,12 +12,12 @@ public class Program
     {
         var bobTrading = Task.Run(async () =>
         {
-            await Work(Users.Bob.Name, 100);
+            await Work(Users.Bob.Name, 1000);
         });
 
         var aliceTrading = Task.Run(async () =>
         {
-            await Work(Users.Alice.Name, 100);
+            await Work(Users.Alice.Name, 1000);
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
