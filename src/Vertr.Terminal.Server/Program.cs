@@ -1,8 +1,12 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using Vertr.Terminal.Server.Awaiting;
 using Vertr.Terminal.Server.BackgroundServices;
 using Vertr.Terminal.Server.Providers;
 using Vertr.Terminal.Server.Repositories;
+
+[assembly: InternalsVisibleTo("Vertr.Terminal.Server.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Terminal.Server.Tests.ConsoleApp")]
 
 namespace Vertr.Terminal.Server;
 
