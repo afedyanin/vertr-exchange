@@ -1,6 +1,8 @@
-namespace Vertr.Terminal.Server.OrderManagement;
+using Vertr.Terminal.ApiClient.Contracts;
 
-public interface IOrderRepository
+namespace Vertr.Terminal.Server.Repositories;
+
+public interface IOrdersRepository
 {
     Task<bool> Add(Order order);
 

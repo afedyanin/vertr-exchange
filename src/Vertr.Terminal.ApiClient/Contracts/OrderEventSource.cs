@@ -1,4 +1,4 @@
-namespace Vertr.Terminal.Server.OrderManagement;
+namespace Vertr.Terminal.ApiClient.Contracts;
 
 public enum OrderEventSource
 {

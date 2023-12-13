@@ -1,6 +1,7 @@
 using Refit;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
+using Vertr.Terminal.ApiClient.Contracts;
 
 namespace Vertr.Terminal.ApiClient;
 
@@ -41,4 +42,7 @@ public interface ITerminalApiClient
 
     [Get("/queries/trades")]
     Task<TradeEvent[]> GetTrades();
+
+    [Get("/queries/orders")]
+    Task<Order[]> GetOrders();
 }

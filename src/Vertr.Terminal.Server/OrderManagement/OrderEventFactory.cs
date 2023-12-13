@@ -1,6 +1,7 @@
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Exchange.Shared.Enums;
+using Vertr.Terminal.ApiClient.Contracts;
 
 namespace Vertr.Terminal.Server.OrderManagement;
 

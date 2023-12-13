@@ -1,7 +1,8 @@
+using Vertr.Terminal.ApiClient.Contracts;
 
-namespace Vertr.Terminal.Server.OrderManagement;
+namespace Vertr.Terminal.Server.Repositories;
 
-public class OrderRepository : IOrderRepository
+public class OrdersRepository : IOrdersRepository
 {
     private readonly Dictionary<long, Order> _orders = [];
 

@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Terminal.Server.OrderManagement;
+namespace Vertr.Terminal.ApiClient.Contracts;
 
 public class Order(
     long orderId,

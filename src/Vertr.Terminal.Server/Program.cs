@@ -28,7 +28,7 @@ public class Program
         builder.Services.AddSingleton<HubConnectionProvider>();
         builder.Services.AddSingleton<IOrderBookSnapshotsRepository, OrderBookSnapshotsRepository>();
         builder.Services.AddSingleton<ITradeEventsRepository, TradeEventsRepository>();
-        builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
+        builder.Services.AddSingleton<IOrdersRepository, OrdersRepository>();
         builder.Services.AddTransient<IOrderEventHandler, OrderEventHandler>();
         builder.Services.AddHostedService<CommandResultService>();
         builder.Services.AddHostedService<OrderBooksService>();

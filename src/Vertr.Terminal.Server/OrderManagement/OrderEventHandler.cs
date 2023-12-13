@@ -1,13 +1,15 @@
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
+using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Terminal.Server.Repositories;
 
 namespace Vertr.Terminal.Server.OrderManagement;
 
 public class OrderEventHandler(
-    IOrderRepository orderRepository,
+    IOrdersRepository orderRepository,
     ILogger<OrderEventHandler> logger) : IOrderEventHandler
 {
-    private readonly IOrderRepository _orderRepository = orderRepository;
+    private readonly IOrdersRepository _orderRepository = orderRepository;
     private readonly ILogger<OrderEventHandler> _logger = logger;
 
     public async Task HandleMoveOrderRequest(MoveOrderRequest request, ApiCommandResult result)
