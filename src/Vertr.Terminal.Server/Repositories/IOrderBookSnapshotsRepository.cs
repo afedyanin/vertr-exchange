@@ -9,4 +9,6 @@ public interface IOrderBookSnapshotsRepository
     Task<OrderBook?> Get(int symbolId);
 
     Task<OrderBook[]> GetList();
+
+    Task Reset();
 }

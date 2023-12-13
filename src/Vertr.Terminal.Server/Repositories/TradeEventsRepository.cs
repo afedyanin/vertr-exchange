@@ -16,4 +16,10 @@ internal sealed class TradeEventsRepository : ITradeEventsRepository
         var res = _tradeEvents.Values.OrderBy(ti => ti.Seq).ToArray();
         return Task.FromResult(res);
     }
+
+    public Task Reset()
+    {
+        _tradeEvents.Clear();
+        return Task.CompletedTask;
+    }
 }

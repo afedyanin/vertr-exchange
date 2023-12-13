@@ -26,4 +26,10 @@ internal sealed class OrderBookSnapshotsRepository : IOrderBookSnapshotsReposito
     {
         return Task.FromResult(_orderBooks.Values.ToArray());
     }
+
+    public Task Reset()
+    {
+        _orderBooks.Clear();
+        return Task.CompletedTask;
+    }
 }

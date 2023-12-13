@@ -1,10 +1,8 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Shared.Reports;
 using Vertr.Terminal.Server.Awaiting;
 using Vertr.Terminal.Server.Providers;
 using Vertr.Terminal.Server.Repositories;
@@ -49,6 +47,13 @@ public class ExchangeController(
     public async Task<IActionResult> Reset()
     {
         var res = await InvokeHubMethod("Reset");
+
+        if (res.ResultCode == CommandResultCode.SUCCESS)
+        {
+            await _orderBookRepository.Reset();
+            await _tradeEventsRepository.Reset();
+        }
+
         return Ok(res);
     }
 
