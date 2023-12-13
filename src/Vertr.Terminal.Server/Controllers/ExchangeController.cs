@@ -4,6 +4,7 @@ using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Terminal.Server.Awaiting;
+using Vertr.Terminal.Server.OrderManagement;
 using Vertr.Terminal.Server.Providers;
 using Vertr.Terminal.Server.Repositories;
 
@@ -16,6 +17,7 @@ public class ExchangeController(
     ICommandAwaitingService commandAwaitingService,
     IOrderBookSnapshotsRepository orderBookRepository,
     ITradeEventsRepository tradeEventsRepository,
+    IOrderEventHandler orderEventHandler,
     ILogger<ExchangeController> logger) : ControllerBase
 {
     private readonly ILogger<ExchangeController> _logger = logger;
@@ -23,6 +25,7 @@ public class ExchangeController(
     private readonly ICommandAwaitingService _commandAwaitingService = commandAwaitingService;
     private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
     private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
+    private readonly IOrderEventHandler _orderEventHandler = orderEventHandler;
 
     [HttpPost("symbols")]
     public async Task<IActionResult> AddSymbols(AddSymbolsRequest request)
@@ -52,6 +55,7 @@ public class ExchangeController(
         {
             await _orderBookRepository.Reset();
             await _tradeEventsRepository.Reset();
+            await _orderEventHandler.Reset();
         }
 
         return Ok(res);
@@ -68,6 +72,35 @@ public class ExchangeController(
     public async Task<IActionResult> PlaceOrder(PlaceOrderRequest request)
     {
         var res = await InvokeHubMethod("PlaceOrder", request);
+        await _orderEventHandler.HandlePlaceOrderRequest(request, res);
+
+        return Ok(res);
+    }
+
+    [HttpPost("cancel-order")]
+    public async Task<IActionResult> CancelOrder(CancelOrderRequest request)
+    {
+        var res = await InvokeHubMethod("CancelOrder", request);
+        await _orderEventHandler.HandleCancelOrderRequest(request, res);
+
+        return Ok(res);
+    }
+
+    [HttpPost("move-order")]
+    public async Task<IActionResult> MoveOrder(MoveOrderRequest request)
+    {
+        var res = await InvokeHubMethod("MoveOrder", request);
+        await _orderEventHandler.HandleMoveOrderRequest(request, res);
+
+        return Ok(res);
+    }
+
+    [HttpPost("reduce-order")]
+    public async Task<IActionResult> ReduceOrder(ReduceOrderRequest request)
+    {
+        var res = await InvokeHubMethod("ReduceOrder", request);
+        await _orderEventHandler.HandleReduceOrderRequest(request, res);
+
         return Ok(res);
     }
 
