@@ -6,30 +6,39 @@ namespace Vertr.Terminal.ApiClient;
 
 public interface ITerminalApiClient
 {
-    [Post("/exchange/symbols")]
+    [Post("/admin/add-symbols")]
     Task<ApiCommandResult?> AddSymbols([Body] AddSymbolsRequest request);
 
-    [Post("/exchange/accounts")]
+    [Post("/admin/add-accounts")]
     Task<ApiCommandResult?> AddAccounts([Body] AddAccountsRequest request);
 
-    [Post("/exchange/reset")]
+    [Post("/admin/reset")]
     Task<ApiCommandResult?> Reset();
 
-    [Post("/exchange/nop")]
+    [Post("/commands/nop")]
     Task<ApiCommandResult?> Nop();
 
-    [Post("/exchange/place-order")]
+    [Post("/commands/place-order")]
     Task<ApiCommandResult?> PlaceOrder([Body] PlaceOrderRequest request);
 
-    [Get("/exchange/order-books/{symbolId}")]
+    [Post("/commands/cancel-order")]
+    Task<ApiCommandResult?> CancelOrder([Body] CancelOrderRequest request);
+
+    [Post("/commands/move-order")]
+    Task<ApiCommandResult?> MoveOrder([Body] MoveOrderRequest request);
+
+    [Post("/commands/reduce-order")]
+    Task<ApiCommandResult?> ReduceOrder([Body] ReduceOrderRequest request);
+
+    [Post("/queries/user-report")]
+    Task<ApiCommandResult?> GetSingleUserReport([Body] UserRequest request);
+
+    [Get("/queries/order-books/{symbolId}")]
     Task<OrderBook?> GetOrderBook(int symbolId);
 
-    [Get("/exchange/order-books")]
+    [Get("/queries/order-books")]
     Task<OrderBook[]> GetOrderBooks();
 
-    [Get("/exchange/trades")]
+    [Get("/queries/trades")]
     Task<TradeEvent[]> GetTrades();
-
-    [Post("/exchange/user-report")]
-    Task<ApiCommandResult?> GetSingleUserReport([Body] UserRequest request);
 }
