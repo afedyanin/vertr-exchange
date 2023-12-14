@@ -15,7 +15,7 @@ internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> log
             // Check if it is already done.
             if (_commands.Remove(commandId, out var tcs))
             {
-                _logger.LogInformation("Command Id={commandId} already completed.", commandId);
+                _logger.LogDebug("Command Id={commandId} already completed.", commandId);
                 return tcs.Task;
             }
 
@@ -26,7 +26,7 @@ internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> log
                 throw new InvalidOperationException($"Command Id={commandId} is already registered.");
             }
 
-            _logger.LogInformation("Command Id={commandId} is registered.", commandId);
+            _logger.LogDebug("Command Id={commandId} is registered.", commandId);
 
             cancellationToken.Register(UnregisterWait, new WaitContext(commandId, cancellationToken));
 
@@ -42,7 +42,7 @@ internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> log
 
             if (_commands.Remove(commandId, out var tcs))
             {
-                _logger.LogInformation("Command Id={commandId} is completed.", commandId);
+                _logger.LogDebug("Command Id={commandId} is completed.", commandId);
                 tcs.SetResult(response);
                 return;
             }

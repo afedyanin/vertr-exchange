@@ -11,6 +11,7 @@ internal static class OrderEventFactory
     {
         return new OrderEvent
         {
+            OrderId = maker.MakerOrderId,
             TimeStamp = taker.Timestamp,
             Seq = taker.Seq,
             Action = taker.TakerAction == OrderAction.ASK ? OrderAction.BID : OrderAction.ASK,
@@ -25,6 +26,7 @@ internal static class OrderEventFactory
     {
         return new OrderEvent
         {
+            OrderId = taker.TakerOrderId,
             TimeStamp = taker.Timestamp,
             Seq = taker.Seq,
             Action = taker.TakerAction,
@@ -38,6 +40,7 @@ internal static class OrderEventFactory
     {
         return new OrderEvent
         {
+            OrderId = rejectEvent.OrderId,
             TimeStamp = rejectEvent.Timestamp,
             Seq = rejectEvent.Seq,
             Price = rejectEvent.Price,
@@ -50,6 +53,7 @@ internal static class OrderEventFactory
     {
         return new OrderEvent
         {
+            OrderId = reduceEvent.OrderId,
             TimeStamp = reduceEvent.Timestamp,
             Seq = reduceEvent.Seq,
             Price = reduceEvent.Price,
@@ -63,6 +67,7 @@ internal static class OrderEventFactory
 
         return new OrderEvent
         {
+            OrderId = request.OrderId,
             CommandResultCode = result.ResultCode,
             TimeStamp = result.Timestamp,
             Seq = result.Seq,
@@ -75,6 +80,7 @@ internal static class OrderEventFactory
     {
         return new OrderEvent
         {
+            OrderId = request.OrderId,
             CommandResultCode = result.ResultCode,
             TimeStamp = result.Timestamp,
             Seq = result.Seq,
@@ -88,6 +94,7 @@ internal static class OrderEventFactory
 
         return new OrderEvent
         {
+            OrderId = result.OrderId,
             CommandResultCode = result.ResultCode,
             TimeStamp = result.Timestamp,
             Seq = result.Seq,
@@ -102,6 +109,7 @@ internal static class OrderEventFactory
     {
         return new OrderEvent
         {
+            OrderId = result.OrderId,
             CommandResultCode = result.ResultCode,
             TimeStamp = result.Timestamp,
             Seq = result.Seq,

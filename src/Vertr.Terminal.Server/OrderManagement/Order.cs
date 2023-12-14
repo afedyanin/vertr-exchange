@@ -1,6 +1,7 @@
 using Vertr.Exchange.Shared.Enums;
+using Vertr.Terminal.ApiClient.Contracts;
 
-namespace Vertr.Terminal.ApiClient.Contracts;
+namespace Vertr.Terminal.Server.OrderManagement;
 
 public class Order(
     long orderId,
@@ -12,7 +13,7 @@ public class Order(
     OrderType orderType
         )
 {
-    private readonly List<OrderEvent> _events = [];
+    public OrderEvent[] OrderEvents { get; private set; } = [];
 
     public long OrderId { get; } = orderId;
 
@@ -28,10 +29,8 @@ public class Order(
 
     public OrderType OrderType { get; } = orderType;
 
-    public void AddEvent(OrderEvent orderEvent)
+    public void SetEvents(OrderEvent[] orderEvents)
     {
-        _events.Add(orderEvent);
+        OrderEvents = orderEvents ?? [];
     }
-
-    public OrderEvent[] GetEvents() => _events.ToArray();
 }

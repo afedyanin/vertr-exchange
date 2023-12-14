@@ -24,7 +24,7 @@ public class RejectEventsService(
             while (channel.TryRead(out var rejectEvent))
             {
                 await _orderEventHandler.HandleRejectEvent(rejectEvent);
-                _logger.LogInformation("Reject Event received: {rejectEvent}", rejectEvent);
+                _logger.LogDebug("Reject Event received: {rejectEvent}", rejectEvent);
             }
         }
     }

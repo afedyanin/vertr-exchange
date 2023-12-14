@@ -1,10 +1,13 @@
 using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Terminal.Server.OrderManagement;
 
 namespace Vertr.Terminal.Server.Repositories;
 
 public interface IOrdersRepository
 {
-    Task<bool> Add(Order order);
+    Task<bool> AddOrder(Order order);
+
+    Task AddEvent(OrderEvent orderEvent);
 
     Task<bool> Remove(long orderId);
 

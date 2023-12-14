@@ -23,7 +23,7 @@ public class CommandResultService(
         {
             while (channel.TryRead(out var apiCommandResult))
             {
-                _logger.LogInformation("API Commad result received: {commandResult}", apiCommandResult);
+                _logger.LogDebug("API Commad result received: {commandResult}", apiCommandResult);
                 var resp = new CommandResponse(apiCommandResult);
                 _commandAwaitingService.Complete(resp);
             }

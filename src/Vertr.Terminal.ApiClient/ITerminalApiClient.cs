@@ -44,5 +44,5 @@ public interface ITerminalApiClient
     Task<TradeEvent[]> GetTrades();
 
     [Get("/queries/orders")]
-    Task<Order[]> GetOrders();
+    Task<OrderDto[]> GetOrders();
 }

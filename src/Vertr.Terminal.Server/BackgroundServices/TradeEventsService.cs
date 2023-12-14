@@ -29,7 +29,7 @@ public class TradeEventsService(
                 await _tradeEventsRepository.Save(tradeEvent);
                 await _orderEventHandler.HandleTradeEvent(tradeEvent);
 
-                _logger.LogInformation("Trade Event received: {tradeEvent}", tradeEvent);
+                _logger.LogDebug("Trade Event received: {tradeEvent}", tradeEvent);
             }
         }
     }

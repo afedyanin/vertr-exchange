@@ -24,7 +24,7 @@ public class OrderBooksService(
             while (channel.TryRead(out var orderBook))
             {
                 await _orderBookRepository.Save(orderBook);
-                _logger.LogInformation("Order Book received: {orderBook}", orderBook);
+                _logger.LogDebug("Order Book received: {orderBook}", orderBook);
             }
         }
     }

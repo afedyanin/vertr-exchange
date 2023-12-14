@@ -4,6 +4,8 @@ namespace Vertr.Terminal.ApiClient.Contracts;
 
 public record class OrderEvent
 {
+    public long OrderId { get; init; }
+
     public DateTime TimeStamp { get; init; }
 
     public long Seq { get; init; }
@@ -14,7 +16,7 @@ public record class OrderEvent
 
     public OrderAction? Action { get; init; }
 
-    public bool? OrderCompleted { get; init; }
+    public bool OrderCompleted { get; init; }
 
     public decimal? Price { get; init; }
 

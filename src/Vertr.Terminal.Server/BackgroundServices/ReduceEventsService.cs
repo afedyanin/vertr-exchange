@@ -24,7 +24,7 @@ public class ReduceEventsService(
             while (channel.TryRead(out var reduceEvent))
             {
                 await _orderEventHandler.HandleReduceEvent(reduceEvent);
-                _logger.LogInformation("Reduce Event received: {reduceEvent}", reduceEvent);
+                _logger.LogDebug("Reduce Event received: {reduceEvent}", reduceEvent);
             }
         }
     }

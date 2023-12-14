@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Terminal.Server.Awaiting;
+using Vertr.Terminal.Server.Extensions;
 using Vertr.Terminal.Server.Providers;
 using Vertr.Terminal.Server.Repositories;
 
@@ -60,6 +61,6 @@ public class QueriesController(
     public async Task<IActionResult> GetOrders()
     {
         var orders = await _ordersRepository.GetList();
-        return Ok(orders);
+        return Ok(orders.ToDto());
     }
 }
