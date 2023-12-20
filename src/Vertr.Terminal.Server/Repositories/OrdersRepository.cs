@@ -54,7 +54,7 @@ public class OrdersRepository : IOrdersRepository
     {
         if (order != null)
         {
-            var events = _orderEvents.Where(oe => oe.OrderId == order.OrderId).ToArray();
+            var events = _orderEvents.Where(oe => oe.OrderId == order.OrderId).OrderBy(ev => ev.Seq).ToArray();
             order.SetEvents(events);
         }
     }
