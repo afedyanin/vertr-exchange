@@ -72,9 +72,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exchange", "Exchange", "{7B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Terminal", "Terminal", "{6F3BDA1E-685C-4FEC-8216-577FE361D343}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Terminal.Server.Tests", "tests\Vertr.Terminal.Server.Tests\Vertr.Terminal.Server.Tests.csproj", "{05FE7C4E-882F-4825-8671-A8D2B0080B6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Terminal.Server.Tests", "tests\Vertr.Terminal.Server.Tests\Vertr.Terminal.Server.Tests.csproj", "{05FE7C4E-882F-4825-8671-A8D2B0080B6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Terminal.Server.Tests.ConsoleApp", "tests\Vertr.Terminal.Server.Tests.ConsoleApp\Vertr.Terminal.Server.Tests.ConsoleApp.csproj", "{00E8D47A-11B4-42CD-8CC4-8C8D50F19D13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Terminal.Server.Tests.ConsoleApp", "tests\Vertr.Terminal.Server.Tests.ConsoleApp\Vertr.Terminal.Server.Tests.ConsoleApp.csproj", "{00E8D47A-11B4-42CD-8CC4-8C8D50F19D13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Terminal.ExchangeClient", "src\Vertr.Terminal.ExchangeClient\Vertr.Terminal.ExchangeClient.csproj", "{F42AC9F0-E2CF-406F-8EAB-7B76A837E2D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,6 +164,10 @@ Global
 		{00E8D47A-11B4-42CD-8CC4-8C8D50F19D13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00E8D47A-11B4-42CD-8CC4-8C8D50F19D13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00E8D47A-11B4-42CD-8CC4-8C8D50F19D13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F42AC9F0-E2CF-406F-8EAB-7B76A837E2D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F42AC9F0-E2CF-406F-8EAB-7B76A837E2D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F42AC9F0-E2CF-406F-8EAB-7B76A837E2D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F42AC9F0-E2CF-406F-8EAB-7B76A837E2D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -197,6 +203,7 @@ Global
 		{6F3BDA1E-685C-4FEC-8216-577FE361D343} = {9C59A7AC-5C91-4BC5-97B7-72B20D752B2C}
 		{05FE7C4E-882F-4825-8671-A8D2B0080B6D} = {6F3BDA1E-685C-4FEC-8216-577FE361D343}
 		{00E8D47A-11B4-42CD-8CC4-8C8D50F19D13} = {6F3BDA1E-685C-4FEC-8216-577FE361D343}
+		{F42AC9F0-E2CF-406F-8EAB-7B76A837E2D1} = {FBA1A7D1-9962-41D1-BBC9-4D2A3AEA1E44}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AED32BEA-7168-480C-BA57-E1182383356F}

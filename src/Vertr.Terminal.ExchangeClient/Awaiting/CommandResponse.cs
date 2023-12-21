@@ -1,6 +1,6 @@
-using Vertr.Exchange.Contracts;
+using Vertr.Exchange.Common.Messages;
 
-namespace Vertr.Terminal.Server.Awaiting;
+namespace Vertr.Terminal.ExchangeClient.Awaiting;
 public record class CommandResponse
 {
     public ApiCommandResult CommandResult { get; }

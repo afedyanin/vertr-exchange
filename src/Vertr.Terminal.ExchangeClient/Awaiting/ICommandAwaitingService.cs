@@ -1,4 +1,4 @@
-namespace Vertr.Terminal.Server.Awaiting;
+namespace Vertr.Terminal.ExchangeClient.Awaiting;
 
 public interface ICommandAwaitingService
 {

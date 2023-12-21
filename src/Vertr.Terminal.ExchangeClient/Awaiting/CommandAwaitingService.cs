@@ -1,4 +1,6 @@
-namespace Vertr.Terminal.Server.Awaiting;
+using Microsoft.Extensions.Logging;
+
+namespace Vertr.Terminal.ExchangeClient.Awaiting;
 
 internal sealed class CommandAwaitingService(ILogger<CommandAwaitingService> logger) : ICommandAwaitingService
 {

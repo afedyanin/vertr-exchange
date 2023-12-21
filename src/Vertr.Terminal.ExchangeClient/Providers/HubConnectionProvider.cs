@@ -1,20 +1,29 @@
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Vertr.Terminal.ExchangeClient.Configuration;
+using Vertr.Terminal.ExchangeClient.Extensions;
 
-namespace Vertr.Terminal.Server.Providers;
+namespace Vertr.Terminal.ExchangeClient.Providers;
 
-public class HubConnectionProvider : IAsyncDisposable
+internal class HubConnectionProvider : IHubConnectionProvider, IAsyncDisposable
 {
     private readonly HubConnection _connection;
+    private readonly HubConnectionConfiguration _configuration;
     private readonly ILogger<HubConnectionProvider> _logger;
 
-    public HubConnectionProvider(ILogger<HubConnectionProvider> logger)
+    public HubConnectionProvider(
+        IOptions<HubConnectionConfiguration> configuration,
+        ILogger<HubConnectionProvider> logger)
     {
         _logger = logger;
+        _configuration = configuration.Value;
 
         var connection = new HubConnectionBuilder()
             .WithUrl(
-            url: "http://localhost:5000/exchange",
+            url: _configuration.BaseUrl,
             transports: HttpTransportType.WebSockets,
             options =>
             {
@@ -22,7 +31,8 @@ public class HubConnectionProvider : IAsyncDisposable
             })
             .ConfigureLogging(logging =>
             {
-                logging.AddConsole();
+                logging.AddProvider(_logger.AsLoggerProvider());
+                // logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Debug);
             })
             .AddMessagePackProtocol()
             .Build();
