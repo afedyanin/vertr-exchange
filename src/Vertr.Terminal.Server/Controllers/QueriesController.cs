@@ -1,32 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.Exchange.Contracts.Requests;
-using Vertr.Terminal.Server.Awaiting;
+using Vertr.Terminal.Domain.Abstractions;
 using Vertr.Terminal.Server.Extensions;
-using Vertr.Terminal.Server.Providers;
-using Vertr.Terminal.Server.Repositories;
 
 namespace Vertr.Terminal.Server.Controllers;
 
 [Route("queries")]
 [ApiController]
 public class QueriesController(
-    HubConnectionProvider connectionProvider,
-    ICommandAwaitingService commandAwaitingService,
+    IExchangeApiClient exchangeApiClient,
     IOrderBookSnapshotsRepository orderBookRepository,
     ITradeEventsRepository tradeEventsRepository,
-    IOrdersRepository ordersRepository)
-    : ExchangeControllerBase(
-        connectionProvider,
-        commandAwaitingService)
+    IOrderRepository ordersRepository)
+    : ControllerBase
 {
     private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
     private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
-    private readonly IOrdersRepository _ordersRepository = ordersRepository;
+    private readonly IOrderRepository _ordersRepository = ordersRepository;
+    private readonly IExchangeApiClient _exchangeApiClient = exchangeApiClient;
 
     [HttpPost("user-report")]
     public async Task<IActionResult> GetSingleUserReport(UserRequest request)
     {
-        var res = await InvokeHubMethod("GetSingleUserReport", request);
+        var res = await _exchangeApiClient.GetSingleUserReport(request);
         return Ok(res);
     }
 

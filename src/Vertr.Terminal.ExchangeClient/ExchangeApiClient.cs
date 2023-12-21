@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
+using Vertr.Terminal.Domain.Abstractions;
 using Vertr.Terminal.ExchangeClient.Awaiting;
 using Vertr.Terminal.ExchangeClient.Providers;
 
 namespace Vertr.Terminal.ExchangeClient;
 
-internal class ExchangeApiClient(
+internal sealed class ExchangeApiClient(
     IHubConnectionProvider connectionProvider,
     ICommandAwaitingService commandAwaitingService) : IExchangeApiClient
 {
@@ -25,6 +26,24 @@ internal class ExchangeApiClient(
         return res;
     }
 
+    public async Task<ApiCommandResult> CancelOrder(CancelOrderRequest request)
+    {
+        var res = await InvokeHubMethod("CancelOrder", request);
+        return res;
+    }
+
+    public async Task<ApiCommandResult> GetSingleUserReport(UserRequest request)
+    {
+        var res = await InvokeHubMethod("GetSingleUserReport", request);
+        return res;
+    }
+
+    public async Task<ApiCommandResult> MoveOrder(MoveOrderRequest request)
+    {
+        var res = await InvokeHubMethod("MoveOrder", request);
+        return res;
+    }
+
     public async Task<ApiCommandResult> Nop()
     {
         var res = await InvokeHubMethod("Nop");
@@ -34,6 +53,12 @@ internal class ExchangeApiClient(
     public async Task<ApiCommandResult> PlaceOrder(PlaceOrderRequest request)
     {
         var res = await InvokeHubMethod("PlaceOrder", request);
+        return res;
+    }
+
+    public async Task<ApiCommandResult> ReduceOrder(ReduceOrderRequest request)
+    {
+        var res = await InvokeHubMethod("ReduceOrder", request);
         return res;
     }
 

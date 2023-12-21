@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Exchange.Contracts\Vertr.Exchange.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.Terminal.ApiClient\Vertr.Terminal.ApiClient.csproj" />
+    <ProjectReference Include="..\Vertr.Terminal.DataAccess.InMemory\Vertr.Terminal.DataAccess.InMemory.csproj" />
     <ProjectReference Include="..\Vertr.Terminal.ExchangeClient\Vertr.Terminal.ExchangeClient.csproj" />
   </ItemGroup>
 

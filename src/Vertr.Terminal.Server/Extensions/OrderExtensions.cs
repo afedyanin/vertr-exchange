@@ -1,5 +1,5 @@
 using Vertr.Terminal.ApiClient.Contracts;
-using Vertr.Terminal.Server.OrderManagement;
+using Vertr.Terminal.Domain.OrderManagement;
 
 namespace Vertr.Terminal.Server.Extensions;
 
@@ -12,7 +12,7 @@ internal static class OrderExtensions
         => new OrderDto
         {
             Action = order.Action,
-            OrderEvents = order.OrderEvents,
+            OrderEvents = order.OrderEvents.ToDto(),
             OrderId = order.OrderId,
             OrderType = order.OrderType,
             Price = order.Price,

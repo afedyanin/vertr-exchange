@@ -8,14 +8,14 @@ using Vertr.Terminal.ExchangeClient.Extensions;
 
 namespace Vertr.Terminal.ExchangeClient.Providers;
 
-internal class HubConnectionProvider : IHubConnectionProvider, IAsyncDisposable
+internal sealed class HubConnectionProvider : IHubConnectionProvider, IAsyncDisposable
 {
     private readonly HubConnection _connection;
-    private readonly HubConnectionConfiguration _configuration;
+    private readonly ExchangeConfiguration _configuration;
     private readonly ILogger<HubConnectionProvider> _logger;
 
     public HubConnectionProvider(
-        IOptions<HubConnectionConfiguration> configuration,
+        IOptions<ExchangeConfiguration> configuration,
         ILogger<HubConnectionProvider> logger)
     {
         _logger = logger;
@@ -23,7 +23,7 @@ internal class HubConnectionProvider : IHubConnectionProvider, IAsyncDisposable
 
         var connection = new HubConnectionBuilder()
             .WithUrl(
-            url: _configuration.BaseUrl,
+            url: _configuration.HubConnectionBaseUrl,
             transports: HttpTransportType.WebSockets,
             options =>
             {

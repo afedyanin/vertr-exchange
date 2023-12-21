@@ -1,9 +1,8 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vertr.Exchange.Contracts.Requests;
-using Vertr.Exchange.Shared.Enums;
-using Vertr.Terminal.ExchangeClient;
-using Vertr.Terminal.Server.OrderManagement;
-using Vertr.Terminal.Server.Repositories;
+using Vertr.Terminal.Application.Commands;
+using Vertr.Terminal.Domain.Abstractions;
 
 namespace Vertr.Terminal.Server.Controllers;
 
@@ -11,14 +10,10 @@ namespace Vertr.Terminal.Server.Controllers;
 [ApiController]
 public class AdminController(
     IExchangeApiClient exchangeApiClient,
-    IOrderBookSnapshotsRepository orderBookRepository,
-    ITradeEventsRepository tradeEventsRepository,
-    IOrderEventHandler orderEventHandler) : ControllerBase
+    IMediator mediator) : ControllerBase
 {
-    private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
-    private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
-    private readonly IOrderEventHandler _orderEventHandler = orderEventHandler;
     private readonly IExchangeApiClient _exchangeApiClient = exchangeApiClient;
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost("add-symbols")]
     public async Task<IActionResult> AddSymbols(AddSymbolsRequest request)
@@ -37,15 +32,7 @@ public class AdminController(
     [HttpPost("reset")]
     public async Task<IActionResult> Reset()
     {
-        var res = await _exchangeApiClient.Reset();
-
-        if (res.ResultCode == CommandResultCode.SUCCESS)
-        {
-            await _orderBookRepository.Reset();
-            await _tradeEventsRepository.Reset();
-            await _orderEventHandler.Reset();
-        }
-
+        var res = await _mediator.Send(new ResetRequest());
         return Ok(res);
     }
 }

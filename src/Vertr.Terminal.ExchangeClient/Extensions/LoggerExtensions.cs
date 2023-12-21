@@ -10,7 +10,7 @@ internal static class LoggerExtensions
         return new ExistingLoggerProvider(logger);
     }
 
-    private class ExistingLoggerProvider(ILogger logger) : ILoggerProvider
+    private sealed class ExistingLoggerProvider(ILogger logger) : ILoggerProvider
     {
         private readonly ILogger _logger = logger;
 

@@ -1,13 +1,8 @@
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using Vertr.Terminal.Server.Awaiting;
-using Vertr.Terminal.Server.BackgroundServices;
-using Vertr.Terminal.Server.OrderManagement;
-using Vertr.Terminal.Server.Providers;
-using Vertr.Terminal.Server.Repositories;
 
-[assembly: InternalsVisibleTo("Vertr.Terminal.Server.Tests")]
-[assembly: InternalsVisibleTo("Vertr.Terminal.Server.Tests.ConsoleApp")]
+using Vertr.Terminal.ExchangeClient;
+using Vertr.Terminal.DataAccess.InMemory;
+using Vertr.Terminal.Application.Commands;
 
 namespace Vertr.Terminal.Server;
 
@@ -25,17 +20,9 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddSingleton<HubConnectionProvider>();
-        builder.Services.AddSingleton<IOrderBookSnapshotsRepository, OrderBookSnapshotsRepository>();
-        builder.Services.AddSingleton<ITradeEventsRepository, TradeEventsRepository>();
-        builder.Services.AddSingleton<IOrdersRepository, OrdersRepository>();
-        builder.Services.AddTransient<IOrderEventHandler, OrderEventHandler>();
-        builder.Services.AddHostedService<CommandResultService>();
-        builder.Services.AddHostedService<OrderBooksService>();
-        builder.Services.AddHostedService<TradeEventsService>();
-        builder.Services.AddHostedService<ReduceEventsService>();
-        builder.Services.AddHostedService<RejectEventsService>();
-        builder.Services.AddSingleton<ICommandAwaitingService, CommandAwaitingService>();
+        builder.Services.AddExchangeApi(builder.Configuration);
+        builder.Services.AddDataAccess();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ResetRequest>());
 
         var app = builder.Build();
 

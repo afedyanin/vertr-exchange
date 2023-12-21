@@ -4,7 +4,7 @@ namespace Vertr.Terminal.ApiClient.Contracts;
 
 public record class OrderDto
 {
-    public OrderEvent[] OrderEvents { get; init; } = [];
+    public OrderEventDto[] OrderEvents { get; init; } = [];
 
     public long OrderId { get; init; }
 

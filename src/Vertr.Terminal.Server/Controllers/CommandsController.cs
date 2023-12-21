@@ -1,7 +1,8 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vertr.Exchange.Contracts.Requests;
-using Vertr.Terminal.ExchangeClient;
-using Vertr.Terminal.Server.OrderManagement;
+using Vertr.Terminal.Application.Commands.Orders;
+using Vertr.Terminal.Domain.Abstractions;
 
 namespace Vertr.Terminal.Server.Controllers;
 
@@ -9,11 +10,11 @@ namespace Vertr.Terminal.Server.Controllers;
 [ApiController]
 public class CommandsController(
     IExchangeApiClient exchangeApiClient,
-    IOrderEventHandler orderEventHandler)
+    IMediator mediator)
     : ControllerBase
 {
-    private readonly IOrderEventHandler _orderEventHandler = orderEventHandler;
     private readonly IExchangeApiClient _exchangeApiClient = exchangeApiClient;
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost("nop")]
     public async Task<IActionResult> Nop()
@@ -25,8 +26,12 @@ public class CommandsController(
     [HttpPost("place-order")]
     public async Task<IActionResult> PlaceOrder(PlaceOrderRequest request)
     {
-        var res = await _exchangeApiClient.PlaceOrder(request);
-        await _orderEventHandler.HandlePlaceOrderRequest(request, res);
+        var req = new PlaceRequest
+        {
+            PlaceOrderRequest = request,
+        };
+
+        var res = await _mediator.Send(req);
 
         return Ok(res);
     }
@@ -34,8 +39,12 @@ public class CommandsController(
     [HttpPost("cancel-order")]
     public async Task<IActionResult> CancelOrder(CancelOrderRequest request)
     {
-        var res = await InvokeHubMethod("CancelOrder", request);
-        await _orderEventHandler.HandleCancelOrderRequest(request, res);
+        var req = new CancelRequest
+        {
+            CancelOrderRequest = request,
+        };
+
+        var res = await _mediator.Send(req);
 
         return Ok(res);
     }
@@ -43,8 +52,12 @@ public class CommandsController(
     [HttpPost("move-order")]
     public async Task<IActionResult> MoveOrder(MoveOrderRequest request)
     {
-        var res = await InvokeHubMethod("MoveOrder", request);
-        await _orderEventHandler.HandleMoveOrderRequest(request, res);
+        var req = new MoveRequest
+        {
+            MoveOrderRequest = request,
+        };
+
+        var res = await _mediator.Send(req);
 
         return Ok(res);
     }
@@ -52,8 +65,12 @@ public class CommandsController(
     [HttpPost("reduce-order")]
     public async Task<IActionResult> ReduceOrder(ReduceOrderRequest request)
     {
-        var res = await InvokeHubMethod("ReduceOrder", request);
-        await _orderEventHandler.HandleReduceOrderRequest(request, res);
+        var req = new ReduceRequest
+        {
+            ReduceOrderRequest = request,
+        };
+
+        var res = await _mediator.Send(req);
 
         return Ok(res);
     }
