@@ -1,34 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.Exchange.Contracts.Requests;
-using Vertr.Terminal.Server.Awaiting;
+using Vertr.Terminal.ExchangeClient;
 using Vertr.Terminal.Server.OrderManagement;
-using Vertr.Terminal.Server.Providers;
 
 namespace Vertr.Terminal.Server.Controllers;
 
 [Route("commands")]
 [ApiController]
 public class CommandsController(
-    HubConnectionProvider connectionProvider,
-    ICommandAwaitingService commandAwaitingService,
+    IExchangeApiClient exchangeApiClient,
     IOrderEventHandler orderEventHandler)
-    : ExchangeControllerBase(
-        connectionProvider,
-        commandAwaitingService)
+    : ControllerBase
 {
     private readonly IOrderEventHandler _orderEventHandler = orderEventHandler;
+    private readonly IExchangeApiClient _exchangeApiClient = exchangeApiClient;
 
     [HttpPost("nop")]
     public async Task<IActionResult> Nop()
     {
-        var res = await InvokeHubMethod("Nop");
+        var res = await _exchangeApiClient.Nop();
         return Ok(res);
     }
 
     [HttpPost("place-order")]
     public async Task<IActionResult> PlaceOrder(PlaceOrderRequest request)
     {
-        var res = await InvokeHubMethod("PlaceOrder", request);
+        var res = await _exchangeApiClient.PlaceOrder(request);
         await _orderEventHandler.HandlePlaceOrderRequest(request, res);
 
         return Ok(res);

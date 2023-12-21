@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common.Messages;
+using Vertr.Exchange.Contracts;
 
 namespace Vertr.Terminal.ExchangeClient.Awaiting;
 public record class CommandResponse

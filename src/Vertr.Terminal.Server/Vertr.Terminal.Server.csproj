@@ -9,9 +9,13 @@
 
   <ItemGroup>
     <Compile Remove="Converters\**" />
+    <Compile Remove="Providers\**" />
     <Content Remove="Converters\**" />
+    <Content Remove="Providers\**" />
     <EmbeddedResource Remove="Converters\**" />
+    <EmbeddedResource Remove="Providers\**" />
     <None Remove="Converters\**" />
+    <None Remove="Providers\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,10 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Exchange.Contracts\Vertr.Exchange.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.Terminal.ApiClient\Vertr.Terminal.ApiClient.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Providers\" />
+    <ProjectReference Include="..\Vertr.Terminal.ExchangeClient\Vertr.Terminal.ExchangeClient.csproj" />
   </ItemGroup>
 
 </Project>
