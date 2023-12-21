@@ -5,6 +5,7 @@ using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.StaticData;
 using System.Text.Json;
 using Vertr.Exchange.Shared.Reports;
+using Vertr.Terminal.ApiClient.Contracts;
 
 namespace Vertr.Terminal.ConsoleApp;
 internal sealed class Commands(ITerminalApiClient client)
@@ -58,6 +59,24 @@ internal sealed class Commands(ITerminalApiClient client)
         var req = CreatePlaceOrderRequest(user, symbol, price, size);
         var res = await _client.PlaceOrder(req);
         return res;
+    }
+
+    public async Task RandomWalk(
+        User user,
+        Symbol symbol,
+        decimal startPrice,
+        int ordersCount)
+    {
+        var req = new RandomWalkRequest()
+        {
+            UserId = user.Id,
+            SymbolId = symbol.Id,
+            BasePrice = startPrice,
+            PriceDelta = 0.01m,
+            OrdersCount = ordersCount
+        };
+
+        await _client.RandomWalk(req);
     }
 
     public async Task<SingleUserReportResult?> GetSingleUserReport(UserRequest request)

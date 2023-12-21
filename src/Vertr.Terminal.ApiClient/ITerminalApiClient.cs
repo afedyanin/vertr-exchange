@@ -45,4 +45,8 @@ public interface ITerminalApiClient
 
     [Get("/queries/orders")]
     Task<OrderDto[]> GetOrders();
+
+    [Post("/strategies/random-walk")]
+    Task RandomWalk([Body] RandomWalkRequest request);
+
 }

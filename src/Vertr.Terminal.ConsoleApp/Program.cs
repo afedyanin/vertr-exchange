@@ -26,14 +26,14 @@ public class Program
         res = await commands.AddUsers();
         //Console.WriteLine(res);
 
-        var bobTrading = Task.Run(() =>
+        var bobTrading = Task.Run(async () =>
         {
-            TradingStrategy.RandomWalkTrading(Users.Bob, Symbols.MSFT, 100m, 0.01m, 100).GetAwaiter().GetResult();
+            await commands.RandomWalk(Users.Bob, Symbols.MSFT, 100, 100);
         });
 
-        var aliceTrading = Task.Run(() =>
+        var aliceTrading = Task.Run(async () =>
         {
-            TradingStrategy.RandomWalkTrading(Users.Alice, Symbols.MSFT, 100m, 0.01m, 100).GetAwaiter().GetResult();
+            await commands.RandomWalk(Users.Alice, Symbols.MSFT, 100, 100);
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
