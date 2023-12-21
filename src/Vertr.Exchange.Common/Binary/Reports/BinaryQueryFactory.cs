@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Shared.Reports;
 
 namespace Vertr.Exchange.Common.Binary.Reports;
 

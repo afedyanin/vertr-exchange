@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Common.Binary.Commands;
 public static class BinaryCommandFactory

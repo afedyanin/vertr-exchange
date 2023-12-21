@@ -1,6 +1,6 @@
 using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Tests.Stubs;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Commands;
 

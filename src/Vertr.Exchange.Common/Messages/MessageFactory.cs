@@ -14,6 +14,8 @@ public static class MessageFactory
             ResultCode = cmd.ResultCode,
             Seq = seq,
             Timestamp = cmd.Timestamp,
+            BinaryCommandType = cmd.BinaryCommandType,
+            BinaryData = GetBynaryResult(cmd),
         };
 
     public static RejectEvent CreateRejectEvent(OrderCommand cmd, IEngineEvent evt, long seq)
@@ -71,6 +73,18 @@ public static class MessageFactory
         };
 
         return res;
+    }
+
+    private static byte[] GetBynaryResult(OrderCommand cmd)
+    {
+        var evt = cmd.EngineEvent;
+
+        if (evt == null || evt.EventType != Shared.Enums.EngineEventType.BINARY_EVENT)
+        {
+            return [];
+        }
+
+        return evt.BinaryData;
     }
 
     private static IEnumerable<Trade> CreateTrades(IEnumerable<IEngineEvent> trades)

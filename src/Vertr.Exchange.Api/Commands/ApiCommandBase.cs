@@ -1,22 +1,18 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
 
-public abstract class ApiCommandBase : IApiCommand
+public abstract class ApiCommandBase(
+    long orderId,
+    DateTime timestamp) : IApiCommand
 {
-    public long OrderId { get; }
+    public long OrderId { get; } = orderId;
 
-    public DateTime Timestamp { get; }
+    public DateTime Timestamp { get; } = timestamp;
 
     public abstract OrderCommandType CommandType { get; }
-
-    public ApiCommandBase(long orderId, DateTime timestamp)
-    {
-        OrderId = orderId;
-        Timestamp = timestamp;
-    }
 
     public virtual void Fill(ref OrderCommand command)
     {
@@ -33,7 +29,7 @@ public abstract class ApiCommandBase : IApiCommand
         command.Uid = long.MinValue;
         command.Action = OrderAction.ASK;
         command.BinaryCommandType = BinaryDataType.NONE;
-        command.BinaryData = Array.Empty<byte>();
+        command.BinaryData = [];
         command.EngineEvent = null;
         command.MarketData = null;
         command.OrderType = OrderType.GTC;

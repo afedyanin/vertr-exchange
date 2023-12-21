@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Api.Factories;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Core.EventHandlers;
 
 

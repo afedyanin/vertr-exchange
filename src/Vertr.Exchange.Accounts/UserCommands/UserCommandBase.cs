@@ -1,23 +1,17 @@
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Accounts.UserCommands;
-internal abstract class UserCommandBase : IUserCommand
+internal abstract class UserCommandBase(
+    OrderCommand orderCommand,
+    IUserProfileProvider userProfilesRepository) : IUserCommand
 {
-    protected OrderCommand OrderCommand { get; }
+    protected OrderCommand OrderCommand { get; } = orderCommand;
 
-    protected IUserProfileProvider UserProfilesRepository { get; }
+    protected IUserProfileProvider UserProfilesRepository { get; } = userProfilesRepository;
 
     protected IUserProfile? UserProfile => UserProfilesRepository.Get(OrderCommand.Uid);
-
-    public UserCommandBase(
-        OrderCommand orderCommand,
-        IUserProfileProvider userProfilesRepository)
-    {
-        OrderCommand = orderCommand;
-        UserProfilesRepository = userProfilesRepository;
-    }
 
     public abstract CommandResultCode Execute();
 }

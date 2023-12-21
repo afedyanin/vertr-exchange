@@ -1,15 +1,14 @@
 using System.Diagnostics;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Commands;
-internal sealed class MoveOrderCommand : OrderBookCommand
+internal sealed class MoveOrderCommand(
+    IOrderBook orderBook,
+    OrderCommand cmd)
+    : OrderBookCommand(orderBook, cmd)
 {
-    public MoveOrderCommand(IOrderBook orderBook, OrderCommand cmd) : base(orderBook, cmd)
-    {
-    }
-
     public override CommandResultCode Execute()
     {
         if (!HasValidOrder)

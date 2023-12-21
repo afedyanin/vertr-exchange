@@ -1,17 +1,13 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Accounts.UserCommands;
-internal class AddUserCommand : UserCommandBase
+internal class AddUserCommand(
+    OrderCommand command,
+    IUserProfileProvider userProfilesRepository)
+    : UserCommandBase(command, userProfilesRepository)
 {
-    public AddUserCommand(
-        OrderCommand command,
-        IUserProfileProvider userProfilesRepository)
-        : base(command, userProfilesRepository)
-    {
-    }
-
     public override CommandResultCode Execute()
     {
         if (UserProfile is not null)

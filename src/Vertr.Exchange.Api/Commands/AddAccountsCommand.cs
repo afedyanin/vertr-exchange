@@ -2,23 +2,18 @@ using System.Text;
 using System.Text.Json;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Binary.Commands;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
 
 
-public class AddAccountsCommand : ApiCommandBase
+public class AddAccountsCommand(
+    long orderId,
+    DateTime timestamp,
+    IDictionary<long, IDictionary<int, decimal>> users) : ApiCommandBase(orderId, timestamp)
 {
-    private readonly IDictionary<long, IDictionary<int, decimal>> _users;
+    private readonly IDictionary<long, IDictionary<int, decimal>> _users = users ?? new Dictionary<long, IDictionary<int, decimal>>();
     public override OrderCommandType CommandType => OrderCommandType.BINARY_DATA_COMMAND;
-
-    public AddAccountsCommand(
-        long orderId,
-        DateTime timestamp,
-        IDictionary<long, IDictionary<int, decimal>> users) : base(orderId, timestamp)
-    {
-        _users = users ?? new Dictionary<long, IDictionary<int, decimal>>();
-    }
 
     public override void Fill(ref OrderCommand command)
     {

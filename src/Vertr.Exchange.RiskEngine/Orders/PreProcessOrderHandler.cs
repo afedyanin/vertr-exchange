@@ -1,22 +1,16 @@
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.RiskEngine.Symbols;
 using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.RiskEngine.Orders;
 
-internal class PreProcessOrderHandler
+internal class PreProcessOrderHandler(
+    IUserProfileProvider userProfiles,
+    ISymbolSpecificationProvider symbols)
 {
-    private readonly IUserProfileProvider _userProfiles;
-    private readonly ISymbolSpecificationProvider _symbols;
-
-    public PreProcessOrderHandler(
-        IUserProfileProvider userProfiles,
-        ISymbolSpecificationProvider symbols)
-    {
-        _userProfiles = userProfiles;
-        _symbols = symbols;
-    }
+    private readonly IUserProfileProvider _userProfiles = userProfiles;
+    private readonly ISymbolSpecificationProvider _symbols = symbols;
 
     public CommandResultCode Handle(OrderCommand orderCommand)
     {

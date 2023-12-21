@@ -1,21 +1,21 @@
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Accounts.Tests")]
 
 namespace Vertr.Exchange.Accounts;
 
-internal class Position : IPosition
+internal class Position(long uid, int symbol) : IPosition
 {
     // Buy/Sell Amount
     private decimal _openPriceSum;
 
-    public long Uid { get; }
+    public long Uid { get; } = uid;
 
-    public int Symbol { get; }
+    public int Symbol { get; } = symbol;
 
-    public PositionDirection Direction { get; private set; }
+    public PositionDirection Direction { get; private set; } = PositionDirection.EMPTY;
 
     // Size
     public decimal OpenVolume { get; private set; }
@@ -24,13 +24,6 @@ internal class Position : IPosition
     public decimal RealizedPnL { get; private set; }
 
     public bool IsEmpty => Direction == PositionDirection.EMPTY;
-
-    public Position(long uid, int symbol)
-    {
-        Uid = uid;
-        Symbol = symbol;
-        Direction = PositionDirection.EMPTY;
-    }
 
     public decimal GetUnrealizedPnL(decimal price)
         => ((OpenVolume * price) - _openPriceSum) * GetMultiplier(Direction);

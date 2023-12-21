@@ -1,5 +1,5 @@
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Common.Events;
 
@@ -71,7 +71,7 @@ public static class EventsHelper
         var evt = new EngineEvent
         {
             EventType = EngineEventType.BINARY_EVENT,
-            BinaryData = data ?? Array.Empty<byte>(),
+            BinaryData = data ?? [],
         };
 
         command.EngineEvent = evt;

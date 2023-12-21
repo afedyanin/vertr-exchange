@@ -4,20 +4,14 @@ using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.Core.EventHandlers;
 
-internal class RiskEnginePostProcessor : IOrderCommandEventHandler
+internal class RiskEnginePostProcessor(
+    IOrderRiskEngine orderRiskEngine,
+    ILogger<RiskEnginePostProcessor> logger) : IOrderCommandEventHandler
 {
-    private readonly IOrderRiskEngine _orderRiskEngine;
-    private readonly ILogger<RiskEnginePostProcessor> _logger;
+    private readonly IOrderRiskEngine _orderRiskEngine = orderRiskEngine;
+    private readonly ILogger<RiskEnginePostProcessor> _logger = logger;
 
     public int ProcessingStep => 300;
-
-    public RiskEnginePostProcessor(
-        IOrderRiskEngine orderRiskEngine,
-        ILogger<RiskEnginePostProcessor> logger)
-    {
-        _orderRiskEngine = orderRiskEngine;
-        _logger = logger;
-    }
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
@@ -27,7 +21,7 @@ internal class RiskEnginePostProcessor : IOrderCommandEventHandler
         }
         catch (Exception ex)
         {
-            data.ResultCode = Common.Enums.CommandResultCode.RISK_GENERIC_ERROR;
+            data.ResultCode = Shared.Enums.CommandResultCode.RISK_GENERIC_ERROR;
             _logger.LogError(ex, "Error processing command OrderId={OrderId} Message={Message}", data.OrderId, ex.Message);
         }
     }

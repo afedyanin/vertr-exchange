@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Common.Messages;
 public record class ApiCommandResult
@@ -12,4 +12,8 @@ public record class ApiCommandResult
     public DateTime Timestamp { get; init; }
 
     public long Seq { get; init; }
+
+    public byte[] BinaryData { get; init; } = [];
+
+    public BinaryDataType BinaryCommandType { get; init; }
 }

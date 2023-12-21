@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Scenarios;
 

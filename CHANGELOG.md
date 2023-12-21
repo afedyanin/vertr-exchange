@@ -1,3 +1,21 @@
+## 09-12-23
+- [x] пофиксить зависания в трейдинге - race conditions
+- [x] доработать ресет для терминала - сброс репозиториев
+- [ ] работа с ордерами - история, филлмент, события
+- [ ] тесты и сверка данных: репорт, ордера, трейды и стакан
+
+## 08-12-23
+
+- [x] пофиксить зависания в трейдинге - race conditions
+- [x] зарефакторить TradeItem - варианты использования?
+
+- [x] для трейдов сделать линейный список
+- [x] доставать репорты по позициям и аканутам
+- [ ] агрегация трейдов и формирование маркет даты
+- [ ] реестр и отображение ордеров
+- [ ] история событий по ордеру
+- [ ] действия и события над ордерами - отмена, режект, движение, ресайз, создание
+
 ## 06-12-23
 
 - [x] refitClient and Contracts
@@ -13,10 +31,10 @@
 - [x] fix invalid user bug - place order
 - [x] fix POST params - place order
 - [ ] market data feed (background service)
-- [ ] orderbooks feed (background service)
+- [x] orderbooks feed (background service)
 - [ ] user reports (user account, user status, orders)
 - [ ] market dashboard
-- [ ] orderbooks dashboard
+- [x] orderbooks dashboard
 - [ ] order history
 - [ ] symbols CRUD
 - [x] admin adds users

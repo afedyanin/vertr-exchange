@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
@@ -13,23 +13,16 @@ using Microsoft.Extensions.Logging;
 [assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
 
 namespace Vertr.Exchange.RiskEngine;
-internal sealed class OrderRiskEngine : IOrderRiskEngine
+internal sealed class OrderRiskEngine(
+    IUserProfileProvider userProfiles,
+    ISymbolSpecificationProvider symbolSpecificationProvider,
+    ILogger<OrderRiskEngine> logger) : IOrderRiskEngine
 {
-    private readonly ILogger<OrderRiskEngine> _logger;
+    private readonly ILogger<OrderRiskEngine> _logger = logger;
 
-    public IUserProfileProvider UserProfiles { get; }
+    public IUserProfileProvider UserProfiles { get; } = userProfiles;
 
-    public ISymbolSpecificationProvider SymbolSpecificationProvider { get; }
-
-    public OrderRiskEngine(
-        IUserProfileProvider userProfiles,
-        ISymbolSpecificationProvider symbolSpecificationProvider,
-        ILogger<OrderRiskEngine> logger)
-    {
-        UserProfiles = userProfiles;
-        SymbolSpecificationProvider = symbolSpecificationProvider;
-        _logger = logger;
-    }
+    public ISymbolSpecificationProvider SymbolSpecificationProvider { get; } = symbolSpecificationProvider;
 
     public void PreProcessCommand(long seq, OrderCommand cmd)
     {

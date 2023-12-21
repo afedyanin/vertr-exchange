@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Shared.Reports;
 
 namespace Vertr.Exchange.Common.Binary.Reports;
 public static class BinaryQueryExtesions
@@ -21,7 +22,7 @@ public static class BinaryQueryExtesions
     {
         if (report == null)
         {
-            return Array.Empty<byte>();
+            return [];
         }
 
         var binaryData = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(report));

@@ -1,20 +1,16 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
-public class AddUserCommand : ApiCommandBase
+public class AddUserCommand(
+    long orderId,
+    DateTime timestamp,
+    long uid)
+    : ApiCommandBase(orderId, timestamp)
 {
     public override OrderCommandType CommandType => OrderCommandType.ADD_USER;
 
-    public long Uid { get; }
-
-    public AddUserCommand(
-        long orderId,
-        DateTime timestamp,
-        long uid) : base(orderId, timestamp)
-    {
-        Uid = uid;
-    }
+    public long Uid { get; } = uid;
 
     public override void Fill(ref OrderCommand command)
     {

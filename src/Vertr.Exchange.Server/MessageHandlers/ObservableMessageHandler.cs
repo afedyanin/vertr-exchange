@@ -37,31 +37,31 @@ public class ObservableMessageHandler : IObservableMessageHandler, IMessageHandl
 
     public void CommandResult(Common.Messages.ApiCommandResult apiCommandResult)
     {
-        _logger.LogInformation($"CommandResult received: OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
+        _logger.LogDebug($"CommandResult received: OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
         _commandResultSubject.OnNext(apiCommandResult.ToDto());
     }
 
     public void OrderBook(Common.Messages.OrderBook orderBook)
     {
-        _logger.LogInformation($"OrderBook received: Symbol={orderBook.Symbol}");
+        _logger.LogDebug($"OrderBook received: Symbol={orderBook.Symbol}");
         _orderBookSubject.OnNext(orderBook.ToDto());
     }
 
     public void ReduceEvent(Common.Messages.ReduceEvent reduceEvent)
     {
-        _logger.LogInformation($"ReduceEvent received: OrderId={reduceEvent.OrderId} ReducedVolume={reduceEvent.ReducedVolume}");
+        _logger.LogDebug($"ReduceEvent received: OrderId={reduceEvent.OrderId} ReducedVolume={reduceEvent.ReducedVolume}");
         _reduceEventSubject.OnNext(reduceEvent.ToDto());
     }
 
     public void RejectEvent(Common.Messages.RejectEvent rejectEvent)
     {
-        _logger.LogInformation($"RejectEvent received: OrderId={rejectEvent.OrderId} RejectedVolume={rejectEvent.RejectedVolume}");
+        _logger.LogDebug($"RejectEvent received: OrderId={rejectEvent.OrderId} RejectedVolume={rejectEvent.RejectedVolume}");
         _rejectEventSubject.OnNext(rejectEvent.ToDto());
     }
 
     public void TradeEvent(Common.Messages.TradeEvent tradeEvent)
     {
-        _logger.LogInformation($"TradeEvent received: OrderId={tradeEvent.TakerOrderId} TakeOrderCompleted={tradeEvent.TakeOrderCompleted}");
+        _logger.LogDebug($"TradeEvent received: OrderId={tradeEvent.TakerOrderId} TakeOrderCompleted={tradeEvent.TakeOrderCompleted}");
         _tradeEventSubject.OnNext(tradeEvent.ToDto());
     }
 

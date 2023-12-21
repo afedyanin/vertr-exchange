@@ -1,18 +1,14 @@
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Accounts.UserCommands;
 
-internal class ResumeUserCommand : UserCommandBase
+internal class ResumeUserCommand(
+    OrderCommand command,
+    IUserProfileProvider userProfilesRepository)
+    : UserCommandBase(command, userProfilesRepository)
 {
-    public ResumeUserCommand(
-        OrderCommand command,
-        IUserProfileProvider userProfilesRepository)
-        : base(command, userProfilesRepository)
-    {
-    }
-
     public override CommandResultCode Execute()
     {
         if (UserProfile is null)

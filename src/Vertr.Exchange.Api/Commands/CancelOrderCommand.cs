@@ -1,25 +1,20 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Commands;
 
-public class CancelOrderCommand : ApiCommandBase
+public class CancelOrderCommand(
+    long orderId,
+    DateTime timestamp,
+    long uid,
+    int symbol)
+    : ApiCommandBase(orderId, timestamp)
 {
     public override OrderCommandType CommandType => OrderCommandType.CANCEL_ORDER;
 
-    public long Uid { get; }
+    public long Uid { get; } = uid;
 
-    public int Symbol { get; }
-
-    public CancelOrderCommand(
-        long orderId,
-        DateTime timestamp,
-        long uid,
-        int symbol) : base(orderId, timestamp)
-    {
-        Uid = uid;
-        Symbol = symbol;
-    }
+    public int Symbol { get; } = symbol;
 
     public override void Fill(ref OrderCommand command)
     {

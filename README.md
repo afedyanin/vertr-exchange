@@ -38,10 +38,12 @@ https://github.com/aspnet/SignalR-samples/tree/main
  
  ## URLS
 
-C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Server\bin\Debug\net8.0\
+C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Server\bin\Debug\net8.0
+D:\workspace\vertr\src\Vertr.Exchange.Server\bin\Debug\net8.0
 .\Vertr.Exchange.Server.exe
 
 
-C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Client.Host\bin\Debug\net8.0
-.\Vertr.Exchange.Client.Host.exe
+C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.Server\bin\Debug\net8.0
+D:\workspace\vertr\src\Vertr.Terminal.Server\bin\Debug\net8.0
+.\Vertr.Terminal.Server.exe
 

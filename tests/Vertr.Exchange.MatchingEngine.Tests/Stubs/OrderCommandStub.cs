@@ -1,5 +1,5 @@
 using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
 

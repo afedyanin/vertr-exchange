@@ -1,5 +1,5 @@
 using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Enums;
+using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Common.Events;
 
@@ -21,5 +21,5 @@ public sealed class EngineEvent : IEngineEvent
 
     public IEngineEvent? NextEvent { get; set; }
 
-    public byte[] BinaryData { get; set; } = Array.Empty<byte>();
+    public byte[] BinaryData { get; set; } = [];
 }
