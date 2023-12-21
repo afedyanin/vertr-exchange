@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Vertr.Terminal.Domain.Abstractions;
 using Vertr.Terminal.ExchangeClient.Awaiting;
 using Vertr.Terminal.ExchangeClient.Configuration;
 using Vertr.Terminal.ExchangeClient.Providers;
@@ -16,6 +17,7 @@ public static class ExchangeApiClientRegistrar
 
         services.AddSingleton<IHubConnectionProvider, HubConnectionProvider>();
         services.AddSingleton<ICommandAwaitingService, CommandAwaitingService>();
+        services.AddSingleton<IExchangeApiClient, ExchangeApiClient>();
 
         services.AddHostedService<CommandResultStream>();
         services.AddHostedService<OrderBooksStream>();
