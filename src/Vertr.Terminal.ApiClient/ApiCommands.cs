@@ -54,6 +54,24 @@ public sealed class ApiCommands(ITerminalApiClient client)
         return res;
     }
 
+    public async Task<OrderBook[]> GetOrderBooks()
+    {
+        var res = await _client.GetOrderBooks();
+        return res;
+    }
+
+    public async Task<TradeEvent[]> GetTrades()
+    {
+        var res = await _client.GetTrades();
+        return res;
+    }
+
+    public async Task<OrderDto[]> GetOrders()
+    {
+        var res = await _client.GetOrders();
+        return res;
+    }
+
     public async Task RandomWalk(
         User user,
         Symbol symbol,
@@ -72,8 +90,13 @@ public sealed class ApiCommands(ITerminalApiClient client)
         await _client.RandomWalk(req);
     }
 
-    public async Task<SingleUserReportResult?> GetSingleUserReport(UserRequest request)
+    public async Task<SingleUserReportResult?> GetSingleUserReport(User user)
     {
+        var request = new UserRequest
+        {
+            UserId = user.Id,
+        };
+
         var res = await _client.GetSingleUserReport(request);
 
         if (res == null ||
@@ -106,7 +129,7 @@ public sealed class ApiCommands(ITerminalApiClient client)
         return req;
     }
 
-    private static void EnsureSuccess(ApiCommandResult? result)
+    public void EnsureSuccess(ApiCommandResult? result)
     {
         ArgumentNullException.ThrowIfNull(result);
 
