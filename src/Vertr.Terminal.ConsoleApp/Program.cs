@@ -1,7 +1,7 @@
 using Refit;
 using Vertr.Terminal.ApiClient;
-using Vertr.Terminal.ConsoleApp.StaticData;
 using Vertr.Terminal.ConsoleApp.Views;
+using Vertr.Terminal.StaticData;
 
 namespace Vertr.Terminal.ConsoleApp;
 

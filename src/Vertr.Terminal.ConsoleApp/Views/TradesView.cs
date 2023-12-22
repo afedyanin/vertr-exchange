@@ -1,6 +1,6 @@
 using Spectre.Console;
 using Vertr.Exchange.Contracts;
-using Vertr.Terminal.ConsoleApp.StaticData;
+using Vertr.Terminal.StaticData;
 
 namespace Vertr.Terminal.ConsoleApp.Views;
 

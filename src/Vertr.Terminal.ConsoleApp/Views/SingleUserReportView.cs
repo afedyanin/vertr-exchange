@@ -1,7 +1,7 @@
 using Spectre.Console;
 using Vertr.Exchange.Shared.Reports;
 using Vertr.Exchange.Shared.Reports.Dtos;
-using Vertr.Terminal.ConsoleApp.StaticData;
+using Vertr.Terminal.StaticData;
 
 namespace Vertr.Terminal.ConsoleApp.Views;
 internal static class SingleUserReportView

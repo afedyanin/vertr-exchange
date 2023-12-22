@@ -1,11 +1,10 @@
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Terminal.ConsoleApp.StaticData;
+namespace Vertr.Terminal.StaticData;
 public record Symbol(int Id, Currency Currency, string Code, string Name, SymbolType SymbolType);
 
-
-internal static class Symbols
+public static class Symbols
 {
     public static readonly Symbol MSFT = new Symbol(100, Currencies.USD, "MSFT", "Microsoft", SymbolType.EQUITY);
     public static readonly Symbol AAPL = new Symbol(200, Currencies.USD, "AAPL", "Apple", SymbolType.EQUITY);

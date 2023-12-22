@@ -2,10 +2,10 @@ using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Terminal.ApiClient;
-using Vertr.Terminal.ConsoleApp.StaticData;
 using System.Text.Json;
 using Vertr.Exchange.Shared.Reports;
 using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Terminal.StaticData;
 
 namespace Vertr.Terminal.ConsoleApp;
 internal sealed class Commands(ITerminalApiClient client)

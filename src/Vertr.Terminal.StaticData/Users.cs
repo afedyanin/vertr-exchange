@@ -1,4 +1,4 @@
-namespace Vertr.Terminal.ConsoleApp.StaticData;
+namespace Vertr.Terminal.StaticData;
 
 public record User(long Id, string Name);
 

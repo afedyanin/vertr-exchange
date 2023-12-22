@@ -1,4 +1,4 @@
-namespace Vertr.Terminal.ConsoleApp.StaticData;
+namespace Vertr.Terminal.StaticData;
 
 public record Balance(Currency Currency, decimal Amount);
 
