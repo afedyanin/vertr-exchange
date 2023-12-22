@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Terminal.ApiClient\Vertr.Terminal.ApiClient.csproj" />
-    <ProjectReference Include="..\Vertr.Terminal.StaticData\Vertr.Terminal.StaticData.csproj" />
   </ItemGroup>
 
 

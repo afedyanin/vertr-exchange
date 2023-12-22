@@ -1,6 +1,6 @@
 using Spectre.Console;
 using Vertr.Terminal.ApiClient.Contracts;
-using Vertr.Terminal.StaticData;
+using Vertr.Terminal.ApiClient.Extensions;
 
 namespace Vertr.Terminal.ConsoleApp.Views;
 
@@ -37,8 +37,8 @@ internal static class OrdersView
 
     private static Table CreateTable(OrderDto order)
     {
-        var symbol = Symbols.GetById(order.Symbol);
-        var user = Users.GetById(order.UserId);
+        var symbol = StaticContext.Symbols.All.GetById(order.Symbol);
+        var user = StaticContext.Users.All.GetById(order.UserId);
 
         var table = new Table
         {

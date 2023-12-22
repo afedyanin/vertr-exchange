@@ -92,8 +92,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{AF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Terminal.ApiClient.Tests", "tests\Vertr.Terminal.ApiClient.Tests\Vertr.Terminal.ApiClient.Tests.csproj", "{827E75F4-08C7-45A4-AA91-19DAE194A407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Terminal.StaticData", "src\Vertr.Terminal.StaticData\Vertr.Terminal.StaticData.csproj", "{5B753C32-949F-4F28-B2A7-056D0F2188EA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -196,10 +194,6 @@ Global
 		{827E75F4-08C7-45A4-AA91-19DAE194A407}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{827E75F4-08C7-45A4-AA91-19DAE194A407}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{827E75F4-08C7-45A4-AA91-19DAE194A407}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B753C32-949F-4F28-B2A7-056D0F2188EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B753C32-949F-4F28-B2A7-056D0F2188EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B753C32-949F-4F28-B2A7-056D0F2188EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B753C32-949F-4F28-B2A7-056D0F2188EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -243,7 +237,6 @@ Global
 		{1B863FC4-61EB-44EC-A3E6-3CFB31967184} = {FBA1A7D1-9962-41D1-BBC9-4D2A3AEA1E44}
 		{AF8BB5F7-76B9-41B2-B0A3-D735C58DC593} = {1B863FC4-61EB-44EC-A3E6-3CFB31967184}
 		{827E75F4-08C7-45A4-AA91-19DAE194A407} = {6F3BDA1E-685C-4FEC-8216-577FE361D343}
-		{5B753C32-949F-4F28-B2A7-056D0F2188EA} = {1B863FC4-61EB-44EC-A3E6-3CFB31967184}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AED32BEA-7168-480C-BA57-E1182383356F}

@@ -1,6 +1,7 @@
 using Spectre.Console;
 using Vertr.Exchange.Contracts;
-using Vertr.Terminal.ConsoleApp.StaticData;
+using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Terminal.ApiClient.Extensions;
 
 namespace Vertr.Terminal.ConsoleApp.Views;
 
@@ -14,7 +15,7 @@ internal static class OrderBookView
             return;
         }
 
-        var symbol = Symbols.GetById(orderBook.Symbol);
+        var symbol = StaticContext.Symbols.All.GetById(orderBook.Symbol);
         var obTable = CreateTable(symbol!, orderBook, 10, subTitle);
         AnsiConsole.Write(obTable);
     }
