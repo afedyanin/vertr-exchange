@@ -1,7 +1,7 @@
 using Refit;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Terminal.StaticData;
+using Vertr.Terminal.ApiClient.Extensions;
 
 namespace Vertr.Terminal.ApiClient.Tests;
 
@@ -47,7 +47,7 @@ public class AdminTests
     {
         var req = new AddSymbolsRequest()
         {
-            Symbols = Symbols.All.Select(s => s.GetSpecification()).ToArray(),
+            Symbols = StaticContext.Symbols.All.Select(s => s.GetSpecification()).ToArray(),
         };
 
         var res = await _api.AddSymbols(req);
@@ -63,8 +63,8 @@ public class AdminTests
         {
             UserAccounts =
             [
-                UserAccounts.AliceAccount.ToDto(),
-                UserAccounts.BobAccount.ToDto()
+                StaticContext.UserAccounts.AliceAccount.ToDto(),
+                StaticContext.UserAccounts.BobAccount.ToDto()
             ],
         };
 

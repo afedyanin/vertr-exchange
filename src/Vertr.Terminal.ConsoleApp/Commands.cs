@@ -5,50 +5,12 @@ using Vertr.Terminal.ApiClient;
 using System.Text.Json;
 using Vertr.Exchange.Shared.Reports;
 using Vertr.Terminal.ApiClient.Contracts;
-using Vertr.Terminal.StaticData;
+
 
 namespace Vertr.Terminal.ConsoleApp;
 internal sealed class Commands(ITerminalApiClient client)
 {
     private readonly ITerminalApiClient _client = client;
-
-    public async Task<ApiCommandResult?> AddSymbols()
-    {
-        var req = new AddSymbolsRequest()
-        {
-            Symbols = Symbols.All.Select(s => s.GetSpecification()).ToArray(),
-        };
-
-        var res = await _client.AddSymbols(req);
-        return res;
-    }
-
-    public async Task<ApiCommandResult?> Reset()
-    {
-        var res = await _client.Reset();
-        return res;
-    }
-
-    public async Task<ApiCommandResult?> Nop()
-    {
-        var res = await _client.Nop();
-        return res;
-    }
-
-    public async Task<ApiCommandResult?> AddUsers()
-    {
-        var req = new AddAccountsRequest()
-        {
-            UserAccounts =
-            [
-                UserAccounts.AliceAccount.ToDto(),
-                UserAccounts.BobAccount.ToDto()
-            ],
-        };
-
-        var res = await _client.AddAccounts(req);
-        return res;
-    }
 
     public async Task<ApiCommandResult?> PlaceOrder(
         User user,
