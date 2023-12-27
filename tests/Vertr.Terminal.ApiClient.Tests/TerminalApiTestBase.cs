@@ -48,7 +48,7 @@ public abstract class TerminalApiTestBase
         return await PlaceOrder(AliceAccount, price, qty * (-1));
     }
 
-    private async Task<long> PlaceOrder(Contracts.UserAccount account, decimal price, long qty)
+    protected async Task<long> PlaceOrder(Contracts.UserAccount account, decimal price, long qty)
     {
         var res = await ApiCommands.PlaceOrder(account.User, Msft, price, qty);
         ApiCommands.EnsureSuccess(res);
