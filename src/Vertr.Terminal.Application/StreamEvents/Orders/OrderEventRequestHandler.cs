@@ -53,7 +53,8 @@ internal sealed class OrderEventRequestHandler(
 
     private async Task HandleTakerTrade(TradeEvent tradeEvent)
     {
-        var evt = OrderEventFactory.Create(tradeEvent);
+        var takerOrder = await _orderRepository.GetById(tradeEvent.TakerOrderId);
+        var evt = OrderEventFactory.Create(tradeEvent, takerOrder);
         await _orderRepository.AddEvent(evt);
         _logger.LogDebug("Taker trade event processed. OrderId={orderId}", tradeEvent.TakerOrderId);
     }
