@@ -4,6 +4,7 @@ using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
 using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Core;
 
 namespace Vertr.Exchange.Api.Tests.Stubs;
 
@@ -13,6 +14,7 @@ internal static class ServiceProviderStub
     {
         var serviceCollection = new ServiceCollection();
 
+        serviceCollection.AddExchangeCore();
         serviceCollection.AddExchangeApi();
         serviceCollection.AddAccounts();
         serviceCollection.AddRiskEngine();
