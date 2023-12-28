@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Options;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
-using Vertr.Exchange.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
 internal static class MatchingEngineStub

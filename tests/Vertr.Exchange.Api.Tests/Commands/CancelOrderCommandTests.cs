@@ -15,28 +15,23 @@ public class CancelOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
-        var orderId = res.OrderId;
+        var orderId = 1236L;
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, orderId);
 
         var cancel = new CancelOrderCommand(orderId, DateTime.UtcNow, uid, symbol);
-        res = await Api.SendAsync(cancel);
-
+        res = await SendAsync(cancel);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var resEvent = res.RootEvent;
+        var resEvent = GetReduceEvent(res.OrderId);
         Assert.That(resEvent, Is.Not.Null);
 
         Assert.Multiple(() =>
         {
-            Assert.That(resEvent.EventType, Is.EqualTo(EngineEventType.REDUCE));
-            Assert.That(resEvent.MatchedOrderCompleted, Is.False);
-            Assert.That(resEvent.MatchedOrderId, Is.EqualTo(0L));
-            Assert.That(resEvent.MatchedOrderUid, Is.EqualTo(0L));
-            Assert.That(resEvent.ActiveOrderCompleted, Is.True);
-            Assert.That(resEvent.NextEvent, Is.Null);
-
+            Assert.That(resEvent.OrderCompleted, Is.False);
+            Assert.That(resEvent.OrderId, Is.EqualTo(orderId));
             Assert.That(resEvent.Price, Is.EqualTo(23.45m));
-            Assert.That(resEvent.Size, Is.EqualTo(34));
+            Assert.That(resEvent.Uid, Is.EqualTo(uid));
+            Assert.That(resEvent.ReducedVolume, Is.EqualTo(34));
         });
     }
 
@@ -49,11 +44,11 @@ public class CancelOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
-        var orderId = res.OrderId;
+        var orderId = 2361L;
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, orderId);
 
         var cancel = new CancelOrderCommand(orderId + 1, DateTime.UtcNow, uid, symbol);
-        res = await Api.SendAsync(cancel);
+        res = await SendAsync(cancel);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.MATCHING_UNKNOWN_ORDER_ID));
     }
@@ -67,15 +62,15 @@ public class CancelOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
-        var orderId = res.OrderId;
+        var orderId = 3612L;
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, orderId);
 
         var cancel = new CancelOrderCommand(orderId, DateTime.UtcNow, uid, symbol);
-        res = await Api.SendAsync(cancel);
+        res = await SendAsync(cancel);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
         var cancel2 = new CancelOrderCommand(orderId, DateTime.UtcNow, uid, symbol);
-        res = await Api.SendAsync(cancel2);
+        res = await SendAsync(cancel2);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.MATCHING_UNKNOWN_ORDER_ID));
     }
 }

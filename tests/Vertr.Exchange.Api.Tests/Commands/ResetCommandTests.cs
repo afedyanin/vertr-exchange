@@ -1,5 +1,4 @@
 using Vertr.Exchange.Api.Commands;
-using Vertr.Exchange.Api.Commands.Queries;
 using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Shared.Enums;
 
@@ -11,17 +10,13 @@ public class ResetCommandTests : ApiTestBase
     public async Task CanSendResetCommand()
     {
         var cmd = new AddAccountsCommand(1L, DateTime.UtcNow, AccountsStub.UserAccounts);
-        var res = await Api.SendAsync(cmd);
+        var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
         var reset = new ResetCommand(2L, DateTime.UtcNow);
-        res = await Api.SendAsync(reset);
+        res = await SendAsync(reset);
 
-        var rep = new SingleUserReport(3L, DateTime.UtcNow, AccountsStub.FirstUserUid);
-        res = await Api.SendAsync(rep);
-        Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
-
-        var report = rep.GetResult(res);
+        var report = await GetUserReport(AccountsStub.FirstUserUid);
         Assert.That(report, Is.Not.Null);
 
         Assert.Multiple(() =>

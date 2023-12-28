@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Exchange.RiskEngine;
 using Vertr.Exchange.Accounts;
 using Vertr.Exchange.MatchingEngine;
+using Vertr.Exchange.Common.Abstractions;
 
 namespace Vertr.Exchange.Api.Tests.Stubs;
 
@@ -16,6 +17,9 @@ internal static class ServiceProviderStub
         serviceCollection.AddAccounts();
         serviceCollection.AddRiskEngine();
         serviceCollection.AddMatchingEngine();
+        serviceCollection.AddSingleton<MessageHandlerStub>();
+        serviceCollection.AddSingleton<IMessageHandler>(
+            x => x.GetRequiredService<MessageHandlerStub>());
 
         serviceCollection.AddLogging(configure => configure.AddConsole())
             .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Debug);

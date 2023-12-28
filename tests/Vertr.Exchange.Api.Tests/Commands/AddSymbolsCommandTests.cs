@@ -11,7 +11,7 @@ public class AddSymbolsCommandTests : ApiTestBase
     public async Task CanAddSymbols()
     {
         var cmd = new AddSymbolsCommand(1L, DateTime.UtcNow, SymbolSpecificationStub.GetSymbols);
-        var res = await Api.SendAsync(cmd);
+        var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
     }
 
@@ -19,11 +19,11 @@ public class AddSymbolsCommandTests : ApiTestBase
     public async Task CannotAddSymbolWithTheSameId()
     {
         var cmd = new AddSymbolsCommand(1L, DateTime.UtcNow, SymbolSpecificationStub.GetSymbols);
-        var res = await Api.SendAsync(cmd);
+        var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
         var cmd2 = new AddSymbolsCommand(2L, DateTime.UtcNow, SymbolSpecificationStub.GetSymbols);
-        var res2 = await Api.SendAsync(cmd2);
+        var res2 = await SendAsync(cmd2);
         Assert.That(res2.ResultCode, Is.EqualTo(CommandResultCode.SYMBOL_MGMT_SYMBOL_ALREADY_EXISTS));
     }
 }

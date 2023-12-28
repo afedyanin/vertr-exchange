@@ -10,27 +10,39 @@ public class TradingScenarioTests : ApiTestBase
     {
         var makerUid = 100L;
         var takerUid = 102L;
+        var makerOrderId = 23;
+        var takerOrderId = 24;
         var symbol = 2;
 
         await AddUser(makerUid);
         await AddUser(takerUid);
         await AddSymbol(symbol);
-        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34, 23L);
 
-        var res = await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30, 24L);
+        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34, makerOrderId);
+        await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30, takerOrderId);
 
-        var te = res.RootEvent;
-        Assert.That(te, Is.Not.Null);
+        var taker = GetTradeEvent(takerOrderId);
+        Assert.That(taker, Is.Not.Null);
 
         Assert.Multiple(() =>
         {
-            Assert.That(te.EventType, Is.EqualTo(EngineEventType.TRADE));
-            Assert.That(te.Price, Is.EqualTo(23.45m));
-            Assert.That(te.Size, Is.EqualTo(30));
-            Assert.That(te.ActiveOrderCompleted, Is.True);
-            Assert.That(te.MatchedOrderCompleted, Is.False);
-            Assert.That(te.MatchedOrderId, Is.EqualTo(23L));
-            Assert.That(te.MatchedOrderUid, Is.EqualTo(makerUid));
+            Assert.That(taker.TakeOrderCompleted, Is.True);
+            Assert.That(taker.TotalVolume, Is.EqualTo(30));
+            Assert.That(taker.TakerUid, Is.EqualTo(takerUid));
+            Assert.That(taker.TakerAction, Is.EqualTo(OrderAction.ASK));
+        });
+
+        var maker = taker.Trades.First();
+
+        Assert.That(maker, Is.Not.Null);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(maker.MakerOrderCompleted, Is.False);
+            Assert.That(maker.Price, Is.EqualTo(23.45m));
+            Assert.That(maker.MakerUid, Is.EqualTo(makerUid));
+            Assert.That(maker.MakerOrderId, Is.EqualTo(makerOrderId));
+            Assert.That(maker.Volume, Is.EqualTo(30));
         });
 
         //var makerRep = await GetUserReport(makerUid);

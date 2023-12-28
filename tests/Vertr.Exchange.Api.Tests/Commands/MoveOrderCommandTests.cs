@@ -15,11 +15,11 @@ public class MoveOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, 456L);
         var orderId = res.OrderId;
 
         var move = new MoveOrderCommand(orderId, DateTime.UtcNow, uid, 23.56m, symbol);
-        res = await Api.SendAsync(move);
+        res = await SendAsync(move);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 

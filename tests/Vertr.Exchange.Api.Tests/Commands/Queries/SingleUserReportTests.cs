@@ -13,14 +13,14 @@ public class SingleUserReportTests : ApiTestBase
     public async Task CanGetUserReport()
     {
         var cmd = new AddAccountsCommand(1L, DateTime.UtcNow, AccountsStub.UserAccounts);
-        var res = await Api.SendAsync(cmd);
+        var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
         var rep = new SingleUserReport(2L, DateTime.UtcNow, AccountsStub.FirstUserUid);
-        res = await Api.SendAsync(rep);
+        res = await SendAsync(rep);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var report = rep.GetResult(res);
+        var report = await GetUserReport(AccountsStub.FirstUserUid);
         Assert.That(report, Is.Not.Null);
 
         Assert.Multiple(() =>
@@ -44,17 +44,17 @@ public class SingleUserReportTests : ApiTestBase
     public async Task CanGetEmptyReportForNotExistingUser()
     {
         var rep = new SingleUserReport(2L, DateTime.UtcNow, AccountsStub.FirstUserUid);
-        var res = await Api.SendAsync(rep);
+        var res = await SendAsync(rep);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var report = rep.GetResult(res);
+        var report = await GetUserReport(AccountsStub.FirstUserUid);
         Assert.That(report, Is.Not.Null);
 
         Assert.Multiple(() =>
         {
             Assert.That(report.Uid, Is.EqualTo(AccountsStub.FirstUserUid));
             Assert.That(report.UserStatus, Is.EqualTo(UserStatus.SUSPENDED));
-            Assert.That(report.ExecutionStatus, Is.EqualTo(QueryExecutionStatus.USER_NOT_FOUND)); 
+            Assert.That(report.ExecutionStatus, Is.EqualTo(QueryExecutionStatus.USER_NOT_FOUND));
             Assert.That(report.Accounts, Is.Empty);
             Assert.That(report.Positions, Is.Empty);
             Assert.That(report.Orders, Is.Empty);
