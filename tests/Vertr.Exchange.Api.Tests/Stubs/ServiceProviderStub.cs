@@ -20,6 +20,7 @@ internal static class ServiceProviderStub
         serviceCollection.AddAccounts();
         serviceCollection.AddRiskEngine();
         serviceCollection.AddMatchingEngine();
+
         serviceCollection.AddSingleton<MessageHandlerStub>();
         serviceCollection.AddSingleton<IMessageHandler>(
                     x => x.GetRequiredService<MessageHandlerStub>());

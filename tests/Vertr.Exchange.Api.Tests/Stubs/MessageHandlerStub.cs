@@ -14,6 +14,7 @@ public class MessageHandlerStub : IMessageHandler
     public void CommandResult(ApiCommandResult apiCommandResult)
     {
         Console.WriteLine($"Saving command result. OrderId={apiCommandResult.OrderId}");
+
         _commandResults.AddOrUpdate(
             apiCommandResult.OrderId,
             apiCommandResult,
