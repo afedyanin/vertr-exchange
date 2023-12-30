@@ -12,7 +12,7 @@ using Vertr.Exchange.Shared.Reports;
 namespace Vertr.Exchange.Api.Tests;
 public abstract class ApiTestBase
 {
-    private const int _cancellationTimeout = 4000;
+    private const int _cancellationTimeout = 100;
 
     protected IServiceProvider ServiceProvider { get; private set; }
 
@@ -26,14 +26,14 @@ public abstract class ApiTestBase
     public void OneTimeSetup()
     {
         ServiceProvider = ServiceProviderStub.BuildServiceProvider();
+        MessageHandler = ServiceProvider.GetRequiredService<MessageHandlerStub>();
+        OrderIdGenerator = ServiceProvider.GetRequiredService<IOrderIdGenerator>();
     }
 
     [SetUp]
     public void Setup()
     {
         Api = ServiceProvider.GetRequiredService<IExchangeApi>();
-        MessageHandler = ServiceProvider.GetRequiredService<MessageHandlerStub>();
-        OrderIdGenerator = ServiceProvider.GetRequiredService<IOrderIdGenerator>();
     }
 
     [TearDown]
