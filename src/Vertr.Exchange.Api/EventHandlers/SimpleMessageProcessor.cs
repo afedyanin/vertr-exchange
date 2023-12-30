@@ -5,7 +5,6 @@ using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Core.EventHandlers;
 
-
 namespace Vertr.Exchange.Api.EventHandlers;
 
 internal class SimpleMessageProcessor(
@@ -33,12 +32,15 @@ internal class SimpleMessageProcessor(
 
     private void SendCommandResult(OrderCommand data, long sequence)
     {
+        _logger.LogDebug("Sending command result to Message Handler Id={MessageHandlerId}", _messageHandler.Id.ToString());
         var cmdRes = MessageFactory.CreateApiCommandResult(data, sequence);
         _messageHandler.CommandResult(cmdRes);
     }
 
     private void SendTradeEvents(OrderCommand data, long sequence)
     {
+        _logger.LogDebug("Sending engine events to Message Handler Id={MessageHandlerId}", _messageHandler.Id.ToString());
+
         var trades = new List<IEngineEvent>();
         var current = data.EngineEvent;
 
@@ -75,6 +77,8 @@ internal class SimpleMessageProcessor(
         {
             return;
         }
+
+        _logger.LogDebug("Sending market data to Message Handler Id={MessageHandlerId}", _messageHandler.Id.ToString());
 
         var orderBook = MessageFactory.CreateOrderBook(data, data.MarketData, sequence);
         _messageHandler.OrderBook(orderBook);

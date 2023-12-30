@@ -14,15 +14,16 @@ public class ObservableMessageHandler : IObservableMessageHandler, IMessageHandl
     private readonly Subject<TradeEvent> _tradeEventSubject = new Subject<TradeEvent>();
 
     private bool _disposed;
-    private readonly Guid _identity;
+
+    public Guid Id { get; }
 
     private readonly ILogger<ObservableMessageHandler> _logger;
 
     public ObservableMessageHandler(ILogger<ObservableMessageHandler> logger)
     {
         _logger = logger;
-        _identity = Guid.NewGuid();
-        _logger.LogInformation("Starting ObservableMessageHandler. Identity={id}", _identity);
+        Id = Guid.NewGuid();
+        _logger.LogInformation("Starting ObservableMessageHandler. Identity={id}", Id.ToString());
     }
 
     public IObservable<ApiCommandResult> ApiCommandResultStream() => _commandResultSubject;

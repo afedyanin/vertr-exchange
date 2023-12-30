@@ -22,23 +22,20 @@ public abstract class ApiTestBase
 
     protected MessageHandlerStub MessageHandler { get; private set; }
 
-    [OneTimeSetUp]
-    public void OneTimeSetup()
+    [SetUp]
+    public void Setup()
     {
         ServiceProvider = ServiceProviderStub.BuildServiceProvider();
         MessageHandler = ServiceProvider.GetRequiredService<MessageHandlerStub>();
         OrderIdGenerator = ServiceProvider.GetRequiredService<IOrderIdGenerator>();
-    }
-
-    [SetUp]
-    public void Setup()
-    {
         Api = ServiceProvider.GetRequiredService<IExchangeApi>();
+        Console.WriteLine($"Setup Exchange API. Id={Api.Id}");
     }
 
     [TearDown]
     public void TearDown()
     {
+        Console.WriteLine($"Dispose Exchange API. Id={Api.Id}");
         Api?.Dispose();
     }
 

@@ -6,14 +6,11 @@ using Vertr.Exchange.Core;
 
 namespace Vertr.Exchange.Api;
 
-internal sealed class ExchangeApi : IExchangeApi
+internal sealed class ExchangeApi(IExchangeCoreService exchangeCoreService) : IExchangeApi
 {
-    private readonly IExchangeCoreService _exchangeCoreService;
+    private readonly IExchangeCoreService _exchangeCoreService = exchangeCoreService;
 
-    public ExchangeApi(IExchangeCoreService exchangeCoreService)
-    {
-        _exchangeCoreService = exchangeCoreService;
-    }
+    public Guid Id { get; } = Guid.NewGuid();
 
     public void Send(IApiCommand command)
     {

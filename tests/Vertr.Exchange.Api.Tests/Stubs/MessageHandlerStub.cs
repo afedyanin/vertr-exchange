@@ -11,22 +11,16 @@ public class MessageHandlerStub : IMessageHandler
     private readonly ConcurrentDictionary<long, ReduceEvent> _reduceEvents = [];
     private readonly ConcurrentDictionary<long, RejectEvent> _rejectEvents = [];
 
+    public Guid Id { get; } = Guid.NewGuid();
+
     public void CommandResult(ApiCommandResult apiCommandResult)
     {
-        Console.WriteLine($"Saving command result. OrderId={apiCommandResult.OrderId}");
+        Console.WriteLine($"MessageHandler Id={Id}. Saving command result. OrderId={apiCommandResult.OrderId}");
 
         _commandResults.AddOrUpdate(
             apiCommandResult.OrderId,
             apiCommandResult,
-            (key, val) =>
-            {
-                return val;
-            });
-        /*
-        if (!_commandResults.TryAdd(apiCommandResult.OrderId, apiCommandResult))
-        {
-            _commandResults[apiCommandResult.OrderId] = apiCommandResult;
-        }*/
+            (key, val) => val);
     }
 
     public int CommandResultCount() => _commandResults.Count;
@@ -84,7 +78,7 @@ public class MessageHandlerStub : IMessageHandler
         long key, CancellationToken
         cancellationToken = default)
     {
-        Console.WriteLine($"Getting command result. OrderId={key}");
+        Console.WriteLine($"MessageHandler Id={Id}. Getting command result. OrderId={key}");
 
         while (true)
         {

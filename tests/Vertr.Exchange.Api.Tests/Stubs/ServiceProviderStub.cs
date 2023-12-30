@@ -26,14 +26,10 @@ internal static class ServiceProviderStub
                     x => x.GetRequiredService<MessageHandlerStub>());
         serviceCollection.AddSingleton<IOrderIdGenerator, OrderIdGenerator>();
 
-        // serviceCollection.AddLogging(configure => configure.AddConsole())
-        //    .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Debug);
-
         serviceCollection.AddLogging(configure => configure.AddConsole())
-            .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Critical);
+            .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Debug);
 
         var serviceProvider = serviceCollection.BuildServiceProvider();
-
         return serviceProvider;
     }
 }
