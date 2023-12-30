@@ -83,6 +83,7 @@ public class ReduceOrderCommandTests : ApiTestBase
         var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
         var orderId = res.OrderId;
 
+        MessageHandler.Reset();
         var reduce = new ReduceOrderCommand(orderId, DateTime.UtcNow, uid, symbol, -12);
         res = await SendAsync(reduce);
 

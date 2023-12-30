@@ -10,20 +10,26 @@ public class MessageHandlerStub : IMessageHandler
     private readonly ConcurrentDictionary<long, TradeEvent> _tradeEvents = [];
     private readonly ConcurrentDictionary<long, ReduceEvent> _reduceEvents = [];
     private readonly ConcurrentDictionary<long, RejectEvent> _rejectEvents = [];
+    private readonly ConcurrentDictionary<long, OrderBook> _orderBooks = [];
 
     public Guid Id { get; } = Guid.NewGuid();
 
     public void CommandResult(ApiCommandResult apiCommandResult)
     {
-        Console.WriteLine($"MessageHandler Id={Id}. Saving command result. OrderId={apiCommandResult.OrderId}");
-
         _commandResults.AddOrUpdate(
             apiCommandResult.OrderId,
             apiCommandResult,
-            (key, val) => val);
+            (key, oldVal) => { return apiCommandResult; });
     }
 
-    public int CommandResultCount() => _commandResults.Count;
+    public void Reset()
+    {
+        _commandResults.Clear();
+        _tradeEvents.Clear();
+        _reduceEvents.Clear();
+        _rejectEvents.Clear();
+        _orderBooks.Clear();
+    }
 
     public async Task<ApiCommandResult> GetApiCommandResult(
         long orderId,
@@ -45,32 +51,41 @@ public class MessageHandlerStub : IMessageHandler
         CancellationToken cancellationToken)
         => await GetValueSafe(_rejectEvents, orderId, cancellationToken);
 
+    public async Task<OrderBook> GetOrderBook(
+        long symbol,
+        CancellationToken cancellationToken)
+        => await GetValueSafe(_orderBooks, symbol, cancellationToken);
+
     public void OrderBook(OrderBook orderBook)
     {
+        _orderBooks.AddOrUpdate(
+            orderBook.Symbol,
+            orderBook,
+            (key, oldVal) => { return orderBook; });
     }
 
     public void ReduceEvent(ReduceEvent reduceEvent)
     {
-        if (!_reduceEvents.TryAdd(reduceEvent.OrderId, reduceEvent))
-        {
-            _reduceEvents[reduceEvent.OrderId] = reduceEvent;
-        }
+        _reduceEvents.AddOrUpdate(
+            reduceEvent.OrderId,
+            reduceEvent,
+            (key, oldVal) => { return reduceEvent; });
     }
 
     public void RejectEvent(RejectEvent rejectEvent)
     {
-        if (!_rejectEvents.TryAdd(rejectEvent.OrderId, rejectEvent))
-        {
-            _rejectEvents[rejectEvent.OrderId] = rejectEvent;
-        }
+        _rejectEvents.AddOrUpdate(
+            rejectEvent.OrderId,
+            rejectEvent,
+            (key, oldVal) => { return rejectEvent; });
     }
 
     public void TradeEvent(TradeEvent tradeEvent)
     {
-        if (!_tradeEvents.TryAdd(tradeEvent.TakerOrderId, tradeEvent))
-        {
-            _tradeEvents[tradeEvent.TakerOrderId] = tradeEvent;
-        }
+        _tradeEvents.AddOrUpdate(
+            tradeEvent.TakerOrderId,
+            tradeEvent,
+            (key, oldVal) => { return tradeEvent; });
     }
 
     private async Task<T> GetValueSafe<T>(
@@ -78,8 +93,6 @@ public class MessageHandlerStub : IMessageHandler
         long key, CancellationToken
         cancellationToken = default)
     {
-        Console.WriteLine($"MessageHandler Id={Id}. Getting command result. OrderId={key}");
-
         while (true)
         {
             cancellationToken.ThrowIfCancellationRequested();

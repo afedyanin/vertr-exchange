@@ -9,11 +9,11 @@ public class ResetCommandTests : ApiTestBase
     [Test]
     public async Task CanSendResetCommand()
     {
-        var cmd = new AddAccountsCommand(1L, DateTime.UtcNow, AccountsStub.UserAccounts);
+        var cmd = new AddAccountsCommand(OrderIdGenerator.NextId, DateTime.UtcNow, AccountsStub.UserAccounts);
         var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var reset = new ResetCommand(2L, DateTime.UtcNow);
+        var reset = new ResetCommand(OrderIdGenerator.NextId, DateTime.UtcNow);
         res = await SendAsync(reset);
 
         var report = await GetUserReport(AccountsStub.FirstUserUid);

@@ -29,13 +29,11 @@ public abstract class ApiTestBase
         MessageHandler = ServiceProvider.GetRequiredService<MessageHandlerStub>();
         OrderIdGenerator = ServiceProvider.GetRequiredService<IOrderIdGenerator>();
         Api = ServiceProvider.GetRequiredService<IExchangeApi>();
-        Console.WriteLine($"Setup Exchange API. Id={Api.Id}");
     }
 
     [TearDown]
     public void TearDown()
     {
-        Console.WriteLine($"Dispose Exchange API. Id={Api.Id}");
         Api?.Dispose();
     }
 
@@ -101,9 +99,7 @@ public abstract class ApiTestBase
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        if (res == null ||
-            res.ResultCode != CommandResultCode.SUCCESS ||
-            res.BinaryCommandType != BinaryDataType.QUERY_SINGLE_USER_REPORT)
+        if (res.BinaryCommandType != BinaryDataType.QUERY_SINGLE_USER_REPORT)
         {
             return null;
         }
@@ -116,17 +112,10 @@ public abstract class ApiTestBase
     {
         var obr = new OrderBookRequest(OrderIdGenerator.NextId, DateTime.UtcNow, symbol, 100);
         var res = await SendAsync(obr);
-
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        if (res == null ||
-            res.ResultCode != CommandResultCode.SUCCESS ||
-            res.BinaryCommandType != BinaryDataType.QUERY_SINGLE_USER_REPORT)
-        {
-            return null;
-        }
-
-        var book = JsonSerializer.Deserialize<OrderBook>(res.BinaryData);
+        var cts = new CancellationTokenSource(_cancellationTimeout);
+        var book = await MessageHandler.GetOrderBook(symbol, cts.Token);
         return book;
     }
 

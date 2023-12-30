@@ -1,4 +1,5 @@
 using Vertr.Exchange.Api.Commands;
+using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Exchange.Api.Tests.Commands;
@@ -26,7 +27,7 @@ public class CancelOrderCommandTests : ApiTestBase
 
         Assert.Multiple(() =>
         {
-            Assert.That(resEvent.OrderCompleted, Is.False);
+            Assert.That(resEvent.OrderCompleted, Is.True);
             Assert.That(resEvent.OrderId, Is.EqualTo(res.OrderId));
             Assert.That(resEvent.Price, Is.EqualTo(23.45m));
             Assert.That(resEvent.Uid, Is.EqualTo(uid));
@@ -61,12 +62,15 @@ public class CancelOrderCommandTests : ApiTestBase
         await AddSymbol(symbol);
 
         var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
+        var orderId = res.OrderId;
 
-        var cancel = new CancelOrderCommand(res.OrderId, DateTime.UtcNow, uid, symbol);
+        MessageHandler.Reset();
+        var cancel = new CancelOrderCommand(orderId, DateTime.UtcNow, uid, symbol);
         res = await SendAsync(cancel);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var cancel2 = new CancelOrderCommand(res.OrderId, DateTime.UtcNow, uid, symbol);
+        MessageHandler.Reset();
+        var cancel2 = new CancelOrderCommand(orderId, DateTime.UtcNow, uid, symbol);
         res = await SendAsync(cancel2);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.MATCHING_UNKNOWN_ORDER_ID));
     }

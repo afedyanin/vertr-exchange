@@ -12,11 +12,11 @@ public class SingleUserReportTests : ApiTestBase
     [Test]
     public async Task CanGetUserReport()
     {
-        var cmd = new AddAccountsCommand(1L, DateTime.UtcNow, AccountsStub.UserAccounts);
+        var cmd = new AddAccountsCommand(OrderIdGenerator.NextId, DateTime.UtcNow, AccountsStub.UserAccounts);
         var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var rep = new SingleUserReport(2L, DateTime.UtcNow, AccountsStub.FirstUserUid);
+        var rep = new SingleUserReport(OrderIdGenerator.NextId, DateTime.UtcNow, AccountsStub.FirstUserUid);
         res = await SendAsync(rep);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
@@ -43,7 +43,7 @@ public class SingleUserReportTests : ApiTestBase
     [Test]
     public async Task CanGetEmptyReportForNotExistingUser()
     {
-        var rep = new SingleUserReport(2L, DateTime.UtcNow, AccountsStub.FirstUserUid);
+        var rep = new SingleUserReport(OrderIdGenerator.NextId, DateTime.UtcNow, AccountsStub.FirstUserUid);
         var res = await SendAsync(rep);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
