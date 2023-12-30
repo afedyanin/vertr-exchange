@@ -15,7 +15,7 @@ public class ReduceOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, 3456L);
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
         var orderId = res.OrderId;
 
         var reduce = new ReduceOrderCommand(orderId, DateTime.UtcNow, uid, symbol, 12);
@@ -23,7 +23,7 @@ public class ReduceOrderCommandTests : ApiTestBase
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var reduced = GetReduceEvent(orderId);
+        var reduced = await GetReduceEvent(orderId);
         Assert.That(reduced, Is.Not.Null);
 
         Assert.Multiple(() =>
@@ -45,7 +45,7 @@ public class ReduceOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, 3412L);
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
         var orderId = res.OrderId;
 
         var reduce = new ReduceOrderCommand(orderId, DateTime.UtcNow, uid, symbol, 12);
@@ -58,7 +58,7 @@ public class ReduceOrderCommandTests : ApiTestBase
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var reduced = GetReduceEvent(orderId);
+        var reduced = await GetReduceEvent(orderId);
         Assert.That(reduced, Is.Not.Null);
 
         Assert.Multiple(() =>
@@ -80,7 +80,7 @@ public class ReduceOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, 2345L);
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
         var orderId = res.OrderId;
 
         var reduce = new ReduceOrderCommand(orderId, DateTime.UtcNow, uid, symbol, -12);

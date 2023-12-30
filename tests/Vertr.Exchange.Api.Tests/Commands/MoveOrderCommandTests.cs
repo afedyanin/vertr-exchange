@@ -15,7 +15,7 @@ public class MoveOrderCommandTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, 456L);
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
         var orderId = res.OrderId;
 
         var move = new MoveOrderCommand(orderId, DateTime.UtcNow, uid, 23.56m, symbol);

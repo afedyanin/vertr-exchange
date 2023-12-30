@@ -10,18 +10,16 @@ public class TradingScenarioTests : ApiTestBase
     {
         var makerUid = 100L;
         var takerUid = 102L;
-        var makerOrderId = 23;
-        var takerOrderId = 24;
         var symbol = 2;
 
         await AddUser(makerUid);
         await AddUser(takerUid);
         await AddSymbol(symbol);
 
-        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34, makerOrderId);
-        await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30, takerOrderId);
+        var bidRes = await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34);
+        var askRes = await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30);
 
-        var taker = GetTradeEvent(takerOrderId);
+        var taker = await GetTradeEvent(askRes.OrderId);
         Assert.That(taker, Is.Not.Null);
 
         Assert.Multiple(() =>
@@ -41,7 +39,7 @@ public class TradingScenarioTests : ApiTestBase
             Assert.That(maker.MakerOrderCompleted, Is.False);
             Assert.That(maker.Price, Is.EqualTo(23.45m));
             Assert.That(maker.MakerUid, Is.EqualTo(makerUid));
-            Assert.That(maker.MakerOrderId, Is.EqualTo(makerOrderId));
+            Assert.That(maker.MakerOrderId, Is.EqualTo(bidRes.OrderId));
             Assert.That(maker.Volume, Is.EqualTo(30));
         });
 

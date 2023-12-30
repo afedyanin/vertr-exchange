@@ -55,8 +55,8 @@ public class SuspendUserCommandTests : ApiTestBase
         await AddUser(makerUid);
         await AddUser(takerUid);
         await AddSymbol(symbol);
-        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34, 23L);
-        await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30, 24L);
+        await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 23.45m, 34);
+        await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 23.10m, 30);
 
         var susp = new SuspendUserCommand(23L, DateTime.UtcNow, makerUid);
         var res = await SendAsync(susp);

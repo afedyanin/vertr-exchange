@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Common.Messages;
 
@@ -5,10 +6,10 @@ namespace Vertr.Exchange.Api.Tests.Stubs;
 
 public class MessageHandlerStub : IMessageHandler
 {
-    private readonly Dictionary<long, ApiCommandResult> _commandResults = [];
-    private readonly Dictionary<long, TradeEvent> _tradeEvents = [];
-    private readonly Dictionary<long, ReduceEvent> _reduceEvents = [];
-    private readonly Dictionary<long, RejectEvent> _rejectEvents = [];
+    private readonly ConcurrentDictionary<long, ApiCommandResult> _commandResults = [];
+    private readonly ConcurrentDictionary<long, TradeEvent> _tradeEvents = [];
+    private readonly ConcurrentDictionary<long, ReduceEvent> _reduceEvents = [];
+    private readonly ConcurrentDictionary<long, RejectEvent> _rejectEvents = [];
 
     public void CommandResult(ApiCommandResult apiCommandResult)
     {
@@ -18,29 +19,25 @@ public class MessageHandlerStub : IMessageHandler
         }
     }
 
-    public ApiCommandResult? GetApiCommandResult(long orderId)
-    {
-        _commandResults.TryGetValue(orderId, out var res);
-        return res;
-    }
+    public async Task<ApiCommandResult> GetApiCommandResult(
+        long orderId,
+        CancellationToken cancellationToken)
+        => await GetValueSafe(_commandResults, orderId, cancellationToken);
 
-    public TradeEvent? GetTradeEvent(long takerOrderId)
-    {
-        _tradeEvents.TryGetValue(takerOrderId, out var res);
-        return res;
-    }
+    public async Task<TradeEvent> GetTradeEvent(
+        long takerOrderId,
+        CancellationToken cancellationToken)
+        => await GetValueSafe(_tradeEvents, takerOrderId, cancellationToken);
 
-    public ReduceEvent? GetReduceEvent(long orderId)
-    {
-        _reduceEvents.TryGetValue(orderId, out var res);
-        return res;
-    }
+    public async Task<ReduceEvent> GetReduceEvent(
+        long orderId,
+        CancellationToken cancellationToken)
+        => await GetValueSafe(_reduceEvents, orderId, cancellationToken);
 
-    public RejectEvent? GetRejectEvent(long orderId)
-    {
-        _rejectEvents.TryGetValue(orderId, out var res);
-        return res;
-    }
+    public async Task<RejectEvent> GetRejectEvent(
+        long orderId,
+        CancellationToken cancellationToken)
+        => await GetValueSafe(_rejectEvents, orderId, cancellationToken);
 
     public void OrderBook(OrderBook orderBook)
     {
@@ -67,6 +64,24 @@ public class MessageHandlerStub : IMessageHandler
         if (!_tradeEvents.TryAdd(tradeEvent.TakerOrderId, tradeEvent))
         {
             _tradeEvents[tradeEvent.TakerOrderId] = tradeEvent;
+        }
+    }
+
+    private async Task<T> GetValueSafe<T>(
+        ConcurrentDictionary<long, T> dict,
+        long key, CancellationToken
+        cancellationToken = default)
+    {
+        while (true)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (dict.TryGetValue(key, out var res))
+            {
+                return res;
+            }
+
+            await Task.Delay(10, cancellationToken);
         }
     }
 }

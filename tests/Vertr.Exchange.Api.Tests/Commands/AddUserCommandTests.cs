@@ -9,7 +9,7 @@ public class AddUserCommandTests : ApiTestBase
     [Test]
     public async Task CanAddUser()
     {
-        var cmd = new AddUserCommand(1L, DateTime.UtcNow, 100L);
+        var cmd = new AddUserCommand(OrderIdGenerator.NextId, DateTime.UtcNow, 100L);
 
         var res = await SendAsync(cmd);
 
@@ -24,8 +24,8 @@ public class AddUserCommandTests : ApiTestBase
     [Test]
     public async Task CannotAddUserTwice()
     {
-        var cmd1 = new AddUserCommand(1L, DateTime.UtcNow, 100L);
-        var cmd2 = new AddUserCommand(2L, DateTime.UtcNow, 100L);
+        var cmd1 = new AddUserCommand(OrderIdGenerator.NextId, DateTime.UtcNow, 100L);
+        var cmd2 = new AddUserCommand(OrderIdGenerator.NextId, DateTime.UtcNow, 100L);
 
         var res1 = await SendAsync(cmd1);
         var res2 = await SendAsync(cmd2);

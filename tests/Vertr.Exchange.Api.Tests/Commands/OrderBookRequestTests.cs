@@ -14,7 +14,7 @@ public class OrderBookRequestTests : ApiTestBase
         var symbol = 2;
         await AddSymbol(symbol);
 
-        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34, 7456L);
+        var res = await PlaceGTCOrder(OrderAction.BID, uid, symbol, 23.45m, 34);
         var orderId = res.OrderId;
 
         var book = await GetOrderBook(symbol);

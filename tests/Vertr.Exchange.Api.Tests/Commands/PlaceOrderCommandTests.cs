@@ -28,7 +28,7 @@ public class PlaceOrderCommandTests : ApiTestBase
         var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var reject = GetRejectEvent(cmd.OrderId);
+        var reject = await GetRejectEvent(cmd.OrderId);
         Assert.That(reject, Is.Not.Null);
 
         Assert.Multiple(() =>

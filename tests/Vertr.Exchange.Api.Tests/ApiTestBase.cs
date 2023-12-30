@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Api.Commands;
 using Vertr.Exchange.Api.Commands.Queries;
+using Vertr.Exchange.Api.Generators;
 using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Messages;
@@ -11,7 +12,11 @@ using Vertr.Exchange.Shared.Reports;
 namespace Vertr.Exchange.Api.Tests;
 public abstract class ApiTestBase
 {
+    private const int _cancellationTimeout = 4000;
+
     protected IServiceProvider ServiceProvider { get; private set; }
+
+    protected IOrderIdGenerator OrderIdGenerator { get; private set; }
 
     protected IExchangeApi Api { get; private set; }
 
@@ -28,6 +33,7 @@ public abstract class ApiTestBase
     {
         Api = ServiceProvider.GetRequiredService<IExchangeApi>();
         MessageHandler = ServiceProvider.GetRequiredService<MessageHandlerStub>();
+        OrderIdGenerator = ServiceProvider.GetRequiredService<IOrderIdGenerator>();
     }
 
     [TearDown]
@@ -39,37 +45,35 @@ public abstract class ApiTestBase
     protected async Task<Common.Messages.ApiCommandResult> SendAsync(ApiCommandBase cmd)
     {
         Api.Send(cmd);
-        await Task.Delay(1);
-        var res = MessageHandler.GetApiCommandResult(cmd.OrderId);
-
-        Assert.That(res, Is.Not.Null);
+        var cts = new CancellationTokenSource(_cancellationTimeout);
+        var res = await MessageHandler.GetApiCommandResult(cmd.OrderId, cts.Token);
         return res;
     }
 
-    protected TradeEvent GetTradeEvent(long takerOrderId)
+    protected async Task<TradeEvent> GetTradeEvent(long takerOrderId)
     {
-        var res = MessageHandler.GetTradeEvent(takerOrderId);
-        Assert.That(res, Is.Not.Null);
+        var cts = new CancellationTokenSource(_cancellationTimeout);
+        var res = await MessageHandler.GetTradeEvent(takerOrderId, cts.Token);
         return res;
     }
 
-    protected ReduceEvent GetReduceEvent(long orderId)
+    protected async Task<ReduceEvent> GetReduceEvent(long orderId)
     {
-        var res = MessageHandler.GetReduceEvent(orderId);
-        Assert.That(res, Is.Not.Null);
+        var cts = new CancellationTokenSource(_cancellationTimeout);
+        var res = await MessageHandler.GetReduceEvent(orderId, cts.Token);
         return res;
     }
 
-    protected RejectEvent GetRejectEvent(long orderId)
+    protected async Task<RejectEvent> GetRejectEvent(long orderId)
     {
-        var res = MessageHandler.GetRejectEvent(orderId);
-        Assert.That(res, Is.Not.Null);
+        var cts = new CancellationTokenSource(_cancellationTimeout);
+        var res = await MessageHandler.GetRejectEvent(orderId, cts.Token);
         return res;
     }
 
     protected async Task AddUser(long userId)
     {
-        var orderId = 1000L;
+        var orderId = OrderIdGenerator.NextId;
         var cmd = new AddUserCommand(orderId, DateTime.UtcNow, userId);
         var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
@@ -87,7 +91,7 @@ public abstract class ApiTestBase
             SymbolId = symbol
         };
 
-        var cmd = new AddSymbolsCommand(1010L, DateTime.UtcNow, [symSpec]);
+        var cmd = new AddSymbolsCommand(OrderIdGenerator.NextId, DateTime.UtcNow, [symSpec]);
         var res = await SendAsync(cmd);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
@@ -95,7 +99,7 @@ public abstract class ApiTestBase
 
     protected async Task<SingleUserReportResult?> GetUserReport(long uid)
     {
-        var rep = new SingleUserReport(1020L, DateTime.UtcNow, uid);
+        var rep = new SingleUserReport(OrderIdGenerator.NextId, DateTime.UtcNow, uid);
         var res = await SendAsync(rep);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
@@ -113,7 +117,7 @@ public abstract class ApiTestBase
 
     protected async Task<OrderBook?> GetOrderBook(int symbol)
     {
-        var obr = new OrderBookRequest(23789L, DateTime.UtcNow, symbol, 100);
+        var obr = new OrderBookRequest(OrderIdGenerator.NextId, DateTime.UtcNow, symbol, 100);
         var res = await SendAsync(obr);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
@@ -134,11 +138,10 @@ public abstract class ApiTestBase
         long uid,
         int symbol,
         decimal price,
-        long size,
-        long orderId)
+        long size)
     {
         var cmd = new PlaceOrderCommand(
-            orderId,
+            OrderIdGenerator.NextId,
             DateTime.UtcNow,
             price,
             size,
