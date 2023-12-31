@@ -21,8 +21,10 @@ public static class OrderEventFactory
         };
     }
 
-    public static OrderEvent Create(TradeEvent taker)
+    public static OrderEvent Create(TradeEvent taker, Order? order)
     {
+        ArgumentNullException.ThrowIfNull(order);
+
         return new OrderEvent
         {
             OrderId = taker.TakerOrderId,
@@ -30,6 +32,7 @@ public static class OrderEventFactory
             Seq = taker.Seq,
             Action = taker.TakerAction,
             OrderCompleted = taker.TakeOrderCompleted,
+            Price = order.Price,
             Volume = taker.TotalVolume,
             EventSource = OrderEventSource.TakerTradeEvent,
         };

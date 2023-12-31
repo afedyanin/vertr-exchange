@@ -1,6 +1,6 @@
 using Spectre.Console;
 using Vertr.Exchange.Contracts;
-using Vertr.Terminal.ConsoleApp.StaticData;
+using Vertr.Terminal.ApiClient.Extensions;
 
 namespace Vertr.Terminal.ConsoleApp.Views;
 
@@ -39,12 +39,12 @@ internal static class TradesView
 
         foreach (var tEvent in tradeEvents)
         {
-            var symbol = Symbols.GetById(tEvent.Symbol);
+            var symbol = StaticContext.Symbols.All.GetById(tEvent.Symbol);
 
             for (int i = 0; i < tEvent.Trades.Length; i++)
             {
                 var trade = tEvent.Trades[i];
-                var maker = Users.GetById(trade.MakerUid);
+                var maker = StaticContext.Users.All.GetById(trade.MakerUid);
 
                 table.AddRow(
                     symbol!.Code,

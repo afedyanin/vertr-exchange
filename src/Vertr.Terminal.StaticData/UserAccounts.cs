@@ -1,0 +1,2 @@
+namespace Vertr.Terminal.StaticData;
+

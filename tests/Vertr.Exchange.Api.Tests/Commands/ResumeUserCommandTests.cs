@@ -10,13 +10,13 @@ public class ResumeUserCommandTests : ApiTestBase
     public async Task CanResumeUser()
     {
         var add = new AddUserCommand(1L, DateTime.UtcNow, 100L);
-        var res = await Api.SendAsync(add);
+        var res = await SendAsync(add);
 
         var susp = new SuspendUserCommand(2L, DateTime.UtcNow, add.Uid);
-        res = await Api.SendAsync(susp);
+        res = await SendAsync(susp);
 
         var resume = new ResumeUserCommand(3L, DateTime.UtcNow, add.Uid);
-        res = await Api.SendAsync(resume);
+        res = await SendAsync(resume);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
     }
@@ -25,10 +25,10 @@ public class ResumeUserCommandTests : ApiTestBase
     public async Task CannotResumeActiveUser()
     {
         var add = new AddUserCommand(1L, DateTime.UtcNow, 100L);
-        var res = await Api.SendAsync(add);
+        var res = await SendAsync(add);
 
         var resume = new ResumeUserCommand(3L, DateTime.UtcNow, add.Uid);
-        res = await Api.SendAsync(resume);
+        res = await SendAsync(resume);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.USER_MGMT_USER_NOT_SUSPENDED));
     }
@@ -37,7 +37,7 @@ public class ResumeUserCommandTests : ApiTestBase
     public async Task CannotResumeNotExistingUser()
     {
         var resume = new ResumeUserCommand(3L, DateTime.UtcNow, 200L);
-        var res = await Api.SendAsync(resume);
+        var res = await SendAsync(resume);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.USER_MGMT_USER_NOT_FOUND));
     }

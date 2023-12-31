@@ -19,7 +19,7 @@ public class MoveOrderCommandTests : ApiTestBase
         var orderId = res.OrderId;
 
         var move = new MoveOrderCommand(orderId, DateTime.UtcNow, uid, 23.56m, symbol);
-        res = await Api.SendAsync(move);
+        res = await SendAsync(move);
 
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 

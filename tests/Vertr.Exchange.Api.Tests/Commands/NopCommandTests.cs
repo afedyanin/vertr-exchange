@@ -22,7 +22,7 @@ public class NopCommandTests : ApiTestBase
     {
         var cmd = new NopCommand(1L, DateTime.UtcNow);
 
-        var res = await Api.SendAsync(cmd);
+        var res = await SendAsync(cmd);
 
         Assert.Multiple(() =>
         {

@@ -1,53 +1,46 @@
-using Vertr.Exchange.Contracts;
-using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Contracts.Requests;
-using Vertr.Terminal.ApiClient;
-using Vertr.Terminal.ConsoleApp.StaticData;
 using System.Text.Json;
+using Vertr.Exchange.Contracts;
+using Vertr.Exchange.Contracts.Requests;
+using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Shared.Reports;
 using Vertr.Terminal.ApiClient.Contracts;
+using Vertr.Terminal.ApiClient.Extensions;
 
-namespace Vertr.Terminal.ConsoleApp;
-internal sealed class Commands(ITerminalApiClient client)
+namespace Vertr.Terminal.ApiClient;
+public sealed class ApiCommands(ITerminalApiClient client)
 {
     private readonly ITerminalApiClient _client = client;
+    public async Task Reset()
+    {
+        var res = await _client.Reset();
+        EnsureSuccess(res);
+    }
 
-    public async Task<ApiCommandResult?> AddSymbols()
+    public async Task AddSymbols(Symbol[] symbols)
     {
         var req = new AddSymbolsRequest()
         {
-            Symbols = Symbols.All.Select(s => s.GetSpecification()).ToArray(),
+            Symbols = symbols.Select(s => s.GetSpecification()).ToArray(),
         };
 
         var res = await _client.AddSymbols(req);
-        return res;
+        EnsureSuccess(res);
     }
-
-    public async Task<ApiCommandResult?> Reset()
-    {
-        var res = await _client.Reset();
-        return res;
-    }
-
-    public async Task<ApiCommandResult?> Nop()
-    {
-        var res = await _client.Nop();
-        return res;
-    }
-
-    public async Task<ApiCommandResult?> AddUsers()
+    public async Task AddUsers(Contracts.UserAccount[] userAccounts)
     {
         var req = new AddAccountsRequest()
         {
-            UserAccounts =
-            [
-                UserAccounts.AliceAccount.ToDto(),
-                UserAccounts.BobAccount.ToDto()
-            ],
+            UserAccounts = userAccounts.Select(ua => ua.ToDto()).ToArray(),
         };
 
         var res = await _client.AddAccounts(req);
-        return res;
+        EnsureSuccess(res);
+    }
+
+    public async Task Nop()
+    {
+        var res = await _client.Nop();
+        EnsureSuccess(res);
     }
 
     public async Task<ApiCommandResult?> PlaceOrder(
@@ -58,6 +51,24 @@ internal sealed class Commands(ITerminalApiClient client)
     {
         var req = CreatePlaceOrderRequest(user, symbol, price, size);
         var res = await _client.PlaceOrder(req);
+        return res;
+    }
+
+    public async Task<OrderBook[]> GetOrderBooks()
+    {
+        var res = await _client.GetOrderBooks();
+        return res;
+    }
+
+    public async Task<TradeEvent[]> GetTrades()
+    {
+        var res = await _client.GetTrades();
+        return res;
+    }
+
+    public async Task<OrderDto[]> GetOrders()
+    {
+        var res = await _client.GetOrders();
         return res;
     }
 
@@ -79,8 +90,13 @@ internal sealed class Commands(ITerminalApiClient client)
         await _client.RandomWalk(req);
     }
 
-    public async Task<SingleUserReportResult?> GetSingleUserReport(UserRequest request)
+    public async Task<SingleUserReportResult?> GetSingleUserReport(User user)
     {
+        var request = new UserRequest
+        {
+            UserId = user.Id,
+        };
+
         var res = await _client.GetSingleUserReport(request);
 
         if (res == null ||
@@ -111,5 +127,15 @@ internal sealed class Commands(ITerminalApiClient client)
         };
 
         return req;
+    }
+
+    public void EnsureSuccess(ApiCommandResult? result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+
+        if (result.ResultCode != CommandResultCode.SUCCESS)
+        {
+            throw new InvalidOperationException($"Invalid result code: {result.ResultCode}");
+        }
     }
 }

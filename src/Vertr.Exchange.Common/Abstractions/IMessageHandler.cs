@@ -4,6 +4,8 @@ namespace Vertr.Exchange.Common.Abstractions;
 
 public interface IMessageHandler
 {
+    Guid Id { get; }
+
     void CommandResult(ApiCommandResult apiCommandResult);
 
     void TradeEvent(TradeEvent tradeEvent);

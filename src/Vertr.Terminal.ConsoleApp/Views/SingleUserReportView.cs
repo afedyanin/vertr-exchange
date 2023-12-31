@@ -1,7 +1,7 @@
 using Spectre.Console;
 using Vertr.Exchange.Shared.Reports;
 using Vertr.Exchange.Shared.Reports.Dtos;
-using Vertr.Terminal.ConsoleApp.StaticData;
+using Vertr.Terminal.ApiClient.Extensions;
 
 namespace Vertr.Terminal.ConsoleApp.Views;
 internal static class SingleUserReportView
@@ -14,7 +14,7 @@ internal static class SingleUserReportView
             return;
         }
 
-        var user = Users.GetById(report.Uid);
+        var user = StaticContext.Users.All.GetById(report.Uid);
 
         Console.WriteLine($"Report execution status={report.ExecutionStatus}");
         Console.WriteLine($"User: Id={report.Uid} Name={user!.Name}  Status={report.UserStatus}");
@@ -40,7 +40,7 @@ internal static class SingleUserReportView
 
         foreach (var acc in accounts)
         {
-            var currency = Currencies.GetById(acc.Key);
+            var currency = StaticContext.Currencies.All.GetById(acc.Key);
             table.AddRow(currency!.Code, acc.Value.ToString(ViewConsts.DecimalFormat));
         };
 
@@ -67,7 +67,7 @@ internal static class SingleUserReportView
 
         foreach (var kvp in orders)
         {
-            var symbol = Symbols.GetById(kvp.Key);
+            var symbol = StaticContext.Symbols.All.GetById(kvp.Key);
 
             foreach (var order in kvp.Value.OrderBy(v => v.Action).ThenBy(v => v.Price))
             {
@@ -102,7 +102,7 @@ internal static class SingleUserReportView
 
         foreach (var kvp in positions)
         {
-            var symbol = Symbols.GetById(kvp.Key);
+            var symbol = StaticContext.Symbols.All.GetById(kvp.Key);
             var pos = kvp.Value;
 
             table.AddRow(

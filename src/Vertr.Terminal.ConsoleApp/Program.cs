@@ -1,6 +1,5 @@
 using Refit;
 using Vertr.Terminal.ApiClient;
-using Vertr.Terminal.ConsoleApp.StaticData;
 using Vertr.Terminal.ConsoleApp.Views;
 
 namespace Vertr.Terminal.ConsoleApp;
@@ -15,25 +14,25 @@ public class Program
     public static async Task RunStrategy()
     {
         var api = RestService.For<ITerminalApiClient>("http://localhost:5010");
-        var commands = new Commands(api);
+        var commands = new ApiCommands(api);
 
-        var res = await commands.Reset();
-        //Console.WriteLine(res);
+        await commands.Reset();
 
-        res = await commands.AddSymbols();
-        //Console.WriteLine(res);
+        await commands.AddSymbols(StaticContext.Symbols.All);
 
-        res = await commands.AddUsers();
-        //Console.WriteLine(res);
+        await commands.AddUsers([
+            StaticContext.UserAccounts.BobAccount,
+            StaticContext.UserAccounts.AliceAccount,
+        ]);
 
         var bobTrading = Task.Run(async () =>
         {
-            await commands.RandomWalk(Users.Bob, Symbols.MSFT, 100, 100);
+            await commands.RandomWalk(StaticContext.Users.Bob, StaticContext.Symbols.MSFT, 100, 100);
         });
 
         var aliceTrading = Task.Run(async () =>
         {
-            await commands.RandomWalk(Users.Alice, Symbols.MSFT, 100, 100);
+            await commands.RandomWalk(StaticContext.Users.Alice, StaticContext.Symbols.MSFT, 100, 100);
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
@@ -65,38 +64,5 @@ public class Program
 
         var orders = await api.GetOrders();
         OrdersView.Render(orders);
-    }
-
-    public static async Task RunTest()
-    {
-        var bobTrading = Task.Run(async () =>
-        {
-            await Work(Users.Bob.Name, 1000);
-        });
-
-        var aliceTrading = Task.Run(async () =>
-        {
-            await Work(Users.Alice.Name, 1000);
-        });
-
-        await Task.WhenAll(aliceTrading, bobTrading);
-
-        Console.WriteLine($"Execution completed.");
-    }
-
-    private static async Task Work(string name, int count)
-    {
-        Console.WriteLine($"Job {name} started.");
-        var client = RestService.For<ITerminalApiClient>("http://localhost:5010");
-        var commands = new Commands(client);
-
-        for (var i = 0; i < count; i++)
-        {
-            var res = await commands.Nop();
-            await Task.Delay(Random.Shared.Next(0, 10));
-            Console.WriteLine($"Job {name} iteration #{i} completed. Seq={res!.Seq}  OrderId={res.OrderId}");
-        }
-
-        Console.WriteLine($"Job {name} completed.");
     }
 }

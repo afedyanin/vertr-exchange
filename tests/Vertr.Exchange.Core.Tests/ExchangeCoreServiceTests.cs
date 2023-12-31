@@ -1,7 +1,6 @@
 using Vertr.Exchange.Common;
 using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Core.EventHandlers;
-using Vertr.Exchange.Tests.Stubs;
 
 namespace Vertr.Exchange.Core.Tests;
 

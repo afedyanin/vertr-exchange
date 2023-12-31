@@ -72,9 +72,10 @@ public class PositionTests
     public void LongCanUpdateWithAsk()
     {
         var pos = new Position(1L, 2);
-        pos.Update(OrderAction.BID, 100, 10);
+        pos.Update(OrderAction.BID, 100, 10m);
+        Console.WriteLine(pos);
 
-        pos.Update(OrderAction.ASK, 90, 100);
+        pos.Update(OrderAction.ASK, 90, 100m);
         Console.WriteLine(pos);
 
         Assert.Multiple(() =>
@@ -84,7 +85,7 @@ public class PositionTests
             Assert.That(pos.OpenVolume, Is.EqualTo(10));
         });
 
-        pos.Update(OrderAction.ASK, 10, 100);
+        pos.Update(OrderAction.ASK, 10, 100m);
         Console.WriteLine(pos);
 
         Assert.Multiple(() =>
@@ -96,15 +97,30 @@ public class PositionTests
     }
 
     [Test]
+    public void LongCanUpdateWithAskClosePosition()
+    {
+        var pos = new Position(1L, 2);
+        pos.Update(OrderAction.BID, 100, 10m);
+        Console.WriteLine($"Bid 100x10$ (1000) => {pos}");
+        pos.Update(OrderAction.ASK, 90, 100m);
+        Console.WriteLine($"Ask 90x100$ (-9000) => {pos}");
+        pos.Update(OrderAction.ASK, 5, 100m);
+        Console.WriteLine($"Ask 5x100$ (-500) => {pos}");
+        pos.Update(OrderAction.ASK, 5, 100m);
+        Console.WriteLine($"Ask 5x100$ (-500) => {pos}");
+    }
+
+    [Test]
     public void LongCanUpdateWithAskOverlap()
     {
         var pos = new Position(1L, 2);
-        pos.Update(OrderAction.BID, 100, 10);
-        pos.Update(OrderAction.ASK, 90, 100);
-        Console.WriteLine(pos);
-        pos.Update(OrderAction.ASK, 5, 100);
-        Console.WriteLine(pos);
-        pos.Update(OrderAction.ASK, 15, 20);
+        pos.Update(OrderAction.BID, 100, 10m);
+        Console.WriteLine($"Bid 100x10$ (1000) => {pos}");
+        pos.Update(OrderAction.ASK, 90, 100m);
+        Console.WriteLine($"Ask 90x100$ (-9000) => {pos}");
+        pos.Update(OrderAction.ASK, 5, 100m);
+        Console.WriteLine($"Ask 5x100$ (-500) => {pos}");
+        pos.Update(OrderAction.ASK, 15, 20m);
         Console.WriteLine(pos);
     }
 

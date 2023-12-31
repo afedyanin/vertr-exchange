@@ -55,7 +55,6 @@ internal static class OrderCommandStub
         long orderId,
         long uid,
         decimal price,
-        long size,
         int symbol = defaultSymbol)
     {
         return new OrderCommand
@@ -64,7 +63,7 @@ internal static class OrderCommandStub
             OrderId = orderId,
             Uid = uid,
             Price = price,
-            Size = size,
+            Size = 0L,
             Symbol = symbol,
         };
     }

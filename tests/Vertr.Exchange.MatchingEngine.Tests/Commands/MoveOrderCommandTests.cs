@@ -18,8 +18,7 @@ public class MoveOrderCommandTests
         var cmd = OrderCommandStub.MoveOrder(
             bid.OrderId,
             bid.Uid,
-            47.97M,
-            23);
+            47.97M);
 
         var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
@@ -27,29 +26,9 @@ public class MoveOrderCommandTests
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
-            Assert.That(bid.Size, Is.EqualTo(23));
+            Assert.That(bid.Size, Is.EqualTo(27));
             Assert.That(bid.Price, Is.EqualTo(47.97M));
             Assert.That(bid.Filled, Is.EqualTo(0));
-        });
-    }
-
-    [Test]
-    public void ProcessMoveWithoutMatchingWithInvalidSize()
-    {
-        var orderBook = new OrderBook();
-        var bid = OrderStub.CreateBidOrder(45.23M, 27, 13);
-        orderBook.AddOrder(bid);
-
-        var cmd = OrderCommandStub.MoveOrder(
-            bid.OrderId,
-            bid.Uid,
-            47.97M,
-            3);
-
-        Assert.Throws<InvalidOperationException>(() =>
-        {
-            var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
-            var res = orderCommand.Execute();
         });
     }
 
@@ -58,16 +37,57 @@ public class MoveOrderCommandTests
     {
         var orderBook = new OrderBook();
         var ask = OrderStub.CreateAskOrder(18.56M, 7);
-        var bid = OrderStub.CreateBidOrder(18.23M, 14, 10);
+        var bid = OrderStub.CreateBidOrder(18.23M, 14, 10); // size => 14 - 10 = 4
 
         orderBook.AddOrder(bid);
         orderBook.AddOrder(ask);
 
+        var newPrice = 18.60M;
+
         var cmd = OrderCommandStub.MoveOrder(
             bid.OrderId,
             bid.Uid,
-            18.60M,
-            23);
+            newPrice);
+
+        var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
+        var res = orderCommand.Execute();
+
+        // Bid has been removed from order book. So check ask only.
+        Assert.Multiple(() =>
+        {
+            Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
+            Assert.That(ask.Completed, Is.False);
+            Assert.That(ask.Filled, Is.EqualTo(14 - 10));
+            Assert.That(ask.Remaining, Is.EqualTo(7 - (14 - 10)));
+        });
+
+        Assert.That(cmd.EngineEvent, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(cmd.EngineEvent.EventType, Is.EqualTo(EngineEventType.TRADE));
+            Assert.That(cmd.EngineEvent.Size, Is.EqualTo(ask.Filled));
+            Assert.That(cmd.EngineEvent.Price, Is.EqualTo(ask.Price));
+            Assert.That(cmd.EngineEvent.MatchedOrderId, Is.EqualTo(ask.OrderId));
+            Assert.That(cmd.EngineEvent.MatchedOrderUid, Is.EqualTo(ask.Uid));
+        });
+    }
+
+    [Test]
+    public void ProcessMoveWithMatchingSuccessUpdateBid()
+    {
+        var orderBook = new OrderBook();
+        var ask = OrderStub.CreateAskOrder(18.56M, 7);
+        var bid = OrderStub.CreateBidOrder(18.23M, 13);
+
+        orderBook.AddOrder(bid);
+        orderBook.AddOrder(ask);
+
+        var newPrice = 18.60M;
+
+        var cmd = OrderCommandStub.MoveOrder(
+            bid.OrderId,
+            bid.Uid,
+            newPrice);
 
         var orderCommand = OrderBookCommandFactory.CreateOrderBookCommand(orderBook, cmd, 100);
         var res = orderCommand.Execute();
@@ -75,18 +95,20 @@ public class MoveOrderCommandTests
         Assert.Multiple(() =>
         {
             Assert.That(res, Is.EqualTo(CommandResultCode.SUCCESS));
-            Assert.That(bid.Size, Is.EqualTo(23));
-            Assert.That(bid.Price, Is.EqualTo(18.60M));
             Assert.That(ask.Completed, Is.True);
             Assert.That(bid.Completed, Is.False);
-            Assert.That(bid.Size, Is.EqualTo(23));
-            Assert.That(bid.Filled, Is.EqualTo(17));
-            Assert.That(cmd.EngineEvent, Is.Not.Null);
-            Assert.That(cmd.EngineEvent!.EventType, Is.EqualTo(EngineEventType.TRADE));
-            Assert.That(cmd.EngineEvent!.Size, Is.EqualTo(7));
-            Assert.That(cmd.EngineEvent!.Price, Is.EqualTo(18.56M));
-            Assert.That(cmd.EngineEvent!.MatchedOrderId, Is.EqualTo(ask.OrderId));
-            Assert.That(cmd.EngineEvent!.MatchedOrderUid, Is.EqualTo(ask.Uid));
+            Assert.That(bid.Price, Is.EqualTo(newPrice));
+            Assert.That(bid.Filled, Is.EqualTo(ask.Size));
+        });
+
+        Assert.That(cmd.EngineEvent, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(cmd.EngineEvent.EventType, Is.EqualTo(EngineEventType.TRADE));
+            Assert.That(cmd.EngineEvent.Size, Is.EqualTo(ask.Size));
+            Assert.That(cmd.EngineEvent.Price, Is.EqualTo(ask.Price));
+            Assert.That(cmd.EngineEvent.MatchedOrderId, Is.EqualTo(ask.OrderId));
+            Assert.That(cmd.EngineEvent.MatchedOrderUid, Is.EqualTo(ask.Uid));
         });
     }
 }

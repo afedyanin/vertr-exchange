@@ -10,8 +10,8 @@ public class AddAccountsCommandTests : ApiTestBase
     [Test]
     public async Task CanAddUserAccounts()
     {
-        var cmd = new AddAccountsCommand(1L, DateTime.UtcNow, AccountsStub.UserAccounts);
-        var res = await Api.SendAsync(cmd);
+        var cmd = new AddAccountsCommand(1002L, DateTime.UtcNow, AccountsStub.UserAccounts);
+        var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
     }
 

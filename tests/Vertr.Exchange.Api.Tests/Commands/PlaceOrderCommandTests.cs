@@ -25,22 +25,18 @@ public class PlaceOrderCommandTests : ApiTestBase
             uid,
             symbol);
 
-        var res = await Api.SendAsync(cmd);
+        var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
-        var resEvent = res.RootEvent;
-        Assert.That(resEvent, Is.Not.Null);
+        var reject = await GetRejectEvent(cmd.OrderId);
+        Assert.That(reject, Is.Not.Null);
 
         Assert.Multiple(() =>
         {
-            Assert.That(resEvent.EventType, Is.EqualTo(EngineEventType.REJECT));
-            Assert.That(resEvent.Price, Is.EqualTo(120.34m));
-            Assert.That(resEvent.Size, Is.EqualTo(37));
-            Assert.That(resEvent.ActiveOrderCompleted, Is.True);
-            Assert.That(resEvent.MatchedOrderCompleted, Is.False);
-            Assert.That(resEvent.MatchedOrderId, Is.EqualTo(0L));
-            Assert.That(resEvent.MatchedOrderUid, Is.EqualTo(0L));
-            Assert.That(resEvent.NextEvent, Is.Null);
+            Assert.That(reject.Price, Is.EqualTo(120.34m));
+            Assert.That(reject.RejectedVolume, Is.EqualTo(37));
+            Assert.That(reject.OrderId, Is.EqualTo(cmd.OrderId));
+            Assert.That(reject.Uid, Is.EqualTo(uid));
         });
     }
 
@@ -64,7 +60,7 @@ public class PlaceOrderCommandTests : ApiTestBase
             uid,
             symbol);
 
-        var res = await Api.SendAsync(cmd);
+        var res = await SendAsync(cmd);
         Assert.That(res.ResultCode, Is.EqualTo(CommandResultCode.SUCCESS));
 
         var report = await GetUserReport(uid);
