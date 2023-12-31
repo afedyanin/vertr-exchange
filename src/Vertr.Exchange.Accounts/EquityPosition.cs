@@ -59,7 +59,8 @@ internal class EquityPosition(long uid, int symbol) : IPosition
         if (OpenVolume > tradeSize)
         {
             OpenVolume -= tradeSize;
-            _openPriceSum -= tradeSize * tradePrice;
+            RealizedPnL += ((tradeSize * tradePrice) - _openPriceSum) * GetMultiplier(Direction);
+            _openPriceSum = OpenVolume * tradePrice * (-1);
             return decimal.Zero;
         }
 
