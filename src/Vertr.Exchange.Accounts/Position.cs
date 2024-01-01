@@ -68,6 +68,7 @@ internal class Position(long uid, int symbol) : IPosition
 
         // current position smaller than trade size, can close completely and calculate profit
         _fixedPnl += ((OpenVolume * tradePrice) - _openPriceSum) * GetMultiplier(Direction);
+
         var sizeToOpen = tradeSize - OpenVolume;
         OpenVolume = decimal.Zero;
         _openPriceSum = decimal.Zero;
