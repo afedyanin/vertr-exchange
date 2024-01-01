@@ -8,8 +8,8 @@ namespace Vertr.Exchange.Accounts;
 
 internal class Position(long uid, int symbol) : IPosition
 {
-    // Buy/Sell Amount
     private decimal _openPriceSum;
+    private decimal _fixedPnl;
 
     public long Uid { get; } = uid;
 
@@ -21,7 +21,7 @@ internal class Position(long uid, int symbol) : IPosition
     public decimal OpenVolume { get; private set; }
 
     // Realized PnL
-    public decimal RealizedPnL { get; private set; }
+    public decimal RealizedPnL => _fixedPnl + (_openPriceSum * (-1));
 
     public bool IsEmpty => Direction == PositionDirection.EMPTY;
 
@@ -67,12 +67,11 @@ internal class Position(long uid, int symbol) : IPosition
         }
 
         // current position smaller than trade size, can close completely and calculate profit
+        _fixedPnl += ((OpenVolume * tradePrice) - _openPriceSum) * GetMultiplier(Direction);
         var sizeToOpen = tradeSize - OpenVolume;
-        RealizedPnL += ((OpenVolume * tradePrice) - _openPriceSum) * GetMultiplier(Direction);
-
-        Direction = PositionDirection.EMPTY;
         OpenVolume = decimal.Zero;
         _openPriceSum = decimal.Zero;
+        Direction = PositionDirection.EMPTY;
 
         return sizeToOpen;
     }
