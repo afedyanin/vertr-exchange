@@ -44,7 +44,7 @@ internal class Position(long uid, int symbol) : IPosition
     public override string ToString()
     {
 #if DEBUG
-        return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} OpenPriceSum={_openPriceSum} PnL={RealizedPnL}";
+        return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} OpenPriceSum={_openPriceSum} FixedPnl={_fixedPnl} PnL={RealizedPnL}";
 #else
         return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} PnL={RealizedPnL}";
 #endif
