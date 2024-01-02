@@ -16,7 +16,7 @@ public class TradingScenarioTests : ApiTestBase
         await AddUser(takerUid);
         await AddSymbol(symbol);
 
-        var bidRes = await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 7m, 5);
+        var bidRes = await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 3m, 2);
         var askRes = await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 3m, 2);
 
         var taker = await GetTradeEvent(askRes.OrderId);
@@ -36,8 +36,8 @@ public class TradingScenarioTests : ApiTestBase
 
         Assert.Multiple(() =>
         {
-            Assert.That(maker.MakerOrderCompleted, Is.False);
-            Assert.That(maker.Price, Is.EqualTo(7m));
+            Assert.That(maker.MakerOrderCompleted, Is.True);
+            Assert.That(maker.Price, Is.EqualTo(3m));
             Assert.That(maker.MakerUid, Is.EqualTo(makerUid));
             Assert.That(maker.MakerOrderId, Is.EqualTo(bidRes.OrderId));
             Assert.That(maker.Volume, Is.EqualTo(2));
@@ -56,7 +56,7 @@ public class TradingScenarioTests : ApiTestBase
             Assert.That(makerPos.Uid, Is.EqualTo(makerUid));
             Assert.That(makerPos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(makerPos.OpenVolume, Is.EqualTo(2));
-            Assert.That(makerPos.RealizedPnL, Is.EqualTo(2 * 7m * (-1)));
+            Assert.That(makerPos.RealizedPnL, Is.EqualTo(2 * 3m * (-1)));
         });
 
         var takerRep = await GetUserReport(takerUid);
@@ -72,8 +72,91 @@ public class TradingScenarioTests : ApiTestBase
             Assert.That(takerPos.Uid, Is.EqualTo(takerUid));
             Assert.That(takerPos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
             Assert.That(takerPos.OpenVolume, Is.EqualTo(2));
-            Assert.That(takerPos.RealizedPnL, Is.EqualTo(2 * 7m * (-1)));
+            Assert.That(takerPos.RealizedPnL, Is.EqualTo(2 * 3m * (-1)));
         });
     }
 
+    [Test]
+    public async Task TradesBidAskClosePositions()
+    {
+        var makerUid = 100L;
+        var takerUid = 102L;
+        var symbol = 2;
+
+        await AddUser(makerUid);
+        await AddUser(takerUid);
+        await AddSymbol(symbol);
+
+        var bid1Res = await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 3m, 2);
+        var ask1Res = await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 3m, 2);
+
+        var bid2Res = await PlaceGTCOrder(OrderAction.ASK, makerUid, symbol, 3m, 2);
+        var ask2Res = await PlaceGTCOrder(OrderAction.BID, takerUid, symbol, 3m, 2);
+
+        var makerRep = await GetUserReport(makerUid);
+
+        Assert.That(makerRep, Is.Not.Null);
+        Assert.That(makerRep.Positions, Is.Empty);
+
+        var takerRep = await GetUserReport(takerUid);
+
+        Assert.That(takerRep, Is.Not.Null);
+        Assert.That(takerRep.Positions, Is.Empty);
+    }
+
+    [Test]
+    public async Task TradesBidAskClosePositionsWithPnl()
+    {
+        var makerUid = 100L;
+        var takerUid = 102L;
+        var symbol = 2;
+
+        await AddUser(makerUid);
+        await AddUser(takerUid);
+        await AddSymbol(symbol);
+
+        var bid1Res = await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 3m, 3);
+        var ask1Res = await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 3m, 3);
+
+        var bid2Res = await PlaceGTCOrder(OrderAction.ASK, makerUid, symbol, 5m, 2);
+        var ask2Res = await PlaceGTCOrder(OrderAction.BID, takerUid, symbol, 5m, 2);
+
+        var makerRep = await GetUserReport(makerUid);
+
+        Assert.That(makerRep, Is.Not.Null);
+        Assert.That(makerRep.Positions, Is.Not.Empty);
+
+        var makerPos = makerRep.Positions[symbol];
+        Assert.That(makerPos, Is.Not.Null);
+
+        var makerPnl = ((5m - 3m) * 2) + (3m * (-1));
+        Console.WriteLine($"Maker: Pnl={makerPnl} {makerPos}");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(makerPos.Uid, Is.EqualTo(makerUid));
+            Assert.That(makerPos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
+            Assert.That(makerPos.OpenVolume, Is.EqualTo(1));
+            Assert.That(makerPos.RealizedPnL, Is.EqualTo(makerPnl));
+        });
+
+        var takerRep = await GetUserReport(takerUid);
+
+        Assert.That(takerRep, Is.Not.Null);
+        Assert.That(takerRep.Positions, Is.Not.Empty);
+
+        var takerPos = takerRep.Positions[symbol];
+        Assert.That(takerPos, Is.Not.Null);
+
+        var takerPnl = ((3m - 5m) * 2) + (3m * (-1));
+        Console.WriteLine($"Taker: Pnl={takerPnl} {takerPos}");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(takerPos.Uid, Is.EqualTo(takerUid));
+            Assert.That(takerPos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
+            Assert.That(takerPos.OpenVolume, Is.EqualTo(1));
+            Assert.That(takerPos.RealizedPnL, Is.EqualTo(takerPnl));
+        });
+    }
 }
