@@ -1,6 +1,6 @@
 namespace Vertr.Terminal.ApiClient.Tests;
 
-[TestFixture(Category = "System")]
+[TestFixture(Category = "System", Explicit = true)]
 public class MultiTradeTests : TerminalApiTestBase
 {
     [SetUp]

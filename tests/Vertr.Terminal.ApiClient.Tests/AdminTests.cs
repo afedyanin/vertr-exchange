@@ -16,7 +16,7 @@ D:\workspace\vertr\src\Vertr.Terminal.Server\bin\Debug\net8.0
 .\Vertr.Terminal.Server.exe
  */
 
-[TestFixture(Category = "System")]
+[TestFixture(Category = "System", Explicit = true)]
 public class AdminTests
 {
     private ITerminalApiClient _api;

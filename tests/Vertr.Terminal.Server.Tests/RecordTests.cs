@@ -1,5 +1,6 @@
 namespace Vertr.Terminal.Server.Tests;
 
+[TestFixture(Category = "Unit")]
 public class RecordTests
 {
     public record History

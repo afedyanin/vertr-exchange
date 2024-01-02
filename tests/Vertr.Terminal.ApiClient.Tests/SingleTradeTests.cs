@@ -3,7 +3,7 @@ using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Terminal.ApiClient.Tests;
 
-[TestFixture(Category = "System")]
+[TestFixture(Category = "System", Explicit = true)]
 public class SingleTradeTests : TerminalApiTestBase
 {
     [SetUp]
