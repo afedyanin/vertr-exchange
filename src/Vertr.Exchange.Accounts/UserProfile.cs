@@ -63,11 +63,12 @@ internal class UserProfile(long uid, UserStatus status) : IUserProfile
         var position = value;
         position.Update(action, tradeSize, tradePrice);
 
-        if (position.IsEmpty)
+        // TODO: how to sync account value with each position moving: open, close, change?
+        /*if (position.IsEmpty)
         {
             AddToValue(spec.Currency, position.RealizedPnL);
             _positions.Remove(position.Symbol);
-        }
+        }*/
     }
 
     public CommandResultCode Suspend()

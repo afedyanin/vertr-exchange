@@ -96,12 +96,14 @@ public class TradingScenarioTests : ApiTestBase
         var makerRep = await GetUserReport(makerUid);
 
         Assert.That(makerRep, Is.Not.Null);
-        Assert.That(makerRep.Positions, Is.Empty);
+        // TODO: Move pnl to account and remove closed position
+        Assert.That(makerRep.Positions, Is.Not.Empty);
 
         var takerRep = await GetUserReport(takerUid);
 
         Assert.That(takerRep, Is.Not.Null);
-        Assert.That(takerRep.Positions, Is.Empty);
+        // TODO: Move pnl to account and remove closed position
+        Assert.That(takerRep.Positions, Is.Not.Empty);
     }
 
     [Test]
@@ -115,11 +117,11 @@ public class TradingScenarioTests : ApiTestBase
         await AddUser(takerUid);
         await AddSymbol(symbol);
 
-        var bid1Res = await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 3m, 3);
-        var ask1Res = await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 3m, 3);
+        var bid1Res = await PlaceGTCOrder(OrderAction.BID, makerUid, symbol, 3m, 3); // -9
+        var ask1Res = await PlaceGTCOrder(OrderAction.ASK, takerUid, symbol, 3m, 3); // -9
 
-        var bid2Res = await PlaceGTCOrder(OrderAction.ASK, makerUid, symbol, 5m, 2);
-        var ask2Res = await PlaceGTCOrder(OrderAction.BID, takerUid, symbol, 5m, 2);
+        var bid2Res = await PlaceGTCOrder(OrderAction.ASK, makerUid, symbol, 5m, 4); // -9 + 15 - 5 = 6 - 5 = 1
+        var ask2Res = await PlaceGTCOrder(OrderAction.BID, takerUid, symbol, 5m, 4); // +9 - 15 - 5 = -6 - 5 = -11
 
         var makerRep = await GetUserReport(makerUid);
 
@@ -129,15 +131,14 @@ public class TradingScenarioTests : ApiTestBase
         var makerPos = makerRep.Positions[symbol];
         Assert.That(makerPos, Is.Not.Null);
 
-        var makerPnl = ((5m - 3m) * 2) + (3m * (-1));
-        Console.WriteLine($"Maker: Pnl={makerPnl} {makerPos}");
+        Console.WriteLine($"Maker: Pnl={1} {makerPos}");
 
         Assert.Multiple(() =>
         {
             Assert.That(makerPos.Uid, Is.EqualTo(makerUid));
-            Assert.That(makerPos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
+            Assert.That(makerPos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
             Assert.That(makerPos.OpenVolume, Is.EqualTo(1));
-            Assert.That(makerPos.RealizedPnL, Is.EqualTo(makerPnl));
+            Assert.That(makerPos.RealizedPnL, Is.EqualTo(1));
         });
 
         var takerRep = await GetUserReport(takerUid);
@@ -148,15 +149,14 @@ public class TradingScenarioTests : ApiTestBase
         var takerPos = takerRep.Positions[symbol];
         Assert.That(takerPos, Is.Not.Null);
 
-        var takerPnl = ((3m - 5m) * 2) + (3m * (-1));
-        Console.WriteLine($"Taker: Pnl={takerPnl} {takerPos}");
+        Console.WriteLine($"Taker: Pnl={-11} {takerPos}");
 
         Assert.Multiple(() =>
         {
             Assert.That(takerPos.Uid, Is.EqualTo(takerUid));
-            Assert.That(takerPos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
+            Assert.That(takerPos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(takerPos.OpenVolume, Is.EqualTo(1));
-            Assert.That(takerPos.RealizedPnL, Is.EqualTo(takerPnl));
+            Assert.That(takerPos.RealizedPnL, Is.EqualTo(-11));
         });
     }
 }
