@@ -39,14 +39,16 @@ public abstract class TerminalApiTestBase
     }
 
     protected async Task<long> PlaceBobBid(decimal price, long qty)
-    {
-        return await PlaceOrder(BobAccount, price, qty);
-    }
+        => await PlaceOrder(BobAccount, price, qty);
+
+    protected async Task<long> PlaceBobAsk(decimal price, long qty)
+        => await PlaceOrder(BobAccount, price, qty * (-1));
 
     protected async Task<long> PlaceAliceAsk(decimal price, long qty)
-    {
-        return await PlaceOrder(AliceAccount, price, qty * (-1));
-    }
+        => await PlaceOrder(AliceAccount, price, qty * (-1));
+
+    protected async Task<long> PlaceAliceBid(decimal price, long qty)
+        => await PlaceOrder(AliceAccount, price, qty);
 
     protected async Task<long> PlaceOrder(Contracts.UserAccount account, decimal price, long qty)
     {

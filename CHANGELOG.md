@@ -1,8 +1,46 @@
+## 02-01-24
+
+### Учет денег на акааунте
+Сейчас движения в позиции никак не влияют на сумму акаунта. Т.е. она вообще никак не участвует в движениях.
+
+Необходимо доработать функционал акаунтинга:
+- перед выставлением ордера проверять доступность средств. При необходимости - резервировать средства
+- при срабатывании ордера и при движении позиции - отражать соответствующие суммы на акаунте
+Сейчас закомментирован код, который вызывал движение в акаунте - но только при закрытии позиции. 
+Необходимо расширить функционал работы с аккаунтом для всех типов движений в позиции - не только для закрытия.
+
+### Fix error
+
+fail: Microsoft.Extensions.Hosting.Internal.Host[9]
+      BackgroundService failed
+      System.ArgumentNullException: Value cannot be null. (Parameter 'order')
+         at System.ArgumentNullException.Throw(String paramName)
+         at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
+         at Vertr.Terminal.Domain.OrderManagement.OrderEventFactory.Create(TradeEvent taker, Order order) in D:\workspace\vertr\src\Vertr.Terminal.Domain\OrderManagement\OrderEventFactory.cs:line 26
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.HandleTakerTrade(TradeEvent tradeEvent) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 57
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.Handle(TradeRequest request, CancellationToken cancellationToken) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 46
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at Vertr.Terminal.ExchangeClient.Streams.TradeEventStream.ExecuteAsync(CancellationToken stoppingToken) in D:\workspace\vertr\src\Vertr.Terminal.ExchangeClient\Streams\TradeEventStream.cs:line 34
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+crit: Microsoft.Extensions.Hosting.Internal.Host[10]
+      The HostOptions.BackgroundServiceExceptionBehavior is configured to StopHost. A BackgroundService has thrown an unhandled exception, and the IHost instance is stopping. To avoid this behavior, configure this to Ignore; however the BackgroundService will not be restarted.
+      System.ArgumentNullException: Value cannot be null. (Parameter 'order')
+         at System.ArgumentNullException.Throw(String paramName)
+         at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
+         at Vertr.Terminal.Domain.OrderManagement.OrderEventFactory.Create(TradeEvent taker, Order order) in D:\workspace\vertr\src\Vertr.Terminal.Domain\OrderManagement\OrderEventFactory.cs:line 26
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.HandleTakerTrade(TradeEvent tradeEvent) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 57
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.Handle(TradeRequest request, CancellationToken cancellationToken) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 46
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at Vertr.Terminal.ExchangeClient.Streams.TradeEventStream.ExecuteAsync(CancellationToken stoppingToken) in D:\workspace\vertr\src\Vertr.Terminal.ExchangeClient\Streams\TradeEventStream.cs:line 34
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+
 ## 09-12-23
 - [x] пофиксить зависания в трейдинге - race conditions
 - [x] доработать ресет для терминала - сброс репозиториев
 - [x] работа с ордерами - история, филлмент, события
-- [ ] тесты и сверка данных: репорт, ордера, трейды и стакан
+- [x] тесты и сверка данных: репорт, ордера, трейды и стакан
 
 ## 08-12-23
 

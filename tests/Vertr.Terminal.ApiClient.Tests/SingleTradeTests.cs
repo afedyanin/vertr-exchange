@@ -3,7 +3,7 @@ using Vertr.Exchange.Shared.Enums;
 
 namespace Vertr.Terminal.ApiClient.Tests;
 
-[TestFixture(Category = "System")]
+[TestFixture(Category = "System", Explicit = true)]
 public class SingleTradeTests : TerminalApiTestBase
 {
     [SetUp]
@@ -12,9 +12,9 @@ public class SingleTradeTests : TerminalApiTestBase
         await Init();
     }
 
-    [TestCase(124, 24, 120, 26)]
-    [TestCase(124, 28, 120, 26)]
-    [TestCase(124, 26, 120, 26)]
+    [TestCase(4, 4, 2, 6)]
+    [TestCase(4, 8, 2, 6)]
+    [TestCase(4, 6, 2, 6)]
     public async Task ExchangeHasValidStateAfterSingleTrade(
         decimal bidPrice,
         long bidQty,
@@ -31,10 +31,11 @@ public class SingleTradeTests : TerminalApiTestBase
         // ValidateProfileAmounts(bobProfile, expBidAmount, decimal.Zero, minQty);
 
         var bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
-        ValidateProfileAmounts(bobProfile, BobInitialAmount, decimal.Zero, minQty);
+        ValidateProfileAmounts(bobProfile, BobInitialAmount, bidPrice * minQty * (-1), minQty);
 
         var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
-        ValidateProfileAmounts(aliceProfile, AliceInitialAmount, decimal.Zero, minQty);
+        var bestAskPrice = Math.Max(bidPrice, askPrice);
+        ValidateProfileAmounts(aliceProfile, AliceInitialAmount, bestAskPrice * minQty * (-1), minQty);
 
         var books = await ApiCommands.GetOrderBooks();
 

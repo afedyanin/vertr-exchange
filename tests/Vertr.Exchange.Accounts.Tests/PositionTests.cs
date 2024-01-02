@@ -35,7 +35,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
+            Assert.That(pos.RealizedPnL, Is.EqualTo(size * price * (-1)));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
     }
@@ -81,7 +81,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(0));
+            Assert.That(pos.RealizedPnL, Is.EqualTo((100 * 10 * (-1)) + (90 * 100)));
             Assert.That(pos.OpenVolume, Is.EqualTo(10));
         });
 
@@ -120,8 +120,8 @@ public class PositionTests
         Console.WriteLine($"Ask 90x100$ (-9000) => {pos}");
         pos.Update(OrderAction.ASK, 5, 100m);
         Console.WriteLine($"Ask 5x100$ (-500) => {pos}");
-        pos.Update(OrderAction.ASK, 15, 20m);
-        Console.WriteLine(pos);
+        pos.Update(OrderAction.ASK, 15, 100m);
+        Console.WriteLine($"Ask 15x100$ (-500 + (-1000)) =>  {pos}");
     }
 
     [Test]
@@ -135,8 +135,8 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(0));
-            Assert.That(pos.OpenVolume, Is.EqualTo(300));
+            Assert.That(pos.RealizedPnL, Is.EqualTo(((100 * 10) + (200 * 20)) * (-1)));
+            Assert.That(pos.OpenVolume, Is.EqualTo(100 + 200));
         });
     }
 

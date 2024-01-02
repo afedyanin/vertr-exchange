@@ -1,6 +1,8 @@
+using Vertr.Exchange.Shared.Enums;
+
 namespace Vertr.Terminal.ApiClient.Tests;
 
-[TestFixture(Category = "System")]
+[TestFixture(Category = "System", Explicit = true)]
 public class MultiTradeTests : TerminalApiTestBase
 {
     [SetUp]
@@ -9,63 +11,170 @@ public class MultiTradeTests : TerminalApiTestBase
         await Init();
     }
 
-    [TestCase(124, 24, 120, 26)]
-    public async Task UserProfilesHaveValidStateAfterTrades(
-        decimal bidPrice,
-        long bidQty,
-        decimal askPrice,
-        long askQty)
+    [Test]
+    public async Task BidAskOpenMatch()
     {
-        // TODO: Implement this
-
-        var minQty = Math.Min(bidQty, askQty);
-
-        var bobOpenOrderId = await PlaceBobBid(bidPrice, bidQty);
-        var aliceOrderId = await PlaceAliceAsk(askPrice, askQty);
+        var bobOpenOrderId = await PlaceBobBid(3m, 2);
+        var aliceOrderId = await PlaceAliceAsk(3m, 2);
 
         var bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
         var bobPosition = bobProfile!.Positions[Msft.Id];
 
         var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
         var alicePosition = aliceProfile!.Positions[Msft.Id];
-        Console.WriteLine($"Before Bob={bobPosition}");
-        Console.WriteLine($"Before Alice={alicePosition}");
 
-        var bobCloseOrderId = await PlaceOrder(BobAccount, 130, -28); // Close position
-        var aliceCloseOrderId = await PlaceOrder(AliceAccount, 132, 28); // Close position
+        Assert.Multiple(() =>
+        {
+            Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
+            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(-6));
+            Assert.That(bobPosition.OpenVolume, Is.EqualTo(2));
+            Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
+            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(-6));
+            Assert.That(alicePosition.OpenVolume, Is.EqualTo(2));
+        });
 
-        bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
-        bobPosition = bobProfile!.Positions[Msft.Id];
-
-        aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
-        alicePosition = aliceProfile!.Positions[Msft.Id];
-        Console.WriteLine($"After Bob={bobPosition}");
-        Console.WriteLine($"After Alice={alicePosition}");
-
-        // ValidateProfileAmounts(bobProfile, BobInitialAmount, decimal.Zero, decimal.Zero);
-        // ValidateProfilePosition(bobProfile, decimal.Zero, decimal.Zero);
-
-        // var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
-        // ValidateProfileAmounts(aliceProfile, AliceInitialAmount, decimal.Zero, decimal.Zero);
+        // Console.WriteLine($"Bob={bobPosition}");
+        // Console.WriteLine($"Alice={alicePosition}");
     }
 
-    /*
-        private void ValidateProfilePosition(
-            SingleUserReportResult? report,
-            decimal expectedPnl,
-            decimal expectedOpenVolume)
+    [Test]
+    public async Task BidAskCloseMatch()
+    {
+        var bobOrderId = await PlaceBobBid(3m, 2);
+        var aliceOrderId = await PlaceAliceAsk(3m, 2);
+        bobOrderId = await PlaceBobAsk(3m, 2);
+        aliceOrderId = await PlaceAliceBid(3m, 2);
+
+        var bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
+        var bobPosition = bobProfile!.Positions[Msft.Id];
+
+        var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
+        var alicePosition = aliceProfile!.Positions[Msft.Id];
+
+        Assert.Multiple(() =>
         {
-            Assert.That(report, Is.Not.Null);
+            Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
+            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(0));
+            Assert.That(bobPosition.OpenVolume, Is.EqualTo(0));
+            Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
+            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(0));
+            Assert.That(alicePosition.OpenVolume, Is.EqualTo(0));
+        });
 
-            var position = report.Positions[Msft.Id];
+        // Console.WriteLine($"Bob={bobPosition}");
+        // Console.WriteLine($"Alice={alicePosition}");
+    }
 
-            Console.WriteLine($"Position={position}");
+    [Test]
+    public async Task BidProfit()
+    {
+        var bobOrderId = await PlaceBobBid(3m, 2);
+        var aliceOrderId = await PlaceAliceAsk(3m, 2);
+        bobOrderId = await PlaceBobAsk(5m, 2);
+        aliceOrderId = await PlaceAliceBid(5m, 2);
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(position.RealizedPnL, Is.EqualTo(expectedPnl));
-                Assert.That(position.OpenVolume, Is.EqualTo(expectedOpenVolume));
-            });
-        }
-    */
+        var bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
+        var bobPosition = bobProfile!.Positions[Msft.Id];
+
+        var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
+        var alicePosition = aliceProfile!.Positions[Msft.Id];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
+            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(4));
+            Assert.That(bobPosition.OpenVolume, Is.EqualTo(0));
+            Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
+            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(-4));
+            Assert.That(alicePosition.OpenVolume, Is.EqualTo(0));
+        });
+
+        // Console.WriteLine($"Bob={bobPosition}");
+        // Console.WriteLine($"Alice={alicePosition}");
+    }
+
+    [Test]
+    public async Task AskProfit()
+    {
+        var bobOrderId = await PlaceBobBid(3m, 2);
+        var aliceOrderId = await PlaceAliceAsk(3m, 2);
+        bobOrderId = await PlaceBobAsk(1m, 2);
+        aliceOrderId = await PlaceAliceBid(1m, 2);
+
+        var bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
+        var bobPosition = bobProfile!.Positions[Msft.Id];
+
+        var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
+        var alicePosition = aliceProfile!.Positions[Msft.Id];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
+            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(-4));
+            Assert.That(bobPosition.OpenVolume, Is.EqualTo(0));
+            Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
+            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(4));
+            Assert.That(alicePosition.OpenVolume, Is.EqualTo(0));
+        });
+
+        // Console.WriteLine($"Bob={bobPosition}");
+        // Console.WriteLine($"Alice={alicePosition}");
+    }
+
+    [Test]
+    public async Task BidProfitDiffQty()
+    {
+        var bobOrderId = await PlaceBobBid(3m, 2);
+        var aliceOrderId = await PlaceAliceAsk(3m, 2);
+        bobOrderId = await PlaceBobAsk(5m, 4);
+        aliceOrderId = await PlaceAliceBid(5m, 4);
+
+        var bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
+        var bobPosition = bobProfile!.Positions[Msft.Id];
+
+        var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
+        var alicePosition = aliceProfile!.Positions[Msft.Id];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
+            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(4 - 10));
+            Assert.That(bobPosition.OpenVolume, Is.EqualTo(2));
+            Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
+            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(-4 - 10));
+            Assert.That(alicePosition.OpenVolume, Is.EqualTo(2));
+        });
+
+        // Console.WriteLine($"Bob={bobPosition}");
+        // Console.WriteLine($"Alice={alicePosition}");
+    }
+
+    [Test]
+    public async Task AskProfitDiffQty()
+    {
+        var bobOrderId = await PlaceBobBid(3m, 2);
+        var aliceOrderId = await PlaceAliceAsk(3m, 2);
+        bobOrderId = await PlaceBobAsk(1m, 4);
+        aliceOrderId = await PlaceAliceBid(1m, 4);
+
+        var bobProfile = await ApiCommands.GetSingleUserReport(BobAccount.User);
+        var bobPosition = bobProfile!.Positions[Msft.Id];
+
+        var aliceProfile = await ApiCommands.GetSingleUserReport(AliceAccount.User);
+        var alicePosition = aliceProfile!.Positions[Msft.Id];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
+            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(-4 - 2));
+            Assert.That(bobPosition.OpenVolume, Is.EqualTo(2));
+            Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
+            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(4 - 2));
+            Assert.That(alicePosition.OpenVolume, Is.EqualTo(2));
+        });
+
+        // Console.WriteLine($"Bob={bobPosition}");
+        // Console.WriteLine($"Alice={alicePosition}");
+    }
+
 }
