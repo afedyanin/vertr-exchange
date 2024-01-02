@@ -453,17 +453,17 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.ASK, 7, ask1Price);
-        var expectedPnl = 7 * ask1Price * (-1);
+        var expectedPnl = 7 * ask1Price * (-1); // -35
         Console.WriteLine($"Pnl={expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.BID, 9, bidPrice);
-        expectedPnl += 7 * bidPrice;
-        var fixedPnl = expectedPnl;
-        expectedPnl = 2 * bidPrice * (-1);
+        expectedPnl += 7 * bidPrice;  // -35 + 21 = -14
+        var fixedPnl = expectedPnl * (-1); // close short
+        expectedPnl = 2 * bidPrice * (-1); // -6
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.ASK, 2, ask2Price);
-        expectedPnl += 2 * ask2Price;
+        expectedPnl += 2 * ask2Price; // -6 + 16 = 10
         fixedPnl += expectedPnl;
         Console.WriteLine($"Pnl={fixedPnl} Pos={pos}");
 
@@ -491,13 +491,13 @@ public class PositionPnlTests
         Console.WriteLine($"Pnl={expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.BID, 9, bidPrice);
-        expectedPnl += 7 * bidPrice;
-        var fixedPnl = expectedPnl;
-        expectedPnl = 2 * bidPrice * (-1);
+        expectedPnl += 7 * bidPrice;  // -35 + 21 = -14
+        var fixedPnl = expectedPnl * (-1); // close short
+        expectedPnl = 2 * bidPrice * (-1); // -6
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.ASK, 5, ask2Price);
-        expectedPnl += 2 * ask2Price;
+        expectedPnl += 2 * ask2Price; // -6 + 16 = 10
         fixedPnl += expectedPnl;
         expectedPnl = 3 * ask2Price * (-1); // open short
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
@@ -509,5 +509,4 @@ public class PositionPnlTests
             Assert.That(pos.RealizedPnL, Is.EqualTo(fixedPnl + expectedPnl));
         });
     }
-
 }
