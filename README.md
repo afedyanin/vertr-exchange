@@ -1,7 +1,5 @@
 # vertr
 
-Algorithmic Trading Engine
-
 ## Exchange Emulator Engine 
 
 Inspired by
@@ -11,12 +9,14 @@ Inspired by
 - [Aeron](https://github.com/real-logic/aeron)
 
 
-## SignalR
+## Tech stuff
+
+### SignalR
 
 https://learn.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-8.0
 https://github.com/aspnet/SignalR-samples/tree/main
 
-## Channels
+### Channels
 
 - [An Introduction to System.Threading.Channels](https://devblogs.microsoft.com/dotnet/an-introduction-to-system-threading-channels/)
 - [System.Threading.Channels library](https://learn.microsoft.com/en-us/dotnet/core/extensions/channels)
@@ -26,7 +26,7 @@ https://github.com/aspnet/SignalR-samples/tree/main
 - [Asynchronous Producer Consumer Pattern in .NET (C#)](https://www.dotnetcurry.com/dotnetcore/1509/async-dotnetcore-pattern)
 - [Concurrent Pipeline with .NET Channels](https://www.rickyterrell.com/?p=247)
 
-### Denis Kyashif's Blog
+#### Denis Kyashif's Blog
 - [C# Channels - Publish / Subscribe Workflows](https://deniskyashif.com/2019/12/08/csharp-channels-part-1/)
 - [C# Channels - Timeout and Cancellation](https://deniskyashif.com/2019/12/11/csharp-channels-part-2/)
 - [C# Channels - Async Data Pipelines](https://deniskyashif.com/2020/01/07/csharp-channels-part-3/)
@@ -36,7 +36,7 @@ https://github.com/aspnet/SignalR-samples/tree/main
 
 
  
- ## URLS
+ ## URLS to start
 
 C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Exchange.Server\bin\Debug\net8.0
 D:\workspace\vertr\src\Vertr.Exchange.Server\bin\Debug\net8.0
