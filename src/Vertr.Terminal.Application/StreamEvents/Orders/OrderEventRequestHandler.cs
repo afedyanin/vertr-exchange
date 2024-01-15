@@ -8,6 +8,7 @@ namespace Vertr.Terminal.Application.StreamEvents.Orders;
 internal sealed class OrderEventRequestHandler(
     IOrderRepository orderRepository,
     ITradeEventsRepository tradeEventsRepository,
+    IMarketDataRepository marketDataRepository,
     ILogger<OrderEventRequestHandler> logger) :
     IRequestHandler<ReduceRequest>,
     IRequestHandler<RejectRequest>,
@@ -15,6 +16,7 @@ internal sealed class OrderEventRequestHandler(
 {
     private readonly IOrderRepository _orderRepository = orderRepository;
     private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
+    private readonly IMarketDataRepository _marketDataRepository = marketDataRepository;
     private readonly ILogger<OrderEventRequestHandler> _logger = logger;
 
     public async Task Handle(ReduceRequest request, CancellationToken cancellationToken)
@@ -48,6 +50,7 @@ internal sealed class OrderEventRequestHandler(
         foreach (var makerTrade in orderEvent.Trades)
         {
             await HandleMakerTrade(orderEvent, makerTrade);
+            await HandleMarketData(orderEvent, makerTrade);
         }
     }
 
@@ -64,5 +67,12 @@ internal sealed class OrderEventRequestHandler(
         var evt = OrderEventFactory.Create(tradeEvent, makerTrade);
         await _orderRepository.AddEvent(evt);
         _logger.LogDebug("Maker trade event processed. OrderId={orderId}", makerTrade.MakerOrderId);
+    }
+
+    private async Task HandleMarketData(TradeEvent tradeEvent, Trade makerTrade)
+    {
+        var symbolId = tradeEvent.Symbol;
+        var price = makerTrade.Price;
+        await _marketDataRepository.Update(symbolId, price);
     }
 }

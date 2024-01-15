@@ -2,6 +2,7 @@ using MediatR;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Terminal.Application.Commands.Orders;
+using Vertr.Terminal.Domain.Abstractions;
 
 namespace Vertr.Terminal.Server.Strategies;
 
@@ -14,21 +15,22 @@ public record RandomWalkStrategyParams(
 
 public class RandomWalkStrategy(
     IMediator mediator,
+    IMarketDataRepository marketDataRepository,
     RandomWalkStrategyParams strategyParams)
 {
     private readonly RandomWalkStrategyParams _strategyParams = strategyParams;
     private readonly IMediator _mediator = mediator;
+    private readonly IMarketDataRepository _marketDataRepository = marketDataRepository;
     private const int _orderCommadsDelay = 1;
 
     public async Task Execute(CancellationToken cancellationToken = default)
     {
-        var nextPrice = _strategyParams.BasePrice;
+        var marketPrice = await GetMarketPrice(_strategyParams.BasePrice);
 
         for (var i = 0; i < _strategyParams.OrdersCount; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            nextPrice = NextRandomPrice(nextPrice, _strategyParams.PriceDelta);
+            var randomPrice = NextRandomPrice(marketPrice, _strategyParams.PriceDelta);
             var size = NextRandomQty();
             var placeRequest = new PlaceRequest
             {
@@ -36,16 +38,25 @@ public class RandomWalkStrategy(
                 {
                     UserId = _strategyParams.UserId,
                     Symbol = _strategyParams.SymbolId,
-                    Price = nextPrice,
+                    Price = randomPrice,
                     Size = Math.Abs(size),
                     Action = size > 0 ? OrderAction.BID : OrderAction.ASK,
-                    OrderType = nextPrice == decimal.Zero ? OrderType.IOC : OrderType.GTC,
+                    OrderType = randomPrice == decimal.Zero ? OrderType.IOC : OrderType.GTC,
                 }
             };
 
             await _mediator.Send(placeRequest);
             await Task.Delay(_orderCommadsDelay, cancellationToken);
+            marketPrice = await GetMarketPrice(randomPrice);
         }
+    }
+
+    private async Task<decimal> GetMarketPrice(decimal previousPrice)
+    {
+        var marketDataItem = await _marketDataRepository.GetBySymbolId(_strategyParams.SymbolId);
+        var res = marketDataItem == null ? previousPrice : marketDataItem.Price;
+
+        return res;
     }
 
     private static decimal NextRandomPrice(decimal baseParice, decimal delta)

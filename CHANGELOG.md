@@ -1,13 +1,49 @@
+## 15-01-24
+
+- [ ] закрытие позиций по рынку по завершению стратегии
+- [ ] история цены, история сделок, эквити
+- [ ] поификсить багу
+
+```
+      Hub connection started
+fail: Microsoft.Extensions.Hosting.Internal.Host[9]
+      BackgroundService failed
+      System.ArgumentNullException: Value cannot be null. (Parameter 'order')
+         at System.ArgumentNullException.Throw(String paramName)
+         at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
+         at Vertr.Terminal.Domain.OrderManagement.OrderEventFactory.Create(TradeEvent taker, Order order) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.Domain\OrderManagement\OrderEventFactory.cs:line 26
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.HandleTakerTrade(TradeEvent tradeEvent) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 60
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.Handle(TradeRequest request, CancellationToken cancellationToken) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 48
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at Vertr.Terminal.ExchangeClient.Streams.TradeEventStream.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.ExchangeClient\Streams\TradeEventStream.cs:line 34
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+crit: Microsoft.Extensions.Hosting.Internal.Host[10]
+      The HostOptions.BackgroundServiceExceptionBehavior is configured to StopHost. A BackgroundService has thrown an unhandled exception, and the IHost instance is stopping. To avoid this behavior, configure this to Ignore; however the BackgroundService will not be restarted.
+      System.ArgumentNullException: Value cannot be null. (Parameter 'order')
+         at System.ArgumentNullException.Throw(String paramName)
+         at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
+         at Vertr.Terminal.Domain.OrderManagement.OrderEventFactory.Create(TradeEvent taker, Order order) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.Domain\OrderManagement\OrderEventFactory.cs:line 26
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.HandleTakerTrade(TradeEvent tradeEvent) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 60
+         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.Handle(TradeRequest request, CancellationToken cancellationToken) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 48
+         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
+      --- End of stack trace from previous location ---
+         at Vertr.Terminal.ExchangeClient.Streams.TradeEventStream.ExecuteAsync(CancellationToken stoppingToken) in C:\Users\Anatoly\Documents\GitHub\vertr\src\Vertr.Terminal.ExchangeClient\Streams\TradeEventStream.cs:line 34
+         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+
+```
+
+
 ## 10-01-24
 
-### Random Walk Strategy
+### [x] Random Walk Strategy 
 - прокидывать в стратегию текущую рыночную цену и от нее шагать
 - для рыночной цены нужен провайдер
 - прокидывать параметр необходимости закрытия позиций по завершению стратегии
 - закрывать позции отдельной командой? Какая стратегия закрытия - маркет ордер или лимитный?
 - как обеспечить ликвидность при закрытии позиций?
 
-### MarketData Provider
+### [x] MarketData Provider
 Сводная информация по рынку. По каждому символу:
 - текущая цена
 - дельта цены с начала торговли в процентах и сумме

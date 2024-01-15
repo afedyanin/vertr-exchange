@@ -2,6 +2,7 @@ using Refit;
 using Vertr.Terminal.ApiClient;
 using Vertr.Terminal.ConsoleApp.Views;
 
+
 namespace Vertr.Terminal.ConsoleApp;
 
 public class Program
@@ -45,24 +46,15 @@ public class Program
         var trades = await api.GetTrades();
         TradesView.Render(trades);
 
-        var req = new UserRequest()
-        {
-            UserId = Users.Bob.Id,
-        };
-
-        var report = await commands.GetSingleUserReport(req);
-        SingleUserReportView.Render(report);
-
-        req = new UserRequest()
-        {
-            UserId = Users.Alice.Id,
-        };
-
-        report = await commands.GetSingleUserReport(req);
-        SingleUserReportView.Render(report);
-        */
-
         var orders = await api.GetOrders();
         OrdersView.Render(orders);
+
+         */
+
+        var report = await commands.GetSingleUserReport(StaticContext.Users.Bob);
+        SingleUserReportView.Render(report);
+
+        report = await commands.GetSingleUserReport(StaticContext.Users.Alice);
+        SingleUserReportView.Render(report);
     }
 }
