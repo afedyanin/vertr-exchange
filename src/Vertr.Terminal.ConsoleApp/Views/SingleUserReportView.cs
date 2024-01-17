@@ -16,11 +16,12 @@ internal static class SingleUserReportView
 
         var user = StaticContext.Users.All.GetById(report.Uid);
 
-        Console.WriteLine($"Report execution status={report.ExecutionStatus}");
-        Console.WriteLine($"User: Id={report.Uid} Name={user!.Name}  Status={report.UserStatus}");
+        // Console.WriteLine($"Report execution status={report.ExecutionStatus}");
 
-        var accountsTable = CreateAccountsTable(report.Accounts);
-        AnsiConsole.Write(accountsTable);
+
+        // Account not changed yet
+        // var accountsTable = CreateAccountsTable(report.Accounts);
+        // AnsiConsole.Write(accountsTable);
 
         var ordersTable = CreateOrdersTable(report.Orders);
         AnsiConsole.Write(ordersTable);
@@ -29,22 +30,15 @@ internal static class SingleUserReportView
         AnsiConsole.Write(positionsTable);
     }
 
-    private static Table CreateAccountsTable(IDictionary<int, decimal> accounts)
+    private static void WriteUserInfo(SingleUserReportResult report)
     {
-        var table = new Table
-        {
-            Title = new TableTitle("Accounts"),
-        };
+        var deviderTop = new string('=', 80);
+        Console.WriteLine($"\n{deviderTop}");
 
-        table.AddColumns("Currency", "Amount");
+        Console.WriteLine($"User: Id={report.Uid} Name={user!.Name}  Status={report.UserStatus}");
 
-        foreach (var acc in accounts)
-        {
-            var currency = StaticContext.Currencies.All.GetById(acc.Key);
-            table.AddRow(currency!.Code, acc.Value.ToString(ViewConsts.DecimalFormat));
-        };
-
-        return table;
+        var deviderBottom = new string('-', 80);
+        Console.WriteLine($"{deviderBottom}\n");
     }
 
     private static Table CreateOrdersTable(IDictionary<int, OrderDto[]> orders)
@@ -115,4 +109,24 @@ internal static class SingleUserReportView
 
         return table;
     }
+
+    /*
+    private static Table CreateAccountsTable(IDictionary<int, decimal> accounts)
+    {
+        var table = new Table
+        {
+            Title = new TableTitle("Accounts"),
+        };
+
+        table.AddColumns("Currency", "Amount");
+
+        foreach (var acc in accounts)
+        {
+            var currency = StaticContext.Currencies.All.GetById(acc.Key);
+            table.AddRow(currency!.Code, acc.Value.ToString(ViewConsts.DecimalFormat));
+        };
+
+        return table;
+    }
+    */
 }
