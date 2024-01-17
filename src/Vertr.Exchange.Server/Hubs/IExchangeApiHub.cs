@@ -8,6 +8,8 @@ public interface IExchangeApiHub
 {
     long Nop();
 
+    long GetNextOrderId();
+
     long GetOrderBook(OrderBookRequest orderBookRequest);
 
     long AddSymbols(AddSymbolsRequest addSymbolsRequest);
@@ -22,7 +24,7 @@ public interface IExchangeApiHub
 
     long MoveOrder(MoveOrderRequest moveOrderRequest);
 
-    long PlaceOrder(PlaceOrderRequest placeOrderRequest);
+    long PlaceOrder(PlaceOrderRequest placeOrderRequest, long? orderId = null);
 
     long ReduceOrder(ReduceOrderRequest reduceOrderRequest);
 

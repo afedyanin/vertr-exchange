@@ -23,10 +23,10 @@ internal sealed class OrderRequestHandler(
     {
         var orderRequest = request.PlaceOrderRequest ?? throw new ArgumentNullException(nameof(request));
 
-        var res = await _exchangeApiClient.PlaceOrder(orderRequest);
+        var orderId = await _exchangeApiClient.GetNextOrderId();
 
         var order = new Order(
-            res.OrderId,
+            orderId,
             orderRequest.UserId,
             orderRequest.Symbol,
             orderRequest.Price,
@@ -36,6 +36,8 @@ internal sealed class OrderRequestHandler(
             );
 
         await _orderRepository.AddOrder(order);
+
+        var res = await _exchangeApiClient.PlaceOrder(orderRequest, orderId);
 
         var evt = OrderEventFactory.Create(orderRequest, res);
         await _orderRepository.AddEvent(evt);
