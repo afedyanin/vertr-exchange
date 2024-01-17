@@ -14,10 +14,8 @@ internal static class SingleUserReportView
             return;
         }
 
-        var user = StaticContext.Users.All.GetById(report.Uid);
-
         // Console.WriteLine($"Report execution status={report.ExecutionStatus}");
-
+        WriteUserInfo(report);
 
         // Account not changed yet
         // var accountsTable = CreateAccountsTable(report.Accounts);
@@ -32,6 +30,8 @@ internal static class SingleUserReportView
 
     private static void WriteUserInfo(SingleUserReportResult report)
     {
+        var user = StaticContext.Users.All.GetById(report.Uid);
+
         var deviderTop = new string('=', 80);
         Console.WriteLine($"\n{deviderTop}");
 

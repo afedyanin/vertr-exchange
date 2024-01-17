@@ -8,8 +8,8 @@ public class Program
 
     public static async Task Main()
     {
-        var trading = new SimpleTrading(_hostUrl);
-        // var trading = new RandomWalkTrading(_hostUrl);
+        // var trading = new SimpleTrading(_hostUrl);
+        var trading = new RandomWalkTrading(_hostUrl);
         await trading.Execute();
     }
 }

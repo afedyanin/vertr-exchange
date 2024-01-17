@@ -7,12 +7,12 @@ public class RandomWalkTrading(string hostUrl) : TradingBase(hostUrl)
     {
         var bobTrading = Task.Run(async () =>
         {
-            await Commands.RandomWalk(StaticContext.Users.Bob, StaticContext.Symbols.MSFT, 100, 10);
+            await Commands.RandomWalk(StaticContext.Users.Bob, StaticContext.Symbols.MSFT, 100, 100);
         });
 
         var aliceTrading = Task.Run(async () =>
         {
-            await Commands.RandomWalk(StaticContext.Users.Alice, StaticContext.Symbols.MSFT, 100, 10);
+            await Commands.RandomWalk(StaticContext.Users.Alice, StaticContext.Symbols.MSFT, 100, 100);
         });
 
         await Task.WhenAll(aliceTrading, bobTrading);
