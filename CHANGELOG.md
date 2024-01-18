@@ -1,3 +1,8 @@
+## 18-01-24
+- [ ] Reject event when trying to close position
+- [ ] Fix PnL value in profile
+
+
 ## 17-01-24
 - [ ] PnL по позициям после отработки стратегии
 

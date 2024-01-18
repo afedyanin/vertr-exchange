@@ -1,3 +1,4 @@
+using Vertr.Terminal.ApiClient.Contracts;
 using static Vertr.Terminal.ConsoleApp.StaticContext;
 
 namespace Vertr.Terminal.ConsoleApp.Scenarios;
@@ -23,6 +24,47 @@ public class RandomWalkTrading(
         });
 
         await Task.WhenAll(t1, t2);
+
+        await TryToClosePosition(Users.Bob);
+        await TryToClosePosition(Users.Alice);
+
+
         await DumpResults();
+    }
+
+    protected async Task TryToClosePosition(User user)
+    {
+        var report = await Commands.GetSingleUserReport(user);
+
+        if (report == null)
+        {
+            return;
+        }
+
+        if (!report.Positions.TryGetValue(Symbol.Id, out var position))
+        {
+            return;
+        }
+
+        if (position.Direction == Exchange.Shared.Enums.PositionDirection.EMPTY)
+        {
+            return;
+        }
+
+        if (position.OpenVolume == decimal.Zero)
+        {
+            return;
+        }
+
+        var reverseSign = position.Direction == Exchange.Shared.Enums.PositionDirection.DIR_SHORT ? 1 : -1;
+        var res = await Commands.PlaceOrder(user, Symbol, decimal.Zero, (long)position.OpenVolume * reverseSign);
+
+        if (res == null)
+        {
+            Console.WriteLine($"ERROR: Failed to close position for user={user.Name}");
+            return;
+        }
+
+        Console.WriteLine($"Close position: User={user.Name} OrderId={res.OrderId} Code={res.ResultCode}");
     }
 }
