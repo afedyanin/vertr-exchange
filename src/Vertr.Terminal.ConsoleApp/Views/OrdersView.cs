@@ -40,12 +40,13 @@ internal static class OrdersView
         var symbol = StaticContext.Symbols.All.GetById(order.Symbol);
         var user = StaticContext.Users.All.GetById(order.UserId);
 
+        var events = order.OrderEvents.ToArray();
+        var isCompleted = events.Where(e => e.OrderCompleted).Any();
+
         var table = new Table
         {
-            Title = new TableTitle($"U={user!.Name} S={symbol!.Code} T={order.OrderType} A={order.Action} Id={order.OrderId} Q={order.Size} P={order.Price.ToString(ViewConsts.DecimalFormat)}")
+            Title = new TableTitle($"Order: U={user!.Name} S={symbol!.Code} T={order.OrderType} A={order.Action} Id={order.OrderId} Q={order.Size} P={order.Price.ToString(ViewConsts.DecimalFormat)} IsCompleted={isCompleted}")
         };
-
-        var events = order.OrderEvents.ToArray();
 
         table.AddColumns(
             "Seq",

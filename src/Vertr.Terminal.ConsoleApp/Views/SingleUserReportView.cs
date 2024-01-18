@@ -23,9 +23,11 @@ internal static class SingleUserReportView
 
         var ordersTable = CreateOrdersTable(report.Orders);
         AnsiConsole.Write(ordersTable);
+        AnsiConsole.WriteLine("\n");
 
         var positionsTable = CreatePositionsTable(report.Positions);
         AnsiConsole.Write(positionsTable);
+        AnsiConsole.WriteLine("\n");
     }
 
     private static void WriteUserInfo(SingleUserReportResult report)
@@ -90,7 +92,7 @@ internal static class SingleUserReportView
         table.AddColumns(
             "Symbol",
             "Direction",
-            "RealizedPnL",
+            "PnL",
             "OpenVolume"
             );
 
@@ -103,7 +105,7 @@ internal static class SingleUserReportView
                 symbol!.Code,
                 pos.Direction.ToString(),
                 pos.RealizedPnL.ToString(ViewConsts.DecimalFormat),
-                pos.OpenVolume.ToString(ViewConsts.DecimalFormat)
+                pos.OpenVolume.ToString()
                 );
         };
 

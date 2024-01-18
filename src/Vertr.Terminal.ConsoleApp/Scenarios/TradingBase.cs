@@ -1,5 +1,8 @@
 using Refit;
 using Vertr.Terminal.ApiClient;
+using Vertr.Terminal.ApiClient.Contracts;
+using static Vertr.Terminal.ConsoleApp.StaticContext;
+
 using Vertr.Terminal.ConsoleApp.Views;
 
 namespace Vertr.Terminal.ConsoleApp.Scenarios;
@@ -10,18 +13,19 @@ public abstract class TradingBase
 
     protected ApiCommands Commands { get; }
 
+    protected Symbol Symbol { get; }
 
-    protected TradingBase(string hostUrl)
+    protected TradingBase(string hostUrl, Symbol symbol)
     {
         ApiClient = RestService.For<ITerminalApiClient>(hostUrl);
         Commands = new ApiCommands(ApiClient);
+        Symbol = symbol;
     }
 
     public async Task Execute()
     {
         await InitExchange();
         await StartTrading();
-        await DumpResults();
     }
 
     protected abstract Task StartTrading();
@@ -30,30 +34,55 @@ public abstract class TradingBase
     {
         await Commands.Reset();
 
-        await Commands.AddSymbols(StaticContext.Symbols.All);
+        await Commands.AddSymbols(Symbols.All);
 
         await Commands.AddUsers([
-            StaticContext.UserAccounts.BobAccount,
-            StaticContext.UserAccounts.AliceAccount,
+            UserAccounts.BobAccount,
+            UserAccounts.AliceAccount,
         ]);
     }
 
-    protected virtual async Task DumpResults()
+    protected virtual async Task DumpUserResults(User user)
     {
-        var report = await Commands.GetSingleUserReport(StaticContext.Users.Bob);
+        var report = await Commands.GetSingleUserReport(user);
         SingleUserReportView.Render(report);
+    }
 
-        report = await Commands.GetSingleUserReport(StaticContext.Users.Alice);
-        SingleUserReportView.Render(report);
-
+    protected virtual async Task DumpTrades()
+    {
         var trades = await ApiClient.GetTrades();
         TradesView.Render(trades);
-
-        /*
-        var ob = await api.GetOrderBook(Symbols.MSFT.Id);
-        OrderBookView.Render(ob, "Random walk");
-        var orders = await api.GetOrders();
-        OrdersView.Render(orders);
-         */
     }
+
+    protected virtual async Task DumpOrderBook()
+    {
+        var ob = await ApiClient.GetOrderBook(Symbols.MSFT.Id);
+        OrderBookView.Render(ob, $"Order Book");
+    }
+
+    protected virtual async Task DumpOrders()
+    {
+        var orders = await ApiClient.GetOrders();
+        var filtered = orders.Where(o => o.Symbol == Symbol.Id).ToArray();
+
+        OrdersView.Render(filtered);
+    }
+
+    protected async Task DumpResults()
+    {
+        await DumpUserResults(Users.Bob);
+        await DumpUserResults(Users.Alice);
+        await DumpOrderBook();
+        await DumpTrades();
+        await DumpOrders();
+    }
+
+    protected virtual Task PlaceBid(User user, decimal price, long size)
+    {
+        var res = Commands.PlaceOrder(user, Symbol, price, size);
+        return res;
+    }
+
+    protected virtual Task PlaceAsk(User user, decimal price, long size)
+        => PlaceBid(user, price, size * (-1));
 }

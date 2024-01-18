@@ -6,7 +6,7 @@ namespace Vertr.Terminal.ConsoleApp.Views;
 
 internal static class TradesView
 {
-    public static void Render(TradeEvent[] tradeEvents)
+    public static void Render(TradeEvent[]? tradeEvents)
     {
         if (tradeEvents == null || tradeEvents.Length <= 0)
         {
@@ -16,22 +16,26 @@ internal static class TradesView
 
         var obTable = CreateTable(tradeEvents);
         AnsiConsole.Write(obTable);
+        AnsiConsole.WriteLine("\n");
     }
 
     private static Table CreateTable(TradeEvent[] tradeEvents)
     {
+        var totalVol = CalculateTotalVol(tradeEvents);
+
         var table = new Table
         {
-            Title = new TableTitle("Trades"),
+            Title = new TableTitle($"Trades Total Vol={totalVol.ToString(ViewConsts.DecimalFormat)}"),
         };
 
         table.AddColumns(
             "Symbol",
             "Seq #",
             "Timestamp",
-            "Tkr Vol",
-            "Vol",
+            "Tkr Size",
+            "Total Size",
             "Price",
+            "Vol",
             "Tkr Action",
             "Tkr OrdId",
             "Mkr OrdId"
@@ -44,7 +48,6 @@ internal static class TradesView
             for (int i = 0; i < tEvent.Trades.Length; i++)
             {
                 var trade = tEvent.Trades[i];
-                var maker = StaticContext.Users.All.GetById(trade.MakerUid);
 
                 table.AddRow(
                     symbol!.Code,
@@ -53,6 +56,7 @@ internal static class TradesView
                     i == 0 ? tEvent.TotalVolume.ToString() : ViewConsts.Empty,
                     trade.Volume.ToString(),
                     trade.Price.ToString(ViewConsts.DecimalFormat),
+                    (trade.Volume * trade.Price).ToString(ViewConsts.DecimalFormat),
                     i == 0 ? tEvent.TakerAction.ToString() : ViewConsts.Empty,
                     i == 0 ? tEvent.TakerOrderId.ToString() : ViewConsts.Empty,
                     trade.MakerOrderId.ToString()
@@ -62,4 +66,14 @@ internal static class TradesView
 
         return table;
     }
+
+    private static decimal CalculateTotalVol(TradeEvent[]? tradeEvents)
+    {
+        var totalVol = tradeEvents == null ?
+            decimal.Zero :
+            tradeEvents.Sum(te => te.Trades.Sum(t => t.Price * t.Volume));
+
+        return totalVol;
+    }
+
 }

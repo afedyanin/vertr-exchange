@@ -8,8 +8,9 @@ public class Program
 
     public static async Task Main()
     {
+        //var trading = new OverlappedOrdersTrading(_hostUrl);
         // var trading = new SimpleTrading(_hostUrl);
-        var trading = new RandomWalkTrading(_hostUrl);
+        var trading = new RandomWalkTrading(_hostUrl, 10, 2);
         await trading.Execute();
     }
 }
