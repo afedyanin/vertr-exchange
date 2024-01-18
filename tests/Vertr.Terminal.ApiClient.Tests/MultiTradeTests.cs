@@ -26,10 +26,10 @@ public class MultiTradeTests : TerminalApiTestBase
         Assert.Multiple(() =>
         {
             Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(-6));
+            Assert.That(bobPosition.PnL, Is.EqualTo(-6));
             Assert.That(bobPosition.OpenVolume, Is.EqualTo(2));
             Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(-6));
+            Assert.That(alicePosition.PnL, Is.EqualTo(-6));
             Assert.That(alicePosition.OpenVolume, Is.EqualTo(2));
         });
 
@@ -54,10 +54,10 @@ public class MultiTradeTests : TerminalApiTestBase
         Assert.Multiple(() =>
         {
             Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(0));
+            Assert.That(bobPosition.PnL, Is.EqualTo(0));
             Assert.That(bobPosition.OpenVolume, Is.EqualTo(0));
             Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(0));
+            Assert.That(alicePosition.PnL, Is.EqualTo(0));
             Assert.That(alicePosition.OpenVolume, Is.EqualTo(0));
         });
 
@@ -82,10 +82,10 @@ public class MultiTradeTests : TerminalApiTestBase
         Assert.Multiple(() =>
         {
             Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(4));
+            Assert.That(bobPosition.PnL, Is.EqualTo(4));
             Assert.That(bobPosition.OpenVolume, Is.EqualTo(0));
             Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(-4));
+            Assert.That(alicePosition.PnL, Is.EqualTo(-4));
             Assert.That(alicePosition.OpenVolume, Is.EqualTo(0));
         });
 
@@ -110,10 +110,10 @@ public class MultiTradeTests : TerminalApiTestBase
         Assert.Multiple(() =>
         {
             Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(-4));
+            Assert.That(bobPosition.PnL, Is.EqualTo(-4));
             Assert.That(bobPosition.OpenVolume, Is.EqualTo(0));
             Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(4));
+            Assert.That(alicePosition.PnL, Is.EqualTo(4));
             Assert.That(alicePosition.OpenVolume, Is.EqualTo(0));
         });
 
@@ -138,10 +138,10 @@ public class MultiTradeTests : TerminalApiTestBase
         Assert.Multiple(() =>
         {
             Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(4 - 10));
+            Assert.That(bobPosition.PnL, Is.EqualTo(4 - 10));
             Assert.That(bobPosition.OpenVolume, Is.EqualTo(2));
             Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(-4 - 10));
+            Assert.That(alicePosition.PnL, Is.EqualTo(-4 - 10));
             Assert.That(alicePosition.OpenVolume, Is.EqualTo(2));
         });
 
@@ -166,10 +166,10 @@ public class MultiTradeTests : TerminalApiTestBase
         Assert.Multiple(() =>
         {
             Assert.That(bobPosition.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(bobPosition.RealizedPnL, Is.EqualTo(-4 - 2));
+            Assert.That(bobPosition.PnL, Is.EqualTo(-4 - 2));
             Assert.That(bobPosition.OpenVolume, Is.EqualTo(2));
             Assert.That(alicePosition.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(alicePosition.RealizedPnL, Is.EqualTo(4 - 2));
+            Assert.That(alicePosition.PnL, Is.EqualTo(4 - 2));
             Assert.That(alicePosition.OpenVolume, Is.EqualTo(2));
         });
 

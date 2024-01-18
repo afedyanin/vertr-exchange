@@ -56,7 +56,7 @@ public class TradingScenarioTests : ApiTestBase
             Assert.That(makerPos.Uid, Is.EqualTo(makerUid));
             Assert.That(makerPos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(makerPos.OpenVolume, Is.EqualTo(2));
-            Assert.That(makerPos.RealizedPnL, Is.EqualTo(2 * 3m * (-1)));
+            Assert.That(makerPos.PnL, Is.EqualTo(2 * 3m * (-1)));
         });
 
         var takerRep = await GetUserReport(takerUid);
@@ -72,7 +72,7 @@ public class TradingScenarioTests : ApiTestBase
             Assert.That(takerPos.Uid, Is.EqualTo(takerUid));
             Assert.That(takerPos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
             Assert.That(takerPos.OpenVolume, Is.EqualTo(2));
-            Assert.That(takerPos.RealizedPnL, Is.EqualTo(2 * 3m * (-1)));
+            Assert.That(takerPos.PnL, Is.EqualTo(2 * 3m * (-1)));
         });
     }
 
@@ -138,7 +138,7 @@ public class TradingScenarioTests : ApiTestBase
             Assert.That(makerPos.Uid, Is.EqualTo(makerUid));
             Assert.That(makerPos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
             Assert.That(makerPos.OpenVolume, Is.EqualTo(1));
-            Assert.That(makerPos.RealizedPnL, Is.EqualTo(1));
+            Assert.That(makerPos.PnL, Is.EqualTo(1));
         });
 
         var takerRep = await GetUserReport(takerUid);
@@ -156,7 +156,7 @@ public class TradingScenarioTests : ApiTestBase
             Assert.That(takerPos.Uid, Is.EqualTo(takerUid));
             Assert.That(takerPos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(takerPos.OpenVolume, Is.EqualTo(1));
-            Assert.That(takerPos.RealizedPnL, Is.EqualTo(-11));
+            Assert.That(takerPos.PnL, Is.EqualTo(-11));
         });
     }
 }

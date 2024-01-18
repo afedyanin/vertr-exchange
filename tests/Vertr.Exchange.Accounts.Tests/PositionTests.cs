@@ -19,7 +19,7 @@ public class PositionTests
             Assert.That(pos.Uid, Is.EqualTo(1L));
             Assert.That(pos.Symbol, Is.EqualTo(2));
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
+            Assert.That(pos.PnL, Is.EqualTo(decimal.Zero));
             Assert.That(pos.OpenVolume, Is.EqualTo(decimal.Zero));
         });
     }
@@ -35,7 +35,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(size * price * (-1)));
+            Assert.That(pos.PnL, Is.EqualTo(size * price * (-1)));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
     }
@@ -49,7 +49,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
+            Assert.That(pos.PnL, Is.EqualTo(decimal.Zero));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
     }
@@ -63,7 +63,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(decimal.Zero));
+            Assert.That(pos.PnL, Is.EqualTo(decimal.Zero));
             Assert.That(pos.OpenVolume, Is.EqualTo(decimal.Zero));
         });
     }
@@ -81,7 +81,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo((100 * 10 * (-1)) + (90 * 100)));
+            Assert.That(pos.PnL, Is.EqualTo((100 * 10 * (-1)) + (90 * 100)));
             Assert.That(pos.OpenVolume, Is.EqualTo(10));
         });
 
@@ -91,7 +91,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(9000));
+            Assert.That(pos.PnL, Is.EqualTo(9000));
             Assert.That(pos.OpenVolume, Is.EqualTo(0));
         });
     }
@@ -135,7 +135,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(((100 * 10) + (200 * 20)) * (-1)));
+            Assert.That(pos.PnL, Is.EqualTo(((100 * 10) + (200 * 20)) * (-1)));
             Assert.That(pos.OpenVolume, Is.EqualTo(100 + 200));
         });
     }

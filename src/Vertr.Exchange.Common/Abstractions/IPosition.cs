@@ -13,6 +13,9 @@ public interface IPosition
     // Size
     decimal OpenVolume { get; }
 
-    // Realized PnL
-    decimal RealizedPnL { get; }
+    decimal PnL { get; }
+
+    decimal FixedPnL { get; }
+
+    decimal OpenPriceSum { get; }
 }

@@ -53,7 +53,9 @@ internal static class ReportExtensions
         {
             Direction = pos.Direction,
             OpenVolume = pos.OpenVolume,
-            RealizedPnL = pos.RealizedPnL,
+            PnL = pos.PnL,
+            FixedPnL = pos.FixedPnL,
+            OpenPriceSum = pos.OpenPriceSum,
             Symbol = pos.Symbol,
             Uid = pos.Uid,
         };

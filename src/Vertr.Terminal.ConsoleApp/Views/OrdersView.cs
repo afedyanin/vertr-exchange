@@ -1,3 +1,4 @@
+using System.Text;
 using Spectre.Console;
 using Vertr.Terminal.ApiClient.Contracts;
 using Vertr.Terminal.ApiClient.Extensions;
@@ -37,15 +38,11 @@ internal static class OrdersView
 
     private static Table CreateTable(OrderDto order)
     {
-        var symbol = StaticContext.Symbols.All.GetById(order.Symbol);
-        var user = StaticContext.Users.All.GetById(order.UserId);
-
-        var events = order.OrderEvents.ToArray();
-        var isCompleted = events.Where(e => e.OrderCompleted).Any();
+        var summary = GetOrderSummary(order);
 
         var table = new Table
         {
-            Title = new TableTitle($"Order: U={user!.Name} S={symbol!.Code} T={order.OrderType} A={order.Action} Id={order.OrderId} Q={order.Size} P={order.Price.ToString(ViewConsts.DecimalFormat)} IsCompleted={isCompleted}")
+            Title = new TableTitle(summary)
         };
 
         table.AddColumns(
@@ -58,6 +55,8 @@ internal static class OrdersView
             "Volume",
             "OrderCompleted"
             );
+
+        var events = order.OrderEvents.ToArray();
 
         if (events.Length <= 0)
         {
@@ -79,5 +78,27 @@ internal static class OrdersView
         }
 
         return table;
+    }
+
+    private static string GetOrderSummary(OrderDto order)
+    {
+        var symbol = StaticContext.Symbols.All.GetById(order.Symbol);
+        var user = StaticContext.Users.All.GetById(order.UserId);
+
+        var events = order.OrderEvents.ToArray();
+        var isCompleted = events.Where(e => e.OrderCompleted).Any();
+
+
+        var sb = new StringBuilder("Order: ");
+        sb.Append($"U={user!.Name} ");
+        sb.Append($"S={symbol!.Code} ");
+        sb.Append($"T={order.OrderType} ");
+        sb.Append($"A={order.Action} ");
+        sb.Append($"Id={order.OrderId} ");
+        sb.Append($"Q={order.Size} ");
+        sb.Append($"P={order.Price.ToString(ViewConsts.DecimalFormat)} ");
+        sb.Append($"V={(order.Price * order.Size).ToString(ViewConsts.DecimalFormat)} ");
+        sb.Append($"IsCompleted={isCompleted} ");
+        return sb.ToString();
     }
 }

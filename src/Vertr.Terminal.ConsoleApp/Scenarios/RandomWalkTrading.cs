@@ -25,8 +25,8 @@ public class RandomWalkTrading(
 
         await Task.WhenAll(t1, t2);
 
-        await TryToClosePosition(Users.Bob);
-        await TryToClosePosition(Users.Alice);
+        // await TryToClosePosition(Users.Bob);
+        // await TryToClosePosition(Users.Alice);
 
 
         await DumpResults();

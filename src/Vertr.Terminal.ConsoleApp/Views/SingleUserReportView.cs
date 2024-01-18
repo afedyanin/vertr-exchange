@@ -47,7 +47,7 @@ internal static class SingleUserReportView
     {
         var table = new Table
         {
-            Title = new TableTitle("Orders"),
+            Title = new TableTitle("Open orders"),
         };
 
         table.AddColumns(
@@ -92,8 +92,10 @@ internal static class SingleUserReportView
         table.AddColumns(
             "Symbol",
             "Direction",
-            "PnL",
-            "OpenVolume"
+            // "PnL",
+            "Fixed PnL",
+            "Open Price Sum",
+            "Open Size"
             );
 
         foreach (var kvp in positions)
@@ -104,7 +106,9 @@ internal static class SingleUserReportView
             table.AddRow(
                 symbol!.Code,
                 pos.Direction.ToString(),
-                pos.RealizedPnL.ToString(ViewConsts.DecimalFormat),
+                // pos.PnL.ToString(ViewConsts.DecimalFormat),
+                pos.FixedPnL.ToString(ViewConsts.DecimalFormat),
+                pos.OpenPriceSum.ToString(ViewConsts.DecimalFormat),
                 pos.OpenVolume.ToString()
                 );
         };

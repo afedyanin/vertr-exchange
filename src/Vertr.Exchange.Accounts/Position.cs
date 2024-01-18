@@ -8,9 +8,6 @@ namespace Vertr.Exchange.Accounts;
 
 internal class Position(long uid, int symbol) : IPosition
 {
-    private decimal _openPriceSum;
-    private decimal _fixedPnl;
-
     public long Uid { get; } = uid;
 
     public int Symbol { get; } = symbol;
@@ -21,12 +18,16 @@ internal class Position(long uid, int symbol) : IPosition
     public decimal OpenVolume { get; private set; }
 
     // Realized PnL
-    public decimal RealizedPnL => _fixedPnl + (_openPriceSum * (-1));
+    public decimal PnL => FixedPnL + (OpenPriceSum * (-1));
+
+    public decimal FixedPnL { get; private set; }
+
+    public decimal OpenPriceSum { get; private set; }
 
     public bool IsEmpty => Direction == PositionDirection.EMPTY;
 
     public decimal GetUnrealizedPnL(decimal price)
-        => ((OpenVolume * price) - _openPriceSum) * GetMultiplier(Direction);
+        => ((OpenVolume * price) - OpenPriceSum) * GetMultiplier(Direction);
 
 
     public void Update(OrderAction action, long size, decimal price)
@@ -44,7 +45,7 @@ internal class Position(long uid, int symbol) : IPosition
     public override string ToString()
     {
 #if DEBUG
-        return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} OpenPriceSum={_openPriceSum} FixedPnl={_fixedPnl} PnL={RealizedPnL}";
+        return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} OpenPriceSum={OpenPriceSum} FixedPnl={FixedPnL} PnL={PnL}";
 #else
         return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} PnL={RealizedPnL}";
 #endif
@@ -62,16 +63,16 @@ internal class Position(long uid, int symbol) : IPosition
         if (OpenVolume > tradeSize)
         {
             OpenVolume -= tradeSize;
-            _openPriceSum -= tradeSize * tradePrice;
+            OpenPriceSum -= tradeSize * tradePrice;
             return decimal.Zero;
         }
 
         // current position smaller than trade size, can close completely and calculate profit
-        _fixedPnl += ((OpenVolume * tradePrice) - _openPriceSum) * GetMultiplier(Direction);
+        FixedPnL += ((OpenVolume * tradePrice) - OpenPriceSum) * GetMultiplier(Direction);
 
         var sizeToOpen = tradeSize - OpenVolume;
         OpenVolume = decimal.Zero;
-        _openPriceSum = decimal.Zero;
+        OpenPriceSum = decimal.Zero;
         Direction = PositionDirection.EMPTY;
 
         return sizeToOpen;
@@ -86,7 +87,7 @@ internal class Position(long uid, int symbol) : IPosition
 
         Direction = GetByAction(action);
         OpenVolume += sizeToOpen;
-        _openPriceSum += tradePrice * sizeToOpen;
+        OpenPriceSum += tradePrice * sizeToOpen;
     }
 
     private static PositionDirection GetByAction(OrderAction action)

@@ -12,6 +12,9 @@ public record PositionDto
     // Size
     public decimal OpenVolume { get; set; }
 
-    // Realized PnL
-    public decimal RealizedPnL { get; set; }
+    public decimal PnL { get; set; }
+
+    public decimal FixedPnL { get; set; }
+
+    public decimal OpenPriceSum { get; set; }
 }
