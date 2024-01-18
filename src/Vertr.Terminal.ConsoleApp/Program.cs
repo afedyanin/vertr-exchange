@@ -4,13 +4,15 @@ namespace Vertr.Terminal.ConsoleApp;
 
 public class Program
 {
-    private const string _hostUrl = "http://localhost:5010";
+    private const string _terminalHostUrl = "http://localhost:5010";
 
     public static async Task Main()
     {
-        //var trading = new OverlappedOrdersTrading(_hostUrl);
-        // var trading = new SimpleTrading(_hostUrl);
-        var trading = new RandomWalkTrading(_hostUrl, 10, 10);
+        var trading = new RandomWalkTrading(
+            _terminalHostUrl,
+            basePrice: 10.45m,
+            numberOfIterations: 10);
+
         await trading.Execute();
     }
 }

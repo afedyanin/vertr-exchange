@@ -1,7 +1,7 @@
 using static Vertr.Terminal.ConsoleApp.StaticContext;
 namespace Vertr.Terminal.ConsoleApp.Scenarios;
 
-public class OverlappedOrdersTrading(string hostUrl) : TradingBase(hostUrl, Symbols.MSFT)
+public class OverlappedOrdersTrading(string terminalHostUrl) : TradingBase(terminalHostUrl, Symbols.MSFT)
 {
     protected override async Task StartTrading()
     {

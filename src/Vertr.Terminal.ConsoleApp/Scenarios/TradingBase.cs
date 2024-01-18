@@ -15,9 +15,9 @@ public abstract class TradingBase
 
     protected Symbol Symbol { get; }
 
-    protected TradingBase(string hostUrl, Symbol symbol)
+    protected TradingBase(string terminalHhostUrl, Symbol symbol)
     {
-        ApiClient = RestService.For<ITerminalApiClient>(hostUrl);
+        ApiClient = RestService.For<ITerminalApiClient>(terminalHhostUrl);
         Commands = new ApiCommands(ApiClient);
         Symbol = symbol;
     }

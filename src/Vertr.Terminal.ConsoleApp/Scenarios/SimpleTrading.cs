@@ -2,7 +2,7 @@ using static Vertr.Terminal.ConsoleApp.StaticContext;
 
 namespace Vertr.Terminal.ConsoleApp.Scenarios;
 
-public class SimpleTrading(string hostUrl) : TradingBase(hostUrl, Symbols.MSFT)
+public class SimpleTrading(string terminalHostUrl) : TradingBase(terminalHostUrl, Symbols.MSFT)
 {
     protected override async Task StartTrading()
     {

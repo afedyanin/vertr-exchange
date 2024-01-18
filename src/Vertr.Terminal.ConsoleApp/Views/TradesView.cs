@@ -32,6 +32,7 @@ internal static class TradesView
             "Symbol",
             "Seq #",
             "Timestamp",
+            "Tkr User",
             "Tkr Size",
             "Total Size",
             "Price",
@@ -44,6 +45,7 @@ internal static class TradesView
         foreach (var tEvent in tradeEvents)
         {
             var symbol = StaticContext.Symbols.All.GetById(tEvent.Symbol);
+            var usr = StaticContext.Users.All.GetById(tEvent.TakerUid);
 
             for (int i = 0; i < tEvent.Trades.Length; i++)
             {
@@ -53,6 +55,7 @@ internal static class TradesView
                     symbol!.Code,
                     i == 0 ? tEvent.Seq.ToString() : ViewConsts.Empty,
                     tEvent.Timestamp.ToString(ViewConsts.TimeFormat),
+                    usr!.Name,
                     i == 0 ? tEvent.TotalVolume.ToString() : ViewConsts.Empty,
                     trade.Volume.ToString(),
                     trade.Price.ToString(ViewConsts.DecimalFormat),

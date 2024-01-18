@@ -3,9 +3,9 @@ using static Vertr.Terminal.ConsoleApp.StaticContext;
 
 namespace Vertr.Terminal.ConsoleApp.Scenarios;
 public class RandomWalkTrading(
-    string hostUrl,
+    string terminalHostUrl,
     decimal basePrice,
-    int numberOfIterations) : TradingBase(hostUrl, Symbols.MSFT)
+    int numberOfIterations) : TradingBase(terminalHostUrl, Symbols.MSFT)
 {
 
     private readonly decimal _basePrice = basePrice;
@@ -24,10 +24,6 @@ public class RandomWalkTrading(
         });
 
         await Task.WhenAll(t1, t2);
-
-        // await TryToClosePosition(Users.Bob);
-        // await TryToClosePosition(Users.Alice);
-
 
         await DumpResults();
     }

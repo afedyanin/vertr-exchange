@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{4B1B7D
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
+		sample.png = sample.png
+		tech-stuff.md = tech-stuff.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4B42857C-FD8E-4EB6-B9D6-200FD3E19168}"
@@ -90,7 +92,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{AF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Terminal.ApiClient.Tests", "tests\Vertr.Terminal.ApiClient.Tests\Vertr.Terminal.ApiClient.Tests.csproj", "{827E75F4-08C7-45A4-AA91-19DAE194A407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Terminal.DataAccess.InMemory.Tests", "tests\Vertr.Terminal.DataAccess.InMemory.Tests\Vertr.Terminal.DataAccess.InMemory.Tests.csproj", "{A40FDA8B-BBBA-4B10-AA0A-61C5635ED9FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Terminal.DataAccess.InMemory.Tests", "tests\Vertr.Terminal.DataAccess.InMemory.Tests\Vertr.Terminal.DataAccess.InMemory.Tests.csproj", "{A40FDA8B-BBBA-4B10-AA0A-61C5635ED9FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
