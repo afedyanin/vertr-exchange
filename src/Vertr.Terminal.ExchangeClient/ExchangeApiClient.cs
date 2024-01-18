@@ -14,67 +14,61 @@ internal sealed class ExchangeApiClient(
     private readonly IHubConnectionProvider _connectionProvider = connectionProvider;
     private readonly ICommandAwaitingService _commandAwaitingService = commandAwaitingService;
 
-    public async Task<ApiCommandResult> AddAccounts(AddAccountsRequest request)
+    public Task<ApiCommandResult> AddAccounts(AddAccountsRequest request)
+        => InvokeHubMethod("AddAccounts", request);
+
+    public Task<ApiCommandResult> AddSymbols(AddSymbolsRequest request)
+        => InvokeHubMethod("AddSymbols", request);
+
+    public Task<ApiCommandResult> CancelOrder(CancelOrderRequest request)
+        => InvokeHubMethod("CancelOrder", request);
+
+    public Task<ApiCommandResult> GetSingleUserReport(UserRequest request)
+        => InvokeHubMethod("GetSingleUserReport", request);
+
+    public Task<ApiCommandResult> MoveOrder(MoveOrderRequest request)
+        => InvokeHubMethod("MoveOrder", request);
+
+    public Task<ApiCommandResult> Nop()
+        => InvokeHubMethod("Nop");
+
+    public async Task<long> GetNextOrderId()
     {
-        var res = await InvokeHubMethod("AddAccounts", request);
+        var connection = await _connectionProvider.GetConnection();
+        var nextOrderId = await connection.InvokeAsync<long>("GetNextOrderId");
+        return nextOrderId;
+    }
+
+    public Task<ApiCommandResult> PlaceOrder(PlaceOrderRequest request, long? orderId = null)
+    {
+        var res = orderId.HasValue ?
+            InvokeHubMethod("PlaceOrder", [request, orderId.Value]) :
+            InvokeHubMethod("PlaceOrder", request);
+
         return res;
     }
 
-    public async Task<ApiCommandResult> AddSymbols(AddSymbolsRequest request)
-    {
-        var res = await InvokeHubMethod("AddSymbols", request);
-        return res;
-    }
+    public Task<ApiCommandResult> ReduceOrder(ReduceOrderRequest request)
+        => InvokeHubMethod("ReduceOrder", request);
 
-    public async Task<ApiCommandResult> CancelOrder(CancelOrderRequest request)
-    {
-        var res = await InvokeHubMethod("CancelOrder", request);
-        return res;
-    }
+    public Task<ApiCommandResult> Reset()
+        => InvokeHubMethod("Reset");
 
-    public async Task<ApiCommandResult> GetSingleUserReport(UserRequest request)
-    {
-        var res = await InvokeHubMethod("GetSingleUserReport", request);
-        return res;
-    }
-
-    public async Task<ApiCommandResult> MoveOrder(MoveOrderRequest request)
-    {
-        var res = await InvokeHubMethod("MoveOrder", request);
-        return res;
-    }
-
-    public async Task<ApiCommandResult> Nop()
-    {
-        var res = await InvokeHubMethod("Nop");
-        return res;
-    }
-
-    public async Task<ApiCommandResult> PlaceOrder(PlaceOrderRequest request)
-    {
-        var res = await InvokeHubMethod("PlaceOrder", request);
-        return res;
-    }
-
-    public async Task<ApiCommandResult> ReduceOrder(ReduceOrderRequest request)
-    {
-        var res = await InvokeHubMethod("ReduceOrder", request);
-        return res;
-    }
-
-    public async Task<ApiCommandResult> Reset()
-    {
-        var res = await InvokeHubMethod("Reset");
-        return res;
-    }
-
-    private async Task<ApiCommandResult> InvokeHubMethod(
+    private Task<ApiCommandResult> InvokeHubMethod(
         string methodName,
         object request,
         CancellationToken cancellationToken = default)
     {
+        return InvokeHubMethod(methodName, [request], cancellationToken);
+    }
+
+    private async Task<ApiCommandResult> InvokeHubMethod(
+        string methodName,
+        object[] requestItems,
+        CancellationToken cancellationToken = default)
+    {
         var connection = await _connectionProvider.GetConnection();
-        var commandId = await connection.InvokeCoreAsync<long>(methodName, [request], cancellationToken);
+        var commandId = await connection.InvokeCoreAsync<long>(methodName, requestItems, cancellationToken);
         var result = await _commandAwaitingService.Register(commandId);
         return result.CommandResult;
     }
@@ -88,5 +82,4 @@ internal sealed class ExchangeApiClient(
         var result = await _commandAwaitingService.Register(commandId);
         return result.CommandResult;
     }
-
 }

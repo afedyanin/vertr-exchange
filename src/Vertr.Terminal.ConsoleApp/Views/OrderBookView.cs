@@ -18,6 +18,7 @@ internal static class OrderBookView
         var symbol = StaticContext.Symbols.All.GetById(orderBook.Symbol);
         var obTable = CreateTable(symbol!, orderBook, 10, subTitle);
         AnsiConsole.Write(obTable);
+        AnsiConsole.WriteLine("\n");
     }
 
     private static Table CreateTable(Symbol symbol, OrderBook ob, int maxDepth, string subTitle)

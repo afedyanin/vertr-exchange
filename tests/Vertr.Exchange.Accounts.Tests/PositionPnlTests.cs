@@ -19,7 +19,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
 
@@ -39,7 +39,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
 
@@ -62,7 +62,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(expectedOpenVol));
         });
     }
@@ -83,7 +83,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(expectedOpenVol));
         });
     }
@@ -106,7 +106,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(0L));
         });
 
@@ -137,7 +137,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(17 - 7));
         });
     }
@@ -160,7 +160,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(0L));
         });
 
@@ -186,7 +186,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(17 - 7));
         });
 
@@ -214,7 +214,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(expectedOpenVol));
         });
     }
@@ -239,7 +239,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(expectedOpenVol));
         });
     }
@@ -269,7 +269,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(0));
         });
 
@@ -301,7 +301,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(0));
         });
 
@@ -332,7 +332,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(5));
         });
 
@@ -363,7 +363,7 @@ public class PositionPnlTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(expectedPnl));
             Assert.That(pos.OpenVolume, Is.EqualTo(5));
         });
 
@@ -401,7 +401,7 @@ public class PositionPnlTests
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
             Assert.That(pos.OpenVolume, Is.EqualTo(0));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(fixedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(fixedPnl));
         });
     }
 
@@ -437,7 +437,7 @@ public class PositionPnlTests
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
             Assert.That(pos.OpenVolume, Is.EqualTo(3));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(fixedPnl + expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(fixedPnl + expectedPnl));
         });
     }
 
@@ -471,7 +471,7 @@ public class PositionPnlTests
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.EMPTY));
             Assert.That(pos.OpenVolume, Is.EqualTo(0));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(fixedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(fixedPnl));
         });
     }
 
@@ -506,7 +506,7 @@ public class PositionPnlTests
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_SHORT));
             Assert.That(pos.OpenVolume, Is.EqualTo(3));
-            Assert.That(pos.RealizedPnL, Is.EqualTo(fixedPnl + expectedPnl));
+            Assert.That(pos.PnL, Is.EqualTo(fixedPnl + expectedPnl));
         });
     }
 }

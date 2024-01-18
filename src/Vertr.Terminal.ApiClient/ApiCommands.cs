@@ -72,6 +72,12 @@ public sealed class ApiCommands(ITerminalApiClient client)
         return res;
     }
 
+    public async Task<MarketDataItemDto[]> GetMarketDataSnapshot()
+    {
+        var res = await _client.GetMarketDataSnapshot();
+        return res;
+    }
+
     public async Task RandomWalk(
         User user,
         Symbol symbol,

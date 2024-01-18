@@ -46,7 +46,9 @@ public interface ITerminalApiClient
     [Get("/queries/orders")]
     Task<OrderDto[]> GetOrders();
 
+    [Get("/queries/market-data")]
+    Task<MarketDataItemDto[]> GetMarketDataSnapshot();
+
     [Post("/strategies/random-walk")]
     Task RandomWalk([Body] RandomWalkRequest request);
-
 }

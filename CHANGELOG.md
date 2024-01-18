@@ -1,13 +1,31 @@
+## 18-01-24
+- [ ] (!) Implement Position Calculation by trade events on client side
+- [ ] (!) Save Position History on client side - (Equity by time)
+- [ ] Bug: в трейдах есть евенты с Size = 0
+- [ ] Bug: в ордерах есть евенты с Size = 0
+
+- [x] Fix PnL value in profile
+- [-] Reject event when trying to close position
+
+## 17-01-24
+- [x] PnL по позициям после отработки стратегии
+
+## 15-01-24
+
+- [ ] история цены, история сделок, эквити
+- [x] закрытие позиций по рынку по завершению стратегии
+- [x] поификсить багу
+
 ## 10-01-24
 
-### Random Walk Strategy
+### [x] Random Walk Strategy 
 - прокидывать в стратегию текущую рыночную цену и от нее шагать
 - для рыночной цены нужен провайдер
 - прокидывать параметр необходимости закрытия позиций по завершению стратегии
 - закрывать позции отдельной командой? Какая стратегия закрытия - маркет ордер или лимитный?
 - как обеспечить ликвидность при закрытии позиций?
 
-### MarketData Provider
+### [x] MarketData Provider
 Сводная информация по рынку. По каждому символу:
 - текущая цена
 - дельта цены с начала торговли в процентах и сумме
@@ -54,32 +72,7 @@
 - нужна отдельная процедура клиринга или EOD - когда PnL с позциций фиксируется на счетах
 - простой вариант - считать Fair Value на лету - сумма на аккаунте плюс PnL по всем позициям в валюте акаунта
 
-### Fix error
-
-fail: Microsoft.Extensions.Hosting.Internal.Host[9]
-      BackgroundService failed
-      System.ArgumentNullException: Value cannot be null. (Parameter 'order')
-         at System.ArgumentNullException.Throw(String paramName)
-         at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
-         at Vertr.Terminal.Domain.OrderManagement.OrderEventFactory.Create(TradeEvent taker, Order order) in D:\workspace\vertr\src\Vertr.Terminal.Domain\OrderManagement\OrderEventFactory.cs:line 26
-         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.HandleTakerTrade(TradeEvent tradeEvent) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 57
-         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.Handle(TradeRequest request, CancellationToken cancellationToken) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 46
-         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
-      --- End of stack trace from previous location ---
-         at Vertr.Terminal.ExchangeClient.Streams.TradeEventStream.ExecuteAsync(CancellationToken stoppingToken) in D:\workspace\vertr\src\Vertr.Terminal.ExchangeClient\Streams\TradeEventStream.cs:line 34
-         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
-crit: Microsoft.Extensions.Hosting.Internal.Host[10]
-      The HostOptions.BackgroundServiceExceptionBehavior is configured to StopHost. A BackgroundService has thrown an unhandled exception, and the IHost instance is stopping. To avoid this behavior, configure this to Ignore; however the BackgroundService will not be restarted.
-      System.ArgumentNullException: Value cannot be null. (Parameter 'order')
-         at System.ArgumentNullException.Throw(String paramName)
-         at System.ArgumentNullException.ThrowIfNull(Object argument, String paramName)
-         at Vertr.Terminal.Domain.OrderManagement.OrderEventFactory.Create(TradeEvent taker, Order order) in D:\workspace\vertr\src\Vertr.Terminal.Domain\OrderManagement\OrderEventFactory.cs:line 26
-         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.HandleTakerTrade(TradeEvent tradeEvent) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 57
-         at Vertr.Terminal.Application.StreamEvents.Orders.OrderEventRequestHandler.Handle(TradeRequest request, CancellationToken cancellationToken) in D:\workspace\vertr\src\Vertr.Terminal.Application\StreamEvents\Orders\OrderEventRequestHandler.cs:line 46
-         at MediatR.Wrappers.RequestHandlerWrapperImpl`1.<>c__DisplayClass1_0.<<Handle>g__Handler|0>d.MoveNext()
-      --- End of stack trace from previous location ---
-         at Vertr.Terminal.ExchangeClient.Streams.TradeEventStream.ExecuteAsync(CancellationToken stoppingToken) in D:\workspace\vertr\src\Vertr.Terminal.ExchangeClient\Streams\TradeEventStream.cs:line 34
-         at Microsoft.Extensions.Hosting.Internal.Host.TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)
+### [x] Fix error
 
 ## 09-12-23
 - [x] пофиксить зависания в трейдинге - race conditions

@@ -13,13 +13,11 @@ public class ExchangeApiHub(
     IExchangeApi api,
     IOrderIdGenerator orderIdGenerator,
     ITimestampGenerator timestampGenerator,
-    ILogger<ExchangeApiHub> logger,
     IObservableMessageHandler messageHandler) : Hub, IExchangeApiHub
 {
     private readonly IExchangeApi _api = api;
     private readonly IOrderIdGenerator _orderIdGenerator = orderIdGenerator;
     private readonly ITimestampGenerator _timestampGenerator = timestampGenerator;
-    private readonly ILogger<ExchangeApiHub> _logger = logger;
     private readonly IObservableMessageHandler _messageHandler = messageHandler;
 
     private const int _maxBufferSize = 10;
@@ -49,6 +47,8 @@ public class ExchangeApiHub(
         return cmd.OrderId;
     }
 
+    public long GetNextOrderId() => _orderIdGenerator.NextId;
+
     public long GetOrderBook(OrderBookRequest request)
     {
         var cmd = new Api.Commands.OrderBookRequest(
@@ -63,14 +63,11 @@ public class ExchangeApiHub(
 
     public long AddSymbols(AddSymbolsRequest request)
     {
-        _logger.LogDebug("AddSymbols command received.");
-
         var cmd = new Api.Commands.AddSymbolsCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.Symbols.ToDomain());
 
-        _logger.LogDebug("AddSymbols command completed.");
         _api.Send(cmd);
         return cmd.OrderId;
     }
@@ -97,10 +94,10 @@ public class ExchangeApiHub(
         return cmd.OrderId;
     }
 
-    public long PlaceOrder(PlaceOrderRequest request)
+    public long PlaceOrder(PlaceOrderRequest request, long? orderId = null)
     {
         var cmd = new Api.Commands.PlaceOrderCommand(
-            _orderIdGenerator.NextId,
+            orderId ?? _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.Price,
             request.Size,

@@ -14,44 +14,40 @@ internal static class SingleUserReportView
             return;
         }
 
-        var user = StaticContext.Users.All.GetById(report.Uid);
+        // Console.WriteLine($"Report execution status={report.ExecutionStatus}");
+        WriteUserInfo(report);
 
-        Console.WriteLine($"Report execution status={report.ExecutionStatus}");
-        Console.WriteLine($"User: Id={report.Uid} Name={user!.Name}  Status={report.UserStatus}");
-
-        var accountsTable = CreateAccountsTable(report.Accounts);
-        AnsiConsole.Write(accountsTable);
+        // Account not changed yet
+        // var accountsTable = CreateAccountsTable(report.Accounts);
+        // AnsiConsole.Write(accountsTable);
 
         var ordersTable = CreateOrdersTable(report.Orders);
         AnsiConsole.Write(ordersTable);
+        AnsiConsole.WriteLine("\n");
 
         var positionsTable = CreatePositionsTable(report.Positions);
         AnsiConsole.Write(positionsTable);
+        AnsiConsole.WriteLine("\n");
     }
 
-    private static Table CreateAccountsTable(IDictionary<int, decimal> accounts)
+    private static void WriteUserInfo(SingleUserReportResult report)
     {
-        var table = new Table
-        {
-            Title = new TableTitle("Accounts"),
-        };
+        var user = StaticContext.Users.All.GetById(report.Uid);
 
-        table.AddColumns("Currency", "Amount");
+        var deviderTop = new string('=', 80);
+        Console.WriteLine($"\n{deviderTop}");
 
-        foreach (var acc in accounts)
-        {
-            var currency = StaticContext.Currencies.All.GetById(acc.Key);
-            table.AddRow(currency!.Code, acc.Value.ToString(ViewConsts.DecimalFormat));
-        };
+        Console.WriteLine($"User: Id={report.Uid} Name={user!.Name}  Status={report.UserStatus}");
 
-        return table;
+        var deviderBottom = new string('-', 80);
+        Console.WriteLine($"{deviderBottom}\n");
     }
 
     private static Table CreateOrdersTable(IDictionary<int, OrderDto[]> orders)
     {
         var table = new Table
         {
-            Title = new TableTitle("Orders"),
+            Title = new TableTitle("Open orders"),
         };
 
         table.AddColumns(
@@ -96,8 +92,10 @@ internal static class SingleUserReportView
         table.AddColumns(
             "Symbol",
             "Direction",
-            "RealizedPnL",
-            "OpenVolume"
+            // "PnL",
+            "Fixed PnL",
+            "Open Price Sum",
+            "Open Size"
             );
 
         foreach (var kvp in positions)
@@ -108,11 +106,33 @@ internal static class SingleUserReportView
             table.AddRow(
                 symbol!.Code,
                 pos.Direction.ToString(),
-                pos.RealizedPnL.ToString(ViewConsts.DecimalFormat),
-                pos.OpenVolume.ToString(ViewConsts.DecimalFormat)
+                // pos.PnL.ToString(ViewConsts.DecimalFormat),
+                pos.FixedPnL.ToString(ViewConsts.DecimalFormat),
+                pos.OpenPriceSum.ToString(ViewConsts.DecimalFormat),
+                pos.OpenVolume.ToString()
                 );
         };
 
         return table;
     }
+
+    /*
+    private static Table CreateAccountsTable(IDictionary<int, decimal> accounts)
+    {
+        var table = new Table
+        {
+            Title = new TableTitle("Accounts"),
+        };
+
+        table.AddColumns("Currency", "Amount");
+
+        foreach (var acc in accounts)
+        {
+            var currency = StaticContext.Currencies.All.GetById(acc.Key);
+            table.AddRow(currency!.Code, acc.Value.ToString(ViewConsts.DecimalFormat));
+        };
+
+        return table;
+    }
+    */
 }

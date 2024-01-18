@@ -11,13 +11,15 @@ public class QueriesController(
     IExchangeApiClient exchangeApiClient,
     IOrderBookSnapshotsRepository orderBookRepository,
     ITradeEventsRepository tradeEventsRepository,
-    IOrderRepository ordersRepository)
+    IOrderRepository ordersRepository,
+    IMarketDataRepository marketDataRepository)
     : ControllerBase
 {
     private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
     private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
     private readonly IOrderRepository _ordersRepository = ordersRepository;
     private readonly IExchangeApiClient _exchangeApiClient = exchangeApiClient;
+    private readonly IMarketDataRepository _marketDataRepository = marketDataRepository;
 
     [HttpPost("user-report")]
     public async Task<IActionResult> GetSingleUserReport(UserRequest request)
@@ -58,5 +60,12 @@ public class QueriesController(
     {
         var orders = await _ordersRepository.GetList();
         return Ok(orders.ToDto());
+    }
+
+    [HttpGet("market-data")]
+    public async Task<IActionResult> GetMerketData()
+    {
+        var items = await _marketDataRepository.GetSnapshot();
+        return Ok(items.ToDto());
     }
 }

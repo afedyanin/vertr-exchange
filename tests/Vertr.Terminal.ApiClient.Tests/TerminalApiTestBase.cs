@@ -194,7 +194,7 @@ public abstract class TerminalApiTestBase
 
         Assert.Multiple(() =>
         {
-            Assert.That(position.RealizedPnL, Is.EqualTo(expectedPnl));
+            Assert.That(position.PnL, Is.EqualTo(expectedPnl));
             Assert.That(position.OpenVolume, Is.EqualTo(expectedOpenVolume));
         });
     }
