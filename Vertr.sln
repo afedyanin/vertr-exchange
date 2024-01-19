@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{4B1B7D
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
-		sample.png = sample.png
+		sample02.png = sample02.png
 		tech-stuff.md = tech-stuff.md
 	EndProjectSection
 EndProject
