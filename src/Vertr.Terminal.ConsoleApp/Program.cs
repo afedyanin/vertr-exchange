@@ -11,7 +11,7 @@ public class Program
         var trading = new RandomWalkTrading(
             _terminalHostUrl,
             basePrice: 10.45m,
-            numberOfIterations: 10);
+            numberOfIterations: 100);
 
         await trading.Execute();
     }

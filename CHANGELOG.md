@@ -1,8 +1,10 @@
+## 19-01-24
+- [ ] Implement Position Calculation by trade events on client side
+- [ ] Save Position History on client side - (Equity by time)
+
 ## 18-01-24
-- [ ] (!) Implement Position Calculation by trade events on client side
-- [ ] (!) Save Position History on client side - (Equity by time)
-- [ ] Bug: в трейдах есть евенты с Size = 0
-- [ ] Bug: в ордерах есть евенты с Size = 0
+- [x] Bug: в трейдах есть евенты с Size = 0
+- [x] Bug: в ордерах есть евенты с Size = 0
 
 - [x] Fix PnL value in profile
 - [-] Reject event when trying to close position

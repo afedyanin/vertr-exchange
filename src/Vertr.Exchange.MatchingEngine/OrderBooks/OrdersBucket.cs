@@ -89,6 +89,13 @@ internal sealed class OrdersBucket
         {
             var order = node.Value;
 
+            if (order.Remaining == 0L)
+            {
+                // already filled
+                node = node.Next;
+                continue;
+            }
+
             var volume = Math.Min(volumeToCollect, order.Remaining);
 
             totalMatchingVolume += volume;

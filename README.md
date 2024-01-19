@@ -54,6 +54,6 @@ public class RandomWalkTrading(string terminalHostUrl, decimal basePrice, int nu
 ```
 
 
-![Random Walk](sample.png)
+![Random Walk](sample02.png)
 
 
