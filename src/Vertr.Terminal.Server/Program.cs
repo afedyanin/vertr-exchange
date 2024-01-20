@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 
+using Vertr.Terminal.Domain;
 using Vertr.Terminal.ExchangeClient;
 using Vertr.Terminal.DataAccess.InMemory;
 using Vertr.Terminal.Application.Commands;
@@ -22,6 +23,7 @@ public class Program
 
         builder.Services.AddExchangeApi(builder.Configuration);
         builder.Services.AddDataAccess();
+        builder.Services.AddDomainServices();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ResetRequest>());
 
         var app = builder.Build();

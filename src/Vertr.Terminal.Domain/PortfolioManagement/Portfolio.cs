@@ -39,4 +39,9 @@ public class Portfolio(long uid)
             throw new ArgumentException($"Invalid Trade Uid. Portfolio Uid={Uid}, Trade Uid={trade.Uid}");
         }
     }
+
+    public static implicit operator Task<object>(Portfolio v)
+    {
+        throw new NotImplementedException();
+    }
 }

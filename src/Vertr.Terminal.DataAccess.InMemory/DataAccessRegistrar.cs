@@ -15,7 +15,7 @@ public static class DataAccessRegistrar
         services.AddSingleton<ITradeEventsRepository, TradeEventsRepository>();
         services.AddSingleton<IOrderRepository, OrdersRepository>();
         services.AddSingleton<IMarketDataRepository, MarketDataRepository>();
-        services.AddSingleton<IPortfolioRepository, PortfolioRepository>();
+        services.AddSingleton<IPortfolioRepository, PortfoliosRepository>();
 
         return services;
     }

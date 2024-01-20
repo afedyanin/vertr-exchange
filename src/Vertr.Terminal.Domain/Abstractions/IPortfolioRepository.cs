@@ -4,9 +4,7 @@ namespace Vertr.Terminal.Domain.Abstractions;
 
 public interface IPortfolioRepository
 {
-    Task<bool> Add(Portfolio portfolio);
-
-    Task<bool> Update(Portfolio portfolio);
+    Task<Portfolio> AddOrUpdate(Portfolio portfolio);
 
     Task<bool> Remove(long uid);
 
