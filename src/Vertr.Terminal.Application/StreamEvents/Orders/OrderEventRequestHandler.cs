@@ -1,78 +1,51 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Contracts;
 using Vertr.Terminal.Domain.Abstractions;
-using Vertr.Terminal.Domain.OrderManagement;
 
 namespace Vertr.Terminal.Application.StreamEvents.Orders;
 internal sealed class OrderEventRequestHandler(
-    IOrderRepository orderRepository,
+    IOrderEventService orderEventService,
+    IMarketDataService marketDataService,
+    IPortolioService portolioService,
     ITradeEventsRepository tradeEventsRepository,
-    IMarketDataRepository marketDataRepository,
     ILogger<OrderEventRequestHandler> logger) :
     IRequestHandler<ReduceRequest>,
     IRequestHandler<RejectRequest>,
     IRequestHandler<TradeRequest>
 {
-    private readonly IOrderRepository _orderRepository = orderRepository;
+    private readonly IOrderEventService _orderEventService = orderEventService;
+    private readonly IMarketDataService _marketDataService = marketDataService;
+    private readonly IPortolioService _portolioService = portolioService;
+
     private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
-    private readonly IMarketDataRepository _marketDataRepository = marketDataRepository;
     private readonly ILogger<OrderEventRequestHandler> _logger = logger;
 
-    public async Task Handle(ReduceRequest request, CancellationToken cancellationToken)
+    public Task Handle(ReduceRequest request, CancellationToken cancellationToken)
     {
         var orderEvent = request.ReduceEvent ?? throw new ArgumentNullException(nameof(request));
+        _logger.LogDebug("Processing Reduce event. OrderId={orderId}", orderEvent.OrderId);
 
-        var evt = OrderEventFactory.Create(orderEvent);
-        await _orderRepository.AddEvent(evt);
-
-        _logger.LogDebug("Reduce event processed. OrderId={orderId}", orderEvent.OrderId);
+        return _orderEventService.ProcessReduceEvent(orderEvent);
     }
 
-    public async Task Handle(RejectRequest request, CancellationToken cancellationToken)
+    public Task Handle(RejectRequest request, CancellationToken cancellationToken)
     {
         var orderEvent = request.RejectEvent ?? throw new ArgumentNullException(nameof(request));
+        _logger.LogDebug("Processing Reject event. OrderId={orderId}", orderEvent.OrderId);
 
-        var evt = OrderEventFactory.Create(orderEvent);
-        await _orderRepository.AddEvent(evt);
-
-        _logger.LogDebug("Reject event processed. OrderId={orderId}", orderEvent.OrderId);
+        return _orderEventService.ProcessRejectEvent(orderEvent);
     }
 
-    public async Task Handle(TradeRequest request, CancellationToken cancellationToken)
+    public Task Handle(TradeRequest request, CancellationToken cancellationToken)
     {
         var orderEvent = request.TradeEvent ?? throw new ArgumentNullException(nameof(request));
+        _logger.LogDebug("Processing Trade event. Taker OrderId={orderId}", orderEvent.TakerOrderId);
 
-        await _tradeEventsRepository.Save(request.TradeEvent);
-
-        await HandleTakerTrade(orderEvent);
-
-        foreach (var makerTrade in orderEvent.Trades)
-        {
-            await HandleMakerTrade(orderEvent, makerTrade);
-            await HandleMarketData(orderEvent, makerTrade);
-        }
-    }
-
-    private async Task HandleTakerTrade(TradeEvent tradeEvent)
-    {
-        var takerOrder = await _orderRepository.GetById(tradeEvent.TakerOrderId);
-        var evt = OrderEventFactory.Create(tradeEvent, takerOrder);
-        await _orderRepository.AddEvent(evt);
-        _logger.LogDebug("Taker trade event processed. OrderId={orderId}", tradeEvent.TakerOrderId);
-    }
-
-    private async Task HandleMakerTrade(TradeEvent tradeEvent, Trade makerTrade)
-    {
-        var evt = OrderEventFactory.Create(tradeEvent, makerTrade);
-        await _orderRepository.AddEvent(evt);
-        _logger.LogDebug("Maker trade event processed. OrderId={orderId}", makerTrade.MakerOrderId);
-    }
-
-    private async Task HandleMarketData(TradeEvent tradeEvent, Trade makerTrade)
-    {
-        var symbolId = tradeEvent.Symbol;
-        var price = makerTrade.Price;
-        await _marketDataRepository.Update(symbolId, price);
+        return Task.WhenAll(
+            _tradeEventsRepository.Save(orderEvent),
+            _orderEventService.ProcessTradeEvent(orderEvent),
+            _marketDataService.ProcessTradeEvent(orderEvent),
+            _portolioService.ProcessTradeEvent(orderEvent)
+            );
     }
 }

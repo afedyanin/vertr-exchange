@@ -68,13 +68,23 @@ public abstract class TradingBase
         OrdersView.Render(filtered);
     }
 
+    protected virtual async Task DumpPosition(User user)
+    {
+        var portfolios = await ApiClient.GetPortfolios();
+        var portfolio = portfolios.Where(p => p.Uid == user.Id).First();
+        var position = portfolio.Positions.Where(p => p.Symbol == Symbols.MSFT.Id).First();
+        PositionView.Render(position);
+    }
+
     protected async Task DumpResults()
     {
         await DumpUserResults(Users.Bob);
+        await DumpPosition(Users.Bob);
         await DumpUserResults(Users.Alice);
+        await DumpPosition(Users.Alice);
         await DumpOrderBook();
         await DumpTrades();
-        await DumpOrders();
+        // await DumpOrders();
     }
 
     protected virtual Task PlaceBid(User user, decimal price, long size)

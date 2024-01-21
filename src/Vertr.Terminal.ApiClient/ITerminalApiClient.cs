@@ -46,6 +46,9 @@ public interface ITerminalApiClient
     [Get("/queries/orders")]
     Task<OrderDto[]> GetOrders();
 
+    [Get("/queries/portfolios")]
+    Task<PortfolioDto[]> GetPortfolios();
+
     [Get("/queries/market-data")]
     Task<MarketDataItemDto[]> GetMarketDataSnapshot();
 

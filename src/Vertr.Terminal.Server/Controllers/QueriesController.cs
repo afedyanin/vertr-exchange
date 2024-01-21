@@ -10,6 +10,7 @@ namespace Vertr.Terminal.Server.Controllers;
 public class QueriesController(
     IExchangeApiClient exchangeApiClient,
     IOrderBookSnapshotsRepository orderBookRepository,
+    IPortfolioRepository portfolioRepository,
     ITradeEventsRepository tradeEventsRepository,
     IOrderRepository ordersRepository,
     IMarketDataRepository marketDataRepository)
@@ -18,6 +19,7 @@ public class QueriesController(
     private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
     private readonly ITradeEventsRepository _tradeEventsRepository = tradeEventsRepository;
     private readonly IOrderRepository _ordersRepository = ordersRepository;
+    private readonly IPortfolioRepository _portfolioRepository = portfolioRepository;
     private readonly IExchangeApiClient _exchangeApiClient = exchangeApiClient;
     private readonly IMarketDataRepository _marketDataRepository = marketDataRepository;
 
@@ -60,6 +62,13 @@ public class QueriesController(
     {
         var orders = await _ordersRepository.GetList();
         return Ok(orders.ToDto());
+    }
+
+    [HttpGet("portfolios")]
+    public async Task<IActionResult> GetPortfolios()
+    {
+        var portfolio = await _portfolioRepository.GetList();
+        return Ok(portfolio.ToDto());
     }
 
     [HttpGet("market-data")]
