@@ -1,3 +1,13 @@
+## 21-01-24
+
+### упростить архитектуру
+- [ ] нарисовать диаграмму (as is, to be)
+- [ ] изолировать контексты терминала и ексченжа
+
+### история трейдов
+- [ ] runing total Pnl по позиции - еквити, хранение истории
+- [ ] история цены, свечки - хранение и стрим маркет данных
+
 ## 19-01-24
 - [ ] Implement Position Calculation by trade events on client side
 - [ ] Save Position History on client side - (Equity by time)
