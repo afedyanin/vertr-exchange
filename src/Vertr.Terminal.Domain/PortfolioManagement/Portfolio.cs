@@ -8,6 +8,8 @@ public class Portfolio(long uid)
 
     public long Uid { get; } = uid;
 
+    public Position[] Positions => _positions.Values.ToArray();
+
     public Position? GetPosition(int symbol)
     {
         _positions.TryGetValue(symbol, out var position);

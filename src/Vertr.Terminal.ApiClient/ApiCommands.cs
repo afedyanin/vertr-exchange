@@ -72,6 +72,12 @@ public sealed class ApiCommands(ITerminalApiClient client)
         return res;
     }
 
+    public async Task<PortfolioDto[]> GetPortfolios()
+    {
+        var res = await _client.GetPortfolios();
+        return res;
+    }
+
     public async Task<MarketDataItemDto[]> GetMarketDataSnapshot()
     {
         var res = await _client.GetMarketDataSnapshot();
