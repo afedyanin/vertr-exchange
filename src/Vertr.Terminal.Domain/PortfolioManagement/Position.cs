@@ -4,11 +4,17 @@ public class Position(long uid, int symbol)
 {
     private readonly List<PositionTrade> _trades = [];
 
+    private readonly List<PositionPnlRecord> _pnlHistory = [];
+
     public long Uid { get; } = uid;
 
     public int Symbol { get; } = symbol;
 
     public PositionTrade[] Trades => _trades.ToArray();
+
+    public PositionPnlRecord[] PnlHistory => _pnlHistory.ToArray();
+
+    public PositionPnlRecord Pnl { get; private set; } = new PositionPnlRecord();
 
     public void Reset()
     {
@@ -19,6 +25,9 @@ public class Position(long uid, int symbol)
     {
         ValidateTrade(trade);
         _trades.Add(trade);
+        var newPnl = Pnl.ApplyTrade(trade);
+        _pnlHistory.Add(newPnl);
+        Pnl = newPnl;
     }
 
     public void ValidateTrade(PositionTrade trade)

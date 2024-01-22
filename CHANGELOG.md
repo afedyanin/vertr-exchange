@@ -1,6 +1,20 @@
+## 22-01-24
+
+- [ ] история цены, свечки - хранение и стрим маркет данных
+- [ ] performance reports
+
+### упростить архитектуру
+- [ ] нарисовать диаграмму (as is, to be)
+- [ ] изолировать контексты терминала и ексченжа
+
+
+## 21-01-24
+
+- [x] runing total Pnl по позиции - еквити, хранение истории
+
 ## 19-01-24
-- [ ] Implement Position Calculation by trade events on client side
-- [ ] Save Position History on client side - (Equity by time)
+- [x] Implement Position Calculation by trade events on client side
+- [x] Save Position History on client side - (Equity by time)
 
 ## 18-01-24
 - [x] Bug: в трейдах есть евенты с Size = 0

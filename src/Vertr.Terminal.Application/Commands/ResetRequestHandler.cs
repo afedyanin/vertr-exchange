@@ -11,6 +11,8 @@ internal sealed class ResetRequestHandler(
     IOrderBookSnapshotsRepository orderBookRepository,
     ITradeEventsRepository tradeEventsRepository,
     IOrderRepository orderRepository,
+    IMarketDataRepository marketDataRepository,
+    IPortfolioRepository portfolioRepository,
     ILogger<ResetRequestHandler> logger) : IRequestHandler<ResetRequest, ApiCommandResult>
 {
     private readonly IOrderBookSnapshotsRepository _orderBookRepository = orderBookRepository;
@@ -18,6 +20,8 @@ internal sealed class ResetRequestHandler(
     private readonly IOrderRepository _orderRepository = orderRepository;
     private readonly IExchangeApiClient _exchangeApiClient = exchangeApiClient;
     private readonly ILogger<ResetRequestHandler> _logger = logger;
+    private readonly IMarketDataRepository _marketDataRepository = marketDataRepository;
+    private readonly IPortfolioRepository _portfolioRepository = portfolioRepository;
 
     public async Task<ApiCommandResult> Handle(ResetRequest request, CancellationToken cancellationToken)
     {
@@ -28,6 +32,8 @@ internal sealed class ResetRequestHandler(
             await _orderBookRepository.Reset();
             await _tradeEventsRepository.Reset();
             await _orderRepository.Reset();
+            await _marketDataRepository.Reset();
+            await _portfolioRepository.Reset();
 
             _logger.LogDebug("Reset command completed.");
         }

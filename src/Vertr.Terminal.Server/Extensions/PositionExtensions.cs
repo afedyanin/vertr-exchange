@@ -14,5 +14,7 @@ internal static class PositionExtensions
             Uid = position.Uid,
             Symbol = position.Symbol,
             Trades = position.Trades.ToDto(),
+            Pnl = position.Pnl.ToDto(),
+            PnlHistory = position.PnlHistory.ToDto(),
         };
 }
