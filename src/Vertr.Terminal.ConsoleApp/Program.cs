@@ -8,6 +8,8 @@ public class Program
 
     public static async Task Main()
     {
+        // var trading = new OverlappedOrdersTrading(_terminalHostUrl);
+
         var trading = new RandomWalkTrading(
             _terminalHostUrl,
             basePrice: 10.45m,
