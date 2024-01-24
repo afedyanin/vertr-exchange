@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
+using Vertr.Terminal.ApiClient.Contracts;
 using Vertr.Terminal.Domain.Abstractions;
 using Vertr.Terminal.Server.Extensions;
 
@@ -24,57 +26,70 @@ public class QueriesController(
     private readonly IMarketDataRepository _marketDataRepository = marketDataRepository;
 
     [HttpPost("user-report")]
-    public async Task<IActionResult> GetSingleUserReport(UserRequest request)
+    public async Task<ActionResult<ApiCommandResult?>> GetSingleUserReport(UserRequest request)
     {
         var res = await _exchangeApiClient.GetSingleUserReport(request);
         return Ok(res);
     }
 
     [HttpGet("order-books/{symbolId:int}")]
-    public async Task<IActionResult> GetOrderBook(int symbolId)
+    public async Task<ActionResult<OrderBook?>> GetOrderBook(int symbolId)
     {
         var ob = await _orderBookRepository.Get(symbolId);
-
-        if (ob is null)
-        {
-            return NotFound();
-        }
-
         return Ok(ob);
     }
 
     [HttpGet("order-books")]
-    public async Task<IActionResult> GetOrderBooks()
+    public async Task<ActionResult<OrderBook[]>> GetOrderBooks()
     {
         var ob = await _orderBookRepository.GetList();
         return Ok(ob);
     }
 
     [HttpGet("trades")]
-    public async Task<IActionResult> GetTradeEvents()
+    public async Task<ActionResult<TradeEvent[]>> GetTradeEvents()
     {
         var te = await _tradeEventsRepository.GetList();
         return Ok(te);
     }
 
     [HttpGet("orders")]
-    public async Task<IActionResult> GetOrders()
+    public async Task<ActionResult<OrderDto[]>> GetOrders()
     {
         var orders = await _ordersRepository.GetList();
         return Ok(orders.ToDto());
     }
 
     [HttpGet("portfolios")]
-    public async Task<IActionResult> GetPortfolios()
+    public async Task<ActionResult<PortfolioDto[]>> GetPortfolios()
     {
         var portfolio = await _portfolioRepository.GetList();
         return Ok(portfolio.ToDto());
     }
 
     [HttpGet("market-data")]
-    public async Task<IActionResult> GetMerketData()
+    public async Task<ActionResult<MarketDataItemDto[]>> GetMarketDataSnapshot()
     {
         var items = await _marketDataRepository.GetSnapshot();
+        return Ok(items.ToDto());
+    }
+
+    [HttpGet("market-data/{symbolId:int}")]
+    public async Task<ActionResult<MarketDataItemDto?>> GetMarketData(int symbolId)
+    {
+        var item = await _marketDataRepository.GetBySymbolId(symbolId);
+        if (item == null)
+        {
+            return Ok();
+        }
+
+        return Ok(item.ToDto());
+    }
+
+    [HttpGet("market-data/{symbolId:int}/history")]
+    public async Task<ActionResult<MarketDataItemDto[]>> GetMerketDataHistory(int symbolId)
+    {
+        var items = await _marketDataRepository.GetHistory(symbolId);
         return Ok(items.ToDto());
     }
 }

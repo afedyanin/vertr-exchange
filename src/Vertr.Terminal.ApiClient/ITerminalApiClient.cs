@@ -52,6 +52,12 @@ public interface ITerminalApiClient
     [Get("/queries/market-data")]
     Task<MarketDataItemDto[]> GetMarketDataSnapshot();
 
+    [Get("/queries/market-data/{symbolId}")]
+    Task<MarketDataItemDto?> GetMarketData(int symbolId);
+
+    [Get("/queries/market-data/{symbolId}/history")]
+    Task<MarketDataItemDto[]> GetMarketDataHistory(int symbolId);
+
     [Post("/strategies/random-walk")]
     Task RandomWalk([Body] RandomWalkRequest request);
 }

@@ -1,18 +1,18 @@
 namespace Vertr.Terminal.Domain.MarketData;
 
-public class MarketDataItem
+public record class MarketDataItem
 {
-    private decimal _price;
+    public DateTime TimeStamp { get; init; }
 
     public int SymbolId { get; init; }
 
-    public decimal DayOpen { get; private set; }
+    public decimal DayOpen { get; init; }
 
-    public decimal DayLow { get; private set; }
+    public decimal DayLow { get; init; }
 
-    public decimal DayHigh { get; private set; }
+    public decimal DayHigh { get; init; }
 
-    public decimal LastChange { get; private set; }
+    public decimal LastChange { get; init; }
 
     public decimal Change
     {
@@ -26,39 +26,39 @@ public class MarketDataItem
     {
         get
         {
+            if (Price == decimal.Zero)
+            {
+                return 0;
+            }
+
             return (double)Math.Round(Change / Price, 4);
         }
     }
 
-    public decimal Price
+    public decimal Price { get; init; }
+
+    public MarketDataItem Update(DateTime timeStamp, decimal price)
     {
-        get
+        if (Price == price)
         {
-            return _price;
+            return this;
         }
-        set
+
+        var lastChange = price - Price;
+        var dayOpen = DayOpen == 0 ? price : DayOpen;
+        var dayLow = price < DayLow || DayLow == 0 ? price : DayLow;
+        var dayHigh = price > DayHigh ? price : DayHigh;
+
+
+        return new MarketDataItem
         {
-            if (_price == value)
-            {
-                return;
-            }
-
-            LastChange = value - _price;
-            _price = value;
-
-            if (DayOpen == 0)
-            {
-                DayOpen = _price;
-            }
-            if (_price < DayLow || DayLow == 0)
-            {
-                DayLow = _price;
-            }
-            if (_price > DayHigh)
-            {
-                DayHigh = _price;
-            }
-        }
+            SymbolId = SymbolId,
+            TimeStamp = timeStamp,
+            Price = price,
+            DayHigh = dayHigh,
+            DayLow = dayLow,
+            DayOpen = dayOpen,
+            LastChange = lastChange,
+        };
     }
-
 }

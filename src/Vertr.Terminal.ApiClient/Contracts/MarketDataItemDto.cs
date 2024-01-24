@@ -3,6 +3,8 @@ public record MarketDataItemDto
 {
     public int SymbolId { get; init; }
 
+    public DateTime TimeStamp { get; init; }
+
     public decimal DayOpen { get; init; }
 
     public decimal DayLow { get; init; }

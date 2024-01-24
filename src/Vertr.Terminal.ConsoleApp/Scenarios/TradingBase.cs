@@ -76,6 +76,13 @@ public abstract class TradingBase
         PositionView.Render(position);
     }
 
+    protected virtual async Task DumpMarketHistory()
+    {
+        var history = await ApiClient.GetMarketDataHistory(Symbols.MSFT.Id);
+        var current = await ApiClient.GetMarketData(Symbols.MSFT.Id);
+        MarketDataView.Render(history, current!);
+    }
+
     protected async Task DumpResults()
     {
         await DumpUserResults(Users.Bob);
@@ -85,6 +92,7 @@ public abstract class TradingBase
         await DumpOrderBook();
         await DumpTrades();
         // await DumpOrders();
+        await DumpMarketHistory();
     }
 
     protected virtual Task PlaceBid(User user, decimal price, long size)

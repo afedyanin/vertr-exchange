@@ -11,13 +11,14 @@ internal static class MarketDataItemExtensions
     public static MarketDataItemDto ToDto(this MarketDataItem item)
         => new MarketDataItemDto
         {
-            Change = item.Change,
+            SymbolId = item.SymbolId,
+            TimeStamp = item.TimeStamp,
+            Price = item.Price,
             DayHigh = item.DayHigh,
             DayLow = item.DayLow,
             DayOpen = item.DayOpen,
             LastChange = item.LastChange,
+            Change = item.Change,
             PercentChange = item.PercentChange,
-            Price = item.Price,
-            SymbolId = item.SymbolId,
         };
 }
