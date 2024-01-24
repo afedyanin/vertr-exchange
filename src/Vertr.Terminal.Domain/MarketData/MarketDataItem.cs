@@ -26,11 +26,6 @@ public record class MarketDataItem
     {
         get
         {
-            if (Price == decimal.Zero)
-            {
-                return 0;
-            }
-
             return (double)Math.Round(Change / Price, 4);
         }
     }

@@ -1,7 +1,7 @@
 namespace Vertr.Terminal.ConsoleApp.Views;
 internal static class ViewConsts
 {
-    public const string DecimalFormat = "####.0000";
+    public const string DecimalFormat = "###0.0000";
 
     public const string TimeFormat = "HH:mm:ss:fffff";
 

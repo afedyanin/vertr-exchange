@@ -25,7 +25,6 @@ public class RandomWalkStrategy(
 
     public async Task Execute(CancellationToken cancellationToken = default)
     {
-        // var marketPrice = await GetMarketPrice(_strategyParams.BasePrice);
         var randomPrice = _strategyParams.BasePrice;
 
         for (var i = 0; i < _strategyParams.OrdersCount; i++)
@@ -50,16 +49,20 @@ public class RandomWalkStrategy(
 
             await _mediator.Send(placeRequest);
             await Task.Delay(_orderCommadsDelay, cancellationToken);
-            // marketPrice = await GetMarketPrice(randomPrice);
+
+            var marketPrice = await GetMarketPrice();
+
+            if (marketPrice.HasValue)
+            {
+                randomPrice = marketPrice.Value;
+            }
         }
     }
 
-    protected async Task<decimal> GetMarketPrice(decimal previousPrice)
+    protected async Task<decimal?> GetMarketPrice()
     {
         var marketDataItem = await _marketDataRepository.GetBySymbolId(_strategyParams.SymbolId);
-        var res = marketDataItem == null ? previousPrice : marketDataItem.Price;
-
-        return res;
+        return marketDataItem?.Price;
     }
 
     private static decimal NextRandomPrice(decimal baseParice, decimal delta)

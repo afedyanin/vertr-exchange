@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Vertr.Exchange.Contracts;
 using Vertr.Terminal.Domain.Abstractions;
 
 namespace Vertr.Terminal.Application.StreamEvents.Orders;
@@ -39,7 +40,8 @@ internal sealed class OrderEventRequestHandler(
     public Task Handle(TradeRequest request, CancellationToken cancellationToken)
     {
         var orderEvent = request.TradeEvent ?? throw new ArgumentNullException(nameof(request));
-        _logger.LogDebug("Processing Trade event. Taker OrderId={orderId}", orderEvent.TakerOrderId);
+        ValidateEvent(orderEvent);
+        _logger.LogDebug("Start processing Trade event. Taker OrderId={orderId}", orderEvent.TakerOrderId);
 
         return Task.WhenAll(
             _tradeEventsRepository.Save(orderEvent),
@@ -47,5 +49,13 @@ internal sealed class OrderEventRequestHandler(
             _marketDataService.ProcessTradeEvent(orderEvent),
             _portolioService.ProcessTradeEvent(orderEvent)
             );
+    }
+
+    private void ValidateEvent(TradeEvent tradeEvent)
+    {
+        if (tradeEvent.Trades.Any(t => t.Price <= decimal.Zero))
+        {
+            throw new InvalidOperationException($"Trade event with zero price. OrderId={tradeEvent.TakerOrderId}");
+        }
     }
 }
