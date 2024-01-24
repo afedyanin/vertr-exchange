@@ -5,22 +5,24 @@ namespace Vertr.Terminal.ConsoleApp.Scenarios;
 public class RandomWalkTrading(
     string terminalHostUrl,
     decimal basePrice,
+    decimal priceDelta,
     int numberOfIterations) : TradingBase(terminalHostUrl, Symbols.MSFT)
 {
 
     private readonly decimal _basePrice = basePrice;
+    private readonly decimal _priceDelta = priceDelta;
     private readonly int _numberOfIterations = numberOfIterations;
 
     protected override async Task StartTrading()
     {
         var t1 = Task.Run(async () =>
         {
-            await Commands.RandomWalk(Users.Bob, Symbol, _basePrice, _numberOfIterations);
+            await Commands.RandomWalk(Users.Bob, Symbol, _basePrice, _priceDelta, _numberOfIterations);
         });
 
         var t2 = Task.Run(async () =>
         {
-            await Commands.RandomWalk(Users.Alice, Symbol, _basePrice, _numberOfIterations);
+            await Commands.RandomWalk(Users.Alice, Symbol, _basePrice, _priceDelta, _numberOfIterations);
         });
 
         await Task.WhenAll(t1, t2);

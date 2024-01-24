@@ -84,10 +84,17 @@ public sealed class ApiCommands(ITerminalApiClient client)
         return res;
     }
 
+    public async Task<MarketDataItemDto[]> GetMarketDataHistory(Symbol symbol)
+    {
+        var res = await _client.GetMarketDataHistory(symbol.Id);
+        return res;
+    }
+
     public async Task RandomWalk(
         User user,
         Symbol symbol,
         decimal startPrice,
+        decimal priceDelta,
         int ordersCount)
     {
         var req = new RandomWalkRequest()
@@ -95,7 +102,7 @@ public sealed class ApiCommands(ITerminalApiClient client)
             UserId = user.Id,
             SymbolId = symbol.Id,
             BasePrice = startPrice,
-            PriceDelta = 0.01m,
+            PriceDelta = priceDelta,
             OrdersCount = ordersCount
         };
 

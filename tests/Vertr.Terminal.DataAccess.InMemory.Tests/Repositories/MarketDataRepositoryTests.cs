@@ -11,20 +11,22 @@ public class MarketDataRepositoryTests
         var repo = new MarketDataRepository();
         var symbolId = 100;
         var price = 45.5m;
+        var dt = new DateTime(2024, 01, 25, 18, 12, 57);
 
-        var res = await repo.Update(symbolId, price);
+        var res = await repo.Update(symbolId, dt, price);
 
         Assert.That(res, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(res.SymbolId, Is.EqualTo(symbolId));
-            Assert.That(res.Price, Is.EqualTo(price));
-            Assert.That(res.DayHigh, Is.EqualTo(price));
-            Assert.That(res.DayLow, Is.EqualTo(price));
-            Assert.That(res.DayOpen, Is.EqualTo(price));
-            Assert.That(res.PercentChange, Is.EqualTo(0));
-            Assert.That(res.Change, Is.EqualTo(0));
-            Assert.That(res.LastChange, Is.EqualTo(price));
+            Assert.That(res.SymbolId, Is.EqualTo(symbolId), "SymbolId");
+            Assert.That(res.Price, Is.EqualTo(price), "Price");
+            Assert.That(res.DayHigh, Is.EqualTo(price), "DayHigh");
+            Assert.That(res.DayLow, Is.EqualTo(price), "DayLow");
+            Assert.That(res.DayOpen, Is.EqualTo(price), "DayOpen");
+            Assert.That(res.PercentChange, Is.EqualTo(0), "PercentChange");
+            Assert.That(res.Change, Is.EqualTo(0), "Change");
+            Assert.That(res.LastChange, Is.EqualTo(price), "LastChange");
+            Assert.That(res.TimeStamp, Is.EqualTo(dt), "TimeStamp");
         });
     }
 
@@ -35,9 +37,11 @@ public class MarketDataRepositoryTests
     {
         var symbolId = 100;
         var repo = new MarketDataRepository();
+        var dt1 = new DateTime(2024, 01, 25, 18, 12, 57);
+        var dt2 = new DateTime(2024, 01, 25, 18, 15, 57);
 
-        var res = await repo.Update(symbolId, p1);
-        res = await repo.Update(symbolId, p2);
+        var res = await repo.Update(symbolId, dt1, p1);
+        res = await repo.Update(symbolId, dt2, p2);
 
         Assert.That(res, Is.Not.Null);
         Assert.Multiple(() =>
@@ -50,6 +54,7 @@ public class MarketDataRepositoryTests
             Assert.That(Math.Round(res.PercentChange, 4), Is.EqualTo(Math.Round((p2 - p1) / p2, 4)));
             Assert.That(res.Change, Is.EqualTo(p2 - p1));
             Assert.That(res.LastChange, Is.EqualTo(p2 == p1 ? p2 : p2 - p1));
+            Assert.That(res.TimeStamp, Is.EqualTo(p2 == p1 ? dt1 : dt2));
         });
     }
 
@@ -66,10 +71,13 @@ public class MarketDataRepositoryTests
     {
         var symbolId = 100;
         var repo = new MarketDataRepository();
+        var dt1 = new DateTime(2024, 01, 25, 18, 12, 57);
+        var dt2 = new DateTime(2024, 01, 25, 18, 15, 57);
+        var dt3 = new DateTime(2024, 01, 25, 18, 15, 59);
 
-        var res = await repo.Update(symbolId, p1);
-        res = await repo.Update(symbolId, p2);
-        res = await repo.Update(symbolId, p3);
+        var res = await repo.Update(symbolId, dt1, p1);
+        res = await repo.Update(symbolId, dt2, p2);
+        res = await repo.Update(symbolId, dt3, p3);
 
         var prices = new decimal[] { p1, p2, p3 };
 
@@ -85,6 +93,7 @@ public class MarketDataRepositoryTests
             Assert.That(Math.Round(res.PercentChange, 4), Is.EqualTo(Math.Round((p3 - p1) / p3, 4)));
             Assert.That(res.Change, Is.EqualTo(p3 - p1));
             Assert.That(res.LastChange, Is.EqualTo(p3 == p2 ? p2 == p1 ? p2 : p2 - p1 : p3 - p2));
+            Assert.That(res.TimeStamp, Is.EqualTo(p3 == p2 ? p2 == p1 ? dt1 : dt2 : dt3));
         });
     }
 }

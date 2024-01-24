@@ -12,6 +12,6 @@ internal sealed class MarketDataService(IMarketDataRepository marketDataReposito
         var symbolId = tradeEvent.Symbol;
         // var price = tradeEvent.Trades.Average(mt => mt.Price);
         var price = tradeEvent.Trades.Select(mt => mt.Price).Last();
-        return _marketDataRepository.Update(symbolId, price);
+        return _marketDataRepository.Update(symbolId, tradeEvent.Timestamp, price);
     }
 }
