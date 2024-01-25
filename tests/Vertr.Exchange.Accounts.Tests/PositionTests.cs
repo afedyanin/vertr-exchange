@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Accounts.Tests;
+namespace Vertr.Exchange.Domain.Accounts.Tests;
 
 [TestFixture(Category = "Unit")]
 
@@ -35,7 +35,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.PnL, Is.EqualTo(size * price * (-1)));
+            Assert.That(pos.PnL, Is.EqualTo(size * price * -1));
             Assert.That(pos.OpenVolume, Is.EqualTo(size));
         });
     }
@@ -81,7 +81,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.PnL, Is.EqualTo((100 * 10 * (-1)) + (90 * 100)));
+            Assert.That(pos.PnL, Is.EqualTo((100 * 10 * -1) + (90 * 100)));
             Assert.That(pos.OpenVolume, Is.EqualTo(10));
         });
 
@@ -135,7 +135,7 @@ public class PositionTests
         Assert.Multiple(() =>
         {
             Assert.That(pos.Direction, Is.EqualTo(PositionDirection.DIR_LONG));
-            Assert.That(pos.PnL, Is.EqualTo(((100 * 10) + (200 * 20)) * (-1)));
+            Assert.That(pos.PnL, Is.EqualTo(((100 * 10) + (200 * 20)) * -1));
             Assert.That(pos.OpenVolume, Is.EqualTo(100 + 200));
         });
     }

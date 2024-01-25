@@ -1,8 +1,8 @@
 using System.Text.Json;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Common.Binary.Commands;
+namespace Vertr.Exchange.Domain.Common.Binary.Commands;
 public static class BinaryCommandFactory
 {
     public static IBinaryCommand? GetBinaryCommand(BinaryDataType commandType, byte[] data)

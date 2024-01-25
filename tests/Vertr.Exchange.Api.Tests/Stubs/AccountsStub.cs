@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Api.Tests.Stubs;
+namespace Vertr.Exchange.Application.Tests.Stubs;
 public static class AccountsStub
 {
     public static long FirstUserUid => UserAccounts.First().Key;

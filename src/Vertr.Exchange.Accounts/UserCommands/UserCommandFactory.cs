@@ -1,8 +1,8 @@
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common;
 using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
 
-namespace Vertr.Exchange.Accounts.UserCommands;
+namespace Vertr.Exchange.Domain.Accounts.UserCommands;
 
 public static class UserCommandFactory
 {

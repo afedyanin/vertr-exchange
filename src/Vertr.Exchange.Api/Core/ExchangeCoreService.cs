@@ -2,14 +2,14 @@ using System.Runtime.CompilerServices;
 using Disruptor;
 using Disruptor.Dsl;
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Core.EventHandlers;
+using Vertr.Exchange.Application.EventHandlers;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Core.Tests")]
-[assembly: InternalsVisibleTo("Vertr.Exchange.Api.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Exchange.Application.Tests")]
 
-namespace Vertr.Exchange.Core;
+namespace Vertr.Exchange.Application.Core;
 
 internal class ExchangeCoreService : IExchangeCoreService
 {

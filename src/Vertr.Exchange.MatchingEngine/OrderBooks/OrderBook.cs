@@ -1,10 +1,10 @@
 using System.Diagnostics;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.MatchingEngine.Helpers;
+using Vertr.Exchange.Domain.MatchingEngine.Helpers;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
 
-namespace Vertr.Exchange.MatchingEngine.OrderBooks;
+namespace Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 
 internal sealed class OrderBook : IOrderBook
 {

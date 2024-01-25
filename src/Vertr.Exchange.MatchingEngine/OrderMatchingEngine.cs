@@ -1,18 +1,18 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Binary.Commands;
-using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.MatchingEngine.Binary;
-using Vertr.Exchange.MatchingEngine.Commands;
+using Vertr.Exchange.Domain.MatchingEngine.Binary;
+using Vertr.Exchange.Domain.MatchingEngine.Commands;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Binary.Commands;
+using Vertr.Exchange.Domain.Common.Binary.Reports;
 
-[assembly: InternalsVisibleTo("Vertr.Exchange.MatchingEngine.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Exchange.Domain.MatchingEngine.Tests")]
 
-namespace Vertr.Exchange.MatchingEngine;
+namespace Vertr.Exchange.Domain.MatchingEngine;
 
 public class OrderMatchingEngine(
     IOrderBookProvider orderBookProvider,

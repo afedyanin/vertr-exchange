@@ -1,4 +1,4 @@
-using Vertr.Exchange.MatchingEngine.OrderBooks;
+using Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
 namespace Vertr.Exchange.MatchingEngine.Tests;
@@ -25,8 +25,6 @@ public class OrderBookL2MarketDataTests
             Assert.That(snapshot.AskOrders, Is.Empty);
             Assert.That(snapshot.BidOrders, Is.Empty);
         });
-
-
     }
 
     [Test]

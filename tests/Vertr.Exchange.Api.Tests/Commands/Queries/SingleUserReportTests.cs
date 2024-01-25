@@ -1,9 +1,9 @@
-using Vertr.Exchange.Api.Commands;
-using Vertr.Exchange.Api.Commands.Queries;
-using Vertr.Exchange.Api.Tests.Stubs;
+using Vertr.Exchange.Application.Commands;
+using Vertr.Exchange.Application.Commands.Queries;
+using Vertr.Exchange.Application.Tests.Stubs;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Tests.Commands.Queries;
+namespace Vertr.Exchange.Application.Tests.Commands.Queries;
 
 
 [TestFixture(Category = "Unit")]

@@ -1,8 +1,8 @@
-using Vertr.Exchange.Common.Binary.Commands;
 using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Binary.Commands;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
 
-namespace Vertr.Exchange.MatchingEngine.Binary;
+namespace Vertr.Exchange.Domain.MatchingEngine.Binary;
 internal static class CommandExtensions
 {
     public static CommandResultCode HandleCommand(

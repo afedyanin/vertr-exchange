@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.Core.EventHandlers;
+namespace Vertr.Exchange.Application.EventHandlers;
 internal class MatchingEngineProcessor(
     IOrderMatchingEngine orderMatchingEngine,
     ILogger<MatchingEngineProcessor> logger) : IOrderCommandEventHandler

@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Common.Abstractions;
+namespace Vertr.Exchange.Domain.Common.Abstractions;
 public interface IApiCommand
 {
     void Fill(ref OrderCommand command);

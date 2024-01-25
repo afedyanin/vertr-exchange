@@ -1,7 +1,7 @@
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Commands;
+namespace Vertr.Exchange.Application.Commands;
 public class SuspendUserCommand(
     long orderId,
     DateTime timestamp,

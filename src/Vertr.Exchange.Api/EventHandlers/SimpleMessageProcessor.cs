@@ -1,11 +1,10 @@
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Api.Factories;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Messages;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Core.EventHandlers;
 
-namespace Vertr.Exchange.Api.EventHandlers;
+namespace Vertr.Exchange.Application.EventHandlers;
 
 internal class SimpleMessageProcessor(
     IMessageHandler messageHandler,

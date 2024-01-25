@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Exchange.Api.EventHandlers;
-using Vertr.Exchange.Api.Generators;
-using Vertr.Exchange.Core.EventHandlers;
+using Vertr.Exchange.Application.Core;
+using Vertr.Exchange.Application.EventHandlers;
+using Vertr.Exchange.Application.Generators;
 
-namespace Vertr.Exchange.Api;
+namespace Vertr.Exchange.Application;
 
 public static class ExchangeApiRegistrar
 {
@@ -13,6 +13,12 @@ public static class ExchangeApiRegistrar
         serviceCollection.AddSingleton<IOrderIdGenerator, OrderIdGenerator>();
         serviceCollection.AddSingleton<ITimestampGenerator, TimestampGenerator>();
         serviceCollection.AddSingleton<IExchangeApi, ExchangeApi>();
+
+        serviceCollection.AddSingleton<IExchangeCoreService, ExchangeCoreService>();
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, RiskEnginePreProcessor>();
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, RiskEnginePostProcessor>();
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, MatchingEngineProcessor>();
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, LoggingProcessor>();
 
         return serviceCollection;
     }

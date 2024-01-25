@@ -1,6 +1,7 @@
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.MatchingEngine.OrderBooks;
 
-namespace Vertr.Exchange.MatchingEngine.OrderBooks;
+namespace Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 internal class OrderBookProvider(Func<IOrderBook> orderBookFactory) : IOrderBookProvider
 {
     private readonly Func<IOrderBook> _orderBookFactory = orderBookFactory;

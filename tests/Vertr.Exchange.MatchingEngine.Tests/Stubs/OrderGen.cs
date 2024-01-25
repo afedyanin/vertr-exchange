@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
+namespace Vertr.Exchange.Domain.MatchingEngine.Tests.Stubs;
 
 internal static class OrderGen
 {

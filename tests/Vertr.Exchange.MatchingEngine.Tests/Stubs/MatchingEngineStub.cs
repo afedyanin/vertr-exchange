@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Options;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
 
-namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
+namespace Vertr.Exchange.Domain.MatchingEngine.Tests.Stubs;
 internal static class MatchingEngineStub
 {
     public static MatchingEngineConfiguration Configuration =>

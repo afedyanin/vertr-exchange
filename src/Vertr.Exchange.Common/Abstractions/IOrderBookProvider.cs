@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
 namespace Vertr.Exchange.MatchingEngine.OrderBooks;
 public interface IOrderBookProvider

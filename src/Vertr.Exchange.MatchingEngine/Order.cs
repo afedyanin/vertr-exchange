@@ -1,7 +1,7 @@
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.MatchingEngine;
+namespace Vertr.Exchange.Domain.MatchingEngine;
 
 internal sealed class Order : IOrder
 {

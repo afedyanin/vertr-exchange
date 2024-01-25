@@ -1,7 +1,7 @@
-using Vertr.Exchange.MatchingEngine.OrderBooks;
+using Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 
-namespace Vertr.Exchange.MatchingEngine.Tests;
+namespace Vertr.Exchange.Domain.MatchingEngine.Tests;
 
 [TestFixture(Category = "Unit")]
 public class OrderBookTests

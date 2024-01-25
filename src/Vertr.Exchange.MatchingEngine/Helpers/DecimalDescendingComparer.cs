@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.MatchingEngine.Helpers;
+namespace Vertr.Exchange.Domain.MatchingEngine.Helpers;
 
 internal sealed class DecimalDescendingComparer : IComparer<decimal>
 {

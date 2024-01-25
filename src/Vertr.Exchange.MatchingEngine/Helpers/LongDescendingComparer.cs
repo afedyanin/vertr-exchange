@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.MatchingEngine.Helpers;
+namespace Vertr.Exchange.Domain.MatchingEngine.Helpers;
 
 // https://stackoverflow.com/questions/931891/reverse-sorted-dictionary-in-net
 internal sealed class LongDescendingComparer : IComparer<long>

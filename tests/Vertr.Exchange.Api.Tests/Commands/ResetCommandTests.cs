@@ -1,8 +1,8 @@
-using Vertr.Exchange.Api.Commands;
-using Vertr.Exchange.Api.Tests.Stubs;
+using Vertr.Exchange.Application.Commands;
+using Vertr.Exchange.Application.Tests.Stubs;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Tests.Commands;
+namespace Vertr.Exchange.Application.Tests.Commands;
 
 public class ResetCommandTests : ApiTestBase
 {

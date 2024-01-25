@@ -1,9 +1,9 @@
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Binary.Commands;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.RiskEngine.Symbols;
+using Vertr.Exchange.Domain.RiskEngine.Symbols;
+using Vertr.Exchange.Domain.Common.Binary.Commands;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.RiskEngine.Binary;
+namespace Vertr.Exchange.Domain.RiskEngine.Binary;
 
 internal static class CommandExtensions
 {

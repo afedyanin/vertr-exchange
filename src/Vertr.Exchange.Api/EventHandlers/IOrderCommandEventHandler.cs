@@ -1,7 +1,8 @@
 using Disruptor;
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Domain.Common;
 
-namespace Vertr.Exchange.Core.EventHandlers;
+namespace Vertr.Exchange.Application.EventHandlers;
+
 public interface IOrderCommandEventHandler : IEventHandler<OrderCommand>
 {
     int ProcessingStep { get; }

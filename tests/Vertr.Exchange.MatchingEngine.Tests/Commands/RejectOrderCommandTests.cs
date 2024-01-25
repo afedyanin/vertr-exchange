@@ -1,9 +1,10 @@
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.MatchingEngine.Commands;
-using Vertr.Exchange.MatchingEngine.OrderBooks;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
+using Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
+using Vertr.Exchange.Domain.MatchingEngine.Commands;
+using Vertr.Exchange.Domain.MatchingEngine.Tests.Stubs;
 
-namespace Vertr.Exchange.MatchingEngine.Tests.Commands;
+namespace Vertr.Exchange.Domain.MatchingEngine.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
 public class RejectOrderCommandTests

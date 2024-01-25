@@ -1,8 +1,8 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Accounts.UserCommands;
+namespace Vertr.Exchange.Domain.Accounts.UserCommands;
 internal class AdjustBalanceCommand(
     OrderCommand command,
     IUserProfileProvider userProfilesRepository)

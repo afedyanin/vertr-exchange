@@ -1,10 +1,9 @@
-using Vertr.Exchange.Api;
-using Vertr.Exchange.Core;
-using Vertr.Exchange.RiskEngine;
-using Vertr.Exchange.Accounts;
-using Vertr.Exchange.MatchingEngine;
+using Vertr.Exchange.Application;
+using Vertr.Exchange.Domain.RiskEngine;
+using Vertr.Exchange.Domain.Accounts;
+using Vertr.Exchange.Domain.MatchingEngine;
 using Vertr.Exchange.Server.MessageHandlers;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Server.Hubs;
 using Microsoft.AspNetCore.Http.Connections;
 
@@ -24,7 +23,6 @@ public class Program
         }).AddMessagePackProtocol();
 
         builder.Services.AddExchangeApi();
-        builder.Services.AddExchangeCore();
         builder.Services.AddAccounts();
         builder.Services.AddRiskEngine();
         builder.Services.AddMatchingEngine();

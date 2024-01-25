@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Common;
+namespace Vertr.Exchange.Domain.Common;
 
 public class SymbolSpecification
 {

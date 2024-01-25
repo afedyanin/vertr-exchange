@@ -1,12 +1,12 @@
 using System.Text;
 using System.Text.Json;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Binary.Reports;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Binary.Reports;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Shared.Reports;
 
-namespace Vertr.Exchange.Api.Commands.Queries;
+namespace Vertr.Exchange.Application.Commands.Queries;
 
 public class SingleUserReport(
     long orderId,

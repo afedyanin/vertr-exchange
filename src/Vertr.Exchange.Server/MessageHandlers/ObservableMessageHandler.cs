@@ -1,5 +1,5 @@
 using System.Reactive.Subjects;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Server.Extensions;
 
@@ -36,31 +36,31 @@ public class ObservableMessageHandler : IObservableMessageHandler, IMessageHandl
 
     public IObservable<TradeEvent> TradeEventStream() => _tradeEventSubject;
 
-    public void CommandResult(Common.Messages.ApiCommandResult apiCommandResult)
+    public void CommandResult(Domain.Common.Messages.ApiCommandResult apiCommandResult)
     {
         _logger.LogDebug($"CommandResult received: OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
         _commandResultSubject.OnNext(apiCommandResult.ToDto());
     }
 
-    public void OrderBook(Common.Messages.OrderBook orderBook)
+    public void OrderBook(Domain.Common.Messages.OrderBook orderBook)
     {
         _logger.LogDebug($"OrderBook received: Symbol={orderBook.Symbol}");
         _orderBookSubject.OnNext(orderBook.ToDto());
     }
 
-    public void ReduceEvent(Common.Messages.ReduceEvent reduceEvent)
+    public void ReduceEvent(Domain.Common.Messages.ReduceEvent reduceEvent)
     {
         _logger.LogDebug($"ReduceEvent received: OrderId={reduceEvent.OrderId} ReducedVolume={reduceEvent.ReducedVolume}");
         _reduceEventSubject.OnNext(reduceEvent.ToDto());
     }
 
-    public void RejectEvent(Common.Messages.RejectEvent rejectEvent)
+    public void RejectEvent(Domain.Common.Messages.RejectEvent rejectEvent)
     {
         _logger.LogDebug($"RejectEvent received: OrderId={rejectEvent.OrderId} RejectedVolume={rejectEvent.RejectedVolume}");
         _rejectEventSubject.OnNext(rejectEvent.ToDto());
     }
 
-    public void TradeEvent(Common.Messages.TradeEvent tradeEvent)
+    public void TradeEvent(Domain.Common.Messages.TradeEvent tradeEvent)
     {
         _logger.LogDebug($"TradeEvent received: OrderId={tradeEvent.TakerOrderId} TakeOrderCompleted={tradeEvent.TakeOrderCompleted}");
         _tradeEventSubject.OnNext(tradeEvent.ToDto());

@@ -1,7 +1,7 @@
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
-using Vertr.Exchange.Api;
-using Vertr.Exchange.Api.Generators;
+using Vertr.Exchange.Application;
+using Vertr.Exchange.Application.Generators;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
 using Vertr.Exchange.Server.Extensions;
@@ -39,7 +39,7 @@ public class ExchangeApiHub(
 
     public long Nop()
     {
-        var cmd = new Api.Commands.NopCommand(
+        var cmd = new Application.Commands.NopCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime);
 
@@ -51,7 +51,7 @@ public class ExchangeApiHub(
 
     public long GetOrderBook(OrderBookRequest request)
     {
-        var cmd = new Api.Commands.OrderBookRequest(
+        var cmd = new Application.Commands.OrderBookRequest(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.Symbol,
@@ -63,7 +63,7 @@ public class ExchangeApiHub(
 
     public long AddSymbols(AddSymbolsRequest request)
     {
-        var cmd = new Api.Commands.AddSymbolsCommand(
+        var cmd = new Application.Commands.AddSymbolsCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.Symbols.ToDomain());
@@ -74,7 +74,7 @@ public class ExchangeApiHub(
 
     public long AddUser(UserRequest request)
     {
-        var cmd = new Api.Commands.AddUserCommand(
+        var cmd = new Application.Commands.AddUserCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
@@ -85,7 +85,7 @@ public class ExchangeApiHub(
 
     public long AddAccounts(AddAccountsRequest request)
     {
-        var cmd = new Api.Commands.AddAccountsCommand(
+        var cmd = new Application.Commands.AddAccountsCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserAccounts.ToDomain());
@@ -96,7 +96,7 @@ public class ExchangeApiHub(
 
     public long PlaceOrder(PlaceOrderRequest request, long? orderId = null)
     {
-        var cmd = new Api.Commands.PlaceOrderCommand(
+        var cmd = new Application.Commands.PlaceOrderCommand(
             orderId ?? _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.Price,
@@ -112,7 +112,7 @@ public class ExchangeApiHub(
 
     public long AdjustBalance(AdjustBalanceRequest request)
     {
-        var cmd = new Api.Commands.AdjustBalanceCommand(
+        var cmd = new Application.Commands.AdjustBalanceCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId,
@@ -125,7 +125,7 @@ public class ExchangeApiHub(
 
     public long CancelOrder(CancelOrderRequest request)
     {
-        var cmd = new Api.Commands.CancelOrderCommand(
+        var cmd = new Application.Commands.CancelOrderCommand(
             request.OrderId,
             _timestampGenerator.CurrentTime,
             request.UserId,
@@ -137,7 +137,7 @@ public class ExchangeApiHub(
 
     public long MoveOrder(MoveOrderRequest request)
     {
-        var cmd = new Api.Commands.MoveOrderCommand(
+        var cmd = new Application.Commands.MoveOrderCommand(
             request.OrderId,
             _timestampGenerator.CurrentTime,
             request.UserId,
@@ -150,7 +150,7 @@ public class ExchangeApiHub(
 
     public long ReduceOrder(ReduceOrderRequest request)
     {
-        var cmd = new Api.Commands.ReduceOrderCommand(
+        var cmd = new Application.Commands.ReduceOrderCommand(
             request.OrderId,
             _timestampGenerator.CurrentTime,
             request.UserId,
@@ -163,7 +163,7 @@ public class ExchangeApiHub(
 
     public long Reset()
     {
-        var cmd = new Api.Commands.ResetCommand(
+        var cmd = new Application.Commands.ResetCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime);
 
@@ -173,7 +173,7 @@ public class ExchangeApiHub(
 
     public long ResumeUser(UserRequest request)
     {
-        var cmd = new Api.Commands.ResumeUserCommand(
+        var cmd = new Application.Commands.ResumeUserCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
@@ -184,7 +184,7 @@ public class ExchangeApiHub(
 
     public long SuspendUser(UserRequest request)
     {
-        var cmd = new Api.Commands.SuspendUserCommand(
+        var cmd = new Application.Commands.SuspendUserCommand(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);
@@ -195,7 +195,7 @@ public class ExchangeApiHub(
 
     public long GetSingleUserReport(UserRequest request)
     {
-        var cmd = new Api.Commands.Queries.SingleUserReport(
+        var cmd = new Application.Commands.Queries.SingleUserReport(
             _orderIdGenerator.NextId,
             _timestampGenerator.CurrentTime,
             request.UserId);

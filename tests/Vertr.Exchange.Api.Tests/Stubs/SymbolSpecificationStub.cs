@@ -1,7 +1,7 @@
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Tests.Stubs;
+namespace Vertr.Exchange.Application.Tests.Stubs;
 internal static class SymbolSpecificationStub
 {
     internal static int[] Symbols = [1, 2, 3, 4];

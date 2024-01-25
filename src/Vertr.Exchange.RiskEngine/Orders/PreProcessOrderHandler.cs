@@ -1,9 +1,9 @@
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.RiskEngine.Symbols;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.RiskEngine.Symbols;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
 
-namespace Vertr.Exchange.RiskEngine.Orders;
+namespace Vertr.Exchange.Domain.RiskEngine.Orders;
 
 internal class PreProcessOrderHandler(
     IUserProfileProvider userProfiles,

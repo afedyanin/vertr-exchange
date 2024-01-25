@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.RiskEngine.Symbols;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.RiskEngine.Symbols;
 
-namespace Vertr.Exchange.RiskEngine;
+namespace Vertr.Exchange.Domain.RiskEngine;
 
 public static class RiskEngineRegistrar
 {

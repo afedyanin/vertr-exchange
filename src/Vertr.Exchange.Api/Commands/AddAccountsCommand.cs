@@ -1,10 +1,10 @@
 using System.Text;
 using System.Text.Json;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Binary.Commands;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Binary.Commands;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Commands;
+namespace Vertr.Exchange.Application.Commands;
 
 
 public class AddAccountsCommand(

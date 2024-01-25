@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 using Vertr.Exchange.MatchingEngine.OrderBooks;
 
-namespace Vertr.Exchange.MatchingEngine;
+namespace Vertr.Exchange.Domain.MatchingEngine;
 public static class MatchingEngineRegistrar
 {
     public static IServiceCollection AddMatchingEngine(this IServiceCollection serviceCollection)

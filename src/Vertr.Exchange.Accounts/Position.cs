@@ -1,10 +1,10 @@
 using System.Runtime.CompilerServices;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
 
-[assembly: InternalsVisibleTo("Vertr.Exchange.Accounts.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Exchange.Domain.Accounts.Tests")]
 
-namespace Vertr.Exchange.Accounts;
+namespace Vertr.Exchange.Domain.Accounts;
 
 internal class Position(long uid, int symbol) : IPosition
 {

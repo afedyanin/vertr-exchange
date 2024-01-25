@@ -1,8 +1,8 @@
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.MatchingEngine.OrderBooks;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
+using Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 
-namespace Vertr.Exchange.MatchingEngine.Tests;
+namespace Vertr.Exchange.Domain.MatchingEngine.Tests;
 
 [TestFixture(Category = "Unit")]
 public class OrderBookMatcherTests

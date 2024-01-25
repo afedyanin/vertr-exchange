@@ -1,6 +1,6 @@
-using Vertr.Exchange.Common.Messages;
+using Vertr.Exchange.Domain.Common.Messages;
 
-namespace Vertr.Exchange.Common.Abstractions;
+namespace Vertr.Exchange.Domain.Common.Abstractions;
 
 public interface IMessageHandler
 {

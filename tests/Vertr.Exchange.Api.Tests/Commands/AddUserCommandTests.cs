@@ -1,7 +1,7 @@
-using Vertr.Exchange.Api.Commands;
+using Vertr.Exchange.Application.Commands;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Tests.Commands;
+namespace Vertr.Exchange.Application.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
 public class AddUserCommandTests : ApiTestBase

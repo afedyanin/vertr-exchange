@@ -1,9 +1,9 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Common.Events;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Events;
 
-namespace Vertr.Exchange.MatchingEngine.Commands;
+namespace Vertr.Exchange.Domain.MatchingEngine.Commands;
 internal sealed class RejectOrderCommand(
     IOrderBook orderBook,
     OrderCommand cmd)

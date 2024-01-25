@@ -1,15 +1,15 @@
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Exchange.Api.Commands;
-using Vertr.Exchange.Api.Commands.Queries;
-using Vertr.Exchange.Api.Generators;
-using Vertr.Exchange.Api.Tests.Stubs;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Messages;
+using Vertr.Exchange.Application.Tests.Stubs;
+using Vertr.Exchange.Application.Generators;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Shared.Reports;
+using Vertr.Exchange.Domain.Common.Messages;
+using Vertr.Exchange.Application.Commands;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Application.Commands.Queries;
 
-namespace Vertr.Exchange.Api.Tests;
+namespace Vertr.Exchange.Application.Tests;
 public abstract class ApiTestBase
 {
     private const int _cancellationTimeout = 100;
@@ -37,7 +37,7 @@ public abstract class ApiTestBase
         Api?.Dispose();
     }
 
-    protected async Task<Common.Messages.ApiCommandResult> SendAsync(ApiCommandBase cmd)
+    protected async Task<Domain.Common.Messages.ApiCommandResult> SendAsync(ApiCommandBase cmd)
     {
         Api.Send(cmd);
         var cts = new CancellationTokenSource(_cancellationTimeout);
@@ -119,7 +119,7 @@ public abstract class ApiTestBase
         return book;
     }
 
-    protected async Task<Common.Messages.ApiCommandResult> PlaceGTCOrder(
+    protected async Task<Domain.Common.Messages.ApiCommandResult> PlaceGTCOrder(
         OrderAction orderAction,
         long uid,
         int symbol,

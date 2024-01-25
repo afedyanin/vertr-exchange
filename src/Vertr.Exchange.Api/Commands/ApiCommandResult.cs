@@ -1,8 +1,8 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Commands;
+namespace Vertr.Exchange.Application.Commands;
 internal class ApiCommandResult : IApiCommandResult
 {
     public CommandResultCode ResultCode { get; init; }

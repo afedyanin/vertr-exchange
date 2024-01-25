@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.RiskEngine.Tests;
+namespace Vertr.Exchange.Domain.RiskEngine.Tests;
 
 public class Tests
 {

@@ -1,7 +1,7 @@
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.RiskEngine.Symbols;
+namespace Vertr.Exchange.Domain.RiskEngine.Symbols;
 
 internal interface ISymbolSpecificationProvider
 {

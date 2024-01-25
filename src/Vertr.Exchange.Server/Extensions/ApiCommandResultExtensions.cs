@@ -4,7 +4,7 @@ namespace Vertr.Exchange.Server.Extensions;
 
 internal static class ApiCommandResultExtensions
 {
-    public static ApiCommandResult ToDto(this Common.Messages.ApiCommandResult apiRes)
+    public static ApiCommandResult ToDto(this Domain.Common.Messages.ApiCommandResult apiRes)
     {
         var res = new ApiCommandResult()
         {

@@ -1,6 +1,6 @@
-using Vertr.Exchange.Api.Generators;
+using Vertr.Exchange.Application.Generators;
 
-namespace Vertr.Exchange.Api.Tests;
+namespace Vertr.Exchange.Application.Tests;
 
 [TestFixture(Category = "Unit")]
 public class OrderIdGeneratorTests

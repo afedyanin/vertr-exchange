@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Common.Messages;
+namespace Vertr.Exchange.Domain.Common.Messages;
 public record class ApiCommandResult
 {
     public long OrderId { get; init; }

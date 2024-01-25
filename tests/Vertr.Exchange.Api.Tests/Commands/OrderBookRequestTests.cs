@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Tests.Commands;
+namespace Vertr.Exchange.Application.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
 public class OrderBookRequestTests : ApiTestBase

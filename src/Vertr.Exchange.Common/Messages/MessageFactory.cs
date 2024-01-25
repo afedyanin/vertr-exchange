@@ -1,8 +1,6 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Messages;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.Api.Factories;
+namespace Vertr.Exchange.Domain.Common.Messages;
 
 public static class MessageFactory
 {
@@ -104,7 +102,7 @@ public static class MessageFactory
     {
         var res = new OrderBookRecord[mdata.AskSize];
 
-        for (int i = 0; i < mdata.AskSize; i++)
+        for (var i = 0; i < mdata.AskSize; i++)
         {
             res[i] = new OrderBookRecord
             {
@@ -121,7 +119,7 @@ public static class MessageFactory
     {
         var res = new OrderBookRecord[mdata.BidSize];
 
-        for (int i = 0; i < mdata.BidSize; i++)
+        for (var i = 0; i < mdata.BidSize; i++)
         {
             res[i] = new OrderBookRecord
             {

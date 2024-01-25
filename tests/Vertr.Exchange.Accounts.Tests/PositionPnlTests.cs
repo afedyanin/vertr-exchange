@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Accounts.Tests;
+namespace Vertr.Exchange.Domain.Accounts.Tests;
 
 [TestFixture(Category = "Unit")]
 public class PositionPnlTests
@@ -14,7 +14,7 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.BID, size, price);
-        var expectedPnl = size * price * (-1);
+        var expectedPnl = size * price * -1;
 
         Assert.Multiple(() =>
         {
@@ -34,7 +34,7 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.ASK, size, price);
-        var expectedPnl = size * price * (-1);
+        var expectedPnl = size * price * -1;
 
         Assert.Multiple(() =>
         {
@@ -52,11 +52,11 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.BID, 10, 3);
-        var expectedPnl = 10 * 3 * (-1);
+        var expectedPnl = 10 * 3 * -1;
         var expectedOpenVol = 10;
 
         pos.Update(OrderAction.BID, 5, 4);
-        expectedPnl += 5 * 4 * (-1);
+        expectedPnl += 5 * 4 * -1;
         expectedOpenVol += 5;
 
         Assert.Multiple(() =>
@@ -73,11 +73,11 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.ASK, 10, 3);
-        var expectedPnl = 10 * 3 * (-1);
+        var expectedPnl = 10 * 3 * -1;
         var expectedOpenVol = 10;
 
         pos.Update(OrderAction.ASK, 5, 4);
-        expectedPnl += 5 * 4 * (-1);
+        expectedPnl += 5 * 4 * -1;
         expectedOpenVol += 5;
 
         Assert.Multiple(() =>
@@ -98,7 +98,7 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.BID, 7, bidPrice);
-        var expectedPnl = 7 * bidPrice * (-1);
+        var expectedPnl = 7 * bidPrice * -1;
 
         pos.Update(OrderAction.ASK, 7, askPrice);
         expectedPnl += 7 * askPrice;
@@ -123,7 +123,7 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.BID, 7, bidPrice);
-        var expectedPnl = 7 * bidPrice * (-1);
+        var expectedPnl = 7 * bidPrice * -1;
         Console.WriteLine($"{pos}");
 
         pos.Update(OrderAction.ASK, 7, askPrice);
@@ -131,7 +131,7 @@ public class PositionPnlTests
         Console.WriteLine($"{pos}");
 
         pos.Update(OrderAction.ASK, 10, askPrice);
-        expectedPnl += 10 * askPrice * (-1); // open short
+        expectedPnl += 10 * askPrice * -1; // open short
         Console.WriteLine($"{pos}");
 
         Assert.Multiple(() =>
@@ -155,7 +155,7 @@ public class PositionPnlTests
         var expectedPnl = 7 * askPrice;
 
         pos.Update(OrderAction.BID, 7, bidPrice);
-        expectedPnl += 7 * bidPrice * (-1);
+        expectedPnl += 7 * bidPrice * -1;
 
         Assert.Multiple(() =>
         {
@@ -180,8 +180,8 @@ public class PositionPnlTests
         var expectedPnl = 7 * askPrice;
 
         pos.Update(OrderAction.BID, 17, bidPrice);
-        expectedPnl += 7 * bidPrice * (-1); // close
-        expectedPnl += 10 * bidPrice * (-1); // open long
+        expectedPnl += 7 * bidPrice * -1; // close
+        expectedPnl += 10 * bidPrice * -1; // open long
 
         Assert.Multiple(() =>
         {
@@ -201,11 +201,11 @@ public class PositionPnlTests
 
         pos.Update(OrderAction.BID, 7, 3.5m);
         var expectedOpenVol = 7;
-        var expectedPnl = 7 * 3.5m * (-1);
+        var expectedPnl = 7 * 3.5m * -1;
 
         pos.Update(OrderAction.BID, 19, 8.5m);
         expectedOpenVol += 19;
-        expectedPnl += 19 * 8.5m * (-1);
+        expectedPnl += 19 * 8.5m * -1;
 
         pos.Update(OrderAction.ASK, 10, 5.7m);
         expectedOpenVol -= 10;
@@ -226,11 +226,11 @@ public class PositionPnlTests
 
         pos.Update(OrderAction.ASK, 7, 3.5m);
         var expectedOpenVol = 7;
-        var expectedPnl = 7 * 3.5m * (-1);
+        var expectedPnl = 7 * 3.5m * -1;
 
         pos.Update(OrderAction.ASK, 19, 8.5m);
         expectedOpenVol += 19;
-        expectedPnl += 19 * 8.5m * (-1);
+        expectedPnl += 19 * 8.5m * -1;
 
         pos.Update(OrderAction.BID, 10, 5.7m);
         expectedOpenVol -= 10;
@@ -257,11 +257,11 @@ public class PositionPnlTests
 
         pos.Update(OrderAction.BID, 7, bid1Price);
         var expectedOpenVol = 7;
-        var expectedPnl = 7 * bid1Price * (-1);
+        var expectedPnl = 7 * bid1Price * -1;
 
         pos.Update(OrderAction.BID, 3, bid2Price);
         expectedOpenVol += 3;
-        expectedPnl += 3 * bid2Price * (-1);
+        expectedPnl += 3 * bid2Price * -1;
 
         pos.Update(OrderAction.ASK, expectedOpenVol, askPrice);
         expectedPnl += expectedOpenVol * askPrice;
@@ -296,7 +296,7 @@ public class PositionPnlTests
         expectedPnl += 3 * ask2Price;
 
         pos.Update(OrderAction.BID, expectedOpenVol, bidPrice);
-        expectedPnl += expectedOpenVol * bidPrice * (-1);
+        expectedPnl += expectedOpenVol * bidPrice * -1;
 
         Assert.Multiple(() =>
         {
@@ -320,14 +320,14 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.BID, 7, bid1Price);
-        var expectedPnl = 7 * bid1Price * (-1);
+        var expectedPnl = 7 * bid1Price * -1;
 
         pos.Update(OrderAction.BID, 3, bid2Price);
-        expectedPnl += 3 * bid2Price * (-1);
+        expectedPnl += 3 * bid2Price * -1;
 
         pos.Update(OrderAction.ASK, 15, askPrice);
         expectedPnl += 10 * askPrice;
-        expectedPnl += 5 * askPrice * (-1);
+        expectedPnl += 5 * askPrice * -1;
 
         Assert.Multiple(() =>
         {
@@ -357,8 +357,8 @@ public class PositionPnlTests
         expectedPnl += 3 * ask2Price;
 
         pos.Update(OrderAction.BID, 15, bidPrice);
-        expectedPnl += 10 * bidPrice * (-1);
-        expectedPnl += 5 * bidPrice * (-1);
+        expectedPnl += 10 * bidPrice * -1;
+        expectedPnl += 5 * bidPrice * -1;
 
         Assert.Multiple(() =>
         {
@@ -382,13 +382,13 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.BID, 7, bid1Price);
-        var expectedPnl = 7 * bid1Price * (-1);
+        var expectedPnl = 7 * bid1Price * -1;
         Console.WriteLine($"Pnl={expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.ASK, 9, askPrice);
         expectedPnl += 7 * askPrice;
         var fixedPnl = expectedPnl;
-        expectedPnl = 2 * askPrice * (-1);
+        expectedPnl = 2 * askPrice * -1;
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.BID, 2, bid2Price);
@@ -417,20 +417,20 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.BID, 7, bid1Price);
-        var expectedPnl = 7 * bid1Price * (-1);
+        var expectedPnl = 7 * bid1Price * -1;
         Console.WriteLine($"Pnl={expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.ASK, 9, askPrice);
         expectedPnl += 7 * askPrice;
         var fixedPnl = expectedPnl;
-        expectedPnl = 2 * askPrice * (-1);
+        expectedPnl = 2 * askPrice * -1;
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.BID, 5, bid2Price);
         expectedPnl += 2 * bid2Price;
         expectedPnl *= -1; // close short
         fixedPnl += expectedPnl;
-        expectedPnl = 3 * bid2Price * (-1); // open long
+        expectedPnl = 3 * bid2Price * -1; // open long
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         Assert.Multiple(() =>
@@ -453,13 +453,13 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.ASK, 7, ask1Price);
-        var expectedPnl = 7 * ask1Price * (-1); // -35
+        var expectedPnl = 7 * ask1Price * -1; // -35
         Console.WriteLine($"Pnl={expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.BID, 9, bidPrice);
         expectedPnl += 7 * bidPrice;  // -35 + 21 = -14
-        var fixedPnl = expectedPnl * (-1); // close short
-        expectedPnl = 2 * bidPrice * (-1); // -6
+        var fixedPnl = expectedPnl * -1; // close short
+        expectedPnl = 2 * bidPrice * -1; // -6
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.ASK, 2, ask2Price);
@@ -487,19 +487,19 @@ public class PositionPnlTests
         var pos = new Position(1L, 2);
 
         pos.Update(OrderAction.ASK, 7, ask1Price);
-        var expectedPnl = 7 * ask1Price * (-1);
+        var expectedPnl = 7 * ask1Price * -1;
         Console.WriteLine($"Pnl={expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.BID, 9, bidPrice);
         expectedPnl += 7 * bidPrice;  // -35 + 21 = -14
-        var fixedPnl = expectedPnl * (-1); // close short
-        expectedPnl = 2 * bidPrice * (-1); // -6
+        var fixedPnl = expectedPnl * -1; // close short
+        expectedPnl = 2 * bidPrice * -1; // -6
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         pos.Update(OrderAction.ASK, 5, ask2Price);
         expectedPnl += 2 * ask2Price; // -6 + 16 = 10
         fixedPnl += expectedPnl;
-        expectedPnl = 3 * ask2Price * (-1); // open short
+        expectedPnl = 3 * ask2Price * -1; // open short
         Console.WriteLine($"Pnl={fixedPnl + expectedPnl} Pos={pos}");
 
         Assert.Multiple(() =>

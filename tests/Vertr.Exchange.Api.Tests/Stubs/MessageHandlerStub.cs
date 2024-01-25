@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Messages;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Messages;
 
-namespace Vertr.Exchange.Api.Tests.Stubs;
+namespace Vertr.Exchange.Application.Tests.Stubs;
 
 public class MessageHandlerStub : IMessageHandler
 {

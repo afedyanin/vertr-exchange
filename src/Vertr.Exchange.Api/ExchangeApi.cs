@@ -1,10 +1,10 @@
 using System.Runtime.CompilerServices;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Core;
+using Vertr.Exchange.Application.Core;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
-[assembly: InternalsVisibleTo("Vertr.Exchange.Api.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Exchange.Application.Tests")]
 
-namespace Vertr.Exchange.Api;
+namespace Vertr.Exchange.Application;
 
 internal sealed class ExchangeApi(IExchangeCoreService exchangeCoreService) : IExchangeApi
 {

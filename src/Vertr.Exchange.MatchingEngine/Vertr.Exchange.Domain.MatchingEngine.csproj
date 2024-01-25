@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Exchange.Common\Vertr.Exchange.Common.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Common\Vertr.Exchange.Domain.Common.csproj" />
   </ItemGroup>
 
 </Project>

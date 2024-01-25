@@ -1,9 +1,9 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.MatchingEngine.Commands.NewOrder;
+using Vertr.Exchange.Domain.MatchingEngine.Commands.NewOrder;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
 
-namespace Vertr.Exchange.MatchingEngine.Commands;
+namespace Vertr.Exchange.Domain.MatchingEngine.Commands;
 internal static class OrderBookCommandFactory
 {
     public static OrderBookCommand CreateOrderBookCommand(

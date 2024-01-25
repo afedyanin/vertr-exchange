@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Api.Tests.Scenarios;
+namespace Vertr.Exchange.Application.Tests.Scenarios;
 
 [TestFixture(Category = "Unit")]
 public class TradingScenarioTests : ApiTestBase

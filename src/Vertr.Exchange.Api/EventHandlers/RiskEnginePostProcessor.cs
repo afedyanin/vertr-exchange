@@ -1,22 +1,23 @@
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.Core.EventHandlers;
-internal class RiskEnginePreProcessor(
+namespace Vertr.Exchange.Application.EventHandlers;
+
+internal class RiskEnginePostProcessor(
     IOrderRiskEngine orderRiskEngine,
-    ILogger<RiskEnginePreProcessor> logger) : IOrderCommandEventHandler
+    ILogger<RiskEnginePostProcessor> logger) : IOrderCommandEventHandler
 {
     private readonly IOrderRiskEngine _orderRiskEngine = orderRiskEngine;
-    private readonly ILogger<RiskEnginePreProcessor> _logger = logger;
+    private readonly ILogger<RiskEnginePostProcessor> _logger = logger;
 
-    public int ProcessingStep => 100;
+    public int ProcessingStep => 300;
 
     public void OnEvent(OrderCommand data, long sequence, bool endOfBatch)
     {
         try
         {
-            _orderRiskEngine.PreProcessCommand(sequence, data);
+            _orderRiskEngine.PostProcessCommand(sequence, data);
         }
         catch (Exception ex)
         {

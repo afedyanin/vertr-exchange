@@ -1,13 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Vertr.Exchange.RiskEngine;
-using Vertr.Exchange.Accounts;
-using Vertr.Exchange.MatchingEngine;
-using Vertr.Exchange.Core;
-using Vertr.Exchange.Api.Generators;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Application.Generators;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.RiskEngine;
+using Vertr.Exchange.Domain.Accounts;
+using Vertr.Exchange.Domain.MatchingEngine;
 
-namespace Vertr.Exchange.Api.Tests.Stubs;
+namespace Vertr.Exchange.Application.Tests.Stubs;
 
 internal static class ServiceProviderStub
 {
@@ -15,7 +14,6 @@ internal static class ServiceProviderStub
     {
         var serviceCollection = new ServiceCollection();
 
-        serviceCollection.AddExchangeCore();
         serviceCollection.AddExchangeApi();
         serviceCollection.AddAccounts();
         serviceCollection.AddRiskEngine();

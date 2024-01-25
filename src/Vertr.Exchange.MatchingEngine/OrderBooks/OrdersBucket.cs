@@ -1,8 +1,8 @@
-using Vertr.Exchange.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Common.Events;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Events;
 
-namespace Vertr.Exchange.MatchingEngine.OrderBooks;
+namespace Vertr.Exchange.Domain.MatchingEngine.OrderBooks;
 
 internal sealed class OrdersBucket
 {

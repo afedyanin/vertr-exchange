@@ -4,7 +4,7 @@ namespace Vertr.Exchange.Server.Extensions;
 
 internal static class OrderBookExtensions
 {
-    public static OrderBook ToDto(this Common.Messages.OrderBook orderBook)
+    public static OrderBook ToDto(this Domain.Common.Messages.OrderBook orderBook)
     {
         var res = new OrderBook
         {
@@ -18,10 +18,10 @@ internal static class OrderBookExtensions
         return res;
     }
 
-    private static IEnumerable<OrderBookRecord> ToDto(this IEnumerable<Common.Messages.OrderBookRecord> orderBookRecords)
+    private static IEnumerable<OrderBookRecord> ToDto(this IEnumerable<Domain.Common.Messages.OrderBookRecord> orderBookRecords)
         => orderBookRecords.Select(ToDto);
 
-    private static OrderBookRecord ToDto(this Common.Messages.OrderBookRecord orderBookRecord)
+    private static OrderBookRecord ToDto(this Domain.Common.Messages.OrderBookRecord orderBookRecord)
         => new OrderBookRecord
         {
             Orders = orderBookRecord.Orders,

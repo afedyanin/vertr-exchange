@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Common.Messages;
+namespace Vertr.Exchange.Domain.Common.Messages;
 public record class RejectEvent
 {
     public int Symbol { get; init; }

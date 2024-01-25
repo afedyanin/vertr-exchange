@@ -1,14 +1,10 @@
-namespace Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
-public sealed class MatcherResult
+namespace Vertr.Exchange.Domain.Common;
+
+public sealed class MatcherResult(long filled, IEnumerable<IEngineEvent>? tradeEvents = null)
 {
-    public long Filled { get; }
+    public long Filled { get; } = filled;
 
-    public IEnumerable<IEngineEvent> TradeEvents { get; }
-
-    public MatcherResult(long filled, IEnumerable<IEngineEvent>? tradeEvents = null)
-    {
-        Filled = filled;
-        TradeEvents = tradeEvents ?? Array.Empty<IEngineEvent>();
-    }
+    public IEnumerable<IEngineEvent> TradeEvents { get; } = tradeEvents ?? Array.Empty<IEngineEvent>();
 }

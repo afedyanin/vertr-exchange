@@ -1,7 +1,7 @@
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.MatchingEngine.Tests.Stubs;
+namespace Vertr.Exchange.Domain.MatchingEngine.Tests.Stubs;
 
 internal static class OrderCommandStub
 {

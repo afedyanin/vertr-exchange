@@ -1,6 +1,6 @@
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.Common.Binary.Commands;
+namespace Vertr.Exchange.Domain.Common.Binary.Commands;
 
 public sealed class BatchAddAccountsCommand : IBinaryCommand
 {

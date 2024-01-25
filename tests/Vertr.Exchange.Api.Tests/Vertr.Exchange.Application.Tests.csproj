@@ -7,19 +7,15 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Stubs\**" />
-    <EmbeddedResource Remove="Stubs\**" />
-    <None Remove="Stubs\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="NUnit" Version="4.0.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="NUnit.Analyzers" Version="3.10.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -31,7 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Exchange.Accounts\Vertr.Exchange.Accounts.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Accounts\Vertr.Exchange.Domain.Accounts.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Api\Vertr.Exchange.Application.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Common\Vertr.Exchange.Domain.Common.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.MatchingEngine\Vertr.Exchange.Domain.MatchingEngine.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.RiskEngine\Vertr.Exchange.Domain.RiskEngine.csproj" />
   </ItemGroup>
 
 </Project>

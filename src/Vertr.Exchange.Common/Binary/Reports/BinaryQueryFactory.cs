@@ -1,9 +1,9 @@
 using System.Text.Json;
-using Vertr.Exchange.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Shared.Reports;
 
-namespace Vertr.Exchange.Common.Binary.Reports;
+namespace Vertr.Exchange.Domain.Common.Binary.Reports;
 
 public static class BinaryQueryFactory
 {

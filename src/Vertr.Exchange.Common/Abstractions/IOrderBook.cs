@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Common.Abstractions;
+namespace Vertr.Exchange.Domain.Common.Abstractions;
 
 public interface IOrderBook
 {

@@ -1,12 +1,12 @@
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
-using Vertr.Exchange.Common.Binary.Reports;
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Common.Events;
 using Vertr.Exchange.Shared.Reports.Dtos;
 using Vertr.Exchange.Shared.Reports;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Binary.Reports;
+using Vertr.Exchange.Domain.Common.Events;
 
-namespace Vertr.Exchange.RiskEngine.Binary;
+namespace Vertr.Exchange.Domain.RiskEngine.Binary;
 
 internal static class ReportExtensions
 {

@@ -1,8 +1,7 @@
-using Vertr.Exchange.Api.Commands;
-using Vertr.Exchange.Api.Tests.Stubs;
 using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Application.Commands;
 
-namespace Vertr.Exchange.Api.Tests.Commands;
+namespace Vertr.Exchange.Application.Tests.Commands;
 
 [TestFixture(Category = "Unit")]
 public class CancelOrderCommandTests : ApiTestBase

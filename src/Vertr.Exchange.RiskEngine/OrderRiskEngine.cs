@@ -1,18 +1,18 @@
 using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Common;
-using Vertr.Exchange.Common.Abstractions;
 using System.Runtime.CompilerServices;
-using Vertr.Exchange.RiskEngine.Orders;
-using Vertr.Exchange.Accounts.UserCommands;
-using Vertr.Exchange.RiskEngine.Symbols;
-using Vertr.Exchange.Common.Binary.Commands;
-using Vertr.Exchange.Common.Binary.Reports;
-using Vertr.Exchange.RiskEngine.Binary;
+using Vertr.Exchange.Domain.RiskEngine.Orders;
+using Vertr.Exchange.Domain.RiskEngine.Symbols;
+using Vertr.Exchange.Domain.RiskEngine.Binary;
 using Microsoft.Extensions.Logging;
+using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Accounts.UserCommands;
+using Vertr.Exchange.Domain.Common.Binary.Commands;
+using Vertr.Exchange.Domain.Common.Binary.Reports;
 
-[assembly: InternalsVisibleTo("Vertr.Exchange.RiskEngine.Tests")]
+[assembly: InternalsVisibleTo("Vertr.Exchange.Domain.RiskEngine.Tests")]
 
-namespace Vertr.Exchange.RiskEngine;
+namespace Vertr.Exchange.Domain.RiskEngine;
 internal sealed class OrderRiskEngine(
     IUserProfileProvider userProfiles,
     ISymbolSpecificationProvider symbolSpecificationProvider,

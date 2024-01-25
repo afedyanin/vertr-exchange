@@ -1,4 +1,4 @@
-using Vertr.Exchange.Common;
+using Vertr.Exchange.Domain.Common;
 
 namespace Vertr.Exchange.Server.Extensions;
 
