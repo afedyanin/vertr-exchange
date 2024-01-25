@@ -18,23 +18,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4B42857C-FD8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9C59A7AC-5C91-4BC5-97B7-72B20D752B2C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.Common", "src\Vertr.Exchange.Common\Vertr.Exchange.Domain.Common.csproj", "{B6622C2A-0BDA-4C7D-AB5B-04E0D968D005}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.Common", "src\Vertr.Exchange.Domain.Common\Vertr.Exchange.Domain.Common.csproj", "{B6622C2A-0BDA-4C7D-AB5B-04E0D968D005}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.MatchingEngine", "src\Vertr.Exchange.MatchingEngine\Vertr.Exchange.Domain.MatchingEngine.csproj", "{A8AB2EF0-5F15-412B-84C0-494B6505B817}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.MatchingEngine", "src\Vertr.Exchange.Domain.MatchingEngine\Vertr.Exchange.Domain.MatchingEngine.csproj", "{A8AB2EF0-5F15-412B-84C0-494B6505B817}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.MatchingEngine.Tests", "tests\Vertr.Exchange.MatchingEngine.Tests\Vertr.Exchange.Domain.MatchingEngine.Tests.csproj", "{25138090-ED8C-47EC-A879-5394878A79C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.MatchingEngine.Tests", "tests\Vertr.Exchange.Domain.MatchingEngine.Tests\Vertr.Exchange.Domain.MatchingEngine.Tests.csproj", "{25138090-ED8C-47EC-A879-5394878A79C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.RiskEngine", "src\Vertr.Exchange.RiskEngine\Vertr.Exchange.Domain.RiskEngine.csproj", "{B3C8793D-E038-4E92-B5EA-897CE5BFB597}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.RiskEngine", "src\Vertr.Exchange.Domain.RiskEngine\Vertr.Exchange.Domain.RiskEngine.csproj", "{B3C8793D-E038-4E92-B5EA-897CE5BFB597}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.RiskEngine.Tests", "tests\Vertr.Exchange.RiskEngine.Tests\Vertr.Exchange.Domain.RiskEngine.Tests.csproj", "{699B713F-B7C5-4083-98EB-82EEBC44287A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.RiskEngine.Tests", "tests\Vertr.Exchange.Domain.RiskEngine.Tests\Vertr.Exchange.Domain.RiskEngine.Tests.csproj", "{699B713F-B7C5-4083-98EB-82EEBC44287A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.Accounts", "src\Vertr.Exchange.Accounts\Vertr.Exchange.Domain.Accounts.csproj", "{7307115F-90CF-4E19-B169-BDEC51414762}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.Accounts", "src\Vertr.Exchange.Domain.Accounts\Vertr.Exchange.Domain.Accounts.csproj", "{7307115F-90CF-4E19-B169-BDEC51414762}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.Accounts.Tests", "tests\Vertr.Exchange.Accounts.Tests\Vertr.Exchange.Domain.Accounts.Tests.csproj", "{4679BAF2-E29E-4154-9BAD-FC29382FE24F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Domain.Accounts.Tests", "tests\Vertr.Exchange.Domain.Accounts.Tests\Vertr.Exchange.Domain.Accounts.Tests.csproj", "{4679BAF2-E29E-4154-9BAD-FC29382FE24F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Application.Tests", "tests\Vertr.Exchange.Api.Tests\Vertr.Exchange.Application.Tests.csproj", "{3BB685ED-65EF-4487-8187-D1E732376BFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Application.Tests", "tests\Vertr.Exchange.Application.Tests\Vertr.Exchange.Application.Tests.csproj", "{3BB685ED-65EF-4487-8187-D1E732376BFF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Application", "src\Vertr.Exchange.Api\Vertr.Exchange.Application.csproj", "{C731C3FD-CDFC-4E65-A217-A70ADEA16736}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Application", "src\Vertr.Exchange.Application\Vertr.Exchange.Application.csproj", "{C731C3FD-CDFC-4E65-A217-A70ADEA16736}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.Server", "src\Vertr.Exchange.Server\Vertr.Exchange.Server.csproj", "{4701020F-5C78-433C-B798-0E1C78C9E1BA}"
 EndProject

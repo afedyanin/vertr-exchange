@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Disruptor" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Exchange.Common\Vertr.Exchange.Common.csproj" />
+    <ProjectReference Include="..\Vertr.Exchange.Domain.Common\Vertr.Exchange.Domain.Common.csproj" />
   </ItemGroup>
 
 </Project>

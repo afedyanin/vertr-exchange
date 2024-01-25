@@ -27,11 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Exchange.Accounts\Vertr.Exchange.Domain.Accounts.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Exchange.Api\Vertr.Exchange.Application.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Exchange.Common\Vertr.Exchange.Domain.Common.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Exchange.MatchingEngine\Vertr.Exchange.Domain.MatchingEngine.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Exchange.RiskEngine\Vertr.Exchange.Domain.RiskEngine.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Domain.Accounts\Vertr.Exchange.Domain.Accounts.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Application\Vertr.Exchange.Application.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Domain.Common\Vertr.Exchange.Domain.Common.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Domain.MatchingEngine\Vertr.Exchange.Domain.MatchingEngine.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Domain.RiskEngine\Vertr.Exchange.Domain.RiskEngine.csproj" />
   </ItemGroup>
 
 </Project>
