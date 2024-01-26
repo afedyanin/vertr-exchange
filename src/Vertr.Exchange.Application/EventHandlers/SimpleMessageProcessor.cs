@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Vertr.Exchange.Application.Messages;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Domain.Common.Messages;

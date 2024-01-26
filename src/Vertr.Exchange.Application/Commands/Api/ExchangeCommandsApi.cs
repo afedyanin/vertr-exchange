@@ -4,9 +4,9 @@ using Vertr.Exchange.Domain.Common.Abstractions;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Application.Tests")]
 
-namespace Vertr.Exchange.Application;
+namespace Vertr.Exchange.Application.Commands.Api;
 
-internal sealed class ExchangeApi(IExchangeCoreService exchangeCoreService) : IExchangeApi
+internal sealed class ExchangeCommandsApi(IExchangeCoreService exchangeCoreService) : IExchangeCommandsApi
 {
     private readonly IExchangeCoreService _exchangeCoreService = exchangeCoreService;
 

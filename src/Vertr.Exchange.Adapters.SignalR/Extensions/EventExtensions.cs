@@ -1,7 +1,7 @@
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.Server.Extensions;
+namespace Vertr.Exchange.Adapters.SignalR.Extensions;
 
 internal static class EventExtensions
 {
@@ -19,7 +19,7 @@ internal static class EventExtensions
         return res;
     }
 
-    public static RejectEvent ToDto(this Domain.Common.Messages.RejectEvent rejectEvent)
+    public static RejectEvent ToDto(this Application.Messages.RejectEvent rejectEvent)
         => new RejectEvent
         {
             OrderId = rejectEvent.OrderId,
@@ -31,7 +31,7 @@ internal static class EventExtensions
             Seq = rejectEvent.Seq,
         };
 
-    public static ReduceEvent ToDto(this Domain.Common.Messages.ReduceEvent reduceEvent)
+    public static ReduceEvent ToDto(this Application.Messages.ReduceEvent reduceEvent)
         => new ReduceEvent
         {
             Uid = reduceEvent.Uid,
@@ -44,7 +44,7 @@ internal static class EventExtensions
             Seq = reduceEvent.Seq,
         };
 
-    public static TradeEvent ToDto(this Domain.Common.Messages.TradeEvent tradeEvent)
+    public static TradeEvent ToDto(this Application.Messages.TradeEvent tradeEvent)
     {
         var res = new TradeEvent
         {
@@ -75,10 +75,10 @@ internal static class EventExtensions
             EventType = evt.EventType,
         };
 
-    private static IEnumerable<Trade> ToDto(this IEnumerable<Domain.Common.Messages.Trade> trades)
+    private static IEnumerable<Trade> ToDto(this IEnumerable<Application.Messages.Trade> trades)
         => trades.Select(ToDto);
 
-    private static Trade ToDto(Domain.Common.Messages.Trade trade)
+    private static Trade ToDto(Application.Messages.Trade trade)
         => new Trade
         {
             MakerOrderCompleted = trade.MakerOrderCompleted,

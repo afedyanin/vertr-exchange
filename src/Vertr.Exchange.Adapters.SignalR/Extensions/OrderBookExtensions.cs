@@ -1,10 +1,10 @@
 using Vertr.Exchange.Contracts;
 
-namespace Vertr.Exchange.Server.Extensions;
+namespace Vertr.Exchange.Adapters.SignalR.Extensions;
 
 internal static class OrderBookExtensions
 {
-    public static OrderBook ToDto(this Domain.Common.Messages.OrderBook orderBook)
+    public static OrderBook ToDto(this Application.Messages.OrderBook orderBook)
     {
         var res = new OrderBook
         {
@@ -18,10 +18,10 @@ internal static class OrderBookExtensions
         return res;
     }
 
-    private static IEnumerable<OrderBookRecord> ToDto(this IEnumerable<Domain.Common.Messages.OrderBookRecord> orderBookRecords)
+    private static IEnumerable<OrderBookRecord> ToDto(this IEnumerable<Application.Messages.OrderBookRecord> orderBookRecords)
         => orderBookRecords.Select(ToDto);
 
-    private static OrderBookRecord ToDto(this Domain.Common.Messages.OrderBookRecord orderBookRecord)
+    private static OrderBookRecord ToDto(this Application.Messages.OrderBookRecord orderBookRecord)
         => new OrderBookRecord
         {
             Orders = orderBookRecord.Orders,

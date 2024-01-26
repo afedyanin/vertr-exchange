@@ -1,8 +1,9 @@
-namespace Vertr.Exchange.Domain.Common.Messages;
-public record class RejectEvent
+namespace Vertr.Exchange.Application.Messages;
+public record class ReduceEvent
 {
     public int Symbol { get; init; }
-    public long RejectedVolume { get; init; }
+    public long ReducedVolume { get; init; }
+    public bool OrderCompleted { get; init; }
     public decimal Price { get; init; }
     public long OrderId { get; init; }
     public long Uid { get; init; }

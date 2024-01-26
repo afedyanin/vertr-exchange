@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Domain.Common.Messages;
+namespace Vertr.Exchange.Application.Messages;
 
 public record class OrderBookRecord
 {

@@ -8,6 +8,7 @@ using Vertr.Exchange.Domain.Common.Messages;
 using Vertr.Exchange.Application.Commands;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Application.Commands.Queries;
+using Vertr.Exchange.Application.Messages;
 
 namespace Vertr.Exchange.Application.Tests;
 public abstract class ApiTestBase
@@ -18,7 +19,7 @@ public abstract class ApiTestBase
 
     protected IOrderIdGenerator OrderIdGenerator { get; private set; }
 
-    protected IExchangeApi Api { get; private set; }
+    protected IExchangeCommandsApi Api { get; private set; }
 
     protected MessageHandlerStub MessageHandler { get; private set; }
 
@@ -28,7 +29,7 @@ public abstract class ApiTestBase
         ServiceProvider = ServiceProviderStub.BuildServiceProvider();
         MessageHandler = ServiceProvider.GetRequiredService<MessageHandlerStub>();
         OrderIdGenerator = ServiceProvider.GetRequiredService<IOrderIdGenerator>();
-        Api = ServiceProvider.GetRequiredService<IExchangeApi>();
+        Api = ServiceProvider.GetRequiredService<IExchangeCommandsApi>();
     }
 
     [TearDown]
@@ -37,7 +38,7 @@ public abstract class ApiTestBase
         Api?.Dispose();
     }
 
-    protected async Task<Domain.Common.Messages.ApiCommandResult> SendAsync(ApiCommandBase cmd)
+    protected async Task<Messages.ApiCommandResult> SendAsync(ApiCommandBase cmd)
     {
         Api.Send(cmd);
         var cts = new CancellationTokenSource(_cancellationTimeout);
@@ -119,7 +120,7 @@ public abstract class ApiTestBase
         return book;
     }
 
-    protected async Task<Domain.Common.Messages.ApiCommandResult> PlaceGTCOrder(
+    protected async Task<Messages.ApiCommandResult> PlaceGTCOrder(
         OrderAction orderAction,
         long uid,
         int symbol,

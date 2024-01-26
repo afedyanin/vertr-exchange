@@ -1,6 +1,6 @@
 using Vertr.Exchange.Contracts;
 
-namespace Vertr.Exchange.Server.MessageHandlers;
+namespace Vertr.Exchange.Adapters.SignalR.MessageHandlers;
 
 public interface IObservableMessageHandler
 {

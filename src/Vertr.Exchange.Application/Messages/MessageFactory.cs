@@ -1,3 +1,4 @@
+using Vertr.Exchange.Application.Messages;
 using Vertr.Exchange.Domain.Common.Abstractions;
 
 namespace Vertr.Exchange.Domain.Common.Messages;

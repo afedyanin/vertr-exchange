@@ -1,11 +1,11 @@
 using System.Reactive.Subjects;
-using Vertr.Exchange.Domain.Common.Abstractions;
+using Microsoft.Extensions.Logging;
+using Vertr.Exchange.Adapters.SignalR.Extensions;
 using Vertr.Exchange.Contracts;
-using Vertr.Exchange.Server.Extensions;
 
-namespace Vertr.Exchange.Server.MessageHandlers;
+namespace Vertr.Exchange.Adapters.SignalR.MessageHandlers;
 
-public class ObservableMessageHandler : IObservableMessageHandler, IMessageHandler, IDisposable
+public class ObservableMessageHandler : IObservableMessageHandler, Application.Messages.IMessageHandler, IDisposable
 {
     private readonly Subject<ApiCommandResult> _commandResultSubject = new Subject<ApiCommandResult>();
     private readonly Subject<OrderBook> _orderBookSubject = new Subject<OrderBook>();
@@ -36,31 +36,31 @@ public class ObservableMessageHandler : IObservableMessageHandler, IMessageHandl
 
     public IObservable<TradeEvent> TradeEventStream() => _tradeEventSubject;
 
-    public void CommandResult(Domain.Common.Messages.ApiCommandResult apiCommandResult)
+    public void CommandResult(Application.Messages.ApiCommandResult apiCommandResult)
     {
         _logger.LogDebug($"CommandResult received: OrderId={apiCommandResult.OrderId} ResultCode={apiCommandResult.ResultCode}");
         _commandResultSubject.OnNext(apiCommandResult.ToDto());
     }
 
-    public void OrderBook(Domain.Common.Messages.OrderBook orderBook)
+    public void OrderBook(Application.Messages.OrderBook orderBook)
     {
         _logger.LogDebug($"OrderBook received: Symbol={orderBook.Symbol}");
         _orderBookSubject.OnNext(orderBook.ToDto());
     }
 
-    public void ReduceEvent(Domain.Common.Messages.ReduceEvent reduceEvent)
+    public void ReduceEvent(Application.Messages.ReduceEvent reduceEvent)
     {
         _logger.LogDebug($"ReduceEvent received: OrderId={reduceEvent.OrderId} ReducedVolume={reduceEvent.ReducedVolume}");
         _reduceEventSubject.OnNext(reduceEvent.ToDto());
     }
 
-    public void RejectEvent(Domain.Common.Messages.RejectEvent rejectEvent)
+    public void RejectEvent(Application.Messages.RejectEvent rejectEvent)
     {
         _logger.LogDebug($"RejectEvent received: OrderId={rejectEvent.OrderId} RejectedVolume={rejectEvent.RejectedVolume}");
         _rejectEventSubject.OnNext(rejectEvent.ToDto());
     }
 
-    public void TradeEvent(Domain.Common.Messages.TradeEvent tradeEvent)
+    public void TradeEvent(Application.Messages.TradeEvent tradeEvent)
     {
         _logger.LogDebug($"TradeEvent received: OrderId={tradeEvent.TakerOrderId} TakeOrderCompleted={tradeEvent.TakeOrderCompleted}");
         _tradeEventSubject.OnNext(tradeEvent.ToDto());

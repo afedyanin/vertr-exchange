@@ -1,6 +1,6 @@
 using Vertr.Exchange.Domain.Common;
 
-namespace Vertr.Exchange.Server.Extensions;
+namespace Vertr.Exchange.Adapters.SignalR.Extensions;
 
 internal static class L2MarketDataExtensions
 {

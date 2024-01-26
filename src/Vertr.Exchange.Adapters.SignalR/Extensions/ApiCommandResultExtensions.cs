@@ -1,10 +1,10 @@
 using Vertr.Exchange.Contracts;
 
-namespace Vertr.Exchange.Server.Extensions;
+namespace Vertr.Exchange.Adapters.SignalR.Extensions;
 
 internal static class ApiCommandResultExtensions
 {
-    public static ApiCommandResult ToDto(this Domain.Common.Messages.ApiCommandResult apiRes)
+    public static ApiCommandResult ToDto(this Application.Messages.ApiCommandResult apiRes)
     {
         var res = new ApiCommandResult()
         {

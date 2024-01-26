@@ -2,7 +2,7 @@ using System.Threading.Channels;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
 
-namespace Vertr.Exchange.Server.Hubs;
+namespace Vertr.Exchange.Adapters.SignalR.Hubs;
 
 public interface IExchangeApiHub
 {

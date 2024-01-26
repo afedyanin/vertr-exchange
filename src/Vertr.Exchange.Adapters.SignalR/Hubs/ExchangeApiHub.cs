@@ -1,21 +1,21 @@
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
+using Vertr.Exchange.Adapters.SignalR.Extensions;
+using Vertr.Exchange.Adapters.SignalR.MessageHandlers;
 using Vertr.Exchange.Application;
 using Vertr.Exchange.Application.Generators;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;
-using Vertr.Exchange.Server.Extensions;
-using Vertr.Exchange.Server.MessageHandlers;
 
-namespace Vertr.Exchange.Server.Hubs;
+namespace Vertr.Exchange.Adapters.SignalR.Hubs;
 
 public class ExchangeApiHub(
-    IExchangeApi api,
+    IExchangeCommandsApi api,
     IOrderIdGenerator orderIdGenerator,
     ITimestampGenerator timestampGenerator,
     IObservableMessageHandler messageHandler) : Hub, IExchangeApiHub
 {
-    private readonly IExchangeApi _api = api;
+    private readonly IExchangeCommandsApi _api = api;
     private readonly IOrderIdGenerator _orderIdGenerator = orderIdGenerator;
     private readonly ITimestampGenerator _timestampGenerator = timestampGenerator;
     private readonly IObservableMessageHandler _messageHandler = messageHandler;

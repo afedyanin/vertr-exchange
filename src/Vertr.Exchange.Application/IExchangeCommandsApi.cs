@@ -2,7 +2,7 @@ using Vertr.Exchange.Domain.Common.Abstractions;
 
 namespace Vertr.Exchange.Application;
 
-public interface IExchangeApi : IDisposable
+public interface IExchangeCommandsApi : IDisposable
 {
     Guid Id { get; }
 

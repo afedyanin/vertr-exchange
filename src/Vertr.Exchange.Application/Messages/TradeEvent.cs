@@ -1,6 +1,6 @@
 using Vertr.Exchange.Shared.Enums;
 
-namespace Vertr.Exchange.Domain.Common.Messages;
+namespace Vertr.Exchange.Application.Messages;
 public record class TradeEvent
 {
     public int Symbol { get; init; }

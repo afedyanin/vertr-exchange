@@ -1,6 +1,6 @@
 using System.Threading.Channels;
 
-namespace Vertr.Exchange.Server.Extensions;
+namespace Vertr.Exchange.Adapters.SignalR.Extensions;
 
 // https://github.com/aspnet/SignalR-samples/blob/main/StockTickR/StockTickRApp/ObservableExtensions.cs
 

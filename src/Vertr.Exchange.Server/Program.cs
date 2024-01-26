@@ -2,10 +2,9 @@ using Vertr.Exchange.Application;
 using Vertr.Exchange.Domain.RiskEngine;
 using Vertr.Exchange.Domain.Accounts;
 using Vertr.Exchange.Domain.MatchingEngine;
-using Vertr.Exchange.Server.MessageHandlers;
-using Vertr.Exchange.Domain.Common.Abstractions;
-using Vertr.Exchange.Server.Hubs;
 using Microsoft.AspNetCore.Http.Connections;
+using Vertr.Exchange.Adapters.SignalR;
+using Vertr.Exchange.Adapters.SignalR.Hubs;
 
 namespace Vertr.Exchange.Server;
 
@@ -22,16 +21,12 @@ public class Program
             hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(15);
         }).AddMessagePackProtocol();
 
-        builder.Services.AddExchangeApi();
+        builder.Services.AddExchangeCommandsApi();
+        builder.Services.AddExchangeSignalrAdapter();
         builder.Services.AddAccounts();
         builder.Services.AddRiskEngine();
         builder.Services.AddMatchingEngine();
 
-        builder.Services.AddSingleton<ObservableMessageHandler>();
-        builder.Services.AddSingleton<IObservableMessageHandler>(
-            x => x.GetRequiredService<ObservableMessageHandler>());
-        builder.Services.AddSingleton<IMessageHandler>(
-            x => x.GetRequiredService<ObservableMessageHandler>());
 
         var app = builder.Build();
 

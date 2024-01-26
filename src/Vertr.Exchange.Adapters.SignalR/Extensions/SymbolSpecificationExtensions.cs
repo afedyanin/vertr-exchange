@@ -1,6 +1,6 @@
 using Vertr.Exchange.Contracts;
 
-namespace Vertr.Exchange.Server.Extensions;
+namespace Vertr.Exchange.Adapters.SignalR.Extensions;
 
 internal static class SymbolSpecificationExtensions
 {
