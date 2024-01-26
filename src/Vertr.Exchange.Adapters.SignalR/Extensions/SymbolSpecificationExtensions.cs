@@ -12,7 +12,7 @@ internal static class SymbolSpecificationExtensions
         return new Domain.Common.SymbolSpecification
         {
             SymbolId = spec.SymbolId,
-            Type = spec.Type,
+            Type = (Domain.Common.Enums.SymbolType)spec.Type,
             Currency = spec.Currency,
         };
     }

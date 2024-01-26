@@ -1,5 +1,5 @@
 using Vertr.Exchange.Application.Commands;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Application.Tests.Commands;
 

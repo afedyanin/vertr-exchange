@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 using Vertr.Exchange.Domain.RiskEngine.Symbols;
 using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Domain.Common;

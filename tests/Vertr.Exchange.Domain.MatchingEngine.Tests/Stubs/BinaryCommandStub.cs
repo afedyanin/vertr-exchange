@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.Json;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Domain.Common.Binary.Commands;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Domain.MatchingEngine.Tests.Stubs;
 

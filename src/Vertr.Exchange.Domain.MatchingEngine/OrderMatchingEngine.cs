@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 using Vertr.Exchange.Domain.MatchingEngine.Binary;
 using Vertr.Exchange.Domain.MatchingEngine.Commands;
 using Vertr.Exchange.Domain.Common.Abstractions;

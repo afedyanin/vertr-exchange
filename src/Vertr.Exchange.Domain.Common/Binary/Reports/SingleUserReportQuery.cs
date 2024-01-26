@@ -1,5 +1,5 @@
 using Vertr.Exchange.Domain.Common.Abstractions;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Domain.Common.Binary.Reports;
 

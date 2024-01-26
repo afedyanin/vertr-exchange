@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Domain.Accounts.Tests;
 

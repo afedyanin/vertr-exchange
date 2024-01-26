@@ -1,4 +1,4 @@
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.Domain.RiskEngine.Orders;
 using Vertr.Exchange.Domain.RiskEngine.Symbols;

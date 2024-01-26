@@ -101,8 +101,8 @@ public class ExchangeApiHub(
             _timestampGenerator.CurrentTime,
             request.Price,
             request.Size,
-            request.Action,
-            request.OrderType,
+            (Domain.Common.Enums.OrderAction)request.Action,
+            (Domain.Common.Enums.OrderType)request.OrderType,
             request.UserId,
             request.Symbol);
 

@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using Vertr.Exchange.Domain.Common.Abstractions;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
 [assembly: InternalsVisibleTo("Vertr.Exchange.Domain.Accounts.Tests")]
 

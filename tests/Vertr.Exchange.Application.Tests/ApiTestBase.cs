@@ -2,13 +2,13 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Application.Tests.Stubs;
 using Vertr.Exchange.Application.Generators;
-using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Shared.Reports;
 using Vertr.Exchange.Application.Commands;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Application.Commands.Queries;
 using Vertr.Exchange.Application.Messages;
 using Vertr.Exchange.Application.Commands.Api;
+using Vertr.Exchange.Domain.Common.Enums;
+using Vertr.Exchange.Domain.Common.Reports;
 
 namespace Vertr.Exchange.Application.Tests;
 public abstract class ApiTestBase

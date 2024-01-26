@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Domain.Common.Abstractions;
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Domain.MatchingEngine.Commands;
 internal sealed class MoveOrderCommand(

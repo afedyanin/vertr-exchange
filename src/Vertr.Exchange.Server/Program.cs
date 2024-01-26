@@ -23,10 +23,10 @@ public class Program
 
         builder.Services.AddExchangeCommandsApi();
         builder.Services.AddExchangeSignalrAdapter();
+
         builder.Services.AddAccounts();
         builder.Services.AddRiskEngine();
         builder.Services.AddMatchingEngine();
-
 
         var app = builder.Build();
 

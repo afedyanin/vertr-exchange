@@ -1,7 +1,7 @@
-using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Shared.Reports.Dtos;
+using Vertr.Exchange.Domain.Common.Enums;
+using Vertr.Exchange.Domain.Common.Reports.Dtos;
 
-namespace Vertr.Exchange.Shared.Reports;
+namespace Vertr.Exchange.Domain.Common.Reports;
 public record SingleUserReportResult
 {
     public long Uid { get; set; }

@@ -1,4 +1,4 @@
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Domain.Common.Abstractions;
 public interface IEngineEvent

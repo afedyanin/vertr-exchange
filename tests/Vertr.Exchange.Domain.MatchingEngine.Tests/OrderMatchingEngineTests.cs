@@ -1,6 +1,6 @@
-using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.MatchingEngine.Tests.Stubs;
 using Vertr.Exchange.Domain.MatchingEngine.Tests.Stubs;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Domain.MatchingEngine.Tests;
 

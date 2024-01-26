@@ -1,4 +1,4 @@
-namespace Vertr.Exchange.Shared.Enums;
+namespace Vertr.Exchange.Contracts.Enums;
 
 public enum OrderAction
 {

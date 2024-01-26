@@ -2,6 +2,7 @@ using Vertr.Exchange.Application.Core;
 using Vertr.Exchange.Application.EventHandlers;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Application.Tests;
 
@@ -43,7 +44,7 @@ public class ExchangeCoreServiceTests
 
         public void Fill(ref OrderCommand command)
         {
-            command.Command = Shared.Enums.OrderCommandType.NOP;
+            command.Command = OrderCommandType.NOP;
             command.OrderId = OrderId;
             command.Timestamp = Timestamp;
         }

@@ -1,5 +1,6 @@
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Domain.Common.Abstractions;
+using Vertr.Exchange.Domain.Common.Enums;
 
 namespace Vertr.Exchange.Application.Messages;
 
@@ -78,7 +79,7 @@ public static class MessageFactory
     {
         var evt = cmd.EngineEvent;
 
-        if (evt == null || evt.EventType != Shared.Enums.EngineEventType.BINARY_EVENT)
+        if (evt == null || evt.EventType != EngineEventType.BINARY_EVENT)
         {
             return [];
         }

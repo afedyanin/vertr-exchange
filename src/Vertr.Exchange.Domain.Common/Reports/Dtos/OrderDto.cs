@@ -1,6 +1,6 @@
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Domain.Common.Enums;
 
-namespace Vertr.Exchange.Shared.Reports.Dtos;
+namespace Vertr.Exchange.Domain.Common.Reports.Dtos;
 public record OrderDto
 {
     public OrderAction Action { get; set; }

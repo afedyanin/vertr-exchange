@@ -50,7 +50,7 @@ internal static class EventExtensions
         {
             Symbol = tradeEvent.Symbol,
             TakeOrderCompleted = tradeEvent.TakeOrderCompleted,
-            TakerAction = tradeEvent.TakerAction,
+            TakerAction = (Contracts.Enums.OrderAction)tradeEvent.TakerAction,
             TakerUid = tradeEvent.TakerUid,
             TakerOrderId = tradeEvent.TakerOrderId,
             Timestamp = tradeEvent.Timestamp,
@@ -72,7 +72,7 @@ internal static class EventExtensions
             Price = evt.Price,
             Size = evt.Size,
             BinaryData = evt.BinaryData,
-            EventType = evt.EventType,
+            EventType = (Contracts.Enums.EngineEventType)evt.EventType,
         };
 
     private static IEnumerable<Trade> ToDto(this IEnumerable<Application.Messages.Trade> trades)

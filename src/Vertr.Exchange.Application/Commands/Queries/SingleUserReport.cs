@@ -3,8 +3,8 @@ using System.Text.Json;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Domain.Common.Abstractions;
 using Vertr.Exchange.Domain.Common.Binary.Reports;
-using Vertr.Exchange.Shared.Enums;
-using Vertr.Exchange.Shared.Reports;
+using Vertr.Exchange.Domain.Common.Enums;
+using Vertr.Exchange.Domain.Common.Reports;
 
 namespace Vertr.Exchange.Application.Commands.Queries;
 
