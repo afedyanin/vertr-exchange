@@ -1,7 +1,7 @@
-using Vertr.Exchange.Application.Messages;
+using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.Domain.Common.Messages;
+namespace Vertr.Exchange.Application.Messages;
 
 public static class MessageFactory
 {

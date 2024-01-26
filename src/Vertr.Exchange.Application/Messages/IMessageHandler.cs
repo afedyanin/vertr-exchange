@@ -1,5 +1,3 @@
-using Vertr.Exchange.Domain.Common.Messages;
-
 namespace Vertr.Exchange.Application.Messages;
 
 public interface IMessageHandler
