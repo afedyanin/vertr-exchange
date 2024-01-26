@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using Vertr.Exchange.Application.Messages;
-using Vertr.Exchange.Domain.Common.Messages;
 
 namespace Vertr.Exchange.Application.Tests.Stubs;
 

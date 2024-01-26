@@ -2,7 +2,7 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
 using Vertr.Exchange.Adapters.SignalR.Extensions;
 using Vertr.Exchange.Adapters.SignalR.MessageHandlers;
-using Vertr.Exchange.Application;
+using Vertr.Exchange.Application.Commands.Api;
 using Vertr.Exchange.Application.Generators;
 using Vertr.Exchange.Contracts;
 using Vertr.Exchange.Contracts.Requests;

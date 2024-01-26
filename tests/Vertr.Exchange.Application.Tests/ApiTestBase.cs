@@ -4,11 +4,11 @@ using Vertr.Exchange.Application.Tests.Stubs;
 using Vertr.Exchange.Application.Generators;
 using Vertr.Exchange.Shared.Enums;
 using Vertr.Exchange.Shared.Reports;
-using Vertr.Exchange.Domain.Common.Messages;
 using Vertr.Exchange.Application.Commands;
 using Vertr.Exchange.Domain.Common;
 using Vertr.Exchange.Application.Commands.Queries;
 using Vertr.Exchange.Application.Messages;
+using Vertr.Exchange.Application.Commands.Api;
 
 namespace Vertr.Exchange.Application.Tests;
 public abstract class ApiTestBase
@@ -38,7 +38,7 @@ public abstract class ApiTestBase
         Api?.Dispose();
     }
 
-    protected async Task<Messages.ApiCommandResult> SendAsync(ApiCommandBase cmd)
+    protected async Task<ApiCommandResult> SendAsync(ApiCommandBase cmd)
     {
         Api.Send(cmd);
         var cts = new CancellationTokenSource(_cancellationTimeout);
@@ -120,7 +120,7 @@ public abstract class ApiTestBase
         return book;
     }
 
-    protected async Task<Messages.ApiCommandResult> PlaceGTCOrder(
+    protected async Task<ApiCommandResult> PlaceGTCOrder(
         OrderAction orderAction,
         long uid,
         int symbol,

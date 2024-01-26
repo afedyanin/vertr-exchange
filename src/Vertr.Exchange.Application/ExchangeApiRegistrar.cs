@@ -10,16 +10,21 @@ public static class ExchangeApiRegistrar
 {
     public static IServiceCollection AddExchangeCommandsApi(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSingleton<IOrderCommandEventHandler, SimpleMessageProcessor>();
         serviceCollection.AddSingleton<IOrderIdGenerator, OrderIdGenerator>();
         serviceCollection.AddSingleton<ITimestampGenerator, TimestampGenerator>();
-        serviceCollection.AddSingleton<IExchangeCommandsApi, ExchangeCommandsApi>();
 
         serviceCollection.AddSingleton<IExchangeCoreService, ExchangeCoreService>();
+
         serviceCollection.AddSingleton<IOrderCommandEventHandler, RiskEnginePreProcessor>();
         serviceCollection.AddSingleton<IOrderCommandEventHandler, RiskEnginePostProcessor>();
         serviceCollection.AddSingleton<IOrderCommandEventHandler, MatchingEngineProcessor>();
         serviceCollection.AddSingleton<IOrderCommandEventHandler, LoggingProcessor>();
+
+        // Use IExchangeCommandsApi to create and send commands to exchange
+        serviceCollection.AddSingleton<IExchangeCommandsApi, ExchangeCommandsApi>();
+
+        // Implement and inject IMessageHandler to handle exchange events
+        serviceCollection.AddSingleton<IOrderCommandEventHandler, SimpleMessageProcessor>();
 
         return serviceCollection;
     }

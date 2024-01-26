@@ -1,6 +1,6 @@
 using Vertr.Exchange.Domain.Common.Abstractions;
 
-namespace Vertr.Exchange.Application;
+namespace Vertr.Exchange.Application.Commands.Api;
 
 public interface IExchangeCommandsApi : IDisposable
 {
