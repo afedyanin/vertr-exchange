@@ -14,6 +14,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddExchangeCommandsApi();
+        builder.Services.AddAccounts();
+        builder.Services.AddRiskEngine();
+        builder.Services.AddMatchingEngine();
+
         builder.Services.AddSignalR(hubOptions =>
         {
             hubOptions.EnableDetailedErrors = true;
@@ -21,12 +26,7 @@ public class Program
             hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(15);
         }).AddMessagePackProtocol();
 
-        builder.Services.AddExchangeCommandsApi();
         builder.Services.AddExchangeSignalrAdapter();
-
-        builder.Services.AddAccounts();
-        builder.Services.AddRiskEngine();
-        builder.Services.AddMatchingEngine();
 
         var app = builder.Build();
 
