@@ -24,7 +24,7 @@ public interface IExchangeApiHub
 
     long MoveOrder(MoveOrderRequest moveOrderRequest);
 
-    long PlaceOrder(PlaceOrderRequest placeOrderRequest, long? orderId = null);
+    long PlaceOrder(PlaceOrderRequest placeOrderRequest);
 
     long ReduceOrder(ReduceOrderRequest reduceOrderRequest);
 

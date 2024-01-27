@@ -38,14 +38,8 @@ internal sealed class ExchangeApiClient(
         return nextOrderId;
     }
 
-    public Task<ApiCommandResult> PlaceOrder(PlaceOrderRequest request, long? orderId = null)
-    {
-        var res = orderId.HasValue ?
-            InvokeHubMethod("PlaceOrder", [request, orderId.Value]) :
-            InvokeHubMethod("PlaceOrder", request);
-
-        return res;
-    }
+    public Task<ApiCommandResult> PlaceOrder(PlaceOrderRequest request)
+        => InvokeHubMethod("PlaceOrder", request);
 
     public Task<ApiCommandResult> ReduceOrder(ReduceOrderRequest request)
         => InvokeHubMethod("ReduceOrder", request);

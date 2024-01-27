@@ -15,7 +15,7 @@ public interface IExchangeApiClient
 
     Task<long> GetNextOrderId();
 
-    Task<ApiCommandResult> PlaceOrder(PlaceOrderRequest request, long? orderId = null);
+    Task<ApiCommandResult> PlaceOrder(PlaceOrderRequest request);
 
     Task<ApiCommandResult> CancelOrder(CancelOrderRequest request);
 

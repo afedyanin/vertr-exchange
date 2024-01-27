@@ -4,9 +4,7 @@ using Vertr.Exchange.SignalRClient.Requests;
 
 namespace Vertr.Exchange.SignalRClient.ConsoleApp;
 
-internal sealed class StreamEventsRequestHandler(
-    ILogger<StreamEventsRequestHandler> logger
-    ) :
+internal sealed class StreamEventsRequestHandler(ILogger<StreamEventsRequestHandler> logger) :
     IRequestHandler<HandleOrderBookRequest>,
     IRequestHandler<HandleReduceRequest>,
     IRequestHandler<HandleRejectRequest>,
@@ -16,7 +14,7 @@ internal sealed class StreamEventsRequestHandler(
 
     public Task Handle(HandleOrderBookRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Order book received: {orderBook}", request.OrderBook);
+        _logger.LogDebug("Order book received: {orderBook}", request.OrderBook);
 
         return Task.CompletedTask;
     }

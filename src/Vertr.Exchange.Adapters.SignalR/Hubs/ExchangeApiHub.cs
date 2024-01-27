@@ -94,10 +94,10 @@ public class ExchangeApiHub(
         return cmd.OrderId;
     }
 
-    public long PlaceOrder(PlaceOrderRequest request, long? orderId = null)
+    public long PlaceOrder(PlaceOrderRequest request)
     {
         var cmd = new Application.Commands.PlaceOrderCommand(
-            orderId ?? _orderIdGenerator.NextId,
+            request.OrderId,
             _timestampGenerator.CurrentTime,
             request.Price,
             request.Size,
