@@ -21,16 +21,19 @@ internal static class Program
         var idGen = sp.GetRequiredService<IOrderIdGenerator>();
         var api = sp.GetRequiredService<IExchangeCommandsApi>();
 
+        // Add Symbols
         api.Send(new AddSymbolsCommand(
             orderId: idGen.NextId,
             timestamp: DateTime.UtcNow,
             Symbols.AllSymbolSpecs));
 
+        // Add Users and Accounts
         api.Send(new AddAccountsCommand(
             orderId: idGen.NextId,
             timestamp: DateTime.UtcNow,
             users: UserAccounts.All));
 
+        // Place ASK order
         api.Send(new PlaceOrderCommand(
             orderId: idGen.NextId,
             timestamp: DateTime.UtcNow,
@@ -41,6 +44,7 @@ internal static class Program
             uid: Users.Alice.Id,
             symbol: Symbols.MSFT.Id));
 
+        // Place BID order
         api.Send(new PlaceOrderCommand(
             orderId: idGen.NextId,
             timestamp: DateTime.UtcNow,
@@ -51,6 +55,7 @@ internal static class Program
             uid: Users.Bob.Id,
             symbol: Symbols.MSFT.Id));
 
+        // wait to end processing
         await Task.Delay(2000);
     }
 
