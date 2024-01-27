@@ -2,7 +2,8 @@ using MediatR;
 using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.SignalRClient.Requests;
-public class TradeRequest : IRequest
+
+public class HandleOrderBookRequest : IRequest
 {
-    public TradeEvent? TradeEvent { get; set; }
+    public OrderBook? OrderBook { get; set; }
 }

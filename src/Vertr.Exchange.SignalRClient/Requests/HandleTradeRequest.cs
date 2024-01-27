@@ -2,7 +2,7 @@ using MediatR;
 using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.SignalRClient.Requests;
-public class RejectRequest : IRequest
+public class HandleTradeRequest : IRequest
 {
-    public RejectEvent? RejectEvent { get; set; }
+    public TradeEvent? TradeEvent { get; set; }
 }

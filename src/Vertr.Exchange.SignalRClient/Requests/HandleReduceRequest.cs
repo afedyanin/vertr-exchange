@@ -3,7 +3,7 @@ using Vertr.Exchange.Contracts;
 
 namespace Vertr.Exchange.SignalRClient.Requests;
 
-public class OrderBookRequest : IRequest
+public class HandleReduceRequest : IRequest
 {
-    public OrderBook? OrderBook { get; set; }
+    public ReduceEvent? ReduceEvent { get; set; }
 }

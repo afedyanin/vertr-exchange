@@ -26,7 +26,7 @@ internal sealed class RejectEventStream(
         {
             while (channel.TryRead(out var rejectEvent))
             {
-                var evt = new RejectRequest
+                var evt = new HandleRejectRequest
                 {
                     RejectEvent = rejectEvent,
                 };

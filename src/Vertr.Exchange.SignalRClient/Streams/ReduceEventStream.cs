@@ -28,7 +28,7 @@ internal sealed class ReduceEventStream(
         {
             while (channel.TryRead(out var reduceEvent))
             {
-                var evt = new ReduceRequest
+                var evt = new HandleReduceRequest
                 {
                     ReduceEvent = reduceEvent,
                 };

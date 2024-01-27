@@ -28,7 +28,7 @@ internal sealed class OrderBooksStream(
         {
             while (channel.TryRead(out var orderBook))
             {
-                var evt = new OrderBookRequest
+                var evt = new HandleOrderBookRequest
                 {
                     OrderBook = orderBook,
                 };

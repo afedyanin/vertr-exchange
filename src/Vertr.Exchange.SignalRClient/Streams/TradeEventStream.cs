@@ -26,7 +26,7 @@ internal sealed class TradeEventStream(
         {
             while (channel.TryRead(out var tradeEvent))
             {
-                var evt = new TradeRequest
+                var evt = new HandleTradeRequest
                 {
                     TradeEvent = tradeEvent,
                 };
