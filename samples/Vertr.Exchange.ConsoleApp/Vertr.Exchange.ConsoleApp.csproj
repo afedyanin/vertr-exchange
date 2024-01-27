@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Application\Vertr.Exchange.Application.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Domain.Accounts\Vertr.Exchange.Domain.Accounts.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Domain.MatchingEngine\Vertr.Exchange.Domain.MatchingEngine.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Exchange.Domain.RiskEngine\Vertr.Exchange.Domain.RiskEngine.csproj" />
+  </ItemGroup>
+
+</Project>

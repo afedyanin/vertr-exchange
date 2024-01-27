@@ -7,15 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-	  <ProjectReference Include="..\Vertr.Exchange.Api\Vertr.Exchange.Api.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.Adapters.SignalR\Vertr.Exchange.Adapters.SignalR.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.Application\Vertr.Exchange.Application.csproj" />
 	  <ProjectReference Include="..\Vertr.Exchange.Contracts\Vertr.Exchange.Contracts.csproj" />
-	  <ProjectReference Include="..\Vertr.Exchange.MatchingEngine\Vertr.Exchange.MatchingEngine.csproj" />
-	  <ProjectReference Include="..\Vertr.Exchange.RiskEngine\Vertr.Exchange.RiskEngine.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.Domain.MatchingEngine\Vertr.Exchange.Domain.MatchingEngine.csproj" />
+	  <ProjectReference Include="..\Vertr.Exchange.Domain.RiskEngine\Vertr.Exchange.Domain.RiskEngine.csproj" />
   </ItemGroup>
   
 </Project>

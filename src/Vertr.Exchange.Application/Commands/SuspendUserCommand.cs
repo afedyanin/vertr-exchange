@@ -1,0 +1,20 @@
+using Vertr.Exchange.Domain.Common;
+using Vertr.Exchange.Domain.Common.Enums;
+
+namespace Vertr.Exchange.Application.Commands;
+public class SuspendUserCommand(
+    long orderId,
+    DateTime timestamp,
+    long uid)
+    : ApiCommandBase(orderId, timestamp)
+{
+    public override OrderCommandType CommandType => OrderCommandType.SUSPEND_USER;
+    public long Uid { get; } = uid;
+
+    public override void Fill(ref OrderCommand command)
+    {
+        base.Fill(ref command);
+
+        command.Uid = Uid;
+    }
+}

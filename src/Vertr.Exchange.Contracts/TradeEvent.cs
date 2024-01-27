@@ -1,6 +1,7 @@
-using Vertr.Exchange.Shared.Enums;
+using Vertr.Exchange.Contracts.Enums;
 
 namespace Vertr.Exchange.Contracts;
+
 public record TradeEvent
 {
     public int Symbol { get; set; }
