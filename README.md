@@ -1,6 +1,6 @@
 # vertr-exchange
 
-# Simple NET Exchange Emulator Engine 
+# Simple NET Exchange Engine 
 
 ## Inspired by
 
