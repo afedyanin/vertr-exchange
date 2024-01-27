@@ -1,59 +1,108 @@
-# vertr
+# vertr-exchange
 
-## Exchange Emulator Engine 
+# Simple NET Exchange Emulator Engine 
 
-### Inspired by
+## Inspired by
 
-- [exchange-core](https://github.com/exchange-core/exchange-core)
 - [LMAX Disruptor](https://github.com/LMAX-Exchange/disruptor)
-- [Aeron](https://github.com/real-logic/aeron)
+- [Disruptor-net](https://github.com/disruptor-net/Disruptor-net)
+- [exchange-core](https://github.com/exchange-core/exchange-core)
 
+## Samples
 
-### Sample
+### Simple console app with embedded exchange engine
+
+[Program.cs](samples/Vertr.Exchange.ConsoleApp/Program.cs)
 
 ```csharp
-public class Program
-{
-    private const string _terminalHostUrl = "http://localhost:5010";
 
     public static async Task Main()
     {
-        var trading = new RandomWalkTrading(
-            _terminalHostUrl,
-            basePrice: 10.45m,
-            numberOfIterations: 10);
+        var sp = ServicePorviderBuilder.BuildServiceProvider();
+        var idGen = sp.GetRequiredService<IOrderIdGenerator>();
+        var api = sp.GetRequiredService<IExchangeCommandsApi>();
 
-        await trading.Execute();
+        // Add Symbols
+        api.Send(new AddSymbolsCommand(
+            orderId: idGen.NextId,
+            timestamp: DateTime.UtcNow,
+            Symbols.AllSymbolSpecs));
+
+        // Add Users and Accounts
+        api.Send(new AddAccountsCommand(
+            orderId: idGen.NextId,
+            timestamp: DateTime.UtcNow,
+            users: UserAccounts.All));
+
+        // Place ASK order
+        api.Send(new PlaceOrderCommand(
+            orderId: idGen.NextId,
+            timestamp: DateTime.UtcNow,
+            price: 120.45m,
+            size: 10,
+            action: OrderAction.ASK,
+            orderType: OrderType.GTC,
+            uid: Users.Alice.Id,
+            symbol: Symbols.MSFT.Id));
+
+        // Place BID order
+        api.Send(new PlaceOrderCommand(
+            orderId: idGen.NextId,
+            timestamp: DateTime.UtcNow,
+            price: 123.56m,
+            size: 7,
+            action: OrderAction.BID,
+            orderType: OrderType.GTC,
+            uid: Users.Bob.Id,
+            symbol: Symbols.MSFT.Id));
+
+        // wait to end processing
+        await Task.Delay(2000);
     }
-}
 
-public class RandomWalkTrading(string terminalHostUrl, decimal basePrice, int numberOfIterations) 
-    : TradingBase(terminalHostUrl, Symbols.MSFT)
-{
-    private readonly decimal _basePrice = basePrice;
-    private readonly int _numberOfIterations = numberOfIterations;
 
-    protected override async Task StartTrading()
-    {
-        var t1 = Task.Run(async () =>
-        {
-            await Commands.RandomWalk(Users.Bob, Symbol, _basePrice, _numberOfIterations);
-        });
-
-        var t2 = Task.Run(async () =>
-        {
-            await Commands.RandomWalk(Users.Alice, Symbol, _basePrice, _numberOfIterations);
-        });
-
-        await Task.WhenAll(t1, t2);
-
-        await DumpResults();
-    }
-
-    ...
 ```
 
+### Console app communicating with Exchange host via SignalR
 
-![Random Walk](sample02.png)
+[Program.cs](samples/Vertr.Exchange.SignalRClient.ConsoleApp/Program.cs)
 
+```csharp
 
+    private static async Task PlaceAsk(IExchangeApiClient api, ILogger<Program> logger)
+    {
+        var askOrderId = await api.GetNextOrderId();
+        var askOrderResult = await api.PlaceOrder(
+            new PlaceOrderRequest
+            {
+                OrderId = askOrderId,
+                OrderType = OrderType.GTC,
+                Action = OrderAction.ASK,
+                UserId = Users.Alice.Id,
+                Price = NextRandomPrice(123),
+                Size = NextRandomQty(10),
+                Symbol = Symbols.MSFT.Id
+            });
+
+        logger.LogWarning("ASK order result: {orderResult}", askOrderResult);
+    }
+
+    private static async Task PlaceBid(IExchangeApiClient api, ILogger<Program> logger)
+    {
+        var bidOrderId = await api.GetNextOrderId();
+        var bidOrderResult = await api.PlaceOrder(
+            new PlaceOrderRequest
+            {
+                OrderId = bidOrderId,
+                OrderType = OrderType.GTC,
+                Action = OrderAction.BID,
+                UserId = Users.Bob.Id,
+                Price = NextRandomPrice(123),
+                Size = NextRandomQty(10),
+                Symbol = Symbols.MSFT.Id
+            });
+
+        logger.LogWarning("BID order result: {orderResult}", bidOrderResult);
+    }
+
+```

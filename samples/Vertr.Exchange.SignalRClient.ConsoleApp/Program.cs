@@ -8,6 +8,7 @@ using static Vertr.Exchange.SignalRClient.ConsoleApp.StaticContext;
 
 namespace Vertr.Exchange.SignalRClient.ConsoleApp;
 
+// Need to start Vertr.Exchange.Server host
 internal sealed class Program
 {
     public static async Task Main()

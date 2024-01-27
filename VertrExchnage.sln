@@ -6,12 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{4B1B7D85-9A4D-4ECC-B361-5D7E24429657}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		CHANGELOG.md = CHANGELOG.md
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
-		sample02.png = sample02.png
-		tech-stuff.md = tech-stuff.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4B42857C-FD8E-4EB6-B9D6-200FD3E19168}"
@@ -48,11 +45,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{B016A6FE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{86970473-71D7-4657-AF44-39F7FDA85D45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.ConsoleApp", "samples\Vertr.Exchange.ConsoleApp\Vertr.Exchange.ConsoleApp.csproj", "{74EDDB3F-5656-4F67-A37B-3797E6E76471}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.ConsoleApp", "samples\Vertr.Exchange.ConsoleApp\Vertr.Exchange.ConsoleApp.csproj", "{74EDDB3F-5656-4F67-A37B-3797E6E76471}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.SignalRClient", "src\Vertr.Exchange.SignalRClient\Vertr.Exchange.SignalRClient.csproj", "{F40D6BC4-4343-4B76-B59F-12F3D629795B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.SignalRClient", "src\Vertr.Exchange.SignalRClient\Vertr.Exchange.SignalRClient.csproj", "{F40D6BC4-4343-4B76-B59F-12F3D629795B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Exchange.SignalRClient.ConsoleApp", "samples\Vertr.Exchange.SignalRClient.ConsoleApp\Vertr.Exchange.SignalRClient.ConsoleApp.csproj", "{5AEFE279-288A-464D-893A-C6D9D4E3454F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vertr.Exchange.SignalRClient.ConsoleApp", "samples\Vertr.Exchange.SignalRClient.ConsoleApp\Vertr.Exchange.SignalRClient.ConsoleApp.csproj", "{5AEFE279-288A-464D-893A-C6D9D4E3454F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
