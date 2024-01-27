@@ -1,11 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Exchange.Application.Generators;
-using Vertr.Exchange.Domain.RiskEngine;
-using Vertr.Exchange.Domain.Accounts;
-using Vertr.Exchange.Domain.MatchingEngine;
-using Vertr.Exchange.Application;
-using Vertr.Exchange.Application.Messages;
-using Microsoft.Extensions.Logging;
 using Vertr.Exchange.Application.Commands.Api;
 using Vertr.Exchange.Domain.Common.Enums;
 using Vertr.Exchange.Application.Commands;
@@ -17,7 +11,7 @@ internal static class Program
 {
     public static async Task Main()
     {
-        var sp = BuildServiceProvider();
+        var sp = ServicePorviderBuilder.BuildServiceProvider();
         var idGen = sp.GetRequiredService<IOrderIdGenerator>();
         var api = sp.GetRequiredService<IExchangeCommandsApi>();
 
@@ -57,25 +51,5 @@ internal static class Program
 
         // wait to end processing
         await Task.Delay(2000);
-    }
-
-    public static IServiceProvider BuildServiceProvider()
-    {
-        var serviceCollection = new ServiceCollection();
-
-        serviceCollection.AddExchangeCommandsApi();
-        serviceCollection.AddAccounts();
-        serviceCollection.AddRiskEngine();
-        serviceCollection.AddMatchingEngine();
-
-        serviceCollection.AddSingleton<LogMessageHandler>();
-        serviceCollection.AddSingleton<IMessageHandler>(
-                    x => x.GetRequiredService<LogMessageHandler>());
-
-        serviceCollection.AddLogging(configure => configure.AddConsole())
-            .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Information);
-
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        return serviceProvider;
     }
 }
