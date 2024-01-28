@@ -4,6 +4,24 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Vertr Exchange Client Contracts</Title>
+    <Authors>afedyanin</Authors>
+    <Company>Vertr</Company>
+    <Description>Client package for Vertr Exchange</Description>
+    <Copyright>Vertr</Copyright>
+    <PackageProjectUrl>https://github.com/afedyanin/vertr-exchange</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/afedyanin/vertr-exchange</RepositoryUrl>
+    <PackageTags>exchange; finance; algotrading; backtesting;</PackageTags>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
