@@ -14,10 +14,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Exchange.Client.SignalR\Vertr.Exchange.Client.SignalR.csproj" />
+    <PackageReference Include="Vertr.Exchange.Client.SignalR" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
