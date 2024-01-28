@@ -30,8 +30,6 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseFileServer();
-
         app.UseRouting();
 
         app.MapHub<ExchangeApiHub>("/exchange",
