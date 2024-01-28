@@ -44,11 +44,7 @@ internal class Position(long uid, int symbol) : IPosition
 
     public override string ToString()
     {
-#if DEBUG
         return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} OpenPriceSum={OpenPriceSum} FixedPnl={FixedPnL} PnL={PnL}";
-#else
-        return $"Position Uid={Uid} Symbol={Symbol} Direction={Direction} OpenVol={OpenVolume} PnL={RealizedPnL}";
-#endif
     }
 
     private decimal TryToCloseCurrentPosition(OrderAction action, long tradeSize, decimal tradePrice)

@@ -65,7 +65,7 @@
 
 ### Console app communicating with Exchange host via SignalR
 
-[Program.cs](samples/Vertr.Exchange.SignalRClient.ConsoleApp/Program.cs)
+[Program.cs](samples/Vertr.Exchange.Client.SignalR.ConsoleApp/Program.cs)
 
 ```csharp
 
