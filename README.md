@@ -12,16 +12,6 @@
 
 ### Simple console app with embedded exchange engine
 
-### Get and run Vertr Exchange Server
-
-```
-docker pull afedyanin/vertr-exchange:v1.0.1
-
-docker run --rm -d -p 5000:8080 afedyanin/vertr-exchange:v1.0.1
-```
-
-### Run Console App
-
 [Program.cs](samples/Vertr.Exchange.ConsoleApp/Program.cs)
 
 ```csharp
@@ -74,6 +64,16 @@ docker run --rm -d -p 5000:8080 afedyanin/vertr-exchange:v1.0.1
 ```
 
 ### Console app communicating with Exchange host via SignalR
+
+#### Get and run Vertr Exchange Server
+
+```
+docker pull afedyanin/vertr-exchange:v1.0.1
+
+docker run --rm -d -p 5000:8080 afedyanin/vertr-exchange:v1.0.1
+```
+
+#### Run Console App
 
 [Program.cs](samples/Vertr.Exchange.Client.SignalR.ConsoleApp/Program.cs)
 
